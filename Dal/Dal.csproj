@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D88DE002-C363-4FA2-B390-8FF31E9D7B84}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>Dal</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Data\CrystalPrintConfigDAL.cs" />
+    <Compile Include="Data\CommonDAL.cs" />
+    <Compile Include="Data\CustomerDAL.cs" />
+    <Compile Include="Data\MainWindowDAL.cs" />
+    <Compile Include="Data\OrganizationDAL.cs" />
+    <Compile Include="Data\ProductiveTaskListDAL.cs" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Configuration" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Dal\CommonNewDal.cs" />
+    <Compile Include="Data\BucketDAL.cs" />
+    <Compile Include="Dal\SJICMOOrderListDal.cs" />
+    <Compile Include="Data\LabelPrintDAL.cs" />
+    <Compile Include="Dal\t_CheckNewDal.cs" />
+    <Compile Include="Data\UserDAL.cs" />
+    <Compile Include="Data\UserInformationDAL.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Dal\CommonDal.cs" />
+    <Compile Include="Dal\ICItemMappingDal.cs" />
+    <Compile Include="Dal\IcmoDal.cs" />
+    <Compile Include="Dal\ICMO_OrderListDal1.cs" />
+    <Compile Include="Dal\ICMO_OrderListDal.cs" />
+    <Compile Include="Dal\ICQCBillDal.cs" />
+    <Compile Include="Dal\ICStockBillDal.cs" />
+    <Compile Include="Dal\SqlHelper.cs" />
+    <Compile Include="Dal\t_CheckEntryDal.cs" />
+    <Compile Include="Dal\t_CheckDal.cs" />
+    <Compile Include="Dal\t_FACardDal.cs" />
+    <Compile Include="Dal\t_ICItemDal.cs" />
+    <Compile Include="Dal\t_LabelDal.cs" />
+    <Compile Include="Dal\t_OrganizationDal.cs" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{ecbf6f9e-26e7-4ae0-b3df-1897ba14b4d9}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

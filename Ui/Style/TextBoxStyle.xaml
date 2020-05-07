@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="TextBox" x:Key="TextBoxStyle" BasedOn="{x:Null}">
+        <Setter Property="Height" Value="26"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="11.5"/>
+        <Setter Property="Foreground" Value="Purple"/>
+        <Setter Property="Padding" Value="5 0 0 0"/>
+        <!--<Setter Property="FontFamily" Value="微软雅黑"/>-->
+        <!--<Setter Property="TextAlignment" Value="Center"/>-->
+        <!--<Setter Property="Background" Value="AliceBlue"/>-->
+    </Style>
+</ResourceDictionary>

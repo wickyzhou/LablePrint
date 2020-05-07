@@ -1,0 +1,122 @@
+﻿<Window x:Class="Ui.View.LabelPrintPrintCountModifyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       Style="{StaticResource WindowStyleLevel1}" Title="打印数据-修改">
+
+
+
+    <Grid x:Name="DataGrid" Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition ColumnDefinition.Width="120" />
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition ColumnDefinition.Width="120" />
+            <ColumnDefinition ColumnDefinition.Width="288*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition RowDefinition.Height="35" />
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="30" />
+            <!--打印张数-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25"/>
+            <!--生产日期-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--有效期-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--客户编号-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--标签型号-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--客户料号-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--客户订单号-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--检验号-->
+            <RowDefinition RowDefinition.Height="0" />
+            <RowDefinition RowDefinition.Height="0" />
+            <!--打印总数-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--备注-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--二维码-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <!--id-->
+            <RowDefinition RowDefinition.Height="8" />
+            <RowDefinition RowDefinition.Height="25" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.ColumnSpan="5" HorizontalAlignment="Left" Width="800" Grid.Row="0"  VerticalAlignment="Top" 
+                Grid.RowSpan="3"   Orientation="Horizontal">
+
+        </StackPanel>
+
+
+        <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="打印张数：" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="生产批号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="生产日期：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="任务单号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="有效期至：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="产品型号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="10" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="客户编号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="产品名称：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="12" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="标签型号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="10" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="包装桶：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="14" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="客户料号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="12" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="毛重：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="16" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="客户订单号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="14" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="净重：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="序号：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="16" Grid.Column="2" HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="修改日期：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="20" Grid.Column="0"  HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="备注：" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="22" Grid.Column="0"  HorizontalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap" Text="二维码：" VerticalAlignment="Center"/>
+
+
+        <TextBox x:Name="LastPrintCount" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="2" Text="{Binding PrintCount}" VerticalAlignment="Center" Width="260"  Focusable="True"
+                 FontSize="12" VerticalContentAlignment="Center" Padding="5,0,0,0" Background="GhostWhite"/>
+
+
+        <Button Grid.Row="2" Grid.Column="1" Name="BtnSave" Content="保存" Style="{StaticResource BtnSuccessStyle}" 
+                    Click="BtnSave_Click" MaxHeight="30" HorizontalAlignment="Right" Margin="0,3,119,0" Grid.ColumnSpan="2" VerticalAlignment="Top"  ToolTip="填写了序号，打印张数系统默认为1"/>
+
+
+        <TextBox x:Name="BatchNo" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="2" Text="{Binding BatchNo}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="ProductionDate" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="6" Text="{Binding ProductionDate,StringFormat=yyyy-MM-dd}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow" Grid.ColumnSpan="2" Margin="1,0,0,0"/>
+        <TextBox x:Name="WorkNo" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="4" Text="{Binding WorkNo}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="ExpirationDate" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="8" Text="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0" Background="LightYellow" />
+        <TextBox x:Name="ProductionModel" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="6" Text="{Binding ProductionModel}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="OrgID" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="10" Text="{Binding OrgID}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow" Margin="0,2,0,6" Grid.RowSpan="2"/>
+        <TextBox x:Name="ProductionName" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="8" Text="{Binding ProductionName}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="Label" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="12" Text="{Binding Label}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow" Grid.ColumnSpan="2" Margin="1,2,0,6" Grid.RowSpan="2"/>
+        <TextBox x:Name="Package" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="10" Text="{Binding Package}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="OrgCode" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="14" Text="{Binding OrgCode}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow" Margin="0,2,0,6" Grid.RowSpan="2"/>
+        <TextBox x:Name="RoughWeight" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="12" Text="{Binding RoughWeight}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="OrgOrderNo" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="16" Text="{Binding OrgOrderNo}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow" Margin="0,2,0,6" Grid.RowSpan="2"/>
+        <TextBox x:Name="NetWeight" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="14" Text="{Binding NetWeight}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="Seq" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="4" Text="{Binding Seq}" VerticalAlignment="Center" Width="220" FontSize="12"  VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="GhostWhite" Margin="1,2,0,6" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
+        <Button Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right" Name="BtnClear" Click="BtnClear_Click" Content="&#xe72a;" Style="{StaticResource SubIconButton1}" Margin="0 0 0 0"  ToolTip="清空数值" FontSize="26" 
+                Width="40"/>
+
+
+        <TextBox x:Name="ModifyTime" Grid.Column="3" HorizontalAlignment="Left" Height="25" Grid.Row="16" Text="{Binding ModifyTime,StringFormat=yyyy-MM-dd HH:mm:ss.fff}" VerticalAlignment="Center" Width="260" FontSize="12" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0"  Background="LightYellow"/>
+        <TextBox x:Name="Note" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="20" Text="{Binding Note}" VerticalAlignment="Center" Width="640" FontSize="12" Grid.ColumnSpan="4" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0" Background="LightYellow"/>
+
+        <TextBox x:Name="TwoDimensionCode" Grid.Column="1" HorizontalAlignment="Left" Height="25" Grid.Row="22"  TextWrapping="NoWrap" VerticalAlignment="Center" Width="640" FontSize="12" Grid.ColumnSpan="4" IsReadOnly="True" VerticalContentAlignment="Center" Padding="5,0,0,0" Background="LightYellow" Text="{Binding TwoDimensionCode}" />
+
+        <TextBox x:Name="ID" IsReadOnly="True" Grid.Column="0" Grid.Row="24"  FontSize="12"  Height="22" 
+                 HorizontalAlignment="Center" Width="80" Background="LightYellow" Text="{Binding ID}" Opacity="0.05" />
+    </Grid>
+
+
+</Window>

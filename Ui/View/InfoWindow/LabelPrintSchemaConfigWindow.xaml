@@ -1,0 +1,51 @@
+﻿<Window x:Class="Ui.View.InfoWindow.LabelPrintSchemaConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:local="clr-namespace:Ui.View.InfoWindow"
+      Style="{StaticResource WindowStyleLevel1}" Title="方案设置" >
+
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid  Grid.Row="0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Name="SchemaManager" Content="方案管理" Style="{StaticResource BtnThemeStyle}" Margin="40 0 30 0" Click="SchemaManager_Click" ToolTip="新增、删除、修改方案"/>
+                    <TextBlock Text="我的方案" Style="{StaticResource TextBlockStyle}" />
+                    <ComboBox  Name="CbRequestName" Style="{StaticResource ComboBoxStyle}" MaxWidth="300"
+                              Width="250" DisplayMemberPath="SchemaName" SelectedValuePath="SchemaSeq" 
+                              Margin="10 0 0 0" SelectionChanged="CbRequestName_SelectionChanged"
+                               >
+                    </ComboBox>
+
+                    <Button x:Name="BtnDelete" Content="删除已选条件" Style="{StaticResource BtnDangerStyle}" Margin="50 0 0 0" HorizontalAlignment="Left" Click="BtnDelete_Click" Width="120"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid  Grid.Row="1">
+            <DataGrid x:Name="MainDataGrid" Style="{StaticResource DGStyle}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn DataGridColumn.Header="方案序号" DataGridBoundColumn.Binding="{Binding ContentTrans}" 
+                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                    <DataGridTextColumn DataGridColumn.Header="方案名称" DataGridBoundColumn.Binding="{Binding SchemaName}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="2*" />
+                    <DataGridTextColumn DataGridColumn.Header="排除条件" DataGridBoundColumn.Binding="{Binding IsConditionOut}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                    <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+
+                    <DataGridTextColumn DataGridColumn.Header="客户ID" DataGridBoundColumn.Binding="{Binding OrgId}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="标签" DataGridBoundColumn.Binding="{Binding Label}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="添加时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

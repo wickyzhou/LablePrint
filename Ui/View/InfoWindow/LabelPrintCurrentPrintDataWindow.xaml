@@ -1,0 +1,104 @@
+﻿<Window x:Class="Ui.View.LabelPrintCurrentPrintDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      Style="{StaticResource WindowStyleLevel1}" Title="打印记录">
+
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="175*"/>
+                <ColumnDefinition Width="71*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="30,0">
+                <Button Name="BtnPrint" Content="顺序打印" Style="{StaticResource BtnSuccessStyle}" Margin="0 0 50 0" 
+                    Click="BtnPrint_Click" ToolTip="界面顺序打印，参数同主界面,按顺序从小到大打印" />
+
+                <TextBlock  Text="生产日期"  VerticalAlignment="Center" HorizontalAlignment="Center" 
+                           TextAlignment="Center"  Foreground="#444"  Margin="10 0 8 0"/>
+                <DatePicker   Name="DP1" SelectedDateChanged="DP1_SelectedDateChanged" Width="110"
+                              SelectedDate="{x:Static sys:DateTime.Now}" Style="{StaticResource DatePickerStyle}"  />
+                <TextBlock   Text="用户" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                           TextAlignment="Center"   Margin="70 0 8 0" />
+                <ComboBox  Name="CbUser" DisplayMemberPath="UserName" SelectedValuePath="ID" Width="100"
+                      SelectionChanged="CbUser_SelectionChanged" Style="{StaticResource ComboBoxStyle}"  Margin="0 0 0 0"/>
+                <TextBlock    Text="打印状态" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                           TextAlignment="Center"  Foreground="#444"  Margin="70 0 8 0"/>
+                <ComboBox  Name="CbPrintStatus" Width="100"
+                      SelectionChanged="CbPrintStatus_SelectionChanged" Style="{StaticResource ComboBoxStyle}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Background="AntiqueWhite" Header="未打印(删除后可重选)" Margin="40 0" Foreground="Purple">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Name="BtnDelete" Content="删除(行)" Style="{StaticResource BtnWarningStyle}" Margin="0 0 0 0" 
+                    Click="BtnDelete_Click" ToolTip="删除选中的单条未打印记录"/>
+
+                    <Button Name="BtnBatchDelete" Content="删除(批)" Style="{StaticResource BtnWarningStyle}" Margin="40 0 0 0" 
+                    Click="BtnBatchDelete_Click" ToolTip="全部清空本用户未打印数据(无需选中数据)"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Background="AntiqueWhite" Header="已打印(还原打印计数)" Margin="20 0" Foreground="Purple">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Name="BtnCreateTimeDelete" Content="按时间删除" Style="{StaticResource BtnWarningStyle}" Margin="30 0 0 0" 
+                    Click="BtnCreateTimeDelete_Click" ToolTip="删除选中的记录【添加时间】对应的所有记录"/>
+                    <Button Name="BtnBatchNoDelete" Content="批号删除" Style="{StaticResource BtnWarningStyle}" Margin="30 0 0 0" 
+                    Click="BtnBatchNoDelete_Click" ToolTip="删除选中的记录【添加时间】【批号】对应的所有记录"/>
+                    <Button Name="BtnSingleRowDelete" Content="按工单删除" Style="{StaticResource BtnWarningStyle}" Margin="30 0 0 0" 
+                    Click="BtnSingleRowDelete_Click" ToolTip="仅删除选中的记录，一次删一条"/>
+                </StackPanel>
+            </GroupBox>
+
+
+
+        </Grid>
+        <Grid Grid.Row="2">
+            <DataGrid Name="MainDataGrid" Style="{StaticResource DGStyle}"  CellEditEnding="MainDataGrid_CellEditEnding">
+                <DataGrid.Columns>
+                    <DataGridTextColumn DataGridColumn.Header="顺序" DataGridBoundColumn.Binding="{Binding PrintOrder}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="添加时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss.fff}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding Seq}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="标签" DataGridBoundColumn.Binding="{Binding Label}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="80" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="张数" DataGridBoundColumn.Binding="{Binding PrintCount}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="有效月" DataGridBoundColumn.Binding="{Binding ExpirationMonth}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="打印状态" DataGridBoundColumn.Binding="{Binding PrintStatus}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="任务单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="历史ID" DataGridBoundColumn.Binding="{Binding LabelPrintHistoryID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="工单号" DataGridBoundColumn.Binding="{Binding WorkNo}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="批次最大序号" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="危险成分" DataGridBoundColumn.Binding="{Binding DangerousIngredient}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="危险性说明" DataGridBoundColumn.Binding="{Binding DangerousComment}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+
+
+</Window>

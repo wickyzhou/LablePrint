@@ -1,0 +1,37 @@
+﻿<Window x:Class="Ui.View.LabelPrintTemplateRefWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          Style="{StaticResource WindowStyleLevel1}" Title="打印参照">
+
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="Transparent" Margin="0 12 2 10">
+            <ComboBox  Name="CbTableName"  Width="150"  Height="26"  Margin="10 2 0 0"  MaxWidth="300"
+                   HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Style="{StaticResource ComboBoxStyle}"
+                     SelectionChanged="CbTableName_SelectionChanged"   />
+        </Grid>
+
+        <Grid  Grid.Row="1" MinHeight="350" MaxHeight="360" >
+            <DataGrid x:Name="DG1" Style="{StaticResource DGStyle}" SelectionChanged="DG1_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn DataGridColumn.Header="系统ID" DataGridBoundColumn.Binding="{Binding ID}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                    <DataGridTextColumn DataGridColumn.Header="模块名称" DataGridBoundColumn.Binding="{Binding ModuleName}" Width="3*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                    <DataGridTextColumn DataGridColumn.Header="数据库表" DataGridBoundColumn.Binding="{Binding ModuleTable}"  Width="3*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                    <DataGridTextColumn DataGridColumn.Header="字段描述" DataGridBoundColumn.Binding="{Binding TemplateFieldDesc}" Width="2*" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="OrangeRed"/>
+                    <DataGridTextColumn DataGridColumn.Header="模板上填写的数据源名称" DataGridBoundColumn.Binding="{Binding TemplateFieldName}" Width="3*" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="OrangeRed"/>
+                    <DataGridTextColumn DataGridColumn.Header="示例数据" DataGridBoundColumn.Binding="{Binding Example}" Width="3*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+    </Grid>
+</Window>

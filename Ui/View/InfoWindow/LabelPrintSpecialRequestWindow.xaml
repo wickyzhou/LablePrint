@@ -1,0 +1,112 @@
+﻿<Window x:Class="Ui.View.LabelPrintSpecialRequestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cvt="clr-namespace:Ui.Converters"
+        mc:Ignorable="d"       Style="{StaticResource WindowStyleLevel1}" DataContext="{Binding}" Title="特殊要求">
+    <Window.Resources>
+        <cvt:BoolConverter x:Key="cvtBool"/>
+    </Window.Resources>
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"  Margin="0 5 0 0"  DataContext="{Binding ElementName=MainDataGrid,Path=SelectedItem,Mode=OneWay}">
+
+            <Grid  Margin="0 10 0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="类型" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockStyle15}"  Foreground="Blue" />
+                <ComboBox Grid.Row="0"  Grid.Column="1" Grid.ColumnSpan="2" Name="CbIdentType" Style="{StaticResource ComboBoxStyle}"
+                              MaxWidth="400" DisplayMemberPath="IdentityTypeDesc" SelectedValuePath="IdentityType" SelectionChanged="CbIdentType_SelectionChanged"
+                              Text="{Binding IdentityTypeDesc,UpdateSourceTrigger=Explicit}" >
+                </ComboBox>
+                <TextBlock Text="客户\标签" Grid.Row="0" Grid.Column="4" Style="{StaticResource TextBlockStyle15}"  Foreground="Blue"/>
+                <TextBox x:Name="TbOrgID" Text="{Binding OrgID,UpdateSourceTrigger=Explicit}" Grid.Row="0" Grid.Column="5" Style="{StaticResource TextBoxStyle}" BorderThickness="1 1 0 1" MinWidth="100"/>
+                <TextBox x:Name="TbLabel" Text="{Binding Label,UpdateSourceTrigger=Explicit}" Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Style="{StaticResource TextBoxStyle}"
+                             MinWidth="150" HorizontalAlignment="Left"/>
+
+                <TextBlock Text="名称" Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockStyle15}"  Foreground="Blue"/>
+                <ComboBox Grid.Row="2"  Grid.Column="1" Grid.ColumnSpan="2" Name="CbRequestName" Style="{StaticResource ComboBoxStyle}"
+                              MaxWidth="400" DisplayMemberPath="RequestName" SelectedValuePath="IdentityType" 
+                              Text="{Binding RequestName,UpdateSourceTrigger=Explicit}"  >
+                </ComboBox>
+
+                <Button Name="BtnAddRequestName" Grid.Row="2"  Grid.Column="3" Content="&#xe71e;" FontFamily="{StaticResource Iconfont1}" Style="{StaticResource SubGridButton}" ToolTip="新增名称" Click="BtnAddRequestName_Click" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="30" />
+
+                <TextBlock Text="固定值" Grid.Row="2"  Grid.Column="4" Style="{StaticResource TextBlockStyle15}" />
+
+
+                <!--<CheckBox Name="Chb" Grid.Row="2"  Grid.Column="5" IsChecked="{Binding IsFixedValue,UpdateSourceTrigger=Explicit}"
+                              Style="{StaticResource CheckBoxStyle}" Margin="2 0 0 0"  Click="Chb_Click"/>-->
+                <TextBox x:Name="TbRequestValue" Grid.Row="2"  Grid.Column="5" Grid.ColumnSpan="3"  Text="{Binding RequestValue,UpdateSourceTrigger=Explicit}" Margin="0 0 0 0" Style="{StaticResource TextBoxStyle}" MinWidth="300"
+                         HorizontalAlignment="Left"/>
+
+
+                <TextBox x:Name="TbID"  Grid.Row="0"  Grid.Column="0" Text="{Binding ID,UpdateSourceTrigger=Explicit}" Margin="360 105 0 0" Style="{StaticResource TextBoxStyle}" Width="50" TextAlignment="Center" IsReadOnly="True" BorderThickness="0" Opacity="0.8"
+                         Panel.ZIndex="999"/>
+            </Grid>
+
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="485*"/>
+                <ColumnDefinition Width="289*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" Margin="50,3,0,3">
+
+                <Button Name="BtnAdd"  Content="&#xe728;" Style="{StaticResource SubIconButton1}" Margin="0 0 0 0"  ToolTip="新增" Click="BtnAdd_Click" FontSize="26"/>
+                <Button Name="BtnUpdate"  Content="&#xe63c;" Style="{StaticResource SubIconButton1}" Margin="10 0 0 0"  ToolTip="保存修改" Click="BtnUpdate_Click"/>
+                <Button Name="BtnDelete"   Content="&#xe61e;" Style="{StaticResource SubIconButton1}" Margin="10 0 0 0"  ToolTip="删除" Click="BtnDelete_Click"/>
+
+
+                <Button Name="BtnQuery"   Content="&#xe62f;"  Style="{StaticResource SubButtonIconFont1}" Margin="10 0 0 2"  ToolTip="查询"  FontSize="24" 
+                            IsDefault="True" Click="BtnQuery_Click"/>
+
+                <Button Name="BtnRefresh" Click="BtnRefresh_Click" Content="&#xe647;" Style="{StaticResource SubIconButton1}" Margin="10 1 0 0"  ToolTip="刷新" FontSize="26.5" />
+
+                <Button Name="BtnClear" Click="BtnClear_Click" Content="&#xe72a;" Style="{StaticResource SubIconButton1}" Margin="10 1 0 0"  ToolTip="清空数值" FontSize="27" />
+            </StackPanel>
+        </Grid>
+
+        <Grid  Grid.Row="2" Margin="0 5 0 0">
+            <DataGrid Style="{StaticResource DGStyle}" x:Name="MainDataGrid" ItemsSource="{Binding}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn DataGridColumn.Header="ID" DataGridBoundColumn.Binding="{Binding ID}" 
+                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="40" />
+                    <DataGridTextColumn DataGridColumn.Header="类型" DataGridBoundColumn.Binding="{Binding IdentityTypeDesc}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="150" />
+                    <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding RequestName}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding OrgID}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                 
+                    <DataGridTextColumn DataGridColumn.Header="数值" DataGridBoundColumn.Binding="{Binding RequestValue}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+
+                    <!--<DataGridTextColumn DataGridColumn.Header="固定值" DataGridBoundColumn.Binding="{Binding IsFixedValue,Converter={StaticResource cvtBool}}" HeaderStyle="{StaticResource DGColumnHeader}" Width="50" />-->
+     
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ECBF6F9E-26E7-4AE0-B3DF-1897BA14B4D9}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>Model</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Model\BatchNoPrintTotalModel.cs" />
+    <Compile Include="Model\CbIdentTypeModel.cs" />
+    <Compile Include="Model\CbRequestNameModel.cs" />
+    <Compile Include="Model\CrystalPrintConfigModel.cs" />
+    <Compile Include="Model\CustomerModel.cs" />
+    <Compile Include="Model\EnumModel.cs" />
+    <Compile Include="Model\LabelPrintCommonAdjustmentModel.cs" />
+    <Compile Include="Model\LabelPrintCurrencyModel.cs" />
+    <Compile Include="Model\LabelPrintSpecialRequestModel.cs" />
+    <Compile Include="Model\MainMenuModel.cs" />
+    <Compile Include="Model\NotificationObject.cs" />
+    <Compile Include="Model\PageSizeModel.cs" />
+    <Compile Include="Model\PrintSchemaParameterModel.cs" />
+    <Compile Include="Model\PrintTemplateRefModel.cs" />
+    <Compile Include="Model\ProductionClassModel.cs" />
+    <Compile Include="Model\ProductiveTaskListModel.cs" />
+    <Compile Include="Model\QuerySchemaConfigModel.cs" />
+    <Compile Include="Model\QuerySchemaDynamicBtnModel.cs" />
+    <Compile Include="Model\QuerySchemaEntryModel.cs" />
+    <Compile Include="Model\QuerySchemaModel.cs" />
+    <Compile Include="Model\QuerySchemaSeqModel.cs" />
+    <Compile Include="Model\SellOrderListModel.cs" />
+    <Compile Include="Model\BucketModel.cs" />
+    <Compile Include="Model\UserInformationModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Model\UserRoleModel.cs" />
+    <Compile Include="Model\OrganizationModel.cs" />
+    <Compile Include="Model\PageOwnerModel.cs" />
+    <Compile Include="SJICMOOrderList.cs" />
+    <Reference Include="System" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Model\ICItemMapping.cs" />
+    <Compile Include="Model\ICMO.cs" />
+    <Compile Include="Model\ICMO_OrderList1.cs" />
+    <Compile Include="Model\ICMO_OrderList.cs" />
+    <Compile Include="Model\ICQCBill.cs" />
+    <Compile Include="Model\ICStockBill.cs" />
+    <Compile Include="Model\LabelPrintHistoryModel.cs" />
+    <Compile Include="Model\t_CheckEntry.cs" />
+    <Compile Include="Model\t_Check.cs" />
+    <Compile Include="Model\t_CheckNew.cs" />
+    <Compile Include="Model\t_FACard.cs" />
+    <Compile Include="Model\t_ICItem.cs" />
+    <Compile Include="Model\t_Label.cs" />
+    <Compile Include="Model\t_Organization.cs" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup />
+</Project>

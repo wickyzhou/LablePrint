@@ -1,0 +1,56 @@
+﻿<Window x:Class="Ui.View.LabelPrintHelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          Style="{StaticResource WindowStyleLevelLast}">
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <RichTextBox Padding="10 20 10 10" VerticalScrollBarVisibility="Visible">
+            <FlowDocument>
+                <Section>
+                    <Paragraph>
+                        <Bold>【打印参照】</Bold> 根据模板名称查看其对应的字段名称，“单击”行，选中时行颜色变绿色（此时系统已将需要的字段数据复制到了剪切板，打开Tender模板，CTRL+V粘贴到 数据源--名称栏位）。如果选中行没有将数据复制到剪切板，则双击{模板上添加数据源名称}，CTRL+A CTRL+C ,CTRL+V粘贴到 数据源--名称栏位
+                    </Paragraph>
+
+                    <Paragraph>
+                        <Bold>【方案配置】</Bold> “新增”方案名称、“查看”“删除” 方案条件明细。
+                    </Paragraph>
+                    <Paragraph>
+                        <Bold>【打印记录】</Bold> 通过查询方案或者勾选某条记录添加的数据集合，未打印状态下的记录可以删除，只能看到本用户操作的结果数据。（不同登录用户数据独立，打印的时候只打印登录用户的数据）
+                    </Paragraph>
+                    <Paragraph>
+                        <Bold>【通用调整】</Bold> 打印模板中，需要单独取数的字段值。目前调整字段有：产品名称、截止日期、有效月份
+                    </Paragraph>
+
+                    <Paragraph>
+                        <Bold>【特殊调整】</Bold> 打印模板中，将调整的数据合并为一个字段值。以客户和标签区分，如果只要按客户区分，则标签栏位不需要填写。
+                    </Paragraph>
+                    <Paragraph>
+                        <Bold>【查询框】</Bold> 组合筛选数据，Enter键确认，如果查询条件数据都属于某个模板，可以将其添加到对应图标的方案中，【方案设置】里面可以查询所有添加的条件。
+                    </Paragraph>
+                    <Paragraph>
+                        <Bold>【重选】</Bold> 默认情况下同一天的数据，多次添加只会添加一次到【打印记录】，如遇补打调整可以用此功能添加至【打印记录】
+                    </Paragraph>
+
+                    <Paragraph>
+                        <Bold>【文件夹】</Bold> 选择打印模板所在的文件夹，动态生成【模板】下拉选项
+                    </Paragraph>
+
+                    <Paragraph>
+                        <Bold>【模板】</Bold> 选择待打印的Tender模板
+                    </Paragraph>
+
+                    <Paragraph>
+                        <Bold>【打印】</Bold> 读取【打印记录】中对应本界面上{生产日期} 当天的未打印数据、【模板】【打印机】打印标签
+                    </Paragraph>
+                    <Paragraph>
+                        <Bold>【数字图标 1-N】</Bold> “单击”图标序号将查询条件增加到方案明细，“双击”图标序号将符合该方案条件的数据全部增加到【打印记录】,获取条件字体为橙红色,多个条件之间为 "AND" 关系。
+                        同一个条件可以加入到多个方案里面，同一个方案不允许相同的条件。注意看提示！
+                    </Paragraph>
+                </Section>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+
+</Window>

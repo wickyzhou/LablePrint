@@ -1,0 +1,50 @@
+﻿<Page x:Class="Ui.View.IndexPage.ProductionDeptIndexPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="800">
+
+
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Background="Red" Width="230" Height="230" Margin="15" Opacity="0.8">
+                <Canvas Width="100" Height="100" Background="White" Margin="80">
+                    <StackPanel>
+                        <TextBox x:Name="tbBucketCount" Text="0" Height="50" Width="50" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                         FontSize="26" HorizontalContentAlignment="Center" Margin="25 10 0 0" BorderThickness="0"/>
+                        <Button x:Name="BtnSyncBucket" Content="新 桶" Margin="25 -5 0 0" IsEnabled="False" Height="30"/>
+                    </StackPanel>
+                </Canvas>
+            </StackPanel>
+
+            <StackPanel Background="LightYellow" Width="250" Margin="10">
+                <Grid Height="280" >
+                    
+                    <Button Name="BtnModifyDate" Content="生成领料时间更新" Style="{StaticResource BtnSuccessStyle}" Width="150"  Click="BtnModifyDate_Click" Height="50"
+                        VerticalAlignment="Center"/>
+                </Grid>
+          
+            </StackPanel>
+
+            <StackPanel Background="Coral" Width="200" Height="200" Margin="10" Opacity="0.8">
+            </StackPanel>
+            
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+
+            <StackPanel Background="Green"  Width="220" Height="220" Margin="15" Opacity="0.8">
+
+            </StackPanel>
+
+            <StackPanel Background="Yellow"  Width="230" Height="230" Margin="10" Opacity="0.8" >
+
+            </StackPanel>
+
+            <StackPanel Background="Aqua" Width="240" Height="240" Margin="10" Opacity="0.8" >
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Page>

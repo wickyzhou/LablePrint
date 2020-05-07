@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5EEF5E57-58FF-47EE-BC51-2B0DFF5EEA33}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>Bll</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Bll\IniAccessor.cs" />
+    <Compile Include="Bll\Services\BucketService.cs" />
+    <Compile Include="Bll\Services\CrystalPrintConfigService.cs" />
+    <Compile Include="Bll\Services\CustomerService.cs" />
+    <Compile Include="Bll\Services\LabelPrintService.cs" />
+    <Compile Include="Bll\Services\MainWindowService.cs" />
+    <Compile Include="Bll\Services\OrganizationService.cs" />
+    <Compile Include="Bll\Services\PrintTemplateService.cs" />
+    <Compile Include="Bll\Services\ProductiveTaskListService.cs" />
+    <Compile Include="Bll\Services\UserInformationService.cs" />
+    <Compile Include="Bll\Services\UserService.cs" />
+    <Compile Include="Bll\SJICMOOrderListBll.cs" />
+    <Compile Include="Bll\SJPrintBLL.cs" />
+    <Compile Include="Bll\t_CheckNewBll.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Bll\CommonBll.cs" />
+    <Compile Include="Bll\ICItemMappingBll.cs" />
+    <Compile Include="Bll\IcmoBll.cs" />
+    <Compile Include="Bll\ICMO_OrderListBll1.cs" />
+    <Compile Include="Bll\ICMO_OrderListBll.cs" />
+    <Compile Include="Bll\ICQCBILLBll.cs" />
+    <Compile Include="Bll\ICStockBillBll.cs" />
+    <Compile Include="Bll\t_CheckEntryBll.cs" />
+    <Compile Include="Bll\t_CheckBll.cs" />
+    <Compile Include="Bll\t_FACardBll.cs" />
+    <Compile Include="Bll\t_ICItemBll.cs" />
+    <Compile Include="Bll\t_LabelBll.cs" />
+    <Compile Include="Bll\t_OrganizationBll.cs" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{bf24549d-b9ff-476b-9f1a-31c4a5cafa1c}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dal\Dal.csproj">
+      <Project>{d88de002-c363-4fa2-b390-8ff31e9d7b84}</Project>
+      <Name>Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{ecbf6f9e-26e7-4ae0-b3df-1897ba14b4d9}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

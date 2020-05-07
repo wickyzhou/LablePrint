@@ -1,0 +1,27 @@
+﻿<Window x:Class="Ui.View.HelpWindow.LabelPrintSchemaConfigHelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Style="{StaticResource WindowStyleLevelLast}" >
+
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <RichTextBox Padding="10 20 10 10" VerticalScrollBarVisibility="Visible" >
+            <FlowDocument>
+
+                <Paragraph  Margin="5 15 0 0">
+                    <Bold>【方案管理】：</Bold>设置方案名称，某方案对应的序号，即为主界面的【1-N】数字按钮
+                </Paragraph>
+
+                <Paragraph  Margin="5 20 0 0">
+                    <Bold>【我的方案】：</Bold> 目前已设置的方案名称，如果为空，则必须进【方案管理】配置。选取不同的方案，展示改方案中已确认的查询条件
+                </Paragraph>
+
+                <Paragraph  Margin="5 20 0 0">
+                    <Bold>【删除已选条件】：</Bold> 选择明细行，变绿，则可删除行
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</Window>

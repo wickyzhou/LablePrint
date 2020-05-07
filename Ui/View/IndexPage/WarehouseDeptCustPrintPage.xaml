@@ -1,0 +1,131 @@
+﻿<Page x:Class="Ui.View.IndexPage.WarehouseDeptCustPrintPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Ui.View.IndexPage"
+      mc:Ignorable="d"  Loaded="Page_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Style="{StaticResource ContentAreaGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4.5*"/>
+                <ColumnDefinition Width="5.5*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Background="LightYellow" Height="150" Padding="30 20 20 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                    <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="组织结构" Style="{StaticResource TextBlockStyle10}" />
+                    <ComboBox Name="CbOrganization"  Grid.Row="0" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}"
+                       DisplayMemberPath="ShortName" SelectedValuePath="Id" SelectionChanged="CbOrganization_SelectionChanged"      />
+                    <Button Name="BtnQuery" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Content="查询" Style="{StaticResource BtnInfoStyle}"
+                    Click="BtnQuery_Click" ToolTip="快捷键【Enter】" IsDefault="True" Height="30" HorizontalAlignment="Right"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="公司代码" Style="{StaticResource TextBlockStyle10}"/>
+                    <TextBox x:Name="tbCompanyCode" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxStyle}" ToolTip="默认输入【X】模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="公司名称" Style="{StaticResource TextBlockStyle10}"/>
+                    <TextBox x:Name="tbCompanyName" Grid.Row="1" Grid.Column="3" Style="{StaticResource TextBoxStyle}" ToolTip="默认输入【X】模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Background="LightYellow" Name="gpConfig" Padding="20 20 20 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="BtnPrint" Grid.Row="0" Grid.Column="0"   Content="打印" Style="{StaticResource BtnWarningStyle}"
+                    Click="BtnPrint_Click" ToolTip="仅打印第一个勾选行数据(绿色行)" Height="30" VerticalAlignment="Top" Margin="0 5 0 0" />
+
+                    <Button Name="BtnPrintPreview" Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"  Content="打印预览" Style="{StaticResource BtnInfoStyle}"
+                    Click="BtnPrintPreview_Click"  Height="30" VerticalAlignment="Center"/>
+
+                    <Button Name="BtnSave" Grid.Row="1" Grid.Column="0" Content="保存配置" Style="{StaticResource BtnSuccessStyle}" VerticalAlignment="Bottom" Margin="0 0 0 5" 
+                    Click="BtnSave_Click" ToolTip="保存打印配置参数" Height="30"/>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="打印机" Style="{StaticResource TextBlockStyle15}"/>
+                    <ComboBox Name="CbPrinter"  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="3"  Style="{StaticResource ComboBoxStyleAuto}" 
+                              Text="{Binding PrinterName,UpdateSourceTrigger=PropertyChanged}" SelectionChanged="CbPrinter_SelectionChanged"/>
+
+
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="纸张大小" Style="{StaticResource TextBlockStyle15}"/>
+                    <ComboBox Name="CbPaperSize"  Grid.Row="1" Grid.Column="2"  Style="{StaticResource ComboBoxStyleAuto}" 
+                              Text="{Binding PaperName,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="RawKind" DisplayMemberPath="PaperName"/>
+
+
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="纸张方向" Style="{StaticResource TextBlockStyle5}"/>
+                    <ComboBox Name="CbOrientation"  Grid.Row="1" Grid.Column="4"   Style="{StaticResource ComboBoxStyleAuto}"  
+                              Text="{Binding Orientation,UpdateSourceTrigger=PropertyChanged}"/>
+                    <GroupBox Grid.Row="0" Grid.Column="6" Grid.RowSpan="2" Header=" 页边距(单位：毫米) " Margin="20 0 0 0" Padding="0 0 10 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="上" Style="{StaticResource TextBlockStyle10}"/>
+                            <TextBox x:Name="tbTop" Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxStyle}" 
+                             Text="{Binding MarginTop,UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="下" Style="{StaticResource TextBlockStyle10}"/>
+                            <TextBox x:Name="tbBottom" Grid.Row="0" Grid.Column="3" Style="{StaticResource TextBoxStyle}" 
+                             Text="{Binding MarginBottom,UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="左" Style="{StaticResource TextBlockStyle10}"/>
+                            <TextBox x:Name="tbLeft" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxStyle}" 
+                             Text="{Binding MarginLeft,UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="右" Style="{StaticResource TextBlockStyle10}"/>
+                            <TextBox x:Name="tbRight" Grid.Row="1" Grid.Column="3" Style="{StaticResource TextBoxStyle}" 
+                             Text="{Binding MarginRight,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+              
+                    </GroupBox>
+                     
+
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="1"  Margin="0 2 0 0">
+            <DataGrid Name="MainDataGrid"  Height="700" Style="{StaticResource DGStyle}" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn DataGridColumn.Header="客户代码" DataGridBoundColumn.Binding="{Binding CustCode}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="100"/>
+                    <DataGridTextColumn DataGridColumn.Header="公司名称" DataGridBoundColumn.Binding="{Binding CustName}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="300" />
+                    <DataGridTextColumn DataGridColumn.Header="收货人" DataGridBoundColumn.Binding="{Binding ContactPerson}" HeaderStyle="{StaticResource DGColumnHeader}" Width="150"/>
+                    <DataGridTextColumn DataGridColumn.Header="收货人电话" DataGridBoundColumn.Binding="{Binding ContactTelephone}" HeaderStyle="{StaticResource DGColumnHeader}" Width="200"/>
+                    <DataGridTextColumn DataGridColumn.Header="收货地址" DataGridBoundColumn.Binding="{Binding ContactAddress}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </Grid>
+    </Grid>
+</Page>

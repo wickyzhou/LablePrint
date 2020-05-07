@@ -1,0 +1,489 @@
+﻿<Page x:Class="Ui.View.IndexPage.ProductionDeptLabelPrintPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Ui.View.IndexPage"
+      mc:Ignorable="d" 
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Loaded="Page_Loaded" Unloaded="Page_Unloaded">
+
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="10 0 0 0"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="Foreground" Value="Chocolate"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="Width" Value="85"/>
+            <Setter Property="FontFamily" Value="宋体"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border BorderBrush="{TemplateBinding Control.BorderBrush}"  CornerRadius="10" Name="PART_Background" BorderThickness="0">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                    <GradientStop Color="LightSeaGreen" Offset="0.0" />
+                                    <GradientStop Color="White" Offset="0.2" />
+                                    <GradientStop Color="White" Offset="0.8" />
+                                    <GradientStop Color="LightSeaGreen" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                                <Setter Property="Foreground" Value="Red"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter  Property="Background" Value="Red"/>
+                            </Trigger>
+
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="SubButton" BasedOn="{x:Null}">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="{StaticResource Iconfont}"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Foreground" Value="LightSeaGreen"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="4 0 6 0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="SeaGreen"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DatePickerTextBox" >
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="Text" Value="{}"/>
+        </Style>
+
+        <Style TargetType="{x:Type MenuItem}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="Wheat"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="3.5*"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 0 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Border  DockPanel.Dock="Top" Grid.Row="1" Grid.ColumnSpan="11" Background="LightSeaGreen" BorderThickness="0" CornerRadius="12 12 0 0">
+                <StackPanel />
+            </Border>
+
+
+
+            <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Name="BtnTemplateRef" FontFamily="宋体" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="-27 0 0 0" Height="33"
+                        Click="BtnTemplateRef_Click" >
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe612;" FontSize="13" FontFamily="{StaticResource Iconfont}" Margin="1 0 3 0"/>
+                        <TextBlock Text="打印参照" FontSize="13" Margin="1 1 3 0"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" 
+                            Name="BtnSchemeConfig"  FontWeight="Regular" FontFamily="宋体" VerticalContentAlignment="Center"
+                        Click="BtnSchemeConfig_Click" Width="85" Height="33" Margin="-20 0 0 0">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe662;" FontSize="15" FontFamily="{StaticResource Iconfont}" Margin="1 0 3 0"/>
+                        <TextBlock Text="方案设置" FontSize="13" Margin="1 1.5 3 0"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Row="0" Grid.Column="5" Name="BtnGenPrintData"  FontFamily="宋体" VerticalContentAlignment="Center" ToolTip="重新生成打印数据"
+                        Click="BtnGenPrintData_Click" Height="33" Margin="14,0,4,0" VerticalAlignment="Top">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe732;" FontSize="16" FontFamily="{StaticResource Iconfont}" Margin="1 -1.5 3 0"/>
+                        <TextBlock Text="生成数据" FontSize="13"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+
+
+            <Button Grid.Row="0" Grid.Column="7" Name="BtnShow"  FontFamily="宋体" VerticalContentAlignment="Center"
+                        Click="BtnShow_Click" Height="33" Margin="14,0,4,0" VerticalAlignment="Top">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe639;" FontSize="16" FontFamily="{StaticResource Iconfont}" Margin="1 -1.5 3 0"/>
+                        <TextBlock Text="打印记录" FontSize="13"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Row="0" Grid.Column="8" Name="BtnPrintAdjustment"  FontFamily="宋体" VerticalContentAlignment="Center"
+                        Click="BtnPrintAdjustment_Click" Height="33">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe786;" FontSize="15" FontFamily="{StaticResource Iconfont}" Margin="1 -1.2 3 0"/>
+                        <TextBlock Text="通用调整" FontSize="13"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="9" Name="BtnSpecialRequest"  FontFamily="宋体" VerticalContentAlignment="Center"
+                        Click="BtnSpecialRequest_Click" Height="33">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xe63d;" FontSize="16" FontFamily="{StaticResource Iconfont}" Margin="1 -1.5 3 0"/>
+                        <TextBlock Text="特殊要求" FontSize="13"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button Name="BtnHelp" Grid.Column="10" Style="{StaticResource BtnHelpStyle}" Height="33" VerticalAlignment="Center"
+                    Click="BtnHelp_Click"  FontSize="24" VerticalContentAlignment="Center" HorizontalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="1" Background="LightGray"/>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="14*"/>
+                <ColumnDefinition Width="16*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition RowDefinition.Height="5" />
+                    <RowDefinition RowDefinition.Height="30*" />
+                    <RowDefinition RowDefinition.Height="5" />
+                    <RowDefinition RowDefinition.Height="30*" />
+                    <RowDefinition RowDefinition.Height="5" />
+                    <RowDefinition RowDefinition.Height="30*" />
+                    <RowDefinition RowDefinition.Height="5" />
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="0,0" Opacity="0.5">
+                        <GradientStop Color="#12998e" Offset="0.0" />
+                        <GradientStop Color="#11998e" Offset="0.43" />
+                        <GradientStop Color="#11998e" Offset="0.53" />
+                        <GradientStop Color="#12998e" Offset="1" />
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <TextBlock Text="生产日期" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"  
+               
+                           TextAlignment="Center"  Foreground="White" FontFamily="宋体"  />
+
+                <DatePicker Name="DP1" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontSize="14" 
+                            VerticalContentAlignment="Center" Width="120" SelectedDateChanged="DP1_SelectedDateChanged"
+                              SelectedDate="{x:Static sys:DateTime.Now}" Margin="0,2"    Style="{StaticResource DatePickerStyle}"/>
+
+                <TextBlock HorizontalAlignment="Center" Grid.Row="3"  Grid.Column="0"  Text="生产批号" VerticalAlignment="Center"
+                                    Foreground="White" FontFamily="宋体" />
+
+                <TextBox Name="tbBatchNo" Grid.Column="1" HorizontalAlignment="Left" Height="26" Grid.Row="3" VerticalAlignment="Center" 
+                         Width="120" VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+
+                <TextBlock HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2"  Text="客户ID" VerticalAlignment="Center"
+                                    Foreground="White" FontFamily="宋体"/>
+
+                <TextBox Name="tbOrgID" Grid.Row="1" Grid.Column="3"   HorizontalAlignment="Left" Height="26" 
+                  VerticalAlignment="Center" Width="120" VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" 
+                         ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+
+                <TextBlock  HorizontalAlignment="Center" Grid.Row="3" Grid.Column="2" Text="产品型号" VerticalAlignment="Center"
+                                     Foreground="White" FontFamily="宋体" />
+
+                <TextBox  Name="tbProductionModel"  Grid.Row="3"  Grid.Column="5" Height="26"  Width="120" HorizontalAlignment="Left"
+                  Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,6,0,6" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+
+                <Grid Grid.Row="5" Grid.ColumnSpan="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="0" Text="标签型号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体"/>
+                    <TextBox  Name="tbLabel"  Grid.Column="1" HorizontalAlignment="Left" Height="26"  Width="100"
+       VerticalAlignment="Center"  VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="2" Text="安全编号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体" />
+                    <TextBox  Name="tbSafeCode"   Grid.Column="3" HorizontalAlignment="Left" Height="26"  
+                  Text="" VerticalAlignment="Center" Width="100"  VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
+                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="4" Text="排除条件" VerticalAlignment="Center"
+                                     Foreground="White" FontFamily="宋体" Margin="20 0 0 0"/>
+                    <CheckBox Name="checkBox" IsChecked="False"  Grid.Column="5" Style="{StaticResource CheckBoxStyle}" Grid.ColumnSpan="2"  HorizontalAlignment="Left" Margin="0 0 0 0" ToolTip="默认是关闭的，点击右置开启" />
+                </Grid>
+
+
+                <Button Name="BtnQuery" Content="查询"  Grid.Column="3"  HorizontalAlignment="Center"  
+                VerticalAlignment="Center" Width="60" Height="36"  IsDefault="True" Click="BtnQuery_Click" Margin="173,-5,-93,24" Grid.RowSpan="2" Opacity="0"  />
+
+            </Grid>
+
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition  Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="0,0" Opacity="0.5">
+                        <GradientStop Color="#12998e" Offset="0.0" />
+                        <GradientStop Color="#11998e" Offset="0.43" />
+                        <GradientStop Color="#11998e" Offset="0.53" />
+                        <GradientStop Color="#12998e" Offset="1" />
+                    </LinearGradientBrush>
+                </Grid.Background>
+
+                <StackPanel  Grid.Column="0"  VerticalAlignment="Center" >
+
+                    <Button x:Name="BtnGenQuerySchema" Content="生成方案"  Style="{StaticResource BtnWarningStyle}" Width="55" Height="30"   Click="BtnGenQuerySchema_Click" ToolTip="选择文件夹，将里面的模板自动生成查询方案，增量模式"  Margin="0,0,8,10"
+                            HorizontalAlignment="Center"/>
+
+                    <Button x:Name="BtnPrint"  Click="BtnPrint_Click" Width="60" Height="60" FontSize="22"
+                                VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 8 0">
+                        <StackPanel Orientation="Horizontal" Width="60">
+                            <TextBlock Text="&#xE6BB;" FontSize="16" FontFamily="{StaticResource Iconfont}" Margin="7 -1.5 0 0"/>
+                            <TextBlock Text="打印" FontSize="13"  Margin="3 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+
+                </StackPanel>
+
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="5" />
+                    </Grid.RowDefinitions>
+
+                    <Button  Grid.Row="1" Grid.Column="0" x:Name="BtnPrintTemplateFolder" Click="BtnPrintTemplateFolder_Click" 
+                                HorizontalContentAlignment="Center" Foreground="Chocolate" Height="30"
+                                 HorizontalAlignment="Center" Margin="0 0 6 0" Width="80" ToolTip="选择模板所在文件夹">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Width="60">
+                                <TextBlock Text="&#xe62f;" FontSize="17" FontFamily="{StaticResource Iconfont}" Margin="0 2 0 0"/>
+                                <TextBlock Text="文件夹" FontSize="13"  Margin="5 3 0 0"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <TextBox  Grid.Row="1" Grid.Column="1"  Name="tbFolderPath" Height="26"  Margin="0 0 8 0" HorizontalAlignment="Left" 
+                                    Background="AliceBlue" VerticalAlignment="Center" Width="300"
+                              IsReadOnly="True" VerticalContentAlignment="Center" Padding="13 0 0 0" Foreground="Purple"/>
+
+                    <Button Grid.Row="2" Grid.Column="0" Margin="0 0 6 0" ToolTip="点击刷新目录中模板" Width="80" 
+                            Height="30" Name="BtnRefreshTemplate" Click="BtnRefreshTemplate_Click">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Width="60" HorizontalAlignment="Left" >
+                                <TextBlock Text="&#xe8a5;" FontFamily="{StaticResource Iconfont}" FontSize="17" Margin="0 1 2 0"  />
+                                <TextBlock  Text="模板" FontSize="12"  Foreground="Chocolate" VerticalAlignment="Center" 
+                                            HorizontalAlignment="Left"  Margin="5 0 0 0"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="CbPrintTemplate"  Margin="0 0 8 0"  Style="{StaticResource ComboBoxStyle}" IsReadOnly="True" MaxWidth="350" HorizontalAlignment="Left" Width="300"/>
+
+                    <Button Name="BtnRefreshPrinter" Grid.Row="3" Grid.Column="0" Foreground="Chocolate" Height="30"  HorizontalAlignment="Center" Margin="0 0 6 0" Width="80" ToolTip="刷新已有打印机" Click="BtnRefreshPrinter_Click" >
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Width="60">
+                                <TextBlock Text="&#xe618;" FontSize="17" FontFamily="{StaticResource Iconfont}" Margin="0 -2.5 0 0" />
+                                <TextBlock Text="打印机" FontSize="13" Margin="5 1 0 0" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <StackPanel  Grid.Row="3" Grid.Column="1" Orientation="Horizontal" >
+                        <ComboBox Name="CbOrientation"   Style="{StaticResource ComboBoxStyle}"  IsReadOnly="True" Margin="0 0 30 0"  
+                      Width="70" MaxWidth="100"
+                              HorizontalAlignment="Left"/>
+                        
+                        <ComboBox Name="CbPrinterName"   Style="{StaticResource ComboBoxStyle}"  IsReadOnly="True"
+                      Width="200" MaxWidth="200"
+                              HorizontalAlignment="Left"/>
+
+                      
+                    </StackPanel>
+               
+
+                </Grid>
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="3" Background="LightGray"/>
+
+        <Grid  Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+                <ColumnDefinition  Width="50"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Button Name="BtnRefresh" Content="&#xe647;"  ToolTip="刷新表格数据" Style="{StaticResource SubIconButton}" Click="BtnRefresh_Click"/>
+                    <Button Name="BtnAddData" Content="&#xe728;"   ToolTip="添加待打印数据" Style="{StaticResource SubIconButton}" Click="BtnAddData_Click" Margin="5 0" />
+                    <Button Name="BtnModify" Content="&#xe63c;" ToolTip="修改选中数据" Style="{StaticResource SubIconButton}" Click="BtnModify_Click"/>
+                </StackPanel>
+
+            <StackPanel Grid.Column="1" x:Name="SpBtnN" Margin="20 0 0 3.5" Width="870" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" CanHorizontallyScroll="True">
+                <StackPanel.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                        <GradientStop Color="#11998e" Offset="0.0" />
+                        <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                        <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                        <GradientStop Color="#11998e" Offset="1" />
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <!--<Button Content="&#xe681;" FontFamily="/Resource/SchemaSeq/#iconfont" Margin="3 0"  ToolTip="测试" FontSize="20" Background="MediumPurple"  ClickMode="Press"/>-->
+            </StackPanel>
+            <TextBlock Grid.Column="2" x:Name="TbSum" Text="0" Style="{StaticResource TextBlockStyle15}" VerticalAlignment="Center" FontSize="13"/>
+        </Grid>
+   
+        <Grid Grid.Row="5" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="115*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
+        <DataGrid Name="MainDataGrid"   Grid.Row="6"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
+                      GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"  HeadersVisibility="Column">
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="24"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="false">
+                            <Setter Property="DataGridRow.Background" Value="Transparent"></Setter>
+                        </DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="LightYellow"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="true">
+                            <Setter Property="DataGridRow.Background" Value="Green"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.ItemContainerStyle>
+            
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="25"  HeaderStyle="{StaticResource DGColumnHeader}">
+                    <DataGridColumn.HeaderTemplate >
+                        <DataTemplate>
+                            <StackPanel>
+                                <CheckBox FrameworkElement.Name="checkAll" Checked="CheckAll_Checked" Unchecked="CheckAll_Unchecked" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}"  Height="16"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn DataGridColumn.Header="选择" DataGridBoundColumn.Binding="{Binding Selected}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="40"/>
+                <DataGridTextColumn DataGridColumn.Header="最近打印" DataGridBoundColumn.Binding="{Binding LastPrintTime,StringFormat=dd-HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="80"/>
+
+
+                <DataGridTextColumn DataGridColumn.Header="打印序号" DataGridBoundColumn.Binding="{Binding Seq}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="本次打印数" DataGridBoundColumn.Binding="{Binding PrintCount}" HeaderStyle="{StaticResource DGColumnHeader}" 
+                                    Foreground="#e80c07"  Width="60" FontWeight="Medium"/>
+
+                <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="生产批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}"  MaxWidth="140" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label}" MaxWidth="100" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                <DataGridTextColumn DataGridColumn.Header="客户料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth}" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                <DataGridTextColumn DataGridColumn.Header="客户订单号" DataGridBoundColumn.Binding="{Binding OrgBillNo}" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="桶包装" DataGridBoundColumn.Binding="{Binding Package}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="生产任务清单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" Visibility="Hidden" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="桶数" DataGridBoundColumn.Binding="{Binding BucketCount}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="任务单号" DataGridBoundColumn.Binding="{Binding WorkNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="最后生成时间" DataGridBoundColumn.Binding="{Binding ModifyTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="张数(批)" DataGridBoundColumn.Binding="{Binding BatchTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                <DataGridTextColumn DataGridColumn.Header="重打(批)" DataGridBoundColumn.Binding="{Binding BatchReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                <DataGridTextColumn DataGridColumn.Header="序号(批)" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+
+                <DataGridTextColumn DataGridColumn.Header="张数(行)" DataGridBoundColumn.Binding="{Binding WorkTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                <DataGridTextColumn DataGridColumn.Header="次数(行)" DataGridBoundColumn.Binding="{Binding WorkPrintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                <DataGridTextColumn DataGridColumn.Header="重打(行)" DataGridBoundColumn.Binding="{Binding WorkReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Page>

@@ -1,0 +1,125 @@
+﻿<Window x:Class="Ui.View.LabelPrintCommonAdjustmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Style="{StaticResource WindowStyleLevel1}" Title="通用调整">
+
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <DataGrid Name="DGViewModel" Grid.Column="0" Style="{StaticResource DGStyle}" SelectionChanged="DGViewModel_SelectionChanged" 
+                       Margin="0 5 0 0">
+            <DataGrid.Columns>
+                <DataGridTextColumn DataGridColumn.Header="ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" Width="40" Visibility="Hidden"/>
+                <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding OrgID}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}" HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                <DataGridTextColumn DataGridColumn.Header="有效天数" DataGridBoundColumn.Binding="{Binding ExpirationDay}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                <DataGridTextColumn DataGridColumn.Header="类型ID" DataGridBoundColumn.Binding="{Binding IdentityType}" HeaderStyle="{StaticResource DGColumnHeader}" Width="50" Visibility="Hidden"/>
+                <DataGridTextColumn DataGridColumn.Header="类型描述" DataGridBoundColumn.Binding="{Binding IdentityTypeDesc}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="67*"/>
+                <ColumnDefinition Width="15*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="350"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,15" >
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="8" Margin="3,0,3,0">
+
+                <Button Name="BtnAdd"  Content="&#xe728;" Style="{StaticResource SubIconButton1}" Margin="0 0 0 0"  ToolTip="新增" Click="BtnAdd_Click" FontSize="26"/>
+                <Button Name="BtnUpdate"  Content="&#xe63c;" Style="{StaticResource SubIconButton1}" Margin="5 0 0 0"  ToolTip="保存修改" Click="BtnUpdate_Click"/>
+                <Button Name="BtnDelete"   Content="&#xe61e;" Style="{StaticResource SubIconButton1}" Margin="5 0 0 0"  ToolTip="删除" Click="BtnDelete_Click"/>
+
+
+                <Button Name="BtnQuery"   Content="&#xe62f;"  Style="{StaticResource SubButtonIconFont1}" Margin="8 0 0 2"  ToolTip="查询"  FontSize="24" 
+                            IsDefault="True" Click="BtnQuery_Click"/>
+
+                <Button Name="BtnRefresh" Click="BtnRefresh_Click" Content="&#xe647;" Style="{StaticResource SubIconButton1}" Margin="5 1 0 0"  ToolTip="刷新" FontSize="26.5" />
+
+                <Button Name="BtnClear" Click="BtnClear_Click" Content="&#xe72a;" Style="{StaticResource SubIconButton1}" Margin="5 1 0 0"  ToolTip="清空数值" FontSize="27" />
+            </StackPanel>
+
+
+
+            <Grid Grid.Row="3" Name="SubGrid" DataContext="{Binding ElementName=DGViewModel,Path=SelectedItem}" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="79*"/>
+                    <ColumnDefinition Width="12*"/>
+                    <ColumnDefinition Width="13*"/>
+                    <ColumnDefinition Width="99*"/>
+                    <ColumnDefinition Width="100*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TbID"  Text="{Binding ID}" Grid.Row="5"  Grid.Column="0" Opacity="1" Grid.ColumnSpan="2"/>
+                <ComboBox Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="5" Name="CbIdentType" Style="{StaticResource ComboBoxStyle}"
+                              MaxWidth="220" DisplayMemberPath="IdentityTypeDesc" SelectedValuePath="IdentityType" SelectionChanged="CbIdentType_SelectionChanged"
+                              Text="{Binding IdentityTypeDesc,UpdateSourceTrigger=Explicit}" Margin="0,16,0,17" >
+                </ComboBox>
+                <TextBlock Grid.Row="1"  Grid.Column="0"  Text="客户ID" VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" FontSize="13" Foreground="Blue" Margin="26,21,13,21"/>
+                <TextBlock Grid.Row="2"  Grid.Column="0"  Text="标签型号" VerticalAlignment="Center"  
+                               HorizontalAlignment="Center"  FontSize="13" Foreground="Blue" Margin="20,21,7,20"/>
+                <TextBlock Grid.Row="3"  Grid.Column="0"  Text="产品名称" VerticalAlignment="Center"  
+                               HorizontalAlignment="Center"  FontSize="13" Margin="20,21,7,20"/>
+                <TextBlock Grid.Row="4"  Grid.Column="0"  Text="净重" VerticalAlignment="Center"  
+                               HorizontalAlignment="Center"  FontSize="13" Margin="32,21,21,20"/>
+                <TextBlock Grid.Row="5"  Grid.Column="0"  Text="有效期限" VerticalAlignment="Center"  
+                               HorizontalAlignment="Center"  FontSize="13" Margin="20,21,7,20" />
+
+
+                <TextBox Grid.Row="1" Grid.Column="2" Name="TbOrgID" Width="150" Height="30" Style="{StaticResource TextBoxStyle}" Text="{Binding OrgID,UpdateSourceTrigger=Explicit}" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="0,15,0,14"/>
+                <TextBox Grid.Row="2" Grid.Column="2" Name="TbLabel" Width="150" Height="30" Style="{StaticResource TextBoxStyle}"  Text="{Binding Label,UpdateSourceTrigger=Explicit}" Grid.ColumnSpan="3"
+                         HorizontalAlignment="Left" Margin="0,14"/>
+                <TextBox Grid.Row="3" Grid.Column="2"  Name="TbProductionName" Width="150" Height="30" Style="{StaticResource TextBoxStyle}"  Text="{Binding ProductionName,UpdateSourceTrigger=Explicit}" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="0,14"/>
+                <TextBox Grid.Row="4" Grid.Column="2"  Name="TbNetWeight" MinWidth="150" Height="30" Style="{StaticResource TextBoxStyle}"  Text="{Binding NetWeight,UpdateSourceTrigger=Explicit}" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="0,14"/>
+
+                <StackPanel Grid.Row="5"   Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                Margin="3,14,0,14" Height="30" Grid.ColumnSpan="3">
+                    <TextBox  Name="TbMonth" Width="40" BorderThickness="0 0 0 1" Style="{StaticResource TextBoxStyle}" Height="21" Text="{Binding ExpirationMonth,UpdateSourceTrigger=Explicit}"
+                                />
+                    <TextBlock  Text=" 个月  " TextAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox  Name="TbDay" Width="40" BorderThickness="0 0 0 1" Style="{StaticResource TextBoxStyle}" Height="21" Text="{Binding ExpirationDay,UpdateSourceTrigger=Explicit}" Margin="5 0 0 0"/>
+                    <TextBlock  Text=" 天" TextAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+
+            </Grid>
+
+
+        </Grid>
+
+    </Grid>
+
+</Window>
+
+
+
+
+
