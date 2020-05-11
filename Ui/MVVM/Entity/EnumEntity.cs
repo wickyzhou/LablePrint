@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Ui.MVVM.ViewModel;
+
+namespace Ui.MVVM.Entity
+{
+    public class EnumEntity:ViewModelBase
+    {
+		private int id;
+
+		public int Id
+		{
+			get { return id; }
+			set
+			{
+				id = value;
+				this.RaisePropertyChanged(nameof(Id));
+			}
+		}
+
+
+		private int groupSeq;
+
+		public int GroupSeq
+		{
+			get { return groupSeq; }
+			set
+			{
+				groupSeq = value;
+				this.RaisePropertyChanged(nameof(GroupSeq));
+			}
+		}
+
+		private string groupName;
+
+		public string GroupName
+		{
+			get { return groupName; }
+			set
+			{
+				groupName = value;
+				this.RaisePropertyChanged(nameof(GroupName));
+			}
+		}
+
+
+		private int itemSeq;
+
+		public int ItemSeq
+		{
+			get { return itemSeq; }
+			set
+			{
+				itemSeq = value;
+				this.RaisePropertyChanged(nameof(ItemSeq));
+			}
+		}
+
+		private string itemValue;
+
+		public string ItemValue
+		{
+			get { return itemValue; }
+			set
+			{
+				itemValue = value;
+				this.RaisePropertyChanged(nameof(ItemValue));
+			}
+		}
+
+
+		private int parentGroupSeq;
+
+		public int ParentGroupSeq
+		{
+			get { return parentGroupSeq; }
+			set
+			{
+				parentGroupSeq = value;
+				this.RaisePropertyChanged(nameof(ParentGroupSeq));
+			}
+		}
+
+    }
+}

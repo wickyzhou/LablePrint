@@ -16,7 +16,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0"  HorizontalAlignment="Left" MaxHeight="26" Background="#444" Orientation="Horizontal" >
+                        <StackPanel Grid.Column="0"  HorizontalAlignment="Left" MaxHeight="26" Background="#444" Orientation="Horizontal">
                             <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
@@ -71,17 +71,93 @@
         <Setter Property="Width" Value="1200"/>
     </Style>
 
+
+    <ControlTemplate x:Key="tempWindowStyleLevelX" TargetType="{x:Type Window}">
+        <Border>
+            <Border CornerRadius="5" Background="#57ae57" Margin="{Binding BorderMargin}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Background="#444" Name="CustomWindow">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"  HorizontalAlignment="Left" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助" Name="BtnHelp" Command="{Binding WindowHelpCommand}" FontSize="22" Margin="0 1 0 0 "/>
+                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{Binding WindowCloseCommand}" ToolTip="关闭" Margin="8 2 10 0"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Background="#d6e7f1" CornerRadius="3" Grid.Row="1" Margin="2" BorderThickness="2">
+                        <Border Margin="3" BorderThickness="1" BorderBrush="LightBlue">
+                            <ContentPresenter ></ContentPresenter>
+                        </Border>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+    </ControlTemplate>
+
+
+  
+    
     <Style x:Key="WindowStyleLevelLast" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource tempWindowStyleLevelLast}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="Transparent" />
-        <!--<Setter Property="ResizeMode" Value="NoResize" />-->
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="Height" Value="600"/>
         <Setter Property="Width" Value="800"/>
-
     </Style>
+
+    <ControlTemplate x:Key="DataWindowTemplate" TargetType="{x:Type Window}">
+        <Border>
+            <Border CornerRadius="5" Background="#57ae57" Margin="{Binding BorderMargin}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Background="#444" Name="CustomWindow">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"  HorizontalAlignment="Left" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{x:Static ApplicationCommands.Close}" ToolTip="关闭" Margin="8 2 10 0"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Background="#d6e7f1" CornerRadius="3" Grid.Row="1" Margin="2" BorderThickness="2">
+                        <Border Margin="3" BorderThickness="1" BorderBrush="LightBlue">
+                            <ContentPresenter ></ContentPresenter>
+                        </Border>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+    </ControlTemplate>
+    <Style x:Key="WindowStyleData" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="400"/>
+        <Setter Property="Width" Value="600"/>
+    </Style>
+
 </ResourceDictionary>
 

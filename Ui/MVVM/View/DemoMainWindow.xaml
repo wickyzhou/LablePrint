@@ -1,0 +1,50 @@
+﻿<Window x:Class="Ui.MVVM.View.DemoMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:Ui.MVVM.ViewModel"
+        Title="MainWindow"  Style="{StaticResource WindowStyleLevel1}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding AddCommand}" Content="添加" Width="60" Height="30" HorizontalAlignment="Left" Margin="10,0"/>
+            <Button Command="{Binding SearchCommand}" Content="查询" Width="60" Height="30" HorizontalAlignment="Left" Margin="10,0"/>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding DataList}" Grid.Row="1" IsReadOnly="True"
+                  CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False"
+                  SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Height" Value="40"/>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="*" Header="Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Width="*" Header="姓名" Binding="{Binding Name}" />
+                <DataGridTextColumn Width="*" Header="年龄" Binding="{Binding Age}" />
+                <DataGridTextColumn Width="*" Header="性别" Binding="{Binding Sex}" />
+                <DataGridTextColumn Width="*" Header="性别" Binding="{Binding CreateTime}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Padding="10,5" Margin="15,0" Command="{Binding DataContext.EditCommand,RelativeSource={RelativeSource AncestorType=Window}}" Content="编辑"/>
+                                <Button Padding="10,5" Command="{Binding DataContext.DeleteCommand,RelativeSource={RelativeSource AncestorType=Window}}" Content="删除"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+    </Grid>
+</Window>
