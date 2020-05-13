@@ -24,5 +24,9 @@ namespace Model
         public string SafeCode { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public decimal SpecificationValueBegin { get; set; }
+
+        public decimal SpecificationValueEnd { get; set; }
     }
 }

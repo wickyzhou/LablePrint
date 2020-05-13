@@ -92,6 +92,6 @@ namespace Model
 
         public string BrandName { get; set; }
 
-
+        public int ProductionNumber { get; set; }
     }
 }

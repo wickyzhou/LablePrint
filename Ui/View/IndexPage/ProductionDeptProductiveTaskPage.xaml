@@ -203,7 +203,10 @@
                 <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}"  Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
 
                 <DataGridTextColumn DataGridColumn.Header="样油(g)" DataGridBoundColumn.Binding="{Binding PaintSampleTotal}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
-                    <!--<DataGridTextColumn DataGridColumn.Header="合格证入库" DataGridBoundColumn.Binding="{Binding FStockInCount}"   HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                <DataGridTextColumn DataGridColumn.Header="生产次数" DataGridBoundColumn.Binding="{Binding ProductionNumber}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Red"/>
+
+                <!--<DataGridTextColumn DataGridColumn.Header="合格证入库" DataGridBoundColumn.Binding="{Binding FStockInCount}"   HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="接收" DataGridBoundColumn.Binding="{Binding FRecievedCount}" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
                     <DataGridTextColumn DataGridColumn.Header="残液" DataGridBoundColumn.Binding="{Binding FResidue}" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="库存时间" DataGridBoundColumn.Binding="{Binding CreateDate,StringFormat=yyyy-MM-dd}"  Width="100"  HeaderStyle="{StaticResource DGColumnHeader}"/>

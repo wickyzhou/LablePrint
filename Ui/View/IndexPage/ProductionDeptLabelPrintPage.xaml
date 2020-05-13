@@ -192,10 +192,12 @@
 
             <Grid Grid.Column="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.5*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition RowDefinition.Height="5" />
@@ -228,6 +230,21 @@
                 <TextBox Name="tbBatchNo" Grid.Column="1" HorizontalAlignment="Left" Height="26" Grid.Row="3" VerticalAlignment="Center" 
                          Width="120" VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
 
+
+                <TextBlock HorizontalAlignment="Center" Grid.Row="3"  Grid.Column="2"  Text="规格区间" VerticalAlignment="Center"
+                                    Foreground="White" FontFamily="宋体" />
+                
+                <TextBox Name="tbNetWeightBegin" Grid.Column="3" HorizontalAlignment="Left" Height="26" Grid.Row="3"   VerticalAlignment="Center" 
+                         Width="50" VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，包括输入值,为空时默认0 "/>
+                <TextBlock HorizontalAlignment="Center" Grid.Row="3"  Grid.Column="3"  Text="-" VerticalAlignment="Center"
+                                    Foreground="White" FontFamily="宋体" />
+                <TextBox Name="tbNetWeightEnd" Grid.Column="3" HorizontalAlignment="Right" Height="26" Grid.Row="3"   VerticalAlignment="Center" 
+                         Width="50" 
+                         VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，包括输入值，为空时默认999999.99 "/>
+    
+                
+
+
                 <TextBlock HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2"  Text="客户ID" VerticalAlignment="Center"
                                     Foreground="White" FontFamily="宋体"/>
 
@@ -235,31 +252,23 @@
                   VerticalAlignment="Center" Width="120" VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" 
                          ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
 
-                <TextBlock  HorizontalAlignment="Center" Grid.Row="3" Grid.Column="2" Text="产品型号" VerticalAlignment="Center"
+                <TextBlock  HorizontalAlignment="Center" Grid.Row="1" Grid.Column="4" Text="产品型号" VerticalAlignment="Center"
                                      Foreground="White" FontFamily="宋体" />
 
-                <TextBox  Name="tbProductionModel"  Grid.Row="3"  Grid.Column="5" Height="26"  Width="120" HorizontalAlignment="Left"
+                <TextBox  Name="tbProductionModel"  Grid.Row="1"  Grid.Column="5" Height="26"  Width="120" HorizontalAlignment="Left"
                   Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,6,0,6" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
 
-                <Grid Grid.Row="5" Grid.ColumnSpan="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="0" Text="标签型号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体"/>
-                    <TextBox  Name="tbLabel"  Grid.Column="1" HorizontalAlignment="Left" Height="26"  Width="100"
+       
+                <TextBlock  HorizontalAlignment="Center" Grid.Row="5"  Grid.Column="0" Text="标签型号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体"/>
+                <TextBox  Name="tbLabel" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Height="26"  Width="100"
        VerticalAlignment="Center"  VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
-                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="2" Text="安全编号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体" />
-                    <TextBox  Name="tbSafeCode"   Grid.Column="3" HorizontalAlignment="Left" Height="26"  
+                <TextBlock  HorizontalAlignment="Center" Grid.Row="5"  Grid.Column="2" Text="安全编号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体" />
+                <TextBox  Name="tbSafeCode" Grid.Row="5"   Grid.Column="3" HorizontalAlignment="Left" Height="26"  
                   Text="" VerticalAlignment="Center" Width="100"  VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
-                    <TextBlock  HorizontalAlignment="Center"  Grid.Column="4" Text="排除条件" VerticalAlignment="Center"
+                <TextBlock  HorizontalAlignment="Center" Grid.Row="5"  Grid.Column="4" Text="排除条件" VerticalAlignment="Center"
                                      Foreground="White" FontFamily="宋体" Margin="20 0 0 0"/>
-                    <CheckBox Name="checkBox" IsChecked="False"  Grid.Column="5" Style="{StaticResource CheckBoxStyle}" Grid.ColumnSpan="2"  HorizontalAlignment="Left" Margin="0 0 0 0" ToolTip="默认是关闭的，点击右置开启" />
-                </Grid>
+                <CheckBox Name="checkBox" IsChecked="False" Grid.Row="5"  Grid.Column="5" Style="{StaticResource CheckBoxStyle}" Grid.ColumnSpan="2"  HorizontalAlignment="Left" Margin="0 0 0 0" ToolTip="默认是关闭的，点击右置开启" />
+           
 
 
                 <Button Name="BtnQuery" Content="查询"  Grid.Column="3"  HorizontalAlignment="Center"  
@@ -448,6 +457,7 @@
                                     Foreground="#e80c07"  Width="60" FontWeight="Medium"/>
 
                 <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                <DataGridTextColumn DataGridColumn.Header="规格" DataGridBoundColumn.Binding="{Binding SpecificationValue}" HeaderStyle="{StaticResource DGColumnHeader}" />
                 <DataGridTextColumn DataGridColumn.Header="生产批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
                 <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}"  MaxWidth="140" HeaderStyle="{StaticResource DGColumnHeader}" />

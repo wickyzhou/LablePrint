@@ -1,6 +1,7 @@
 ﻿using Dal;
 using Model;
 using NPOI.HSSF.UserModel;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
@@ -20,11 +21,9 @@ namespace Common
 {
     public class FileHelper
     {
-
-
         public void ExportItemSourceToExcel(List<ProductiveTaskListModel> lists, string filePath)
         {
-
+         
             if (lists.Count == 0)
             {
                 return;
@@ -63,6 +62,21 @@ namespace Common
 
             #endregion
 
+
+            #region 红色数字
+            ICellStyle warningStyle = wb.CreateCellStyle();
+            warningStyle.ShrinkToFit = true;
+            warningStyle.BorderBottom = BorderStyle.Thin; numberStyle.BorderLeft = BorderStyle.Thin; numberStyle.BorderTop = BorderStyle.Thin; numberStyle.BorderRight = BorderStyle.Thin;
+
+            IFont warningFont = wb.CreateFont();
+            warningFont.FontHeight = 14 * 20;
+            warningFont.FontName = "宋体";
+            warningFont.Color = HSSFColor.Red.Index;
+            warningStyle.SetFont(warningFont);
+
+            #endregion
+
+
             #region 生产类型为返工时候，值为"灌"，设置样式
             ICellStyle guanStyle = wb.CreateCellStyle();
             guanStyle.Alignment = HorizontalAlignment.Center;
@@ -94,6 +108,7 @@ namespace Common
             {
                 var typedlists = lists.Where(n => n.FType == item.FType).ToList();
                 string previousBatch = string.Empty;
+                double batchQuantity = 0;
                 //string prevoousProductionModel = string.Empty;
 
                 ISheet sheet = wb.CreateSheet(item.FType);
@@ -115,11 +130,14 @@ namespace Common
                 sheet.SetColumnWidth(10, (int)9.92 * 256);
                 sheet.SetColumnWidth(11, (int)6 * 256);
                 sheet.SetColumnWidth(12, (int)7 * 256);
-                sheet.SetColumnWidth(13, (int)6.35 * 256);
-                sheet.SetColumnWidth(14, 15 * 256);
-                sheet.SetColumnWidth(15, 45 * 256);
-                sheet.SetColumnWidth(16, 14 * 256);
-                sheet.SetColumnWidth(17, 10 * 256);
+                sheet.SetColumnWidth(13, (int)6.35 * 256);                                      
+                sheet.SetColumnWidth(14, 8 * 256); //差额
+                sheet.SetColumnWidth(15, 10 * 256); //第几次做货
+                sheet.SetColumnWidth(16, 15 * 256); //订单号
+                sheet.SetColumnWidth(17, 40 * 256); //唯一值
+                sheet.SetColumnWidth(18, 14 * 256); //安全编号
+                sheet.SetColumnWidth(19, 10 * 256); //样油重量
+
 
                 #region Logo
                 ExportImgToExcel(sheet, (HSSFWorkbook)wb);
@@ -154,10 +172,12 @@ namespace Common
                 var L = row1.CreateCell(11); L.SetCellValue("接收人"); L.CellStyle = fitStyle;
                 var M = row1.CreateCell(12); M.SetCellValue("残液"); M.CellStyle = fitStyle;
                 var N = row1.CreateCell(13); N.SetCellValue(""); N.CellStyle = guanStyle;//灌不灌
-                var O = row1.CreateCell(14); O.SetCellValue("订单号"); O.CellStyle = fitStyle;
-                var P = row1.CreateCell(15); P.SetCellValue("唯一值"); P.CellStyle = fitStyle;
-                var Q = row1.CreateCell(16); Q.SetCellValue("安全编号"); Q.CellStyle = fitStyle;
-                var R = row1.CreateCell(17); R.SetCellValue("样油重量(g)"); R.CellStyle = fitStyle;
+                var O = row1.CreateCell(14); O.SetCellValue("差额"); O.CellStyle = fitStyle;
+                var P = row1.CreateCell(15); P.SetCellValue("生产次数"); P.CellStyle = numberStyle;
+                var Q = row1.CreateCell(16); Q.SetCellValue("订单号"); Q.CellStyle = fitStyle;
+                var R = row1.CreateCell(17); R.SetCellValue("唯一值"); R.CellStyle = fitStyle;
+                var S = row1.CreateCell(18); S.SetCellValue("安全编号"); S.CellStyle = fitStyle;
+                var T = row1.CreateCell(19); T.SetCellValue("样油重量(g)"); T.CellStyle = fitStyle;
                 #endregion
 
 
@@ -165,18 +185,27 @@ namespace Common
                 {
                     IRow row = sheet.CreateRow(j + 2);
                     row.Height = (short)20.5 * 20;
-
+                
                     string currentBatch = typedlists[j].FBatchNo;
-                    var A0 = row.CreateCell(0); var B0 = row.CreateCell(1); var C0 = row.CreateCell(2); var D0 = row.CreateCell(3);
-
+                    var A0 = row.CreateCell(0); var B0 = row.CreateCell(1); var C0 = row.CreateCell(2); var D0 = row.CreateCell(3); var M0 = row.CreateCell(12); var O0 = row.CreateCell(14);
+                  
                     if (currentBatch != previousBatch)
                     {
+                        batchQuantity = Convert.ToDouble(typedlists[j].FQuantity) - Convert.ToDouble(typedlists[j].RowQuantity) + Convert.ToDouble(typedlists[j].FResidue);
                         A0.SetCellValue(typedlists[j].FitemName);
                         B0.SetCellValue(currentBatch);
                         C0.SetCellValue(Convert.ToDouble(typedlists[j].FQuantity));
                         D0.SetCellValue(typedlists[j].FHasSmallMaterial);
+                        M0.SetCellValue(Convert.ToDouble(typedlists[j].FResidue.ToString("0.0")));
+                        O0.CellStyle = fitStyle;
                     }
-                    A0.CellStyle = fitStyle; B0.CellStyle = fitStyle; C0.CellStyle = numberStyle; D0.CellStyle = fitStyle;
+                    else
+                    {
+                        batchQuantity -= Convert.ToDouble(typedlists[j].RowQuantity);
+                        O0.CellStyle = warningStyle;
+                    }
+                    O0.SetCellValue(batchQuantity);
+                    A0.CellStyle = fitStyle; B0.CellStyle = fitStyle; C0.CellStyle = numberStyle; M0.CellStyle = numberStyle; D0.CellStyle = fitStyle; 
 
                     var E0 = row.CreateCell(4); E0.SetCellValue(typedlists[j].FPackage); E0.CellStyle = fitStyle;
                     var F0 = row.CreateCell(5); F0.SetCellValue(typedlists[j].FBucketName); F0.CellStyle = fitStyle;
@@ -218,13 +247,13 @@ namespace Common
                     var K0 = row.CreateCell(10); K0.CellStyle = blankStyle;
                     var L0 = row.CreateCell(11); L0.CellStyle = blankStyle;
                     #endregion
-
-                    var M0 = row.CreateCell(12); M0.SetCellValue(Convert.ToDouble(typedlists[j].FResidue.ToString("0.0"))) ; M0.CellStyle = numberStyle;
                     var N0 = row.CreateCell(13); N0.SetCellValue(typedlists[j].ProductionType == "返工" ? "灌" : ""); N0.CellStyle = guanStyle;//灌不灌
-                    var O0 = row.CreateCell(14); O0.SetCellValue(typedlists[j].FBillNo); O0.CellStyle = fitStyle;
-                    var P0 = row.CreateCell(15); P0.SetCellValue(UniversalFunction.ToHexString(typedlists[j].RowHashValue)); P0.CellStyle = fitStyle;
-                    var Q0 = row.CreateCell(16); Q0.SetCellValue(typedlists[j].SafeCode); Q0.CellStyle = fitStyle;
-                    var R0 = row.CreateCell(17); R0.SetCellValue(Convert.ToInt32(typedlists[j].PaintSampleTotal)); R0.CellStyle = numberStyle;
+                    var P0 = row.CreateCell(15); P0.SetCellValue(typedlists[j].ProductionNumber>0 && typedlists[j].ProductionNumber <= 3 ? $"第{typedlists[j].ProductionNumber}次生产" :""); P0.CellStyle = fitStyle;
+                    var Q0 = row.CreateCell(16); Q0.SetCellValue(typedlists[j].FBillNo); Q0.CellStyle = fitStyle;
+                    var R0 = row.CreateCell(17); R0.SetCellValue(UniversalFunction.ToHexString(typedlists[j].RowHashValue)); R0.CellStyle = fitStyle;
+                    var S0 = row.CreateCell(18); S0.SetCellValue(typedlists[j].SafeCode); S0.CellStyle = fitStyle;
+                    var T0 = row.CreateCell(19); T0.SetCellValue(Convert.ToInt32(typedlists[j].PaintSampleTotal)); T0.CellStyle = numberStyle;
+                   
                     previousBatch = currentBatch.Length != 0 ? currentBatch : previousBatch;
                 }
 
@@ -296,6 +325,7 @@ namespace Common
 
             //创建列
             DataTable dt = ConvertHelper.CreateDataTableFromModel<ProductiveTaskListModel>();
+       
 
             string previousBatch = string.Empty, previousProductionModel = string.Empty, previousHasSmallMaterial = string.Empty;
             decimal previousQuantity = 0;

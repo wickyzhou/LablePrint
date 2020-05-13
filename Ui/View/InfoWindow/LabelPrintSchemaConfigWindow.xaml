@@ -42,6 +42,8 @@
                     <DataGridTextColumn DataGridColumn.Header="标签" DataGridBoundColumn.Binding="{Binding Label}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
                     <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
                     <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="规格下限" DataGridBoundColumn.Binding="{Binding SpecificationValueBegin}" HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                    <DataGridTextColumn DataGridColumn.Header="规格上限" DataGridBoundColumn.Binding="{Binding SpecificationValueEnd}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" />
                     <DataGridTextColumn DataGridColumn.Header="添加时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
                 </DataGrid.Columns>
 

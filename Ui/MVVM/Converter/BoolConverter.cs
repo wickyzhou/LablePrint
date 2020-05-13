@@ -12,7 +12,7 @@ namespace Ui.MVVM.Converter
         //在绑定时给字段的数据类做转换用
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? "是" : "否";
+            return (int)value==1 ? "是" : "否";
         }
 
         //如果是双向绑定，同时需要添加类型转换逻辑代码

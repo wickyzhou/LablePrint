@@ -63,38 +63,37 @@
             </GroupBox>
 
 
-
         </Grid>
         <Grid Grid.Row="2">
             <DataGrid Name="MainDataGrid" Style="{StaticResource DGStyle}"  CellEditEnding="MainDataGrid_CellEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn DataGridColumn.Header="顺序" DataGridBoundColumn.Binding="{Binding PrintOrder}"  HeaderStyle="{StaticResource DGColumnHeader}" />
-                    <DataGridTextColumn DataGridColumn.Header="添加时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss.fff}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding Seq}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="标签" DataGridBoundColumn.Binding="{Binding Label}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="80" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="张数" DataGridBoundColumn.Binding="{Binding PrintCount}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="有效月" DataGridBoundColumn.Binding="{Binding ExpirationMonth}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}"   HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="打印状态" DataGridBoundColumn.Binding="{Binding PrintStatus}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="任务单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="历史ID" DataGridBoundColumn.Binding="{Binding LabelPrintHistoryID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="工单号" DataGridBoundColumn.Binding="{Binding WorkNo}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="批次最大序号" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="危险成分" DataGridBoundColumn.Binding="{Binding DangerousIngredient}"  HeaderStyle="{StaticResource DGColumnHeader}"  CanUserSort="False"/>
-                    <DataGridTextColumn DataGridColumn.Header="危险性说明" DataGridBoundColumn.Binding="{Binding DangerousComment}"  HeaderStyle="{StaticResource DGColumnHeader}" CanUserSort="False"/>
+                    <DataGridTextColumn DataGridColumn.Header="添加时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss.fff}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding Seq}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="标签" DataGridBoundColumn.Binding="{Binding Label}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="80" />
+                    <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="张数" DataGridBoundColumn.Binding="{Binding PrintCount}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}"   HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="有效月" DataGridBoundColumn.Binding="{Binding ExpirationMonth}"   HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}"   HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}"   HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="打印状态" DataGridBoundColumn.Binding="{Binding PrintStatus}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="任务单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="历史ID" DataGridBoundColumn.Binding="{Binding LabelPrintHistoryID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="工单号" DataGridBoundColumn.Binding="{Binding WorkNo}"  HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="批次最大序号" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}"  HeaderStyle="{StaticResource DGColumnHeader}"  />
+                    <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}"  HeaderStyle="{StaticResource DGColumnHeader}"  />
+                    <DataGridTextColumn DataGridColumn.Header="危险成分" DataGridBoundColumn.Binding="{Binding DangerousIngredient}"  HeaderStyle="{StaticResource DGColumnHeader}"  />
+                    <DataGridTextColumn DataGridColumn.Header="危险性说明" DataGridBoundColumn.Binding="{Binding DangerousComment}"  HeaderStyle="{StaticResource DGColumnHeader}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -128,6 +128,12 @@ namespace Model
         public DateTime? LastPrintTime { get; set; } //最后打印时间
 
         public string SafeCode { get; set; } // 安全编号
-  
+
+        public decimal SpecificationValue { get; set; } // 规格用来做查询条件
+
+        public decimal SpecificationValueBegin { get; set; } // 获取方案明细值规格开始值
+
+        public decimal SpecificationValueEnd { get; set; } // 获取方案明细值规格结束值
+
     }
 }

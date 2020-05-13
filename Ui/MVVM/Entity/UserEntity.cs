@@ -69,9 +69,9 @@ namespace Ui.MVVM.Entity
 			}
 		}
 
-		private bool superAdmin;
+		private int superAdmin;
 
-		public bool SuperAdmin
+		public int SuperAdmin
 		{
 			get { return superAdmin; }
 			set

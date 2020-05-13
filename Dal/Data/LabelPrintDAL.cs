@@ -27,8 +27,9 @@ namespace Dal
                                                                 ,A.RoughWeight,A.NetWeight,A.CheckNo,A.PrintCount,A.TwoDimensionCode,A.SpecialRequest,A.BucketCount,A.CaseName,A.RowHashValue,A.Seq
                                                                 ,CAST(CASE WHEN C.ID IS NULL  THEN 0 ELSE 1 END AS BIT) IsChecked
                                                                 ,CASE WHEN C.ID IS NULL THEN 0 ELSE 1 END Selected
-                                                               , isnull(B.BatchTotal, 0) BatchTotal,isnull(B.BatchReprintCount, 0) BatchReprintCount,isnull(B.BatchCurrentSeq, 0) BatchCurrentSeq
-																,isnull(M.WorkTotal, 0)  WorkTotal,isnull(M.WorkPrintCount, 0)    WorkPrintCount ,isnull(M.WorkReprintCount, 0)    WorkReprintCount ,M.LastPrintTime,A.SafeCode
+                                                                ,isnull(B.BatchTotal, 0) BatchTotal,isnull(B.BatchReprintCount, 0) BatchReprintCount,isnull(B.BatchCurrentSeq, 0) BatchCurrentSeq
+																,isnull(M.WorkTotal, 0)  WorkTotal,isnull(M.WorkPrintCount, 0)    WorkPrintCount ,isnull(M.WorkReprintCount, 0)    WorkReprintCount ,M.LastPrintTime
+                                                                ,A.SafeCode,A.SpecificationValue
                                                               FROM SJLabelPrintHistory A
                                                            LEFT JOIN SJPrintLogBatchView B ON A.BatchNo = B.BatchNo
                                                            LEFT JOIN SJPrintLogBatchWorkView M on A.BatchNo = m.BatchNo  and A.RowHashValue = m.RowHashValue
@@ -118,14 +119,16 @@ namespace Dal
 
         public int AddQuerySchemaEntry(QuerySchemaEntryModel model)
         {
-            return SqlHelper.ExecuteNonQuery(@" insert into SJUserQuerySchemaEntry (SchemaId,OrgId,Label,BatchNo,ProductionModel,IsConditionOut,SafeCode) values(@SchemaId,@OrgId,@Label,@BatchNo,@ProductionModel,@IsConditionOut,@SafeCode);",
+            return SqlHelper.ExecuteNonQuery(@" insert into SJUserQuerySchemaEntry (SchemaId,OrgId,Label,BatchNo,ProductionModel,IsConditionOut,SafeCode,SpecificationValueBegin,SpecificationValueEnd) values(@SchemaId,@OrgId,@Label,@BatchNo,@ProductionModel,@IsConditionOut,@SafeCode,@SpecificationValueBegin,@SpecificationValueEnd);",
                       new SqlParameter[] { new SqlParameter("@SchemaId", model.SchemaId) ,
                                               new SqlParameter("@OrgId", model.OrgId) ,
                                               new SqlParameter("@Label", model.Label) ,
                                               new SqlParameter("@BatchNo", model.BatchNo) ,
                                               new SqlParameter("@ProductionModel", model.ProductionModel),
                                               new SqlParameter("@IsConditionOut", model.IsConditionOut),
-                                              new SqlParameter("@SafeCode", model.SafeCode)
+                                              new SqlParameter("@SafeCode", model.SafeCode),
+                                              new SqlParameter("@SpecificationValueBegin", model.SpecificationValueBegin),
+                                              new SqlParameter("@SpecificationValueEnd", model.SpecificationValueEnd)
                       });
         }
 
@@ -418,14 +421,14 @@ namespace Dal
 
         public IEnumerable<QuerySchemaConfigModel> GetSchemaEntryByUserId(int userId)
         {
-            DataTable data = SqlHelper.ExecuteDataTable(" select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,c.ContentTrans,b.SafeCode,b.CreateTime from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId join SJUserQuerySchemaSeq c on c.Id=a.SchemaSeq   where a.UserId=@UserId;",
+            DataTable data = SqlHelper.ExecuteDataTable(" select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,c.ContentTrans,b.SafeCode,b.CreateTime,b.SpecificationValueBegin,b.SpecificationValueEnd from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId join SJUserQuerySchemaSeq c on c.Id=a.SchemaSeq   where a.UserId=@UserId;",
                 new SqlParameter[] { new SqlParameter("@UserId", userId) });
             return SqlHelper.DataTableToModelList<QuerySchemaConfigModel>(data);
         }
 
         public IEnumerable<QuerySchemaConfigModel> GetSchemaEntryByUserIdAndType(int userId, bool isConditionOut)
         {
-            DataTable data = SqlHelper.ExecuteDataTable(" select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,c.ContentTrans from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId join SJUserQuerySchemaSeq c on c.Id=a.SchemaSeq   where a.UserId=@UserId    and IsConditionOut = @IsConditionOut ;",
+            DataTable data = SqlHelper.ExecuteDataTable(" select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,c.ContentTrans,b.SpecificationValueBegin,b.SpecificationValueEnd from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId join SJUserQuerySchemaSeq c on c.Id=a.SchemaSeq   where a.UserId=@UserId    and IsConditionOut = @IsConditionOut ;",
                 new SqlParameter[] { new SqlParameter("@UserId", userId), new SqlParameter("@IsConditionOut", isConditionOut) });
             return SqlHelper.DataTableToModelList<QuerySchemaConfigModel>(data);
         }

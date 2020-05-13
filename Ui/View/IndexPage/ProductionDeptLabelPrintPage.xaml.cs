@@ -256,13 +256,15 @@ namespace Ui.View.IndexPage
         public IEnumerable<LabelPrintHistoryModel> GetFilteredItemSource()
         {
 
-            var expression = GetFilterExpression<LabelPrintHistoryModel>(new List<LabelPrintHistoryModel> {
+            var expression = GetFilterExpression(new List<LabelPrintHistoryModel> {
                 new LabelPrintHistoryModel{
                     OrgID=this.tbOrgID.Text.ToUpper(),
                     ProductionModel=this.tbProductionModel.Text.ToUpper(),
                     Label=this.tbLabel.Text.ToUpper(),
                     BatchNo=this.tbBatchNo.Text.ToUpper(),
-                    SafeCode= this.tbSafeCode.Text.ToUpper()
+                    SafeCode= this.tbSafeCode.Text.ToUpper(),
+                    SpecificationValueBegin = decimal.TryParse(this.tbNetWeightBegin.Text, out decimal result) ? result: 0,
+                    SpecificationValueEnd= decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99
                 }
             });
             if (expression != null)
@@ -474,7 +476,8 @@ namespace Ui.View.IndexPage
                     message += "  产品型号 包含 【" + entryModel.ProductionModel + "】\r\n";
                 if (!string.IsNullOrWhiteSpace(entryModel.SafeCode))
                     message += "  安全标签 包含 【" + entryModel.SafeCode + "】\r\n";
-
+                message += $"  净重 【 {entryModel.SpecificationValueBegin}】 到 【{entryModel.SpecificationValueEnd}】 \r\n";
+     
                 string con = checkBox.IsChecked.Value ? "-------------排除条件-------" : " 【筛选条件】";
                 MessageBoxResult result = MessageBox.Show($" 类别：{con} \r\n 方案: 【 {schemaName} 】 \r\n\r\n {message} ", "温馨提示", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
@@ -563,12 +566,13 @@ namespace Ui.View.IndexPage
                     BatchNo = item.BatchNo,
                     Label = item.Label,
                     ProductionModel = item.ProductionModel,
-                    SafeCode=item.SafeCode
-                    
+                    SafeCode=item.SafeCode,
+                    SpecificationValueBegin = item.SpecificationValueBegin,
+                    SpecificationValueEnd = item.SpecificationValueEnd
                 });
             }
 
-            var expression = GetFilterExpression<LabelPrintHistoryModel>(models);
+            var expression = GetFilterExpression(models);
             // 2.筛选过滤条件，获取所有唯一ID(当天打印数据 HistoryRecords )
             if (expression != null)
             {
@@ -579,7 +583,9 @@ namespace Ui.View.IndexPage
                     Label = m.Label.ToUpper(),
                     BatchNo = m.BatchNo.ToUpper(),
                     ProductiveTaskListID = m.ProductiveTaskListID,
-                    SafeCode=m.SafeCode
+                    SafeCode = m.SafeCode,
+                    SpecificationValueBegin = m.SpecificationValueBegin,
+                    SpecificationValueEnd = m.SpecificationValueEnd
                 }
                 ).Where(expression).Select(m => m.ProductiveTaskListID).ToList<int>();
             }
@@ -623,21 +629,23 @@ namespace Ui.View.IndexPage
                 ProductionModel = string.IsNullOrWhiteSpace(this.tbProductionModel.Text) ? "" : this.tbProductionModel.Text.ToUpper(),
                 IsConditionOut = this.checkBox.IsChecked.Value,
                 SafeCode = string.IsNullOrWhiteSpace(this.tbSafeCode.Text) ? "" : this.tbSafeCode.Text.ToUpper(),
+                SpecificationValueBegin = decimal.TryParse(this.tbNetWeightBegin.Text, out decimal result) ? result: 0,
+                SpecificationValueEnd= decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99
             };
         }
 
         #region 动态拼接lamda表达式
 
-        public static Expression<Func<T, bool>> GetFilterExpression<T>(List<LabelPrintHistoryModel> entries)
+        public static Expression<Func<LabelPrintHistoryModel, bool>> GetFilterExpression(List<LabelPrintHistoryModel> entries)
         {
-            Expression<Func<T, bool>> condition = null;
+            Expression<Func<LabelPrintHistoryModel, bool>> condition = null;
             try
             {
                 if (entries != null && entries.Count > 0)
                 {
                     foreach (LabelPrintHistoryModel entryModel in entries)
                     {
-                        Expression<Func<T, bool>> tempCondition = CreateLambda<T>(entryModel);
+                        Expression<Func<LabelPrintHistoryModel, bool>> tempCondition = CreateLambda(entryModel);
                         condition = condition == null ? tempCondition : condition.Or(tempCondition);
 
                     }
@@ -650,9 +658,10 @@ namespace Ui.View.IndexPage
             return condition;
         }
 
-        public static Expression<Func<T, bool>> CreateLambda<T>(LabelPrintHistoryModel entryModel)
+        public static Expression<Func<LabelPrintHistoryModel, bool>> CreateLambda(LabelPrintHistoryModel entryModel)
         {
-            Expression<Func<T, bool>> condition = null;
+
+            Expression<Func<LabelPrintHistoryModel, bool>> condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue<=entryModel.SpecificationValueEnd;
             //var parameter = Expression.Parameter(typeof(T), "p");//创建参数i
             //var constant = Expression.Constant(filterCondition.value);//创建常数
             //MemberExpression member = Expression.PropertyOrField(parameter, filterCondition.column);        
