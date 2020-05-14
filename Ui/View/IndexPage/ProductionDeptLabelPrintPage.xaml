@@ -410,90 +410,140 @@
             </Grid.ColumnDefinitions>
         </Grid>
 
-        <DataGrid Name="MainDataGrid"   Grid.Row="6"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
-                      GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"  HeadersVisibility="Column">
-            <DataGrid.ItemContainerStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="Height" Value="24"/>
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="false">
-                            <Setter Property="DataGridRow.Background" Value="Transparent"></Setter>
-                        </DataTrigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="LightYellow"/>
-                        </Trigger>
-                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="true">
-                            <Setter Property="DataGridRow.Background" Value="Green"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.ItemContainerStyle>
+        <Grid  Grid.Row="6" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition  Width="*"/>
+            </Grid.ColumnDefinitions>
             
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Width="25"  HeaderStyle="{StaticResource DGColumnHeader}">
-                    <DataGridColumn.HeaderTemplate >
-                        <DataTemplate>
-                            <StackPanel>
-                                <CheckBox FrameworkElement.Name="checkAll" Checked="CheckAll_Checked" Unchecked="CheckAll_Unchecked" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridColumn.HeaderTemplate>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <CheckBox IsChecked="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}"  Height="16"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+            <DataGrid Name="MainDataGrid" Grid.Column="0"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
+                      GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"  HeadersVisibility="Column">
+                <DataGrid.ItemContainerStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Height" Value="24"/>
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="false">
+                                <Setter Property="DataGridRow.Background" Value="Transparent"></Setter>
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightYellow"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="true">
+                                <Setter Property="DataGridRow.Background" Value="Green"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.ItemContainerStyle>
 
-                <DataGridTextColumn DataGridColumn.Header="选择" DataGridBoundColumn.Binding="{Binding Selected}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="40"/>
-                <DataGridTextColumn DataGridColumn.Header="最近打印" DataGridBoundColumn.Binding="{Binding LastPrintTime,StringFormat=dd-HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="80"/>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="25"  HeaderStyle="{StaticResource DGColumnHeader}">
+                        <DataGridColumn.HeaderTemplate >
+                            <DataTemplate>
+                                <StackPanel>
+                                    <CheckBox FrameworkElement.Name="checkAll" Checked="CheckAll_Checked" Unchecked="CheckAll_Unchecked" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}"  Height="16"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn DataGridColumn.Header="选择" DataGridBoundColumn.Binding="{Binding Selected}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="40"/>
+                    <DataGridTextColumn DataGridColumn.Header="最近打印" DataGridBoundColumn.Binding="{Binding LastPrintTime,StringFormat=dd-HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="80"/>
 
 
-                <DataGridTextColumn DataGridColumn.Header="打印序号" DataGridBoundColumn.Binding="{Binding Seq}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="本次打印数" DataGridBoundColumn.Binding="{Binding PrintCount}" HeaderStyle="{StaticResource DGColumnHeader}" 
+                    <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding Seq}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="打印数" DataGridBoundColumn.Binding="{Binding PrintCount}" HeaderStyle="{StaticResource DGColumnHeader}" 
                                     Foreground="#e80c07"  Width="60" FontWeight="Medium"/>
+                    <DataGridTextColumn DataGridColumn.Header="桶数" DataGridBoundColumn.Binding="{Binding BucketCount}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="规格" DataGridBoundColumn.Binding="{Binding SpecificationValue}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="桶包装" DataGridBoundColumn.Binding="{Binding Package}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="规格" DataGridBoundColumn.Binding="{Binding SpecificationValue}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="生产批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="生产批号" DataGridBoundColumn.Binding="{Binding BatchNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}"  MaxWidth="140" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding ProductionModel}"  MaxWidth="140" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label}" MaxWidth="100" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label}" MaxWidth="100" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="客户编号" DataGridBoundColumn.Binding="{Binding OrgID}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="客户料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="客户料号" DataGridBoundColumn.Binding="{Binding OrgCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="有效期至" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="客户订单号" DataGridBoundColumn.Binding="{Binding OrgBillNo}" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                <DataGridTextColumn DataGridColumn.Header="桶包装" DataGridBoundColumn.Binding="{Binding Package}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="客户订单号" DataGridBoundColumn.Binding="{Binding OrgBillNo}" HeaderStyle="{StaticResource DGColumnHeader}"/>
 
-                <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="生产任务清单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" Visibility="Hidden" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="桶数" DataGridBoundColumn.Binding="{Binding BucketCount}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="任务单号" DataGridBoundColumn.Binding="{Binding WorkNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="最后生成时间" DataGridBoundColumn.Binding="{Binding ModifyTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                <DataGridTextColumn DataGridColumn.Header="张数(批)" DataGridBoundColumn.Binding="{Binding BatchTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
-                <DataGridTextColumn DataGridColumn.Header="重打(批)" DataGridBoundColumn.Binding="{Binding BatchReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
-                <DataGridTextColumn DataGridColumn.Header="序号(批)" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="毛重" DataGridBoundColumn.Binding="{Binding RoughWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="检验号" DataGridBoundColumn.Binding="{Binding CheckNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-                <DataGridTextColumn DataGridColumn.Header="张数(行)" DataGridBoundColumn.Binding="{Binding WorkTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
-                <DataGridTextColumn DataGridColumn.Header="次数(行)" DataGridBoundColumn.Binding="{Binding WorkPrintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
-                <DataGridTextColumn DataGridColumn.Header="重打(行)" DataGridBoundColumn.Binding="{Binding WorkReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="生产任务清单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" Visibility="Hidden" HeaderStyle="{StaticResource DGColumnHeader}" />
 
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="任务单号" DataGridBoundColumn.Binding="{Binding WorkNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="最后生成时间" DataGridBoundColumn.Binding="{Binding ModifyTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <DataGridTextColumn DataGridColumn.Header="张数(批)" DataGridBoundColumn.Binding="{Binding BatchTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="重打(批)" DataGridBoundColumn.Binding="{Binding BatchReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="序号(批)" DataGridBoundColumn.Binding="{Binding BatchCurrentSeq}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+
+                    <DataGridTextColumn DataGridColumn.Header="张数(行)" DataGridBoundColumn.Binding="{Binding WorkTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="次数(行)" DataGridBoundColumn.Binding="{Binding WorkPrintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="重打(行)" DataGridBoundColumn.Binding="{Binding WorkReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid Grid.Column="1" Background="Gray">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Header=" A1 " Grid.Row="0" Background="LightBlue">
+                    <Button Content="A1安全标签2,4,6" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
+                </GroupBox>
+                <GroupBox Header=" A2 " Grid.Row="1" Background="LightBlue">
+                    <Button Content="A2安全标签2" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
+                </GroupBox>
+                <GroupBox Header=" A3 " Grid.Row="2" Background="LightBlue">
+                    <Button Content="A3安全标签1" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
+                </GroupBox>
+                <GroupBox Header=" b1 " Grid.Row="3" Background="LightBlue">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 0"/>
+                        <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
+                    </StackPanel>
+
+                </GroupBox>
+                <GroupBox Header=" b2 " Grid.Row="4" Background="LightBlue"/>
+                <GroupBox Header=" b3 " Grid.Row="5" Background="LightBlue"/>
+                <GroupBox Header=" c1 " Grid.Row="6" Background="LightBlue"/>
+                <GroupBox Header=" c2 " Grid.Row="7" Background="LightBlue"/>
+                <GroupBox Header=" c3 " Grid.Row="8" Background="LightBlue"/>
+                
+            </Grid>
+            
+        </Grid>
+        
 
     </Grid>
 </Page>

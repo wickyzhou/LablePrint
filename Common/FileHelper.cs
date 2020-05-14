@@ -80,6 +80,7 @@ namespace Common
             #region 生产类型为返工时候，值为"灌"，设置样式
             ICellStyle guanStyle = wb.CreateCellStyle();
             guanStyle.Alignment = HorizontalAlignment.Center;
+            guanStyle.ShrinkToFit = true;
             IFont guanFont = wb.CreateFont();
             guanFont.Color = (short)FontColor.Red;
             guanFont.FontName = "宋体";
@@ -130,9 +131,9 @@ namespace Common
                 sheet.SetColumnWidth(10, (int)9.92 * 256);
                 sheet.SetColumnWidth(11, (int)6 * 256);
                 sheet.SetColumnWidth(12, (int)7 * 256);
-                sheet.SetColumnWidth(13, (int)6.35 * 256);                                      
+                sheet.SetColumnWidth(13, (int)18 * 256);  //灌和做货                                 
                 sheet.SetColumnWidth(14, 8 * 256); //差额
-                sheet.SetColumnWidth(15, 10 * 256); //第几次做货
+                sheet.SetColumnWidth(15, 0 * 256); //第几次做货
                 sheet.SetColumnWidth(16, 15 * 256); //订单号
                 sheet.SetColumnWidth(17, 40 * 256); //唯一值
                 sheet.SetColumnWidth(18, 14 * 256); //安全编号
@@ -247,8 +248,13 @@ namespace Common
                     var K0 = row.CreateCell(10); K0.CellStyle = blankStyle;
                     var L0 = row.CreateCell(11); L0.CellStyle = blankStyle;
                     #endregion
-                    var N0 = row.CreateCell(13); N0.SetCellValue(typedlists[j].ProductionType == "返工" ? "灌" : ""); N0.CellStyle = guanStyle;//灌不灌
-                    var P0 = row.CreateCell(15); P0.SetCellValue(typedlists[j].ProductionNumber>0 && typedlists[j].ProductionNumber <= 3 ? $"第{typedlists[j].ProductionNumber}次生产" :""); P0.CellStyle = fitStyle;
+                    string productionNumber = typedlists[j].ProductionNumber > 0 && typedlists[j].ProductionNumber <= 3 ? $"第{typedlists[j].ProductionNumber}次生产" : "";
+                    string guan = typedlists[j].ProductionType == "返工" ? "灌" : "";
+
+                    var N0 = row.CreateCell(13); N0.SetCellValue(guan+" "+ productionNumber); N0.CellStyle = guanStyle;//灌不灌
+                    //var P0 = row.CreateCell(15); P0.SetCellValue(); P0.CellStyle = fitStyle; // 第多少次生产和 灌写入同一个单元格，本单元格已设置宽度为0，
+
+
                     var Q0 = row.CreateCell(16); Q0.SetCellValue(typedlists[j].FBillNo); Q0.CellStyle = fitStyle;
                     var R0 = row.CreateCell(17); R0.SetCellValue(UniversalFunction.ToHexString(typedlists[j].RowHashValue)); R0.CellStyle = fitStyle;
                     var S0 = row.CreateCell(18); S0.SetCellValue(typedlists[j].SafeCode); S0.CellStyle = fitStyle;
