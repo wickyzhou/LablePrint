@@ -42,6 +42,7 @@
     <Compile Include="Bll\Services\OrganizationService.cs" />
     <Compile Include="Bll\Services\PrintTemplateService.cs" />
     <Compile Include="Bll\Services\ProductiveTaskListService.cs" />
+    <Compile Include="Bll\Services\QuerySchemaCurrentStatusService.cs" />
     <Compile Include="Bll\Services\UserInformationService.cs" />
     <Compile Include="Bll\Services\UserService.cs" />
     <Compile Include="Bll\SJICMOOrderListBll.cs" />

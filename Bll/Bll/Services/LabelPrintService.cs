@@ -102,9 +102,9 @@ namespace Bll.Services
             return dal.AddQuerySchemaEntry(model) == 1 ? null : "插入失败";
         }
 
-        public IEnumerable<QuerySchemaDynamicBtnModel> GetSchemaDynamicBtnByUserId(int id)
+        public IEnumerable<QuerySchemaModel> GetQuerySchemaModelByUserId(int userId)
         {
-            return dal.GetSchemaDynamicBtnByUserId(id);
+            return dal.GetQuerySchemaModelByUserId(userId);
         }
 
         public string IfEntryExists(int userId, QuerySchemaEntryModel inputModel)
@@ -130,20 +130,10 @@ namespace Bll.Services
            return dal.GetQuerySchemaEntryBySchemaId(schemaId).ToList(); 
         }
 
-        public string BatchInsertSchema(List<QuerySchemaModel> lists,string destinationTableName)
+        public void BatchInsertSchema(List<QuerySchemaModel> lists,string destinationTableName)
         {
-      
-            if (lists.Count > 1)
-            {
                 DataTable dt = ConvertHelper.ToDataTable<QuerySchemaModel>(lists);
                 dal.BatchInsertSchema(dt, destinationTableName);  
-            }
-            else
-            {
-                return "没有新模板";
-            }
-         
-            return "生成成功";
         }
 
 

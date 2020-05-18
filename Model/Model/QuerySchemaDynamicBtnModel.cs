@@ -27,5 +27,9 @@ namespace Model
 
         public string TemplateFullName { get; set; }
 
+        public string SchemaPageSize   { get; set; }
+
+        public string TemplateFileName { get; set; }
+
     }
 }

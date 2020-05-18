@@ -56,9 +56,11 @@
     <Compile Include="Model\BucketModel.cs" />
     <Compile Include="Model\UserInformationModel.cs" />
     <Compile Include="Model\UserModel.cs" />
+    <Compile Include="Model\QuerySchemaCurrentStatusModel.cs" />
     <Compile Include="Model\UserRoleModel.cs" />
     <Compile Include="Model\OrganizationModel.cs" />
     <Compile Include="Model\PageOwnerModel.cs" />
+    <Compile Include="Model\ViewModelBase11.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

@@ -37,5 +37,7 @@ namespace Model
 
         public decimal SpecificationValueEnd { get; set; }
 
+        public string SchemaPageSize { get; set; }
+
     }
 }

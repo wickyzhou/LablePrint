@@ -132,14 +132,20 @@ namespace Dal
                       });
         }
 
-        public IEnumerable<QuerySchemaDynamicBtnModel> GetSchemaDynamicBtnByUserId(int userId)
+        //public IEnumerable<QuerySchemaDynamicBtnModel> GetSchemaDynamicBtnByUserId(int userId)
+        //{
+
+        //    DataTable data = SqlHelper.ExecuteDataTable(@" select a.Id,UserId,SchemaSeq,SchemaName,Content,MarginLeft,MarginTop,MarginRight,MarginBottom,TemplateFullName,SchemaPageSize,TemplateFileName "
+        //                                                + " from SJUserQuerySchema a  join  SJUserQuerySchemaSeq b on a.SchemaSeq=b.Id where a.UserId=@UserId",
+        //        new SqlParameter[] { new SqlParameter("@UserId", userId) }); ;
+        //    return SqlHelper.DataTableToModelList<QuerySchemaDynamicBtnModel>(data);
+
+        //}
+
+        public IEnumerable<QuerySchemaModel> GetQuerySchemaModelByUserId(int userId)
         {
-
-            DataTable data = SqlHelper.ExecuteDataTable(@" select a.Id,UserId,SchemaSeq,SchemaName,Content,MarginLeft,MarginTop,MarginRight,MarginBottom,TemplateFullName  "
-                                                        + " from SJUserQuerySchema a  join  SJUserQuerySchemaSeq b on a.SchemaSeq=b.Id where a.UserId=@UserId",
-                new SqlParameter[] { new SqlParameter("@UserId", userId) }); ;
-            return SqlHelper.DataTableToModelList<QuerySchemaDynamicBtnModel>(data);
-
+            DataTable data = SqlHelper.ExecuteDataTable(" select * from SJUserQuerySchema where UserId=@UserId ", new SqlParameter[] { new SqlParameter("@UserId", userId) });
+            return SqlHelper.DataTableToModelList<QuerySchemaModel>(data);
         }
 
 
@@ -421,7 +427,8 @@ namespace Dal
 
         public IEnumerable<QuerySchemaConfigModel> GetSchemaEntryByUserId(int userId)
         {
-            DataTable data = SqlHelper.ExecuteDataTable(" select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,c.ContentTrans,b.SafeCode,b.CreateTime,b.SpecificationValueBegin,b.SpecificationValueEnd from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId join SJUserQuerySchemaSeq c on c.Id=a.SchemaSeq   where a.UserId=@UserId;",
+            DataTable data = SqlHelper.ExecuteDataTable(@"select a.UserId,a.Id BtnN,a.SchemaSeq,a.SchemaName,b.Id,b.OrgId,b.Label,b.BatchNo,b.ProductionModel,b.IsConditionOut,b.SafeCode,b.CreateTime,b.SpecificationValueBegin,b.SpecificationValueEnd,a.SchemaPageSize 
+from SJUserQuerySchema a  join  SJUserQuerySchemaEntry b on a.Id=b.SchemaId   where a.UserId=@UserId;",
                 new SqlParameter[] { new SqlParameter("@UserId", userId) });
             return SqlHelper.DataTableToModelList<QuerySchemaConfigModel>(data);
         }

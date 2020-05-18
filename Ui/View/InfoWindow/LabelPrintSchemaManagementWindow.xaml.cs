@@ -39,91 +39,91 @@ namespace Ui.View
             this.DataContext = names;
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
-        {
-            var name = this.TbSchemaName.Text;
-            var item = this.MainDataGrid.SelectedItem as QuerySchemaModel;
-            if (item == null)
-            {
-                MessageBox.Show("请先选择行");
-                return;
-            }
+        //private void BtnSave_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var name = this.TbSchemaName.Text;
+        //    var item = this.MainDataGrid.SelectedItem as QuerySchemaModel;
+        //    if (item == null)
+        //    {
+        //        MessageBox.Show("请先选择行");
+        //        return;
+        //    }
 
-            if (string.IsNullOrEmpty(this.TbSchemaName.Text))
-            {
-                MessageBox.Show("方案名称不能为空");
-                return;
-            }
+        //    if (string.IsNullOrEmpty(this.TbSchemaName.Text))
+        //    {
+        //        MessageBox.Show("方案名称不能为空");
+        //        return;
+        //    }
 
-            var entry = names.FirstOrDefault(m => m.SchemaName == name);
-            if (entry != null)
-            {
-                MessageBox.Show("方案名称不能重复");
-                return;
-            }
-
-
-            // 同步数据库
-            string r = new LabelPrintService().UpdateQuerySchemaName(item.Id, name);
-            if (r == null)
-            {
-                MessageBox.Show("更新成功");
-
-                BindingExpression be1 = TbSchemaName.GetBindingExpression(TextBox.TextProperty);
-                be1.UpdateSource();
-            }
-            else
-            {
-                MessageBox.Show(r);
-            }
-        }
-
-        private void BtnClear_Click(object sender, RoutedEventArgs e)
-        {
-            this.TbSchemaName.Text = null;
-            this.MainDataGrid.SelectedItem = null;
-        }
+        //    var entry = names.FirstOrDefault(m => m.SchemaName == name);
+        //    if (entry != null)
+        //    {
+        //        MessageBox.Show("方案名称不能重复");
+        //        return;
+        //    }
 
 
+        //    // 同步数据库
+        //    string r = new LabelPrintService().UpdateQuerySchemaName(item.Id, name);
+        //    if (r == null)
+        //    {
+        //        MessageBox.Show("更新成功");
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(this.TbSchemaName.Text))
-            {
-                MessageBox.Show("方案名称不能为空");
-                return;
-            }
+        //        BindingExpression be1 = TbSchemaName.GetBindingExpression(TextBox.TextProperty);
+        //        be1.UpdateSource();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show(r);
+        //    }
+        //}
 
-            // 获取当前第一个间断的序号，保证号码是连续的
-            int seq = GetContinuousSeq();
+        //private void BtnClear_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.TbSchemaName.Text = null;
+        //    this.MainDataGrid.SelectedItem = null;
+        //}
 
-            var name = this.TbSchemaName.Text;
 
-            var entry = names.FirstOrDefault(m => m.SchemaName == name);
-            if (entry != null)
-            {
-                MessageBox.Show("名称不能重复");
-                return;
-            }
 
-            QuerySchemaModel model = new QuerySchemaModel
-            {
-                UserId = User.ID,
-                SchemaName = name,
-                SchemaSeq = seq,
-            };
-            int id = new LabelPrintService().AddQuerySchemaName(model);
-            if (id <= 0)
-            {
-                MessageBox.Show("添加失败");
-                return;
-            }
-            model.Id = id;
-            this.names.Insert(seq - 1, model);
-            this.MainDataGrid.SelectedItem = null;
-            MessageBox.Show("添加成功");
+        //private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (string.IsNullOrEmpty(this.TbSchemaName.Text))
+        //    {
+        //        MessageBox.Show("方案名称不能为空");
+        //        return;
+        //    }
 
-        }
+        //    // 获取当前第一个间断的序号，保证号码是连续的
+        //    int seq = GetContinuousSeq();
+
+        //    var name = this.TbSchemaName.Text;
+
+        //    var entry = names.FirstOrDefault(m => m.SchemaName == name);
+        //    if (entry != null)
+        //    {
+        //        MessageBox.Show("名称不能重复");
+        //        return;
+        //    }
+
+        //    QuerySchemaModel model = new QuerySchemaModel
+        //    {
+        //        UserId = User.ID,
+        //        SchemaName = name,
+        //        SchemaSeq = seq,
+        //    };
+        //    int id = new LabelPrintService().AddQuerySchemaName(model);
+        //    if (id <= 0)
+        //    {
+        //        MessageBox.Show("添加失败");
+        //        return;
+        //    }
+        //    model.Id = id;
+        //    this.names.Insert(seq - 1, model);
+        //    this.MainDataGrid.SelectedItem = null;
+        //    MessageBox.Show("添加成功");
+
+        //}
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {

@@ -8,21 +8,25 @@
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
             <DataGrid ItemsSource="{Binding}" Name="MainDataGrid" Style="{StaticResource DGStyle}" Margin="0 10 0 0">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="BtnDelete" Header="删除" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Click="BtnDelete_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding SchemaSeq}" 
-                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="50" />
+                    <DataGridTextColumn DataGridColumn.Header="纸张大小" DataGridBoundColumn.Binding="{Binding SchemaPageSize}" 
+                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="200" />
                     <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding SchemaName}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
 
-        <Grid Grid.Column="1">
+        <!--<Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
@@ -34,23 +38,24 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBlock Text="方案名称" Style="{StaticResource TextBlockStyle}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
+                        <Button x:Name="BtnDelete" Content="删除" Style="{StaticResource BtnDangerStyle}" Margin="112 5 8 0" HorizontalAlignment="Left" Click="BtnDelete_Click"/>
                         <Button x:Name="BtnClear" Content="清除数据" Style="{StaticResource BtnInfoStyle}" Margin="112 5 8 0"  Click="BtnClear_Click"/>
                     </StackPanel>
                     <Grid  Margin="5 15 0 0" DataContext="{Binding ElementName=MainDataGrid,Path=SelectedItem,Mode=OneWay}">
                         <TextBox Name="TbSchemaName" Style="{StaticResource TextBoxStyle}" Text="{Binding SchemaName,UpdateSourceTrigger=Explicit}"/>
                     </Grid>
 
-                    <StackPanel Orientation="Horizontal" Margin="0 20 0 0" HorizontalAlignment="Center">
+                    --><!--<StackPanel Orientation="Horizontal" Margin="0 20 0 0" HorizontalAlignment="Center">
 
-                        <Button x:Name="BtnAdd" Content="增加" Style="{StaticResource BtnSuccessStyle}" Margin="5 10 0 0" HorizontalAlignment="Left" Click="BtnAdd_Click"/>
+                        --><!--<Button x:Name="BtnAdd" Content="增加" Style="{StaticResource BtnSuccessStyle}" Margin="5 10 0 0" HorizontalAlignment="Left" Click="BtnAdd_Click"/>
 
-                        <Button x:Name="BtnSave" Content="修改" Style="{StaticResource BtnWarningStyle}" Margin="12 10 0 0" HorizontalAlignment="Left" Click="BtnSave_Click"/>
+                        <Button x:Name="BtnSave" Content="修改" Style="{StaticResource BtnWarningStyle}" Margin="12 10 0 0" HorizontalAlignment="Left" Click="BtnSave_Click"/>--><!--
                      
                         <Button x:Name="BtnDelete" Content="删除" Style="{StaticResource BtnDangerStyle}" Margin="15 10 0 0" HorizontalAlignment="Left" Click="BtnDelete_Click"/>
-                    </StackPanel>
+                    </StackPanel>--><!--
 
                 </StackPanel>
             </Grid>
-        </Grid>
+        </Grid>-->
     </Grid>
 </Window>

@@ -6,15 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Caching;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Ui.View.InfoWindow;
 using Expression = System.Linq.Expressions.Expression;
@@ -34,8 +38,14 @@ namespace Ui.View.IndexPage
         readonly static string orientationIndex = ConfigurationManager.AppSettings["OrientationIndex"];
         readonly static UserModel user = MemoryCache.Default["user"] as UserModel;
         List<string> PrinterNames;
+
+        List<QuerySchemaCurrentStatusModel> schemaList;
+        List<QuerySchemaCurrentStatusModel> pageSizeList;
         // 用来识别是单击还是双击
         int i = 0; bool doubleClick = false;
+
+        // 当前打印纸张
+        string currentPageSize = string.Empty;
 
         // 用来识别是由双击方案按钮生成的数据还是单独打印的数据
         int globalSchemaId = 0;
@@ -45,6 +55,11 @@ namespace Ui.View.IndexPage
             InitializeComponent();
             SetQuerySchemaBtn(user.ID);
             PrinterNames = PrintHelper.GetComputerPrinter();
+
+            schemaList = new QuerySchemaCurrentStatusService().GetUserSchemaList(user.ID, this.DP1.SelectedDate.Value);
+            pageSizeList = new QuerySchemaCurrentStatusService().GetUserPageSizeList(user.ID, this.DP1.SelectedDate.Value);
+            this.scrollViewer.DataContext = schemaList;
+            this.spSchema.DataContext = pageSizeList;
             //this.MainDataGrid.LoadingRow += (send, e) => { e.Row.Header = e.Row.GetIndex() + 1; };
         }
 
@@ -70,6 +85,7 @@ namespace Ui.View.IndexPage
 
             InitializeComponentDefaultValue();
             this.MainDataGrid.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight);
+            this.scrollViewer.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight); // 同一行数据高度一样
         }
 
         private void InitializeComponentDefaultValue()
@@ -81,11 +97,11 @@ namespace Ui.View.IndexPage
                 Application.Current.Dispatcher?.Invoke(new Action(() =>
                {
                    if (lists.Count == 0)
-                       MainDataGrid.ItemsSource = new ObservableCollection<LabelPrintHistoryModel>(new List<LabelPrintHistoryModel>{new LabelPrintHistoryModel { ProductionModel = $"请先审核 {date.ToString("yyyy-MM-dd")}",Label=" 生产任务清单" }});
+                       MainDataGrid.ItemsSource = new ObservableCollection<LabelPrintHistoryModel>(new List<LabelPrintHistoryModel> { new LabelPrintHistoryModel { ProductionModel = $"请先审核 {date.ToString("yyyy-MM-dd")}", Label = " 生产任务清单" } });
                    else
                        MainDataGrid.ItemsSource = new ObservableCollection<LabelPrintHistoryModel>(lists); //HistoryRecords;
                    this.TbSum.Text = lists.Count().ToString();
-                }));
+               }));
             });
             //GetDataFromDatabase(date);
             globalSchemaId = 0;
@@ -117,7 +133,7 @@ namespace Ui.View.IndexPage
             {
                 ClearValue();
                 DateTime date = this.DP1.SelectedDate.Value;
-                lists =GetDataFromDatabase(date);
+                lists = GetDataFromDatabase(date);
                 if (lists.Count == 0)
                     MainDataGrid.ItemsSource = new ObservableCollection<LabelPrintHistoryModel>(new List<LabelPrintHistoryModel> { new LabelPrintHistoryModel { ProductionModel = $"请先审核 {date.ToString("yyyy-MM-dd")}", Label = " 生产任务清单" } });
                 else
@@ -127,8 +143,8 @@ namespace Ui.View.IndexPage
         }
 
         private void BtnQuery_Click(object sender, RoutedEventArgs e)
-        {   
-            var filterData= GetFilteredItemSource();
+        {
+            var filterData = GetFilteredItemSource();
             this.MainDataGrid.ItemsSource = filterData;
             this.TbSum.Text = filterData.Count().ToString();
         }
@@ -151,7 +167,8 @@ namespace Ui.View.IndexPage
 
         private void BtnShow_Click(object sender, RoutedEventArgs e)
         {
-            LabelPrintCurrentPrintDataWindow window = new LabelPrintCurrentPrintDataWindow(user, this.DP1.SelectedDate.Value, new PrintSchemaParameterModel {
+            LabelPrintCurrentPrintDataWindow window = new LabelPrintCurrentPrintDataWindow(user, this.DP1.SelectedDate.Value, new PrintSchemaParameterModel
+            {
                 UserId = user.ID,
                 SchemaId = globalSchemaId,
                 TemplateFullName = this.CbPrintTemplate.Text,
@@ -167,7 +184,7 @@ namespace Ui.View.IndexPage
 
         public void RefreshDataGrid()
         {
-            lists=GetDataFromDatabase(this.DP1.SelectedDate.Value);
+            lists = GetDataFromDatabase(this.DP1.SelectedDate.Value);
             var filterData = GetFilteredItemSource();
             this.MainDataGrid.ItemsSource = filterData;
             this.TbSum.Text = filterData.Count().ToString();
@@ -194,7 +211,7 @@ namespace Ui.View.IndexPage
                 PrinterName = this.CbPrinterName.Text,
                 FolderPath = this.tbFolderPath.Text
             };
-            string r = new PrintHelper().PrintLabel(config,data);
+            string r = new PrintHelper().PrintLabel(config, data);
             if (string.IsNullOrEmpty(r))
             {
                 // 打印参数插入数据库
@@ -208,6 +225,11 @@ namespace Ui.View.IndexPage
                     }
                 }
                 RefreshDataGrid();
+                // 将对应的按钮的背景色设置为绿色
+                var btn=(Button)this.scrollViewer.FindName("Btn" + globalSchemaId.ToString());
+                btn.Foreground = System.Windows.Media.Brushes.GhostWhite;
+                var border = (Border)btn.Template.FindName("back",btn);
+                border.Background = System.Windows.Media.Brushes.Green;
                 globalSchemaId = 0;
                 MessageBox.Show("打印成功");
             }
@@ -293,7 +315,7 @@ namespace Ui.View.IndexPage
             if (r.Length > 0)
             {
                 MessageBox.Show(r);
-                lists=GetDataFromDatabase(this.DP1.SelectedDate.Value);
+                lists = GetDataFromDatabase(this.DP1.SelectedDate.Value);
             }
             else
             {
@@ -400,29 +422,58 @@ namespace Ui.View.IndexPage
 
         private void SetQuerySchemaBtn(int id)
         {
-            var model = new LabelPrintService().GetSchemaDynamicBtnByUserId(user.ID).OrderBy(m => m.SchemaSeq);
+            var model = new LabelPrintService().GetQuerySchemaModelByUserId(user.ID).OrderBy(m => m.SchemaPageSize);
 
-            int seqCount = model.Count();
-            if (seqCount > 0)
+            if (model.Count() > 0)
             {
-                double marginLeft = ((860.00 / seqCount) - 23) / 2 > 10 ? 10 : ((860.00 / seqCount) - 23) / 2;
-                this.SpBtnN.Children.Clear();
-                foreach (QuerySchemaDynamicBtnModel item in model)
-                {
-                    Button btn = new Button();
-                    btn.Name = "Btn" + item.Id.ToString();
-                    btn.ToolTip = item.SchemaName;
-                    btn.Content = System.Web.HttpUtility.HtmlDecode(item.Content);
-                    btn.Style = FindResource("SchemaSeqButton") as Style;
-                    btn.Margin = new Thickness { Left = marginLeft, Top = item.MarginTop };
-                    btn.Tag = item.TemplateFullName;
+                this.spSchema.Children.Clear();
+                string pageSize = string.Empty;
+             
+                foreach (QuerySchemaModel item in model)
+                {   
+                    // 同一个页面
+                    if (pageSize.Equals(item.SchemaPageSize))
+                    {
+                        var wrapPanel = (WrapPanel)this.spSchema.FindName(item.SchemaPageSize);
+                        var btn = CreateCustomButtion(item);
+                        wrapPanel.Children.Add(btn);
+                        if (wrapPanel.FindName("Btn" + item.Id.ToString()) == null)
+                        {
+                            wrapPanel.RegisterName("Btn" + item.Id.ToString(), btn);
+                        }
+                    }
+                    else // 不是同一组
+                    {
+                        pageSize = item.SchemaPageSize;
+                        GroupBox groupBox = new GroupBox();
+                        groupBox.Header = " "+item.SchemaPageSize+" ";
+                        groupBox.Margin = new Thickness { Bottom = 15 };
+                        groupBox.Padding = new Thickness { Bottom=3,Top=3,Left=3,Right=3};
+                        groupBox.BorderThickness = new Thickness { Bottom = 2, Top = 2, Left = 2, Right = 2 };
 
-                    //btn.MouseDoubleClick+= Btn_MouseDoubleClick; 只能注册一个事件  单击和双击事件 是互斥的
-                    btn.Click += Btn_Click;
-                    this.SpBtnN.Children.Add(btn);
+                        Binding color = new Binding("PageSizeStatus");
+                        color.Converter = FindResource("PageSizeStatusConverter") as IValueConverter;
+                        groupBox.SetBinding(GroupBox.BorderBrushProperty, "PageSizeStatus");
+                        groupBox.SetBinding(GroupBox.ForegroundProperty, "PageSizeStatus");
+                        // groupBox.Name =  item.SchemaPageSize; // 如此赋值FINDNAME找不到
+                        WrapPanel wrapPanel = new WrapPanel();
+                        wrapPanel.Name = item.SchemaPageSize;
+                        var btn = CreateCustomButtion(item);
+                        wrapPanel.Children.Add(btn);
+                        groupBox.Content = wrapPanel;
+                        this.spSchema.Children.Add(groupBox);
+                        if (this.spSchema.FindName(item.SchemaPageSize)==null)
+                        {
+                            this.spSchema.RegisterName(item.SchemaPageSize, wrapPanel);
+                        }
+                        if (wrapPanel.FindName("Btn" + item.Id.ToString()) == null)
+                        {
+                            wrapPanel.RegisterName("Btn" + item.Id.ToString(), btn);
+                        }
+                    }
                 }
-            }
 
+            }
         }
 
         private void Btn_Click(object sender, RoutedEventArgs e)
@@ -430,6 +481,7 @@ namespace Ui.View.IndexPage
             Button button = sender as Button;
             int schemaId = int.Parse(button.Name.Replace("Btn", ""));
             string schemaName = (sender as Button).ToolTip.ToString();
+            var pageSize = (((sender as Button).Parent) as WrapPanel).Name;
             i += 1;
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 0, 0, 400);
@@ -442,7 +494,7 @@ namespace Ui.View.IndexPage
                 doubleClick = true;
 
                 //双击时执行的代码
-                DoubleClick(schemaId, schemaName, button.Tag.ToString());
+                DoubleClick(schemaId, schemaName, button.Tag.ToString(), pageSize);
             }
         }
 
@@ -477,7 +529,7 @@ namespace Ui.View.IndexPage
                 if (!string.IsNullOrWhiteSpace(entryModel.SafeCode))
                     message += "  安全标签 包含 【" + entryModel.SafeCode + "】\r\n";
                 message += $"  净重 【 {entryModel.SpecificationValueBegin}】 到 【{entryModel.SpecificationValueEnd}】 \r\n";
-     
+
                 string con = checkBox.IsChecked.Value ? "-------------排除条件-------" : " 【筛选条件】";
                 MessageBoxResult result = MessageBox.Show($" 类别：{con} \r\n 方案: 【 {schemaName} 】 \r\n\r\n {message} ", "温馨提示", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
@@ -495,12 +547,23 @@ namespace Ui.View.IndexPage
             }
         }
 
-        private void DoubleClick(int schemaId, string schemaName, string templateFullName)
+        private void DoubleClick(int schemaId, string schemaName, string templateFullName,string pageSize)
         {
             MessageBoxResult result = MessageBox.Show($"生成【 {schemaName} 】 全部数据到待打印记录 \r\n 生产日期：【 {this.DP1.SelectedDate.Value} 】", "温馨提示", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
+                #region 设置界面颜色表现
+                var btn = (Button)this.scrollViewer.FindName("Btn" + schemaId.ToString());
+                btn.Foreground = System.Windows.Media.Brushes.Red;
+                #endregion
 
+                if (!string.IsNullOrEmpty(currentPageSize) && currentPageSize!= pageSize)
+                {
+                    MessageBox.Show($" 当前方案纸张【 {pageSize} 】和之前的不一样，请确认打印纸张 ");
+                    currentPageSize = pageSize;
+                    return;
+                }
+                currentPageSize = pageSize;
                 // 获取查询明细，组合条件
                 var schemaEntries = new LabelPrintService().GetQuerySchemaEntryBySchemaId(schemaId);
                 if (schemaEntries.Count() == 0)
@@ -543,7 +606,7 @@ namespace Ui.View.IndexPage
                     }
 
                     MessageBox.Show(message);
-
+                    
                     RefreshDataGrid();
                 }
                 else
@@ -566,7 +629,7 @@ namespace Ui.View.IndexPage
                     BatchNo = item.BatchNo,
                     Label = item.Label,
                     ProductionModel = item.ProductionModel,
-                    SafeCode=item.SafeCode,
+                    SafeCode = item.SafeCode,
                     SpecificationValueBegin = item.SpecificationValueBegin,
                     SpecificationValueEnd = item.SpecificationValueEnd
                 });
@@ -629,8 +692,8 @@ namespace Ui.View.IndexPage
                 ProductionModel = string.IsNullOrWhiteSpace(this.tbProductionModel.Text) ? "" : this.tbProductionModel.Text.ToUpper(),
                 IsConditionOut = this.checkBox.IsChecked.Value,
                 SafeCode = string.IsNullOrWhiteSpace(this.tbSafeCode.Text) ? "" : this.tbSafeCode.Text.ToUpper(),
-                SpecificationValueBegin = decimal.TryParse(this.tbNetWeightBegin.Text, out decimal result) ? result: 0,
-                SpecificationValueEnd= decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99
+                SpecificationValueBegin = decimal.TryParse(this.tbNetWeightBegin.Text, out decimal result) ? result : 0,
+                SpecificationValueEnd = decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99
             };
         }
 
@@ -661,7 +724,7 @@ namespace Ui.View.IndexPage
         public static Expression<Func<LabelPrintHistoryModel, bool>> CreateLambda(LabelPrintHistoryModel entryModel)
         {
 
-            Expression<Func<LabelPrintHistoryModel, bool>> condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue<=entryModel.SpecificationValueEnd;
+            Expression<Func<LabelPrintHistoryModel, bool>> condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue <= entryModel.SpecificationValueEnd;
             //var parameter = Expression.Parameter(typeof(T), "p");//创建参数i
             //var constant = Expression.Constant(filterCondition.value);//创建常数
             //MemberExpression member = Expression.PropertyOrField(parameter, filterCondition.column);        
@@ -745,6 +808,7 @@ namespace Ui.View.IndexPage
 
         private void BtnGenQuerySchema_Click(object sender, RoutedEventArgs e)
         {
+            StringBuilder sb = new StringBuilder("成功生成方案 \r\n 纸张尺寸 \t 方案名称 \r\n");
             if (string.IsNullOrEmpty(this.tbFolderPath.Text))
             {
                 MessageBox.Show("请先选择模板所在文件夹");
@@ -764,34 +828,47 @@ namespace Ui.View.IndexPage
 
             foreach (var s in this.CbPrintTemplate.Items)
             {
-                string schemaName = Path.GetFileName(s.ToString()).Replace(".btw", "");
-
+                string fileName = Path.GetFileName(s.ToString()).Replace(".btw", "");
                 // 方案名称存在的话，不变，不存在的话，新增新的解决方案
-                var exists = userSchemas.FirstOrDefault(m => m.SchemaName == schemaName);
+                var exists = userSchemas.FirstOrDefault(m => m.TemplateFileName == fileName);
                 if (exists == null)
                 {
-                    var seq = GetContinuousSeq(userSchemas);
+                    string pageSize = string.Empty; string schemaName = string.Empty;
+                    try
+                    {
+                        pageSize = fileName.Split(new char[] { ' ' }, 2)[0];
+                        schemaName = fileName.Split(new char[] { ' ' }, 2)[1];
+                    }
+                    catch
+                    {
+                        MessageBox.Show(" 生成方案失败： 所有文件模板必须以【空格】分割页面大小、方案名称");
+                        return;
+                    }
+
                     QuerySchemaModel newModel = new QuerySchemaModel
                     {
                         UserId = user.ID,
-                        SchemaSeq = seq,
+                        SchemaSeq = 0,
+                        TemplateFullName = s.ToString(),
+                        TemplateFileName = fileName,
                         SchemaName = schemaName,
-                        TemplateFullName = s.ToString()
-
+                        SchemaPageSize = pageSize
                     };
+                    sb.Append(pageSize + "\t");
+                    sb.AppendLine(schemaName);
                     newSchema.Add(newModel);
-                    userSchemas.Insert(seq - 1, newModel);
+                    // userSchemas.Insert(seq - 1, newModel);
                 }
             }
 
             // 添加到数据库
-            var r = new LabelPrintService().BatchInsertSchema(newSchema, "SJUserQuerySchema");
-
-            // 刷新panel
-            SetQuerySchemaBtn(user.ID);
-
-            MessageBox.Show(r);
-
+            if (newSchema.Count > 1)
+            {
+                new LabelPrintService().BatchInsertSchema(newSchema, "SJUserQuerySchema");
+                // 刷新panel
+                SetQuerySchemaBtn(user.ID);
+            }
+            MessageBox.Show(sb.ToString());
         }
 
         public int GetContinuousSeq(List<QuerySchemaModel> names)
@@ -831,7 +908,9 @@ namespace Ui.View.IndexPage
             double result = 300;
             if (height > 1080)
                 result = height * 0.7;
-            if (height >= 1000 && height <= 1080)
+            else if (height == 1080)
+                result = 700;
+            else if (height >= 1000 && height < 1080)
                 result = height * 0.6;
             else if (height >= 900 && height < 1000)
                 result = height * 0.55;
@@ -840,7 +919,21 @@ namespace Ui.View.IndexPage
             else if (height < 800)
                 result = height * 0.43;
             return result;
+
         }
+
+        private Button CreateCustomButtion(QuerySchemaModel model)
+        {
+            Button btn = new Button();
+            btn.Name = "Btn" + model.Id.ToString();
+            btn.ToolTip = model.SchemaName;
+            btn.Content = System.Web.HttpUtility.HtmlDecode(model.SchemaName);
+            btn.Style = FindResource("SchemaSeqButton") as Style;
+            btn.Tag = model.TemplateFullName;
+            btn.Click += Btn_Click;
+            return btn;
+        }
+
     }
 
 }

@@ -79,7 +79,6 @@
             </Style.Triggers>
         </Style>
     </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -88,7 +87,7 @@
             <RowDefinition Height="1"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="1"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 0 0 0">
@@ -233,7 +232,7 @@
 
                 <TextBlock HorizontalAlignment="Center" Grid.Row="3"  Grid.Column="2"  Text="规格区间" VerticalAlignment="Center"
                                     Foreground="White" FontFamily="宋体" />
-                
+
                 <TextBox Name="tbNetWeightBegin" Grid.Column="3" HorizontalAlignment="Left" Height="26" Grid.Row="3"   VerticalAlignment="Center" 
                          Width="50" VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，包括输入值,为空时默认0 "/>
                 <TextBlock HorizontalAlignment="Center" Grid.Row="3"  Grid.Column="3"  Text="-" VerticalAlignment="Center"
@@ -241,8 +240,8 @@
                 <TextBox Name="tbNetWeightEnd" Grid.Column="3" HorizontalAlignment="Right" Height="26" Grid.Row="3"   VerticalAlignment="Center" 
                          Width="50" 
                          VerticalContentAlignment="Center" Margin="0,2" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，包括输入值，为空时默认999999.99 "/>
-    
-                
+
+
 
 
                 <TextBlock HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2"  Text="客户ID" VerticalAlignment="Center"
@@ -258,7 +257,7 @@
                 <TextBox  Name="tbProductionModel"  Grid.Row="1"  Grid.Column="5" Height="26"  Width="120" HorizontalAlignment="Left"
                   Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,6,0,6" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
 
-       
+
                 <TextBlock  HorizontalAlignment="Center" Grid.Row="5"  Grid.Column="0" Text="标签型号" VerticalAlignment="Center"  Foreground="White" FontFamily="宋体"/>
                 <TextBox  Name="tbLabel" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Height="26"  Width="100"
        VerticalAlignment="Center"  VerticalContentAlignment="Center" Foreground="OrangeRed" Style="{StaticResource TextBoxStyle}" ToolTip="Enter键查询，默认模糊匹配，【=X】(指定等于某个值) 【%X】（X结尾） 【X%】（X开始）"/>
@@ -268,7 +267,7 @@
                 <TextBlock  HorizontalAlignment="Center" Grid.Row="5"  Grid.Column="4" Text="排除条件" VerticalAlignment="Center"
                                      Foreground="White" FontFamily="宋体" Margin="20 0 0 0"/>
                 <CheckBox Name="checkBox" IsChecked="False" Grid.Row="5"  Grid.Column="5" Style="{StaticResource CheckBoxStyle}" Grid.ColumnSpan="2"  HorizontalAlignment="Left" Margin="0 0 0 0" ToolTip="默认是关闭的，点击右置开启" />
-           
+
 
 
                 <Button Name="BtnQuery" Content="查询"  Grid.Column="3"  HorizontalAlignment="Center"  
@@ -359,14 +358,14 @@
                         <ComboBox Name="CbOrientation"   Style="{StaticResource ComboBoxStyle}"  IsReadOnly="True" Margin="0 0 30 0"  
                       Width="70" MaxWidth="100"
                               HorizontalAlignment="Left"/>
-                        
+
                         <ComboBox Name="CbPrinterName"   Style="{StaticResource ComboBoxStyle}"  IsReadOnly="True"
                       Width="200" MaxWidth="200"
                               HorizontalAlignment="Left"/>
 
-                      
+
                     </StackPanel>
-               
+
 
                 </Grid>
             </Grid>
@@ -383,10 +382,10 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal">
-                    <Button Name="BtnRefresh" Content="&#xe647;"  ToolTip="刷新表格数据" Style="{StaticResource SubIconButton}" Click="BtnRefresh_Click"/>
-                    <Button Name="BtnAddData" Content="&#xe728;"   ToolTip="添加待打印数据" Style="{StaticResource SubIconButton}" Click="BtnAddData_Click" Margin="5 0" />
-                    <Button Name="BtnModify" Content="&#xe63c;" ToolTip="修改选中数据" Style="{StaticResource SubIconButton}" Click="BtnModify_Click"/>
-                </StackPanel>
+                <Button Name="BtnRefresh" Content="&#xe647;"  ToolTip="刷新表格数据" Style="{StaticResource SubIconButton}" Click="BtnRefresh_Click"/>
+                <Button Name="BtnAddData" Content="&#xe728;"   ToolTip="添加待打印数据" Style="{StaticResource SubIconButton}" Click="BtnAddData_Click" Margin="5 0" />
+                <Button Name="BtnModify" Content="&#xe63c;" ToolTip="修改选中数据" Style="{StaticResource SubIconButton}" Click="BtnModify_Click"/>
+            </StackPanel>
 
             <StackPanel Grid.Column="1" x:Name="SpBtnN" Margin="20 0 0 3.5" Width="870" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" CanHorizontallyScroll="True">
                 <StackPanel.Background>
@@ -401,7 +400,7 @@
             </StackPanel>
             <TextBlock Grid.Column="2" x:Name="TbSum" Text="0" Style="{StaticResource TextBlockStyle15}" VerticalAlignment="Center" FontSize="13"/>
         </Grid>
-   
+
         <Grid Grid.Row="5" Background="LightGray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="78*"/>
@@ -410,13 +409,13 @@
             </Grid.ColumnDefinitions>
         </Grid>
 
-        <Grid  Grid.Row="6" >
+        <Grid  Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
-                <ColumnDefinition  Width="*"/>
+                <ColumnDefinition  Width="260"/>
             </Grid.ColumnDefinitions>
-            
-            <DataGrid Name="MainDataGrid" Grid.Column="0"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
+
+            <DataGrid Name="MainDataGrid"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
                       GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"  HeadersVisibility="Column">
                 <DataGrid.ItemContainerStyle>
                     <Style TargetType="DataGridRow">
@@ -502,48 +501,28 @@
 
                 </DataGrid.Columns>
             </DataGrid>
-            <Grid Grid.Column="1" Background="Gray">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <GroupBox Header=" A1 " Grid.Row="0" Background="LightBlue">
-                    <Button Content="A1安全标签2,4,6" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
-                </GroupBox>
-                <GroupBox Header=" A2 " Grid.Row="1" Background="LightBlue">
-                    <Button Content="A2安全标签2" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
-                </GroupBox>
-                <GroupBox Header=" A3 " Grid.Row="2" Background="LightBlue">
-                    <Button Content="A3安全标签1" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
-                </GroupBox>
-                <GroupBox Header=" b1 " Grid.Row="3" Background="LightBlue">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 0"/>
-                        <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"/>
-                    </StackPanel>
 
-                </GroupBox>
-                <GroupBox Header=" b2 " Grid.Row="4" Background="LightBlue"/>
-                <GroupBox Header=" b3 " Grid.Row="5" Background="LightBlue"/>
-                <GroupBox Header=" c1 " Grid.Row="6" Background="LightBlue"/>
-                <GroupBox Header=" c2 " Grid.Row="7" Background="LightBlue"/>
-                <GroupBox Header=" c3 " Grid.Row="8" Background="LightBlue"/>
+
+            <ScrollViewer Grid.Column="1" Background="#e8e8e8" Name="scrollViewer" Margin="1 0" >
+                <StackPanel x:Name="spSchema">
+
+                    <GroupBox Header=" b1 " Padding="5" BorderBrush="Green" BorderThickness="1">
+                        <WrapPanel>
+                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5" ToolTip="B1安全标签3,5,6"/>
+                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5" />
+                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5"/>
+                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5"/>
+                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5"/>
+                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5"/>
+                        </WrapPanel>
+                    </GroupBox>
                 
-            </Grid>
-            
+                </StackPanel>
+            </ScrollViewer>
+
+
         </Grid>
-        
+
 
     </Grid>
 </Page>

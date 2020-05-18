@@ -26,13 +26,13 @@ namespace Ui.View.InfoWindow
             this.User = user;
             // 获取我的方案
             this.CbRequestName.ItemsSource =new LabelPrintService().GetMySchema(User.ID);
-            SchemaEntries = new ObservableCollection<QuerySchemaConfigModel>(new LabelPrintService().GetSchemaEntryByUserId(User.ID).OrderBy(m => m.SchemaSeq));
+            SchemaEntries = new ObservableCollection<QuerySchemaConfigModel>(new LabelPrintService().GetSchemaEntryByUserId(User.ID));
             this.MainDataGrid.ItemsSource = SchemaEntries;
 
             //新建window后台代码
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { RefreshEvent(); this.Close();  }));
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close();  })); // RefreshEvent(); 
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>
             {
                 LabelPrintSchemaConfigHelpWindow window = new LabelPrintSchemaConfigHelpWindow();
@@ -81,8 +81,8 @@ namespace Ui.View.InfoWindow
         {
             if (IsLoaded && e.AddedItems.Count>0)
             {
-                int selectedValue = (e.AddedItems[0] as QuerySchemaModel).SchemaSeq;
-                ObservableCollection<QuerySchemaConfigModel> result = new ObservableCollection<QuerySchemaConfigModel>(SchemaEntries.Where(m=>m.SchemaSeq==selectedValue));
+                int selectedValue = (e.AddedItems[0] as QuerySchemaModel).Id;
+                ObservableCollection<QuerySchemaConfigModel> result = new ObservableCollection<QuerySchemaConfigModel>(SchemaEntries.Where(m=>m.BtnN==selectedValue));
                 this.MainDataGrid.ItemsSource = result;
             }
         }

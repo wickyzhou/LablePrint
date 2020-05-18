@@ -20,21 +20,26 @@
                     <Button Name="SchemaManager" Content="方案管理" Style="{StaticResource BtnThemeStyle}" Margin="40 0 30 0" Click="SchemaManager_Click" ToolTip="新增、删除、修改方案"/>
                     <TextBlock Text="我的方案" Style="{StaticResource TextBlockStyle}" />
                     <ComboBox  Name="CbRequestName" Style="{StaticResource ComboBoxStyle}" MaxWidth="300"
-                              Width="250" DisplayMemberPath="SchemaName" SelectedValuePath="SchemaSeq" 
-                              Margin="10 0 0 0" SelectionChanged="CbRequestName_SelectionChanged"
-                               >
+                              Width="250" DisplayMemberPath="SchemaName" SelectedValuePath="BtnN" 
+                              Margin="10 0 0 0" SelectionChanged="CbRequestName_SelectionChanged" >
                     </ComboBox>
-
-                    <Button x:Name="BtnDelete" Content="删除已选条件" Style="{StaticResource BtnDangerStyle}" Margin="50 0 0 0" HorizontalAlignment="Left" Click="BtnDelete_Click" Width="120"/>
+                    <!--<Button x:Name="BtnDelete" Content="删除已选条件" Style="{StaticResource BtnDangerStyle}" Margin="50 0 0 0" HorizontalAlignment="Left" Click="BtnDelete_Click" Width="120"/>-->
                 </StackPanel>
             </Grid>
         </Grid>
         <Grid  Grid.Row="1">
             <DataGrid x:Name="MainDataGrid" Style="{StaticResource DGStyle}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="BtnDelete" Header="删除" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Click="BtnDelete_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn DataGridColumn.Header="方案序号" DataGridBoundColumn.Binding="{Binding ContentTrans}" 
-                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
+                    <DataGridTextColumn DataGridColumn.Header="方案Id" DataGridBoundColumn.Binding="{Binding BtnN}" 
+                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="40" />
                     <DataGridTextColumn DataGridColumn.Header="方案名称" DataGridBoundColumn.Binding="{Binding SchemaName}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="2*" />
+                    <DataGridTextColumn DataGridColumn.Header="纸张尺寸" DataGridBoundColumn.Binding="{Binding SchemaPageSize}" 
+                                        HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
                     <DataGridTextColumn DataGridColumn.Header="排除条件" DataGridBoundColumn.Binding="{Binding IsConditionOut}"  HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
                     <DataGridTextColumn DataGridColumn.Header="安全编号" DataGridBoundColumn.Binding="{Binding SafeCode}"   HeaderStyle="{StaticResource DGColumnHeader}" Width="60" />
 
