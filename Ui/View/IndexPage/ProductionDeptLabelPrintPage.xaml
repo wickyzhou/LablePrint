@@ -506,23 +506,16 @@
             <ScrollViewer Grid.Column="1" Background="#e8e8e8" Name="scrollViewer" Margin="1 0" >
                 <StackPanel x:Name="spSchema">
 
-                    <GroupBox Header=" b1 " Padding="5" BorderBrush="Green" BorderThickness="1">
+                    <GroupBox Header=" 示例纸张规格 " Padding="5" BorderBrush="Green" BorderThickness="1">
                         <WrapPanel>
-                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5" ToolTip="B1安全标签3,5,6"/>
-                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5" />
-                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5"/>
-                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5"/>
-                            <Button Content="B1安全标签3,5,6" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5"/>
-                            <Button Content="B1安全标签7" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5"/>
+                            <Button Content="示例方案1" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5" />
+                            <Button Content="示例方案2" Style="{StaticResource BtnSuccessStyle}" Width="150"  Margin="10 5" />
+                            <Button Content="示例方案3" Style="{StaticResource BtnSuccessStyle}" Width="150" Margin="10 5"/>
                         </WrapPanel>
                     </GroupBox>
-                
+
                 </StackPanel>
             </ScrollViewer>
-
-
         </Grid>
-
-
     </Grid>
 </Page>

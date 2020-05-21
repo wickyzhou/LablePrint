@@ -53,13 +53,12 @@ namespace Ui.View.IndexPage
         public ProductionDeptLabelPrintPage()
         {
             InitializeComponent();
-            SetQuerySchemaBtn(user.ID);
-            PrinterNames = PrintHelper.GetComputerPrinter();
+           
 
-            schemaList = new QuerySchemaCurrentStatusService().GetUserSchemaList(user.ID, this.DP1.SelectedDate.Value);
-            pageSizeList = new QuerySchemaCurrentStatusService().GetUserPageSizeList(user.ID, this.DP1.SelectedDate.Value);
-            this.scrollViewer.DataContext = schemaList;
-            this.spSchema.DataContext = pageSizeList;
+            //schemaList = new QuerySchemaCurrentStatusService().GetUserSchemaList(user.ID, this.DP1.SelectedDate.Value);
+            //pageSizeList = new QuerySchemaCurrentStatusService().GetUserPageSizeList(user.ID, this.DP1.SelectedDate.Value);
+            //this.scrollViewer.DataContext = schemaList;
+            //this.spSchema.DataContext = pageSizeList;
             //this.MainDataGrid.LoadingRow += (send, e) => { e.Row.Header = e.Row.GetIndex() + 1; };
         }
 
@@ -82,8 +81,10 @@ namespace Ui.View.IndexPage
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-
+            PrinterNames = PrintHelper.GetComputerPrinter();
             InitializeComponentDefaultValue();
+            
+            
             this.MainDataGrid.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight);
             this.scrollViewer.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight); // 同一行数据高度一样
         }
@@ -103,6 +104,11 @@ namespace Ui.View.IndexPage
                    this.TbSum.Text = lists.Count().ToString();
                }));
             });
+
+            SetQuerySchemaBtn(user.ID);
+      
+                
+
             //GetDataFromDatabase(date);
             globalSchemaId = 0;
             //MainDataGrid.DataContext = HistoryRecords;
@@ -184,10 +190,16 @@ namespace Ui.View.IndexPage
 
         public void RefreshDataGrid()
         {
-            lists = GetDataFromDatabase(this.DP1.SelectedDate.Value);
-            var filterData = GetFilteredItemSource();
-            this.MainDataGrid.ItemsSource = filterData;
-            this.TbSum.Text = filterData.Count().ToString();
+            Task.Factory.StartNew(() =>
+            {
+                Application.Current.Dispatcher?.Invoke(new Action(() =>
+                {
+                    lists = GetDataFromDatabase(this.DP1.SelectedDate.Value);
+                    var filterData = GetFilteredItemSource();
+                    this.MainDataGrid.ItemsSource = filterData;
+                    this.TbSum.Text = filterData.Count().ToString();
+                }));
+            });
         }
 
         private void BtnPrint_Click(object sender, RoutedEventArgs e)
@@ -217,6 +229,12 @@ namespace Ui.View.IndexPage
                 // 打印参数插入数据库
                 if (globalSchemaId > 0)
                 {
+                    // 将对应的按钮的背景色设置为绿色
+                    var btn = (Button)this.scrollViewer.FindName("Btn" + globalSchemaId.ToString());
+                    btn.Foreground = System.Windows.Media.Brushes.GhostWhite;
+                    var border = (Border)btn.Template.FindName("back", btn);
+                    border.Background = System.Windows.Media.Brushes.Green;
+
                     var message = new LabelPrintService().SavePrintSchemaParameter(config);
                     if (!string.IsNullOrEmpty(r))
                     {
@@ -225,11 +243,6 @@ namespace Ui.View.IndexPage
                     }
                 }
                 RefreshDataGrid();
-                // 将对应的按钮的背景色设置为绿色
-                var btn=(Button)this.scrollViewer.FindName("Btn" + globalSchemaId.ToString());
-                btn.Foreground = System.Windows.Media.Brushes.GhostWhite;
-                var border = (Border)btn.Template.FindName("back",btn);
-                border.Background = System.Windows.Media.Brushes.Green;
                 globalSchemaId = 0;
                 MessageBox.Show("打印成功");
             }
@@ -366,7 +379,7 @@ namespace Ui.View.IndexPage
             {
                 Owner = System.Windows.Window.GetWindow(this)
             };
-            window.RefreshEvent += () => { this.SpBtnN.Children.Clear(); SetQuerySchemaBtn(user.ID); };
+            window.RefreshEvent += () => {SetQuerySchemaBtn(user.ID); };
             window.ShowDialog();
 
         }
@@ -578,7 +591,6 @@ namespace Ui.View.IndexPage
                 var ids = ids1.Except(ids2).ToList();
                 if (ids.Count() > 0)
                 {
-
                     // 将对应的ID，插入到待打印表，同步界面
                     globalSchemaId = schemaId;
                     string message = new LabelPrintService(this.DP1.SelectedDate.Value, user).AddCurrentPrintDataBatch(ids, this.DP1.SelectedDate.Value);
@@ -604,10 +616,10 @@ namespace Ui.View.IndexPage
                         tbFolderPath.Text = config.FolderPath;
                         message += ValidateConfig(config);
                     }
-
+                    RefreshDataGrid();
                     MessageBox.Show(message);
                     
-                    RefreshDataGrid();
+                   
                 }
                 else
                 {

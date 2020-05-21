@@ -34,6 +34,8 @@
     <Compile Include="Model\BatchNoPrintTotalModel.cs" />
     <Compile Include="Model\CbIdentTypeModel.cs" />
     <Compile Include="Model\CbRequestNameModel.cs" />
+    <Compile Include="Model\ConsignmentBillModel.cs" />
+    <Compile Include="Model\ConsignmentBillParameterModel.cs" />
     <Compile Include="Model\CrystalPrintConfigModel.cs" />
     <Compile Include="Model\CustomerModel.cs" />
     <Compile Include="Model\EnumModel.cs" />
@@ -54,6 +56,8 @@
     <Compile Include="Model\QuerySchemaSeqModel.cs" />
     <Compile Include="Model\SellOrderListModel.cs" />
     <Compile Include="Model\BucketModel.cs" />
+    <Compile Include="Model\ShippingBillEntry.cs" />
+    <Compile Include="Model\ShippingBillModel.cs" />
     <Compile Include="Model\UserInformationModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\QuerySchemaCurrentStatusModel.cs" />

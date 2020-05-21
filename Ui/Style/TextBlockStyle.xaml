@@ -41,6 +41,21 @@
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="Margin" Value="0 0 2 0"/>
     </Style>
-    
+
+    <Style TargetType="TextBlock" x:Key="TextBlockStyle20" BasedOn="{x:Null}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Margin" Value="0 0 20 0"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="TextBlockStyle30" BasedOn="{x:Null}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="微软雅黑"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Margin" Value="0 0 30 0"/>
+    </Style>
 
 </ResourceDictionary>

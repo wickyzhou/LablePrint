@@ -14,7 +14,7 @@ namespace Ui.ViewModel
         {
             if (propertyName != null)
             {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
