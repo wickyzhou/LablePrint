@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-          Style="{StaticResource WindowStyleLevel1}" Title="打印参照">
+          Style="{StaticResource WindowStyleLevel1200*700}" Title="打印参照">
 
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">

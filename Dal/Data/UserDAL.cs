@@ -27,6 +27,9 @@ namespace Data
             return SqlHelper.ExecuteNonQuery(" Insert into SJUserLoginLog(UserID,LoginTime,LogoutTime) Values(@ID,NULL,default)", new SqlParameter[] { new SqlParameter("@ID", id) });
         }
 
-        
+        public int ModifyUserPassword(int userId,string ps)
+        {
+            return SqlHelper.ExecuteNonQuery(" update SJUser set Password =@Password  where ID=@ID", new SqlParameter[] { new SqlParameter("@ID", userId) , new SqlParameter("@Password", ps) });
+        }
     }
 }

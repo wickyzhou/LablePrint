@@ -166,6 +166,18 @@ namespace Model
             }
         }
 
+        private int seqIncrement = 1;
+
+        public int SeqIncrement
+        {
+            get { return seqIncrement; }
+            set
+            {
+                seqIncrement = value;
+                this.RaisePropertyChanged(nameof(SeqIncrement));
+            }
+        }
+
         //public int ID { get; set; } // 自增ID
 
         //public int LabelPrintHistoryID { get; set; } // 历史打印表ID

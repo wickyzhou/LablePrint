@@ -38,6 +38,7 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Data.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text=" 性别：" />
+      
         <ComboBox ItemsSource="{Binding SexList}" DisplayMemberPath="Value" SelectedValuePath="Value" 
                    Grid.Row="1" Grid.Column="1" 
                   SelectedValue="{Binding Data.Sex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>

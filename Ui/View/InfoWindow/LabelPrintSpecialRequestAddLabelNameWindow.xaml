@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.View"
-     mc:Ignorable="d"       Style="{StaticResource WindowStyleLevelLast}" Title="帮助" >
+     mc:Ignorable="d"       Style="{StaticResource WindowStyleLevel800*600}" Title="帮助" >
 
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">

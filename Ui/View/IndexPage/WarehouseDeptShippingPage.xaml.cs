@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Ui.Service;
 using Ui.ViewModel;
 
 namespace Ui.View.IndexPage
@@ -22,18 +24,12 @@ namespace Ui.View.IndexPage
     public partial class WarehouseDeptShippingPage : Page
     {
 
-        public static DateTime Date = System.DateTime.Now.AddDays(-1);
-
         public WarehouseDeptShippingPage()
         {
             InitializeComponent();
-            this.DataContext = new ConsignmentShippingViewModel();
-        }
-
-        private void DataGridRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {   
-            var model = (sender as DataGridRow).Item as ConsignmentBillModel;
-            model.IsChecked = !model.IsChecked;
+            var viewmodel = new ConsignmentShippingViewModel();
+            this.DataContext = viewmodel;
+            viewmodel.Init();
         }
     }
 }

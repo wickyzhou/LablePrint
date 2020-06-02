@@ -189,8 +189,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
-                    <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding FitemName}" Width="90" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="唯一值" DataGridBoundColumn.Binding="{Binding RowHashValueString}" Width="300" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding FitemName}" Width="90" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="产品批号" DataGridBoundColumn.Binding="{Binding FBatchNo}" Width="90" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="生产数量" DataGridBoundColumn.Binding="{Binding FQuantity}" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="小料" DataGridBoundColumn.Binding="{Binding FHasSmallMaterial}" HeaderStyle="{StaticResource DGColumnHeader}"/>

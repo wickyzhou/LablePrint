@@ -46,10 +46,9 @@ namespace Ui.View
                     string seq = this.Seq.Text;
                     if (!string.IsNullOrEmpty(seq))
                     {
-                        count = 1;
-                        _window.PrintCount = 1;
+                        _window.PrintCount = count;
                     }
-                    MessageBoxResult result = MessageBox.Show($" 确认修改 序号为【 {seq} 】的标签  下次打印张数【 {count} 】张，", "温馨提示", MessageBoxButton.YesNo);
+                    MessageBoxResult result = MessageBox.Show($" 确认修改 开始序号为【 {seq} 】的标签  连续打印张数【 {count} 】张，", "温馨提示", MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
                         int rows = new LabelPrintService().ModifyHistoryDataByID(id, count,seq);

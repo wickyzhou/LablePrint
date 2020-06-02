@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.MVVM.View"
         mc:Ignorable="d"
-        Title="UserManagement" Style="{StaticResource WindowStyleLevel1}">
+        Title="UserManagement" Style="{StaticResource WindowStyleLevel1200*700}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>

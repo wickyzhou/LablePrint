@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cvt="clr-namespace:Ui.Converters"
-        mc:Ignorable="d"       Style="{StaticResource WindowStyleLevel1}" DataContext="{Binding}" Title="特殊要求">
+        xmlns:cvt="clr-namespace:Ui.Converter"
+        mc:Ignorable="d"       Style="{StaticResource WindowStyleLevel1200*700}" DataContext="{Binding}" Title="特殊要求">
     <Window.Resources>
         <cvt:BoolConverter x:Key="cvtBool"/>
     </Window.Resources>

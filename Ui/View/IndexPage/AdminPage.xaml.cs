@@ -48,5 +48,14 @@ namespace Ui.View.IndexPage
         {
 
         }
+
+        private void Btn21_Click(object sender, RoutedEventArgs e)
+        {
+            Window1 window = new Window1()
+            {
+                Owner = Window.GetWindow(this)
+            };
+            window.ShowDialog();
+        }
     }
 }

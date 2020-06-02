@@ -33,7 +33,7 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Background="DarkOrchid">
-            <TextBlock Text="第2行"/>
+            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}" Width="200" Height="30" Content="测试1" Click="Btn21_Click"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen">

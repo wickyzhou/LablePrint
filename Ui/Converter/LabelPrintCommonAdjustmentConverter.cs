@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Data;
 using Ui.ViewModel;
 
-namespace Ui.Converters
+namespace Ui.Converter
 {
     //public class LabelPrintCommonAdjustmentConverter : IMultiValueConverter
     //{

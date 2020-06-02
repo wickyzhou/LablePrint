@@ -6,19 +6,18 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Ui.Converters
+namespace Ui.Converter
 {
-    public class BoolConverter : IValueConverter
+    class CheckBoxIsEnabledConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
                 return DependencyProperty.UnsetValue;
-            if ((bool)value)
-            {
-                return "是";
-            }
-            return "否";
+            if ((float)value > 0)
+                return true;
+            else
+                return false;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

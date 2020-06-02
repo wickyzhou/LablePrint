@@ -17,5 +17,8 @@ namespace Ui.ViewModel
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        //public virtual bool IsValid { get; set; }
+
     }
 }

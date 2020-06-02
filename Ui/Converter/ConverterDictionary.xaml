@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Ui.Converter">
+    <local:PageSizeStatusConverter x:Key="PageSizeStatusConverter"/>
+    <local:SelectedStatusConverter x:Key="SelectedStatusConverter"/>
+    <local:SelectedBackgroundConverter x:Key="SelectedBackgroundConverter"/>
+    <local:SelectedDGEnableConverter x:Key="SelectedDGEnableConverter"/>
+    <local:ContentLengthConverter x:Key="ContentLengthConverter"/>
+    <local:CheckBoxIsEnabledConverter x:Key="CheckBoxIsEnabledConverter"/>
+    <local:GuoJiWuliuBackgroundConverter x:Key="GuoJiWuliuBackgroundConverter"/>
+    <local:LinShiErJiYiJiWuLiuBackgroundConverter x:Key="LinShiErJiYiJiWuLiuBackgroundConverter"/>
+    <local:LinShiErJiWuLiuBackgroundConverter x:Key="LinShiErJiWuLiuBackgroundConverter"/>
+    <local:LogisticsTypeConverter x:Key="LogisticsTypeConverter"/>
+    <local:GoodsTypeConverter x:Key="GoodsTypeConverter"/>
+</ResourceDictionary>

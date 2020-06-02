@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Ui.View.PrintPreviewWindow" 
         xmlns:Viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
         mc:Ignorable="d"
-             Style="{StaticResource WindowStyleLevel1}"  Loaded="Window_Loaded">
+             Style="{StaticResource WindowStyleLevel1200*700}"  Loaded="Window_Loaded">
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Viewer:CrystalReportsViewer HorizontalAlignment="Left" VerticalAlignment="Top"  Name="CrystalReportsViewer1" Height="auto" Width="auto"/>
     </Grid>

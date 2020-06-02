@@ -7,42 +7,79 @@ namespace Model
 {
     public class ConsignmentBillModel:NotificationObject
     {
-        private bool isChecked;
-
-        public bool IsChecked
-        {
-            get { return isChecked; }
-            set
-            {
-                isChecked = value;
-                this.RaisePropertyChanged(nameof(IsChecked));
-            }
-        }
-
 
         public int Id { get; set; }
 
-        public int FInterID { get; set; }
+        public int InterId { get; set; }
 
-        public DateTime FDate { get; set; }
+        public DateTime BillDate { get; set; }
 
-        public string FBillNo { get; set; }
+        public string BillNo { get; set; }
 
-        public int FCustID { get; set; }
+        public int CustId { get; set; }
 
         public string ContractPerson { get; set; }
 
         public string ContractPhone { get; set; }
 
-        public int FDeptID { get; set; }
+        public int DeptId { get; set; }
 
         public string CustName { get; set; }
 
         public string DeptName { get; set; }
 
-        public string RestStatus { get; set; }
-        
         public DateTime CreateTime { get; set; }
-                    
+
+        private int selectedStatus;
+
+        public int SelectedStatus
+        {
+            get { return selectedStatus; }
+            set
+            {
+                selectedStatus = value;
+                this.RaisePropertyChanged(nameof(SelectedStatus));
+            }
+        }
+
+        private float totalQuatity;
+
+        public float TotalQuatity
+        {
+            get { return totalQuatity; }
+            set
+            {
+                totalQuatity = value;
+                this.RaisePropertyChanged(nameof(TotalQuatity));
+            }
+        }
+
+        private float undoQuatity;
+
+        public float UndoQuatity
+        {
+            get { return undoQuatity; }
+            set
+            {
+                undoQuatity = value;
+                this.RaisePropertyChanged(nameof(UndoQuatity));
+            }
+        }
+
+
+        private float currencyQuatity;
+
+        public float CurrencyQuatity
+        {
+            get { return currencyQuatity; }
+            set
+            {
+                currencyQuatity = value;
+                this.RaisePropertyChanged(nameof(CurrencyQuatity));
+            }
+        }
+
+        public int UserId { get; set; }
+
     }
 }

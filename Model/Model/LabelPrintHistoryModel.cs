@@ -135,5 +135,7 @@ namespace Model
 
         public decimal SpecificationValueEnd { get; set; } // 获取方案明细值规格结束值
 
+
+
     }
 }

@@ -25,6 +25,10 @@ namespace Bll.Services
             return user.RecordLogoutLog(id);
         }
 
+        public int ModifyUserPassword( int userId,string ps)
+        {
+            return user.ModifyUserPassword(userId, ps);
+        }
         
     }
 }

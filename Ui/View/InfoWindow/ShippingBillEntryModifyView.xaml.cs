@@ -15,14 +15,14 @@ using Ui.ViewModel;
 namespace Ui.View.InfoWindow
 {
     /// <summary>
-    /// ConsignmentBillModifyView.xaml 的交互逻辑
+    /// ShippingBillEntryModifyView.xaml 的交互逻辑
     /// </summary>
-    public partial class ConsignmentBillModifyView : Window
+    public partial class ShippingBillEntryModifyView : Window
     {
-        public ConsignmentBillModifyView()
+        public ShippingBillEntryModifyView()
         {
             InitializeComponent();
-            this.DataContext = new ConsignmentBillModifyViewModel();
+            this.DataContext = new ShippingBillEntryModifyViewModel();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };

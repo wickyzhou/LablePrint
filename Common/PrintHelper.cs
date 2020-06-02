@@ -21,8 +21,6 @@ namespace Common
     public class PrintHelper
     {
 
-
-
         // 打印
         public string PrintLabel(PrintSchemaParameterModel config, List<LabelPrintCurrencyModel> data)
         {
@@ -89,8 +87,9 @@ namespace Common
                         }
                         currentPrintSeqValue = string.IsNullOrEmpty(model.Seq) ? (currentPrintBeginValue + 1).ToString().PadLeft(3, '0') : model.Seq;
                         btFormat.SetNamedSubStringValue("Seq", currentPrintSeqValue);
-                        btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
+
                         btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                        btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
 
 

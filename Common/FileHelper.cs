@@ -23,7 +23,7 @@ namespace Common
     {
         public void ExportItemSourceToExcel(List<ProductiveTaskListModel> lists, string filePath)
         {
-         
+
             if (lists.Count == 0)
             {
                 return;
@@ -186,10 +186,10 @@ namespace Common
                 {
                     IRow row = sheet.CreateRow(j + 2);
                     row.Height = (short)20.5 * 20;
-                
+
                     string currentBatch = typedlists[j].FBatchNo;
                     var A0 = row.CreateCell(0); var B0 = row.CreateCell(1); var C0 = row.CreateCell(2); var D0 = row.CreateCell(3); var M0 = row.CreateCell(12); var O0 = row.CreateCell(14);
-                  
+
                     if (currentBatch != previousBatch)
                     {
                         batchQuantity = Convert.ToDouble(typedlists[j].FQuantity) - Convert.ToDouble(typedlists[j].RowQuantity) + Convert.ToDouble(typedlists[j].FResidue);
@@ -206,7 +206,7 @@ namespace Common
                         O0.CellStyle = warningStyle;
                     }
                     O0.SetCellValue(batchQuantity);
-                    A0.CellStyle = fitStyle; B0.CellStyle = fitStyle; C0.CellStyle = numberStyle; M0.CellStyle = numberStyle; D0.CellStyle = fitStyle; 
+                    A0.CellStyle = fitStyle; B0.CellStyle = fitStyle; C0.CellStyle = numberStyle; M0.CellStyle = numberStyle; D0.CellStyle = fitStyle;
 
                     var E0 = row.CreateCell(4); E0.SetCellValue(typedlists[j].FPackage); E0.CellStyle = fitStyle;
                     var F0 = row.CreateCell(5); F0.SetCellValue(typedlists[j].FBucketName); F0.CellStyle = fitStyle;
@@ -242,7 +242,7 @@ namespace Common
 
                     #region 留样开始3列不赋值(赋值空都会有个空格)
                     ICellStyle blankStyle = wb.CreateCellStyle();
-                    blankStyle.BorderLeft = BorderStyle.Thin; blankStyle.BorderTop = BorderStyle.Thin;blankStyle.BorderBottom = BorderStyle.Thin;
+                    blankStyle.BorderLeft = BorderStyle.Thin; blankStyle.BorderTop = BorderStyle.Thin; blankStyle.BorderBottom = BorderStyle.Thin;
 
                     var J0 = row.CreateCell(9); J0.CellStyle = blankStyle;
                     var K0 = row.CreateCell(10); K0.CellStyle = blankStyle;
@@ -251,7 +251,7 @@ namespace Common
                     string productionNumber = typedlists[j].ProductionNumber > 0 && typedlists[j].ProductionNumber <= 3 ? $"第{typedlists[j].ProductionNumber}次生产" : "";
                     string guan = typedlists[j].ProductionType == "返工" ? "灌" : "";
 
-                    var N0 = row.CreateCell(13); N0.SetCellValue(guan+" "+ productionNumber); N0.CellStyle = guanStyle;//灌不灌
+                    var N0 = row.CreateCell(13); N0.SetCellValue(guan + " " + productionNumber); N0.CellStyle = guanStyle;//灌不灌
                     //var P0 = row.CreateCell(15); P0.SetCellValue(); P0.CellStyle = fitStyle; // 第多少次生产和 灌写入同一个单元格，本单元格已设置宽度为0，
 
 
@@ -259,7 +259,7 @@ namespace Common
                     var R0 = row.CreateCell(17); R0.SetCellValue(UniversalFunction.ToHexString(typedlists[j].RowHashValue)); R0.CellStyle = fitStyle;
                     var S0 = row.CreateCell(18); S0.SetCellValue(typedlists[j].SafeCode); S0.CellStyle = fitStyle;
                     var T0 = row.CreateCell(19); T0.SetCellValue(Convert.ToInt32(typedlists[j].PaintSampleTotal)); T0.CellStyle = numberStyle;
-                   
+
                     previousBatch = currentBatch.Length != 0 ? currentBatch : previousBatch;
                 }
 
@@ -331,7 +331,7 @@ namespace Common
 
             //创建列
             DataTable dt = ConvertHelper.CreateDataTableFromModel<ProductiveTaskListModel>();
-       
+
 
             string previousBatch = string.Empty, previousProductionModel = string.Empty, previousHasSmallMaterial = string.Empty;
             decimal previousQuantity = 0;
@@ -520,5 +520,60 @@ namespace Common
             }
         }
 
+
+
+        public void ExportShippingBillToExcel(IList<ShippingBillExportModel> lists, string hostValue)
+        {
+            try
+            {
+                string fName = Path.Combine(hostValue, $"托运清单.xls");
+                if (File.Exists(fName))
+                    fName = fName.Replace(".xls", DateTime.Now.ToString("yyyy-MM-dd HHmmss") + ".xls");
+
+                IWorkbook wb = new HSSFWorkbook();
+                ISheet sheet = wb.CreateSheet("托运清单");
+                sheet.ForceFormulaRecalculation = true;
+
+
+                sheet.SetColumnWidth(0, 15 * 256); sheet.SetColumnWidth(1, 10 * 256); sheet.SetColumnWidth(2, 10 * 256); sheet.SetColumnWidth(3, 10 * 256); sheet.SetColumnWidth(4, 10 * 256);
+                sheet.SetColumnWidth(5, 10 * 256); sheet.SetColumnWidth(6, 10 * 256); sheet.SetColumnWidth(7, 10 * 256); sheet.SetColumnWidth(8, 10 * 256); sheet.SetColumnWidth(9, 10 * 256);
+                sheet.SetColumnWidth(10, 10 * 256); sheet.SetColumnWidth(11, 10 * 256); sheet.SetColumnWidth(12, 10 * 256); sheet.SetColumnWidth(13, 10 * 256); sheet.SetColumnWidth(14, 10 * 256);
+                sheet.SetColumnWidth(15, 10 * 256); sheet.SetColumnWidth(16, 10 * 256); sheet.SetColumnWidth(17, 10 * 256); sheet.SetColumnWidth(18, 10 * 256); sheet.SetColumnWidth(19, 10 * 256);
+                sheet.SetColumnWidth(20, 10 * 256); sheet.SetColumnWidth(21, 10 * 256); sheet.SetColumnWidth(22, 10 * 256); sheet.SetColumnWidth(23, 10 * 256); sheet.SetColumnWidth(24, 10 * 256);
+                sheet.SetColumnWidth(25, 10 * 256); sheet.SetColumnWidth(26, 10 * 256); sheet.SetColumnWidth(27, 10 * 256); sheet.SetColumnWidth(28, 10 * 256);
+                IRow row1 = sheet.CreateRow(0);
+                row1.Height = (short)20.5 * 20;
+
+                row1.CreateCell(0).SetCellValue("托运单号"); row1.CreateCell(1).SetCellValue("托运日期"); row1.CreateCell(2).SetCellValue("总数量"); row1.CreateCell(3).SetCellValue("总费用"); row1.CreateCell(4).SetCellValue("物流类型");
+                row1.CreateCell(5).SetCellValue("物流公司"); row1.CreateCell(6).SetCellValue("物流单号"); row1.CreateCell(7).SetCellValue("运输费"); row1.CreateCell(8).SetCellValue("邮费"); row1.CreateCell(9).SetCellValue("过路费");
+                row1.CreateCell(10).SetCellValue("差旅费"); row1.CreateCell(11).SetCellValue("维修费"); row1.CreateCell(12).SetCellValue("关税费"); row1.CreateCell(13).SetCellValue("提货费"); row1.CreateCell(14).SetCellValue("危险品费");
+                row1.CreateCell(15).SetCellValue("清关费"); row1.CreateCell(16).SetCellValue("保险费"); row1.CreateCell(17).SetCellValue("派送费"); row1.CreateCell(18).SetCellValue("需求人"); row1.CreateCell(19).SetCellValue("其他费用");
+                row1.CreateCell(20).SetCellValue("备注"); row1.CreateCell(21).SetCellValue("商品类型"); row1.CreateCell(22).SetCellValue("明细序号"); row1.CreateCell(23).SetCellValue("案子名称"); row1.CreateCell(24).SetCellValue("品牌名称");
+                row1.CreateCell(25).SetCellValue("部门名称"); row1.CreateCell(26).SetCellValue("客户名称"); row1.CreateCell(27).SetCellValue("明细数量"); row1.CreateCell(28).SetCellValue("分摊金额");
+
+                for (int i = 0; i < lists.Count; i++)
+                {
+                    IRow row = sheet.CreateRow(i + 1);
+                    row.Height = (short)20 * 20;
+
+                    row.CreateCell(0).SetCellValue(lists[i].BillNo); row.CreateCell(1).SetCellValue(Convert.ToDateTime(lists[i].BillDate).ToString("yyyy-MM-dd")); row.CreateCell(2).SetCellValue(lists[i].TotalQuantity); row.CreateCell(3).SetCellValue(lists[i].TotalAmount); row.CreateCell(4).SetCellValue(lists[i].LogisticsTypeName);
+                    row.CreateCell(5).SetCellValue(lists[i].LogisticsCompanyName); row.CreateCell(6).SetCellValue(lists[i].LogisticsBillNo); row.CreateCell(7).SetCellValue(lists[i].YunShuFei); row.CreateCell(8).SetCellValue(lists[i].YouFei); row.CreateCell(9).SetCellValue(lists[i].GuoLuFei);
+                    row.CreateCell(10).SetCellValue(lists[i].ChaiLvFei); row.CreateCell(11).SetCellValue(lists[i].WeiXiuFei); row.CreateCell(12).SetCellValue(lists[i].GuanShuiFei); row.CreateCell(13).SetCellValue(lists[i].TiHuoFei); row.CreateCell(14).SetCellValue(lists[i].WeiXianPinFei);
+                    row.CreateCell(15).SetCellValue(lists[i].QingGuanFei); row.CreateCell(16).SetCellValue(lists[i].BaoXianFei); row.CreateCell(17).SetCellValue(lists[i].PaiSongFei); row.CreateCell(18).SetCellValue(lists[i].Demander); row.CreateCell(19).SetCellValue(lists[i].OtherCosts);
+                    row.CreateCell(20).SetCellValue(lists[i].Note); row.CreateCell(21).SetCellValue(lists[i].GoodsTypeName); row.CreateCell(22).SetCellValue(lists[i].EntryId); row.CreateCell(23).SetCellValue(lists[i].CaseName); row.CreateCell(24).SetCellValue(lists[i].BrandName);
+                    row.CreateCell(25).SetCellValue(lists[i].DeptName); row.CreateCell(26).SetCellValue(lists[i].CustName); row.CreateCell(27).SetCellValue(lists[i].Quatity); row.CreateCell(28).SetCellValue(lists[i].ApportionedAmount);
+                }
+
+                FileStream fs = new FileStream(fName, FileMode.Create);//新建才不会报错
+                wb.Write(fs);//会自动关闭流文件  //fs.Flush();
+                fs.Close();
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
     }
+
 }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:local="clr-namespace:Ui.View.InfoWindow"
-      Style="{StaticResource WindowStyleLevel1}" Title="方案设置" >
+      Style="{StaticResource WindowStyleLevel1200*700}" Title="方案设置" >
 
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">

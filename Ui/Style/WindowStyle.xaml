@@ -60,7 +60,7 @@
     </ControlTemplate>
 
 
-        <Style x:Key="WindowStyleLevel1" TargetType="{x:Type Window}">
+    <Style x:Key="WindowStyleLevel1200*700" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource tempWindowStyleLevel1}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -104,10 +104,7 @@
         </Border>
     </ControlTemplate>
 
-
-  
-    
-    <Style x:Key="WindowStyleLevelLast" TargetType="{x:Type Window}">
+    <Style x:Key="WindowStyleLevel800*600" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource tempWindowStyleLevelLast}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -148,7 +145,8 @@
             </Border>
         </Border>
     </ControlTemplate>
-    <Style x:Key="WindowStyleData" TargetType="{x:Type Window}">
+    
+    <Style x:Key="WindowStyle600*400" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>

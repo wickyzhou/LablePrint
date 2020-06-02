@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:Ui.MVVM.ViewModel"
-        Title="MainWindow"  Style="{StaticResource WindowStyleLevel1}">
+        Title="MainWindow"  Style="{StaticResource WindowStyleLevel1200*700}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>

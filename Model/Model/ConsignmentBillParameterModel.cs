@@ -79,6 +79,17 @@ namespace Model
             }
         }
 
+        private bool isSeleted;
+
+        public bool IsSelected
+        {
+            get { return isSeleted; }
+            set
+            {
+                isSeleted = value;
+                this.RaisePropertyChanged(nameof(IsSelected));
+            }
+        }
 
 
         //public DateTime ParamDate { get; set; }

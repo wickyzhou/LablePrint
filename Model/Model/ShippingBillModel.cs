@@ -1,37 +1,321 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
 namespace Model
 {
-    public class ShippingBillModel
-    {
-        public int Id { get; set; }
+	public class ShippingBillModel : NotificationObject
+	{
+		public int Id { get; set; }
 
-        public string BillNo { get; set; }
+		private string billNo
+;
+		public string BillNo
 
-        public string SourceBillNo { get; set; }
+		{
+			get { return billNo; }
+			set
+			{
+				billNo = value;
+				this.RaisePropertyChanged(nameof(BillNo));
+			}
+		}
 
-        public DateTime CreateTime { get; set; }
 
-        public float QuatityCosts { get; set; }
+		public DateTime CreateTime { get; set; }
 
-        public float TotalCosts { get; set; }
+		private DateTime billDate;
 
-        public float TransportCosts { get; set; }
+		public DateTime BillDate
+		{
+			get { return billDate; }
+			set
+			{
+				billDate = value;
+				this.RaisePropertyChanged(nameof(BillDate));
+			}
+		}
 
-        public float DeliveryCosts { get; set; }
+		private int logisticsType;
 
-        public float PickUpCosts { get; set; }
+		public int LogisticsType
+		{
+			get { return logisticsType; }
+			set
+			{
+				logisticsType = value;
+				this.RaisePropertyChanged(nameof(LogisticsType));
+			}
+		}
 
-        public float ValuationCosts { get; set; }
+		private string logisticsCompanyName;
 
-        public float PremiumCosts { get; set; }
+		public string LogisticsCompanyName
+		{
+			get { return logisticsCompanyName; }
+			set
+			{
+				logisticsCompanyName = value;
+				this.RaisePropertyChanged(nameof(LogisticsCompanyName));
+			}
+		}
 
-        public float OtherCosts { get; set; }
+		private float yunShuFei;
 
-        public string TransportCompany { get; set; }
+		public float YunShuFei
+		{
+			get { return yunShuFei; }
+			set
+			{
+				yunShuFei = value;
+				this.RaisePropertyChanged(nameof(YunShuFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
 
-    }
+		private float youFei;
+
+		public float YouFei
+		{
+			get { return youFei; }
+			set
+			{
+				youFei = value;
+				this.RaisePropertyChanged(nameof(YouFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float guoLuFei;
+
+		public float GuoLuFei
+		{
+			get { return guoLuFei; }
+			set
+			{
+				guoLuFei = value;
+				this.RaisePropertyChanged(nameof(GuoLuFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float chaiLvFei;
+
+		public float ChaiLvFei
+		{
+			get { return chaiLvFei; }
+			set
+			{
+				chaiLvFei = value;
+				this.RaisePropertyChanged(nameof(ChaiLvFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float weiXiuFei;
+
+		public float WeiXiuFei
+		{
+			get { return weiXiuFei; }
+			set
+			{
+				weiXiuFei = value;
+				this.RaisePropertyChanged(nameof(WeiXiuFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float guanShuiFei;
+
+		public float GuanShuiFei
+		{
+			get { return guanShuiFei; }
+			set
+			{
+				guanShuiFei = value;
+				this.RaisePropertyChanged(nameof(GuanShuiFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float tiHuoFei;
+
+		public float TiHuoFei
+		{
+			get { return tiHuoFei; }
+			set
+			{
+				tiHuoFei = value;
+				this.RaisePropertyChanged(nameof(TiHuoFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float weiXianPinFei;
+
+		public float WeiXianPinFei
+		{
+			get { return weiXianPinFei; }
+			set
+			{
+				weiXianPinFei = value;
+				this.RaisePropertyChanged(nameof(WeiXianPinFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float qingGuanFei;
+
+		public float QingGuanFei
+		{
+			get { return qingGuanFei; }
+			set
+			{
+				qingGuanFei = value;
+				this.RaisePropertyChanged(nameof(QingGuanFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float baoXianFei;
+
+		public float BaoXianFei
+		{
+			get { return baoXianFei; }
+			set
+			{
+				baoXianFei = value;
+				this.RaisePropertyChanged(nameof(BaoXianFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float paiSongFei;
+
+		public float PaiSongFei
+		{
+			get { return paiSongFei; }
+			set
+			{
+				paiSongFei = value;
+				this.RaisePropertyChanged(nameof(PaiSongFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float otherCosts;
+		public float OtherCosts
+		{
+			get { return otherCosts; }
+			set
+			{
+				otherCosts = value;
+				this.RaisePropertyChanged(nameof(OtherCosts));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+
+		private string demander;
+
+		public string Demander
+		{
+			get { return demander; }
+			set
+			{
+				demander = value;
+				this.RaisePropertyChanged(nameof(Demander));
+			}
+		}
+
+
+		private string note;
+
+		public string Note
+		{
+			get { return note; }
+			set
+			{
+				note = value;
+				this.RaisePropertyChanged(nameof(Note));
+			}
+		}
+
+
+		private int goodsType;
+
+		public int GoodsType
+		{
+			get { return goodsType; }
+			set
+			{
+				goodsType = value;
+				this.RaisePropertyChanged(nameof(GoodsType));
+
+			}
+		}
+
+		//YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; 
+		//private float totalAmount;
+
+		public float TotalAmount
+		{
+			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; }
+			set { }
+		}
+
+
+		private string logisticsBillNo;
+
+		public string LogisticsBillNo
+		{
+			get { return logisticsBillNo; }
+			set
+			{
+				logisticsBillNo = value;
+				this.RaisePropertyChanged(nameof(LogisticsBillNo));
+			}
+		}
+
+		private float totalQuantity;
+
+		public float TotalQuantity
+		{
+			get { return totalQuantity; }
+			set
+			{
+				totalQuantity = value;
+				this.RaisePropertyChanged(nameof(TotalQuantity));
+			}
+		}
+
+		private string stringTotalAmount;
+
+		public string StringTotalAmount
+		{
+			get { return $"金额合计：{Convert.ToString(TotalAmount)} 元 "; }
+			set
+			{
+				//stringTotalAmount = value;
+				//this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+
+
+	}
 }
