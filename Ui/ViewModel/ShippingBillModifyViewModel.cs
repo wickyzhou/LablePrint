@@ -17,7 +17,16 @@ namespace Ui.ViewModel
         {
             SaveCommand = new DelegateCommand(Save);
             ExitCommand = new DelegateCommand(Exit);
+            LogisticsTypeSelectionChangedCommand = new DelegateCommand(ChangeLogisticsTypeSelection);
             Init();
+        }
+
+        private void ChangeLogisticsTypeSelection(object obj)
+        {
+            if ((int)obj == 1)
+            {
+                ShippingBill.YunShuFei = (float)(ShippingBill.SystemQuantity * 0.81);
+            }
         }
 
         private ShippingBillModel shippingBill;
@@ -56,8 +65,6 @@ namespace Ui.ViewModel
             }
         }
 
-
-
         public void WithParam(ShippingBillModel entry, Action<int, ShippingBillModel> callBack)
         {
             ShippingBill = entry;
@@ -66,6 +73,7 @@ namespace Ui.ViewModel
 
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand ExitCommand { get; set; }
+        public DelegateCommand LogisticsTypeSelectionChangedCommand { get; set; }
 
         //public bool IsValid { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

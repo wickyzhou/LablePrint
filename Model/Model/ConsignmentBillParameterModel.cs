@@ -7,17 +7,30 @@ namespace Model
 {
    public class ConsignmentBillParameterModel:NotificationObject
     {
-        private DateTime paramDate;
+        private DateTime paramBeginDate;
 
-        public DateTime ParamDate
+        public DateTime ParamBeginDate
         {
-            get { return paramDate; }
+            get { return paramBeginDate; }
             set
             {
-                paramDate = value;
-                this.RaisePropertyChanged(nameof(ParamDate));
+                paramBeginDate = value;
+                this.RaisePropertyChanged(nameof(ParamBeginDate));
             }
         }
+
+        private DateTime paramEndDate;
+
+        public DateTime ParamEndDate
+        {
+            get { return paramEndDate; }
+            set
+            {
+                paramEndDate = value;
+                this.RaisePropertyChanged(nameof(ParamEndDate));
+            }
+        }
+
 
         private string paramBillNo;
 

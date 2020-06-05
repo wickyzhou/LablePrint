@@ -8,11 +8,11 @@ using Ui.Command;
 
 namespace Ui.ViewModel
 {
-    public class ConsignmentBillEntryModifyViewModel:NotificationObject,IValidationExceptionHandler
+  public  class ConsignmentBillEntryCopyViewModel : NotificationObject, IValidationExceptionHandler
     {
         private Action<int, ConsignmentBillEntryModel> _callBack;
 
-        public ConsignmentBillEntryModifyViewModel()
+        public ConsignmentBillEntryCopyViewModel()
         {
             SaveCommand = new DelegateCommand(Save);
             ExitCommand = new DelegateCommand(Exit);
@@ -20,7 +20,7 @@ namespace Ui.ViewModel
 
         private ConsignmentBillEntryModel consignmentBillEntry;
 
-        public ConsignmentBillEntryModel ConsignmentBillEntry   
+        public ConsignmentBillEntryModel ConsignmentBillEntry
         {
             get { return consignmentBillEntry; }
             set
@@ -45,12 +45,12 @@ namespace Ui.ViewModel
         {
             if (this.IsValid)
             {
-                if (ConsignmentBillEntry.ECurrencyQuantity > ConsignmentBillEntry.EUndoQuantity || ConsignmentBillEntry.ECurrencyQuantity <= 0)
+                if (ConsignmentBillEntry.ECurrencyQuantity <= 0)
                 {
-                    MessageBox.Show("输入的格式有误,请重新输入!");
+                    MessageBox.Show("输入的数据不合法,请重新输入!");
                     return;
                 }
-             
+
             }
             _callBack?.Invoke(1, ConsignmentBillEntry);
         }

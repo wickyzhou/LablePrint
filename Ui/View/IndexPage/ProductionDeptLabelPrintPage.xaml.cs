@@ -53,8 +53,8 @@ namespace Ui.View.IndexPage
         public ProductionDeptLabelPrintPage()
         {
             InitializeComponent();
-           
 
+        
             //schemaList = new QuerySchemaCurrentStatusService().GetUserSchemaList(user.ID, this.DP1.SelectedDate.Value);
             //pageSizeList = new QuerySchemaCurrentStatusService().GetUserPageSizeList(user.ID, this.DP1.SelectedDate.Value);
             //this.scrollViewer.DataContext = schemaList;
@@ -83,10 +83,7 @@ namespace Ui.View.IndexPage
         {
             PrinterNames = PrintHelper.GetComputerPrinter();
             InitializeComponentDefaultValue();
-            
-            
-            this.MainDataGrid.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight);
-            this.scrollViewer.Height = GetMainDataGridHeight(SystemParameters.PrimaryScreenHeight); // 同一行数据高度一样
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
 
         private void InitializeComponentDefaultValue()

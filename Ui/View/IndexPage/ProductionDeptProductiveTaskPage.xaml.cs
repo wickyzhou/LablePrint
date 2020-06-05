@@ -34,7 +34,7 @@ namespace Ui.View.IndexPage
         {
 
             InitializeComponentDefaultValue();
-            this.MainDataGrid.Height = SystemParameters.PrimaryScreenHeight*0.66;
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
 
         private void InitializeComponentDefaultValue()

@@ -15,7 +15,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.8*"/>
             <ColumnDefinition Width="0.8*"/>
@@ -34,6 +34,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <ToolBar Grid.ColumnSpan="8" Cursor="Hand" Grid.RowSpan="2" >
             <ToolBar.Background>
                 <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">

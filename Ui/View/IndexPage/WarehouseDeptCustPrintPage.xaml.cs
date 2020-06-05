@@ -33,6 +33,7 @@ namespace Ui.View.IndexPage
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
             #region 组织机构
             var org = new OrganizationService().GetOrganization(user.SuperAdmin,user.OrgId);
             this.CbOrganization.DataContext = org;

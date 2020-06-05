@@ -9,6 +9,7 @@ namespace Model
     {
         public int MainId { get; set; }
         public int InterId { get; set; }
+        public int EntryId { get; set; }
         public int CustId { get; set; }
         public int DeptId { get; set; }
         public int BrandId { get; set; }
@@ -21,7 +22,6 @@ namespace Model
         public string BrandName { get; set; }
         public string CaseName { get; set; }
         public string ItemName { get; set; }
-        public float CurrencyQuatity { get; set; }
-                                    
+        public float CurrencyQuantity { get; set; }
     }
 }

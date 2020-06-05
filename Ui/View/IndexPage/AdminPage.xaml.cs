@@ -23,6 +23,7 @@ namespace Ui.View.IndexPage
         public AdminPage()
         {
             InitializeComponent();
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
 
         private void BtnDemo_Click(object sender, RoutedEventArgs e)

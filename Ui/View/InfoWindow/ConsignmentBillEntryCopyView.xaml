@@ -1,20 +1,20 @@
-﻿<Window x:Class="Ui.View.InfoWindow.ConsignmentBillEntryModifyView"
+﻿<Window x:Class="Ui.View.InfoWindow.ConsignmentBillEntryCopyView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.View.InfoWindow"
-        mc:Ignorable="d"
-          xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         xmlns:domain="clr-namespace:Ui.ViewModel"
-        Title="修改数量" Style="{StaticResource WindowStyle600*400}">
+        mc:Ignorable="d"
+        Title="新增" Style="{StaticResource WindowStyle600*400}">
     <i:Interaction.Behaviors>
         <domain:ValidationExceptionBehavior/>
     </i:Interaction.Behaviors>
+    
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
-            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -34,35 +34,23 @@
                 </TextBox.Text>
             </TextBox>
         </StackPanel>
+        
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="可用数量" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBillEntry.EUndoQuantity}" Style="{StaticResource TextBoxReadonlyStyle}" />
-        </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="案子名称" Style="{StaticResource TextBlockStyle20}"/>
             <TextBox Text="{Binding ConsignmentBillEntry.CaseName}" Style="{StaticResource TextBoxReadonlyStyle}"/>
         </StackPanel>
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
+        
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="物料名称" Style="{StaticResource TextBlockStyle20}"/>
             <TextBox Text="{Binding ConsignmentBillEntry.ItemName}" Style="{StaticResource TextBoxReadonlyStyle}" />
         </StackPanel>
-        <!--<StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="购货单位" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBillEntry.CustName}" Style="{StaticResource TextBoxReadonlyStyle}"/>
-        </StackPanel>-->
-        <!--<StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="区域部门" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBill.DeptName}" Style="{StaticResource TextBoxReadonlyStyle}" />
-        </StackPanel>
-        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center" >
-            <TextBlock Text="产品型号" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBill.MaterialName}" Style="{StaticResource TextBoxReadonlyStyle}"/>
-        </StackPanel>-->
-        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center">
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 100 0" Height="30" IsDefault="True"/>
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>
-        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center" Opacity="0.5">
+        
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Opacity="0.5">
             <TextBox Text="{Binding ConsignmentBillEntry.FDetailID}" Style="{StaticResource TextBoxReadonlyStyle}" />
             <TextBox Text="{Binding ConsignmentBillEntry.FInterID}" Style="{StaticResource TextBoxReadonlyStyle}" />
         </StackPanel>

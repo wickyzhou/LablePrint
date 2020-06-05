@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       Title="AdminPage" >
 
-    <Grid Background="LightYellow" Height="850">
+    <Grid Background="LightYellow" Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -20,20 +20,20 @@
         </Grid.ColumnDefinitions>
         
         <Grid Grid.Row="0" Grid.Column="0" Background="Azure">
-            <Button x:Name="BtnDemo" Style="{StaticResource BtnThemeStyle}" Width="200" Height="30" Content="MVVM Demo" 
+            <Button x:Name="BtnDemo" Style="{StaticResource BtnThemeStyle}"  Content="MVVM Demo" 
                      Click="BtnDemo_Click"/>
         </Grid>
 
         <Grid Grid.Row="0" Grid.Column="1" Background="Blue">
-            <Button x:Name="BtnUser" Style="{StaticResource BtnThemeStyle}" Width="200" Height="30" Content="用户管理" Click="BtnUser_Click"/>
+            <Button x:Name="BtnUser" Style="{StaticResource BtnThemeStyle}"  Content="用户管理" Click="BtnUser_Click"/>
         </Grid>
         
         <Grid Grid.Row="0" Grid.Column="2" Background="Chocolate">
-            <Button x:Name="BtnPage" Style="{StaticResource BtnThemeStyle}" Width="200" Height="30" Content="页面授权" Click="BtnPage_Click"/>
+            <Button x:Name="BtnPage" Style="{StaticResource BtnThemeStyle}" Content="页面授权" Click="BtnPage_Click"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Background="DarkOrchid">
-            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}" Width="200" Height="30" Content="测试1" Click="Btn21_Click"/>
+            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}"  Content="测试1" Click="Btn21_Click"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen">

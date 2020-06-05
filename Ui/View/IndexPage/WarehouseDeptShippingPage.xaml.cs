@@ -27,9 +27,8 @@ namespace Ui.View.IndexPage
         public WarehouseDeptShippingPage()
         {
             InitializeComponent();
-            var viewmodel = new ConsignmentShippingViewModel();
-            this.DataContext = viewmodel;
-            viewmodel.Init();
+            this.DataContext = new ConsignmentShippingViewModel();
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight-160;
         }
     }
 }

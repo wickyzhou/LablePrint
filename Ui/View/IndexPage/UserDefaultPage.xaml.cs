@@ -22,7 +22,7 @@ namespace Ui.View.IndexPage
         public UserDefaultPage()
         {
             InitializeComponent();
-
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
             ImageBrush b = new ImageBrush();
             b.ImageSource = new BitmapImage(new Uri("pack://application:,,,/image/DefaultImg2.jpg"));
             b.Stretch = Stretch.Fill;

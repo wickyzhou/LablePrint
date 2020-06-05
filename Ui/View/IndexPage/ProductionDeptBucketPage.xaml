@@ -3,45 +3,30 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Ui.View.IndexPage"
- Loaded="Page_Loaded">
+      xmlns:local="clr-namespace:Ui.View.IndexPage">
     <Page.Resources>
         <Style TargetType="DatePickerTextBox" >
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="IsEnabled" Value="False"/>
         </Style>
     </Page.Resources>
-    <StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <DataGrid Name="DG1" Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="8" Style="{StaticResource DGStyle}" Height="650">
+    <Grid x:Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
 
-                <FrameworkElement.ContextMenu>
+        <DataGrid Name="DG1" Style="{StaticResource DGStyle}" >
+            <FrameworkElement.ContextMenu>
                     <ContextMenu>
                         <MenuItem Name="modify" HeaderedItemsControl.Header="修改" FrameworkElement.Height="30" Control.VerticalContentAlignment="Center" Control.HorizontalContentAlignment="Center" Click="modify_Click" BorderBrush="DarkSeaGreen"/>
                     </ContextMenu>
                 </FrameworkElement.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn DataGridColumn.Header="编号" DataGridBoundColumn.Binding="{Binding FBucketID}" Width="80"  HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <DataGridTextColumn DataGridColumn.Header="编号" DataGridBoundColumn.Binding="{Binding FBucketID}" Width="180"  HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding FWeight}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="正负差" DataGridBoundColumn.Binding="{Binding FOffset}"  Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="关键字" DataGridBoundColumn.Binding="{Binding FKeyword}"  Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding FWeight}" Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <DataGridTextColumn DataGridColumn.Header="正负差" DataGridBoundColumn.Binding="{Binding FOffset}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <DataGridTextColumn DataGridColumn.Header="关键字" DataGridBoundColumn.Binding="{Binding FKeyword}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-    </StackPanel>
+
 </Page>

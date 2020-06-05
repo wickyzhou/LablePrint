@@ -79,11 +79,11 @@
             </Style.Triggers>
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid  Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="3.5*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="1"/>
@@ -114,7 +114,7 @@
 
 
             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Name="BtnTemplateRef" FontFamily="宋体" 
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="-27 0 0 0" Height="33"
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="-27 0 0 0" Height="31"
                         Click="BtnTemplateRef_Click" >
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
@@ -381,7 +381,7 @@
                 <ColumnDefinition  Width="50"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal">
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="0 3 0 0">
                 <Button Name="BtnRefresh" Content="&#xe647;"  ToolTip="刷新表格数据" Style="{StaticResource SubIconButton}" Click="BtnRefresh_Click"/>
                 <Button Name="BtnAddData" Content="&#xe728;"   ToolTip="添加待打印数据" Style="{StaticResource SubIconButton}" Click="BtnAddData_Click" Margin="5 0" />
                 <Button Name="BtnModify" Content="&#xe63c;" ToolTip="修改选中数据" Style="{StaticResource SubIconButton}" Click="BtnModify_Click"/>

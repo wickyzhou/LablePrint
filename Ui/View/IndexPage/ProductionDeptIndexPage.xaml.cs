@@ -23,6 +23,7 @@ namespace Ui.View.IndexPage
         public ProductionDeptIndexPage()
         {
             InitializeComponent();
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
 
         private void BtnModifyDate_Click(object sender, RoutedEventArgs e)

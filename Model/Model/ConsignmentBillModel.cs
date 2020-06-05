@@ -18,10 +18,6 @@ namespace Model
 
         public int CustId { get; set; }
 
-        public string ContractPerson { get; set; }
-
-        public string ContractPhone { get; set; }
-
         public int DeptId { get; set; }
 
         public string CustName { get; set; }
@@ -42,40 +38,40 @@ namespace Model
             }
         }
 
-        private float totalQuatity;
+        private float totalQuantity;
 
-        public float TotalQuatity
+        public float TotalQuantity
         {
-            get { return totalQuatity; }
+            get { return totalQuantity; }
             set
             {
-                totalQuatity = value;
-                this.RaisePropertyChanged(nameof(TotalQuatity));
+                totalQuantity = value;
+                this.RaisePropertyChanged(nameof(TotalQuantity));
             }
         }
 
-        private float undoQuatity;
+        private float undoQuantity;
 
-        public float UndoQuatity
+        public float UndoQuantity
         {
-            get { return undoQuatity; }
+            get { return undoQuantity; }
             set
             {
-                undoQuatity = value;
-                this.RaisePropertyChanged(nameof(UndoQuatity));
+                undoQuantity = value;
+                this.RaisePropertyChanged(nameof(UndoQuantity));
             }
         }
 
 
-        private float currencyQuatity;
+        private float currencyQuantity;
 
-        public float CurrencyQuatity
+        public float CurrencyQuantity
         {
-            get { return currencyQuatity; }
+            get { return currencyQuantity; }
             set
             {
-                currencyQuatity = value;
-                this.RaisePropertyChanged(nameof(CurrencyQuatity));
+                currencyQuantity = value;
+                this.RaisePropertyChanged(nameof(CurrencyQuantity));
             }
         }
 

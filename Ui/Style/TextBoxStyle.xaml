@@ -39,6 +39,7 @@
         <Setter Property="Padding" Value="5 0 0 0"/>
         <Setter  Property="Background" Value="LightGray"/>
         <Setter Property="IsReadOnly" Value="True"/>
-        <Setter Property="MinWidth" Value="300"/>
+        <Setter Property="MinWidth" Value="50"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
     </Style>
 </ResourceDictionary>

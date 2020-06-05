@@ -5,18 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.View.InfoWindow"
         mc:Ignorable="d"
-        Title="通知单-> 托运单 合并明细" Style="{StaticResource WindowStyleLevel800*600}">
+        Title="通知单-> 托运单 合并明细" Style="{StaticResource WindowStyleLevel1200*700}">
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <DataGrid Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBillDetails,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  >
             <DataGrid.Columns>
                 <DataGridTextColumn DataGridColumn.Header="托运单号" DataGridBoundColumn.Binding="{Binding ShippingBillNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                <DataGridTextColumn DataGridColumn.Header="通知单号" DataGridBoundColumn.Binding="{Binding ConsignmentBillNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="销调单号" DataGridBoundColumn.Binding="{Binding ConsignmentBillNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding CustName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="区域" DataGridBoundColumn.Binding="{Binding DeptName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="物料" DataGridBoundColumn.Binding="{Binding ItemName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuatity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

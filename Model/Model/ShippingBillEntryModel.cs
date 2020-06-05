@@ -7,6 +7,8 @@ namespace Model
 {
     public class ShippingBillEntryModel:NotificationObject
     {
+        public bool IsSystem { get; set; }
+
         public int Id { get; set; }
 
         public int MainId { get; set; }

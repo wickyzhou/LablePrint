@@ -2,6 +2,7 @@
 using Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Ui.MVVM.Common;
@@ -15,7 +16,7 @@ namespace Ui.Service
             string sql = @"select * from SJShippingBill order by Id desc ";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return  connection.Query<ShippingBillModel>(sql).ToList();
+                return connection.Query<ShippingBillModel>(sql).ToList();
             }
         }
 
@@ -34,7 +35,7 @@ namespace Ui.Service
                         set BillDate=@BillDate  ,LogisticsType=@LogisticsType  ,LogisticsCompanyName=@LogisticsCompanyName,
                             YunShuFei=@YunShuFei  ,YouFei=@YouFei  ,GuoLuFei=@GuoLuFei  ,ChaiLvFei=@ChaiLvFei  ,WeiXiuFei=@WeiXiuFei  ,GuanShuiFei=@GuanShuiFei,
                             TiHuoFei=@TiHuoFei, WeiXianPinFei=@WeiXianPinFei, QingGuanFei=@QingGuanFei, BaoXianFei=@BaoXianFei, PaiSongFei=@PaiSongFei, Demander=@Demander, OtherCosts=@OtherCosts,TotalAmount=@TotalAmount,
-                            Note=@Note,LogisticsBillNo=@LogisticsBillNo,GoodsType=@GoodsType
+                            Note=@Note,LogisticsBillNo=@LogisticsBillNo
                         where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -44,7 +45,7 @@ namespace Ui.Service
 
         public bool UpdateShipingBillEntry(ShippingBillModel billModel)
         {
-            string sql = @" update SJShippingBillEntry set ApportionedAmount= Quantity/TotalQuantity*@TotalAmount,TotalAmount=@TotalAmount where MainId=@Id ";
+            string sql = @" update SJShippingBillEntry set ApportionedAmount= Quantity/SystemQuantity*@TotalAmount,TotalAmount=@TotalAmount where MainId=@Id and IsSystem=1  ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, billModel) > 0;
@@ -105,7 +106,7 @@ values(@MainId,@CaseName,@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustI
             }
         }
 
-        public bool UpdateShippingBillEntry3(ShippingBillEntryModel entryModel,float diff)
+        public bool UpdateShippingBillEntry3(ShippingBillEntryModel entryModel, float diff)
         {
             string sql = @" update  SJShippingBillEntry  set EntryId=@EntryId,GoodsType=@GoodsType,Quantity=@Quantity where Id=@Id;
                             update t set TotalQuantity=s,ApportionedAmount=Quantity/s * TotalAmount
@@ -116,6 +117,17 @@ values(@MainId,@CaseName,@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustI
             }
         }
 
+
+        public string DeleteShipingBill(int id)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@ShippingId", id, DbType.Int32, ParameterDirection.Input);
+
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return Convert.ToString(connection.ExecuteScalar("SJDeleteShippingBill", dp, null, null, CommandType.StoredProcedure));
+            }
+        }
     }
 }
 

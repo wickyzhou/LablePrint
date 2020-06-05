@@ -9,7 +9,7 @@ using System.Net;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 using Ui.Command;
 using Ui.Service;
 using Ui.View.InfoWindow;
@@ -38,41 +38,188 @@ namespace Ui.ViewModel
             Filter = new ConsignmentBillParameterModel()
             {
                 ParamRestQuatity = 0,
-                ParamDate = Convert.ToDateTime(System.DateTime.Now.AddMonths(-1).ToShortDateString()),
+                ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddMonths(-1).ToShortDateString()),
+                ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString())
             };
+            //初始化表格数据
 
-            //命令
-            ModifyConsignmentBillEntryCommand = new DelegateCommand(ModifyConsignmentBillEntry);
-            ConsignmentBillMergeCommand = new DelegateCommand(MergeConsignmentBill);
-            AddConsignmentBillCommand = new DelegateCommand(AddConsignmentBill);
-            RemoveConsignmentBillCommand = new DelegateCommand(RemoveConsignmentBill);
+            HostConfig = GetHostConfig();
+            //DataInit();
+            GetShippingBills();
+            InitQueryConSignmentBill();
+
+
+            #region 命令属性
             QueryCommand = new DelegateCommand(QuerySignmentBill);
-            ConsignmentBillSelectionChangedCommand = new DelegateCommand(ConsignmentBillSelectionChanged);
-            ConsignmentBillEntryCheckBoxCommand = new DelegateCommand(ConsignmentBillEntryCheckBoxClick);
-            ShippingBillSelectionChangedCommand = new DelegateCommand(ShippingBillSelectionChanged);
-            ModifyShippingBillCommand = new DelegateCommand(ModifyShippingBill);
-            ClearSelectedConsignmentBillListsCommand = new DelegateCommand(ClearSelectedConsignmentBillLists);
-            SyncConsignmentBillCommand = new DelegateCommand(SyncConsignmentBill);
-            ShowShippingBillDetailLogCommand = new DelegateCommand(ShowShippingBillDetailLog);
-            ExportShippingDataCommand = new DelegateCommand(ExportShippingData);
+
+            #region 销售出库、调拨单主表
             ConsignmentBillSelectedAllCommand = new DelegateCommand(SelectedAllConsignmentBill);
             ConsignmentBillUnSelectedAllCommand = new DelegateCommand(UnSelectedAllConsignmentBill);
+            ConsignmentBillSelectionChangedCommand = new DelegateCommand(ChangeSelectedConsignmentBill);
+            ConsignmentBillRemoveCommand = new DelegateCommand(RemoveConsignmentBill);
+            ConsignmentBillSyncCommand = new DelegateCommand(SyncConsignmentBill);
+            ConsignmentBillSelectedListsClearCommand = new DelegateCommand(ClearSelectedConsignmentBillLists);
+            ConsignmentBillSelectedListsAddCommand = new DelegateCommand(AddConsignmentBill);
+            ConsignmentBillMergeCommand = new DelegateCommand(MergeConsignmentBill);
+            #endregion
+
+            #region 销售出库、调拨单子表
+            ConsignmentBillEntryCopyCommand = new DelegateCommand(CopyConsignmentBillEntry);
+            ConsignmentBillEntryDeleteCommand = new DelegateCommand(DeleteConsignmentBillEntry);
+            ConsignmentBillEntrySelectionChangedCommand = new DelegateCommand(ChangeSelectedConsignmentBillEntry);
+            ConsignmentBillEntryCheckBoxCommand = new DelegateCommand(ClickCheckBoxConsignmentBillEntry);
+            ConsignmentBillEntryModifyCommand = new DelegateCommand(ModifyConsignmentBillEntry);
+            #endregion
+
+            #region 托运单主表
+            ShippingBillSelectionChangedCommand = new DelegateCommand(ShippingBillSelectionChanged);
+            ShippingBillModifyCommand = new DelegateCommand(ModifyShippingBill);
+            ShippingBillDeleteCommand = new DelegateCommand(DeleteShippingBill);
+            ShippingBillExportCommand = new DelegateCommand(ExportShippingData);
+            ShippingBillDetailLogShowCommand = new DelegateCommand(ShowShippingBillDetailLog);
+            #endregion
+
+            #region 托运单子表
             ShippingBillEntryAddCommand = new DelegateCommand(AddShippingBillEntry);
             ShippingBillEntryDeleteCommand = new DelegateCommand(DeleteShippingBillEntry);
             ShippingBillEntryUpdateCommand = new DelegateCommand(UpdateShippingBillEntry);
             ShippingBillEntrySelectionChangedCommand = new DelegateCommand(ShippingBillEntrySelectionChanged);
+            #endregion
 
-
-
-            //初始化表格数据
-           
-            HostConfig = GetHostConfig();
-        
-           // GetShippingBills();
-           // InitQueryConSignmentBill();
+            #endregion
         }
 
-        public void Init()
+        private void DeleteShippingBill(object obj)
+        {
+
+            MessageBoxResult result = MessageBox.Show($"将会将合并此单的销售调拨数据\r\n还原到未合并前的状态 \r\n \r\n 物流单号：【{SelectedShippingBill.LogisticsBillNo}】\r\n  总金额：【{SelectedShippingBill.TotalAmount}】"
+                + $"\r\n   总重量：【{SelectedShippingBill.TotalQuantity}】"
+                + $"\r\n  系统单号：【{SelectedShippingBill.BillNo}】"
+                + $"\r\n  托运日期：【{SelectedShippingBill.BillDate}】"
+                , "【删除警告！！！】", MessageBoxButton.YesNoCancel);
+            if (result == MessageBoxResult.Yes)
+            {
+                int id = SelectedShippingBill.Id;
+                string billNos = _consignmentService.GetConsignmentBillNosByShippingBillId(id);
+                if (!string.IsNullOrEmpty(billNos))
+                {
+                    string lockMessage = _consignmentService.GetConsignmentBillLock(billNos);
+                    if (string.IsNullOrEmpty(lockMessage))
+                    {
+                        string rollbackMessage = _shippingService.DeleteShipingBill(id);
+                        if (string.IsNullOrEmpty(rollbackMessage))
+                        {
+                            ShippingBills.Remove(SelectedShippingBill);
+                            ShippingBillEntries.Clear();
+                            QuerySignmentBill(null);
+                        }
+                        else
+                        {
+                            MessageBox.Show(rollbackMessage);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(lockMessage);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("合成此托运单的明细单据丢失，请联系管理员");
+                }
+            }
+        }
+
+        private void ChangeSelectedConsignmentBillEntry(object obj)
+        {
+            if (obj != null)
+            {
+                SelectedConsignmentBillEntry = (ConsignmentBillEntryModel)obj;
+            }
+        }
+        private void DeleteConsignmentBillEntry(object obj)
+        {
+
+            if (SelectedConsignmentBill == null)
+                return;
+
+            if (SelectedConsignmentBillEntry == null || SelectedConsignmentBillEntry.IsSystem)
+            {
+                MessageBox.Show("只能删除手动添加的数据");
+                return;
+            }
+
+            string ownerName = _consignmentService.GetConsignmentBillLockOwner(SelectedConsignmentBill.BillNo, SelectedConsignmentBill.UserId);
+            if (string.IsNullOrEmpty(ownerName))
+            {
+                // 修改主表界面和后台
+                SelectedConsignmentBill.CurrencyQuantity -= SelectedConsignmentBillEntry.ECurrencyQuantity;
+                SelectedConsignmentBill.UndoQuantity -= SelectedConsignmentBillEntry.ECurrencyQuantity;
+                SelectedConsignmentBill.TotalQuantity -= SelectedConsignmentBillEntry.ECurrencyQuantity;
+                _consignmentService.UpdateConsignmentBill(SelectedConsignmentBill);
+
+                // 删除字表数据
+                int id = SelectedConsignmentBillEntry.Id;
+                ConsignmentBillEntries.Remove(SelectedConsignmentBillEntry);
+                _consignmentService.DeleteConsignmentBillEntry(id);
+
+            }
+            else
+            {
+                MessageBox.Show($"该记录正在被【{ownerName}】使用，请选择其他数据");
+            }
+
+
+
+        }
+
+        private void CopyConsignmentBillEntry(object obj)
+        {
+            if (SelectedConsignmentBill == null)
+                return;
+
+            string ownerName = _consignmentService.GetConsignmentBillLockOwner(SelectedConsignmentBill.BillNo, SelectedConsignmentBill.UserId);
+            if (string.IsNullOrEmpty(ownerName))
+            {
+                if (SelectedConsignmentBillEntry == null) return;
+
+
+                ConsignmentBillEntryCopyView add = new ConsignmentBillEntryCopyView();
+                var cloneData = TransExpV2<ConsignmentBillEntryModel, ConsignmentBillEntryModel>.Trans(SelectedConsignmentBillEntry);
+                cloneData.IsChecked = true;
+                cloneData.EntryId = ConsignmentBillEntries.Max(m => m.EntryId) + 1;
+                cloneData.IsSystem = false;
+                cloneData.ECurrencyQuantity = 0;
+
+                (add.DataContext as ConsignmentBillEntryCopyViewModel).WithParam(cloneData, (type, entry) =>
+                {
+                    add.Close();
+                    if (type == 1)
+                    {
+                        // 修改字表界面和后台
+                        int id = _consignmentService.AddConsignmentBillEntry(entry,user.ID);
+                        entry.ETotalQuantity = entry.ECurrencyQuantity;
+                        entry.EUndoQuantity = entry.ECurrencyQuantity;
+                        entry.Id = id;
+                        ConsignmentBillEntries.Add(entry);
+
+                        // 修改主表界面和后台
+                        SelectedConsignmentBill.CurrencyQuantity += entry.ECurrencyQuantity;
+                        SelectedConsignmentBill.UndoQuantity += entry.ECurrencyQuantity;
+                        SelectedConsignmentBill.TotalQuantity += entry.ECurrencyQuantity;
+                        _consignmentService.UpdateConsignmentBill(SelectedConsignmentBill);
+                    }
+                });
+                add.ShowDialog();
+
+            }
+            else
+            {
+                MessageBox.Show($"该记录正在被【{ownerName}】使用，请选择其他数据");
+            }
+        }
+
+        public void DataInit()
         {
             Task.Factory.StartNew(() =>
             {
@@ -190,16 +337,16 @@ namespace Ui.ViewModel
         private void SelectedAllConsignmentBill(object obj)
         {
             if (ConsignmentBills.Count == 0)
-                return; 
+                return;
 
             if (ConsignmentBills.Where(m => m.SelectedStatus == 0).Count() > 0)
             {
                 // 查询有没有被锁定的数据
                 string billNos = "'" + string.Join("','", ConsignmentBills.Select(m => m.BillNo)) + "'";
                 string lockstring = _consignmentService.GetConsignmentBillLockOwner(user.ID, billNos);
-                bool r = ConsignmentBills.Where(m => m.CurrencyQuatity == 0).Count() > 0;
+                bool r = ConsignmentBills.Where(m => m.CurrencyQuantity == 0).Count() > 0;
                 StringBuilder sb = new StringBuilder();
-        
+
                 if (string.IsNullOrEmpty(lockstring) || r)
                 {
                     foreach (var item in ConsignmentBills)
@@ -208,12 +355,12 @@ namespace Ui.ViewModel
                         {
                             SelectedConsignmentBillLists.Add(item);
                             sb.Append(",'" + item.BillNo + "'");
-                            SelectedConsignmentSum += item.CurrencyQuatity;
+                            SelectedConsignmentSum += item.CurrencyQuantity;
                         }
                     }
                     _consignmentService.AddUserCurrencyOperation(user.ID, sb.ToString().Substring(1));
                     QuerySignmentBill(null);
-               
+
 
                 }
                 else
@@ -221,7 +368,7 @@ namespace Ui.ViewModel
                     MessageBox.Show(lockstring + "！\r\n 或者已选数据的当前数量不能为0 ，不能批量选择");
                 }
             }
-           
+
         }
 
         private void UnSelectedAllConsignmentBill(object obj)
@@ -238,7 +385,7 @@ namespace Ui.ViewModel
                     foreach (var item in bills)
                     {
                         SelectedConsignmentBillLists.Remove(SelectedConsignmentBillLists.FirstOrDefault(x => x.InterId == item.InterId));
-                        SelectedConsignmentSum -= item.CurrencyQuatity;
+                        SelectedConsignmentSum -= item.CurrencyQuantity;
                         sb.Append(",'" + item.BillNo + "'");
                     }
                     SelectedConsignmentSum = (float)Math.Round((double)SelectedConsignmentSum, 2);
@@ -463,27 +610,33 @@ namespace Ui.ViewModel
         #endregion
 
         #region 命令属性
-        public DelegateCommand ModifyConsignmentBillEntryCommand { get; set; }
+        public DelegateCommand ConsignmentBillEntryModifyCommand { get; set; }
         public DelegateCommand QueryCommand { get; set; }
         public DelegateCommand ConsignmentBillMergeCommand { get; set; }
-        public DelegateCommand AddConsignmentBillCommand { get; set; }
-        public DelegateCommand RemoveConsignmentBillCommand { get; set; }
+        public DelegateCommand ConsignmentBillSelectedListsAddCommand { get; set; }
+        public DelegateCommand ConsignmentBillRemoveCommand { get; set; }
 
         public DelegateCommand ConsignmentBillSelectionChangedCommand { get; set; }
         public DelegateCommand ConsignmentBillEntryCheckBoxCommand { get; set; }
 
-        public DelegateCommand ModifyShippingBillCommand { get; set; }
+        public DelegateCommand ShippingBillModifyCommand { get; set; }
+        public DelegateCommand ShippingBillDeleteCommand { get; set; }
         public DelegateCommand ShippingBillSelectionChangedCommand { get; set; }
-        public DelegateCommand ClearSelectedConsignmentBillListsCommand { get; set; }
-        public DelegateCommand SyncConsignmentBillCommand { get; set; }
-        public DelegateCommand ShowShippingBillDetailLogCommand { get; set; }
-        public DelegateCommand ExportShippingDataCommand { get; set; }
+        public DelegateCommand ConsignmentBillSelectedListsClearCommand { get; set; }
+        public DelegateCommand ConsignmentBillSyncCommand { get; set; }
+        public DelegateCommand ShippingBillDetailLogShowCommand { get; set; }
+        public DelegateCommand ShippingBillExportCommand { get; set; }
         public DelegateCommand ConsignmentBillSelectedAllCommand { get; set; }
         public DelegateCommand ConsignmentBillUnSelectedAllCommand { get; set; }
         public DelegateCommand ShippingBillEntryAddCommand { get; set; }
         public DelegateCommand ShippingBillEntryDeleteCommand { get; set; }
         public DelegateCommand ShippingBillEntryUpdateCommand { get; set; }
         public DelegateCommand ShippingBillEntrySelectionChangedCommand { get; set; }
+        public DelegateCommand ConsignmentBillEntryCopyCommand { get; set; }
+        public DelegateCommand ConsignmentBillEntryDeleteCommand { get; set; }
+        public DelegateCommand ConsignmentBillEntrySelectionChangedCommand { get; set; }
+
+
 
         #endregion
 
@@ -510,17 +663,24 @@ namespace Ui.ViewModel
 
         private void ModifyConsignmentBillEntry(object obj)
         {
-            if (SelectedConsignmentBill==null)
+            if (SelectedConsignmentBill == null)
                 return;
+            if (SelectedConsignmentBillEntry == null) return;
+
+            if (!SelectedConsignmentBillEntry.IsSystem)
+            {
+                MessageBox.Show("手动新增的数据无法修改，请先【删除】然后【新增】");
+                return;
+            }
 
             string ownerName = _consignmentService.GetConsignmentBillLockOwner(SelectedConsignmentBill.BillNo, SelectedConsignmentBill.UserId);
             if (string.IsNullOrEmpty(ownerName))
             {
-                if (SelectedConsignmentBillEntry == null) return;
+
 
                 if (SelectedConsignmentBillEntry.IsChecked)
                 {
-                    float currencyQuatityBeforeModify = selectedConsignmentBillEntry.ECurrencyQuatity;
+                    float currencyQuatityBeforeModify = selectedConsignmentBillEntry.ECurrencyQuantity;
                     var cloneData = TransExpV2<ConsignmentBillEntryModel, ConsignmentBillEntryModel>.Trans(SelectedConsignmentBillEntry);
                     ConsignmentBillEntryModifyView edit = new ConsignmentBillEntryModifyView();
 
@@ -529,15 +689,14 @@ namespace Ui.ViewModel
                         edit.Close();
                         if (type == 1)
                         {
-                            if (currencyQuatityBeforeModify != entry.ECurrencyQuatity)
+                            if (currencyQuatityBeforeModify != entry.ECurrencyQuantity)
                             {
-                                SelectedConsignmentBillEntry.ECurrencyQuatity = entry.ECurrencyQuatity;
+                                SelectedConsignmentBillEntry.ECurrencyQuantity = entry.ECurrencyQuantity;
                                 _consignmentService.UpdateConsignmentBillEntry(entry);
                                 // 修改主表界面和后台
-                                SelectedConsignmentBill.CurrencyQuatity += entry.ECurrencyQuatity - currencyQuatityBeforeModify;
+                                SelectedConsignmentBill.CurrencyQuantity += entry.ECurrencyQuantity - currencyQuatityBeforeModify;
                                 _consignmentService.UpdateConsignmentBill(SelectedConsignmentBill);
                             }
-                            //GetConsignmentBills();
                         }
                     });
                     edit.ShowDialog();
@@ -552,19 +711,23 @@ namespace Ui.ViewModel
 
         private void InitQueryConSignmentBill()
         {
-            ConsignmentBills.Clear();
-            //string filter = $" and BillDate >= '{Filter.ParamDate}' and UndoQuatity>{Filter.ParamRestQuatity}  ";
-            _consignmentService.GetAllConsignmentBills(user.ID).ToList().ForEach(x =>
-            {
-                ConsignmentBills.Add(x);
-                if (x.SelectedStatus > 0)
-                {
-                    SelectedConsignmentBillLists.Add(x);
-                }
-            });
-            ConsignmentCount = ConsignmentBills.Count();
-            SelectedConsignmentSum = SelectedConsignmentBillLists.Sum(x => x.CurrencyQuatity);
-            SelectedConsignmentBillEntry = null;
+            QuerySignmentBill(null);
+
+            SelectedConsignmentBillLists.Clear();
+            _consignmentService.GetUserSelectedConsignmentBill(user.ID).ToList().ForEach(x => SelectedConsignmentBillLists.Add(x));
+
+            //ConsignmentBills.Clear();
+            //_consignmentService.GetAllConsignmentBills(user.ID).ToList().ForEach(x =>
+            //{
+            //    ConsignmentBills.Add(x);
+            //    if (x.SelectedStatus > 0)
+            //    {
+            //        SelectedConsignmentBillLists.Add(x);
+            //    }
+            //});
+            //ConsignmentCount = ConsignmentBills.Count();
+            //SelectedConsignmentSum = SelectedConsignmentBillLists.Sum(x => x.CurrencyQuatity);
+            //SelectedConsignmentBillEntry = null;
         }
 
         private void QuerySignmentBill(object obj)
@@ -623,7 +786,7 @@ namespace Ui.ViewModel
                 filters.Add($" and SelectedStatus > 0  ");
             }
 
-            string filter = $" and BillDate >= '{para.ParamDate}'  and UndoQuatity>{Filter.ParamRestQuatity} " + string.Join(" ", filters);
+            string filter = $" and BillDate >= '{para.ParamBeginDate}' and BillDate <= '{para.ParamEndDate}'  and UndoQuantity>{Filter.ParamRestQuatity} " + string.Join(" ", filters);
             _consignmentService.GetAllConsignmentBills(user.ID, filter).ToList().ForEach(x =>
             {
                 ConsignmentBills.Add(x);
@@ -641,13 +804,18 @@ namespace Ui.ViewModel
             {
                 string fInterIds = string.Join(",", SelectedConsignmentBillLists.Select(m => m.InterId));
                 string fbillNos = "'" + string.Join("','", SelectedConsignmentBillLists.Select(m => m.BillNo)) + "'";
-                _consignmentService.MergeConsignmentBill(user.ID, fInterIds, fbillNos);
-
-                SelectedConsignmentBillLists.Clear();
-                SelectedConsignmentSum = 0;
-                QuerySignmentBill(null);
-                //InitQueryConSignmentBill(null);
-                GetShippingBills();
+                string rollbackMsg=_consignmentService.MergeConsignmentBill(user.ID, fInterIds, fbillNos);
+                if (string.IsNullOrEmpty(rollbackMsg))
+                {
+                    SelectedConsignmentBillLists.Clear();
+                    SelectedConsignmentSum = 0;
+                    QuerySignmentBill(null);
+                    GetShippingBills();
+                }
+                else
+                {
+                    MessageBox.Show(rollbackMsg);
+                }
             }
         }
 
@@ -661,14 +829,14 @@ namespace Ui.ViewModel
                 if (string.IsNullOrEmpty(ownerName))
                 {
                     // 修改选择状态
-                    if (SelectedConsignmentBill.UndoQuatity == selectedConsignmentBill.CurrencyQuatity)
+                    if (SelectedConsignmentBill.UndoQuantity == selectedConsignmentBill.CurrencyQuantity)
                         SelectedConsignmentBill.SelectedStatus = 2;
                     else
                         SelectedConsignmentBill.SelectedStatus = 1;
 
                     // 添加已选数据，求和
-                    SelectedConsignmentBillLists.Add(SelectedConsignmentBill);
-                    SelectedConsignmentSum += SelectedConsignmentBill.CurrencyQuatity;
+                    SelectedConsignmentBillLists.Insert(0, SelectedConsignmentBill);
+                    SelectedConsignmentSum += SelectedConsignmentBill.CurrencyQuantity;
                     SelectedConsignmentBillEntry = null;
 
                     // 同步数据到数据库
@@ -691,7 +859,7 @@ namespace Ui.ViewModel
             {
                 //移除数据求和
                 SelectedConsignmentBillLists.Remove(SelectedConsignmentBillLists.FirstOrDefault(x => x.InterId == SelectedConsignmentBill.InterId));
-                SelectedConsignmentSum -= SelectedConsignmentBill.CurrencyQuatity;
+                SelectedConsignmentSum -= SelectedConsignmentBill.CurrencyQuantity;
 
                 // 修改选择状态
                 SelectedConsignmentBill.SelectedStatus = 0;
@@ -701,7 +869,7 @@ namespace Ui.ViewModel
             }
         }
 
-        private void ConsignmentBillSelectionChanged(object obj)
+        private void ChangeSelectedConsignmentBill(object obj)
         {
             if (obj != null)
             {
@@ -712,15 +880,15 @@ namespace Ui.ViewModel
             }
         }
 
-        private void ConsignmentBillEntryCheckBoxClick(object obj)
+        private void ClickCheckBoxConsignmentBillEntry(object obj)
         {
             string ownerName = _consignmentService.GetConsignmentBillLockOwner(SelectedConsignmentBill.BillNo, SelectedConsignmentBill.UserId);
             if (string.IsNullOrEmpty(ownerName))
             {
                 if (SelectedConsignmentBillEntry.IsChecked)   // UnCheck -> Checked
-                    selectedConsignmentBill.CurrencyQuatity += SelectedConsignmentBillEntry.ECurrencyQuatity;
+                    selectedConsignmentBill.CurrencyQuantity += SelectedConsignmentBillEntry.ECurrencyQuantity;
                 else // Checked -> UnCheck
-                    selectedConsignmentBill.CurrencyQuatity -= SelectedConsignmentBillEntry.ECurrencyQuatity;
+                    selectedConsignmentBill.CurrencyQuantity -= SelectedConsignmentBillEntry.ECurrencyQuantity;
 
                 _consignmentService.UpdateConsignmentBillEntry(SelectedConsignmentBillEntry);
                 _consignmentService.UpdateConsignmentBill(SelectedConsignmentBill);
@@ -758,17 +926,11 @@ namespace Ui.ViewModel
                 {
                     // 重新加载主表
                     _shippingService.UpdateShipingBill(shippingBill);
-                    // 修改参数
-                    //int index = ShippingBills.IndexOf(SelectedShippingBill);
-                    //ShippingBills.Remove(SelectedShippingBill);
-                    //ShippingBills.Insert(index, entry);
-                    //SelectedShippingBill = entry;
-                    //SelectedShippingBill = TransExpV2<ShippingBillModel, ShippingBillModel>.Trans(entry); 
+
                     SelectedShippingBill.BaoXianFei = shippingBill.BaoXianFei;
                     SelectedShippingBill.BillDate = shippingBill.BillDate;
                     SelectedShippingBill.ChaiLvFei = shippingBill.ChaiLvFei;
                     SelectedShippingBill.Demander = shippingBill.Demander;
-                    SelectedShippingBill.GoodsType = shippingBill.GoodsType;
                     SelectedShippingBill.GuanShuiFei = shippingBill.GuanShuiFei;
                     SelectedShippingBill.GuoLuFei = shippingBill.GuoLuFei;
                     SelectedShippingBill.LogisticsBillNo = shippingBill.LogisticsBillNo;
@@ -812,9 +974,15 @@ namespace Ui.ViewModel
 
         private void SyncConsignmentBill(object obj)
         {
-            _consignmentService.SyncConsignmentBill();
-            QuerySignmentBill(null);
-            MessageBox.Show("已获取最新数据");
+
+            MessageBoxResult result = MessageBox.Show($" 确认重新获取满足下列条件的最新单据数据：\r\n \r\n 1.时间段：【{Filter.ParamBeginDate.ToString("yyyy-MM-dd")} 至 {Filter.ParamEndDate.ToString("yyyy-MM-dd")} (包括边界日期) 】 \r\n 2.【单据号未增加明细】" +
+                $"\r\n 3.【单据号未被选定】\r\n 4.【单据号从未合并托运单】", "【删除警告！！！】", MessageBoxButton.YesNoCancel);
+            if (result == MessageBoxResult.Yes)
+            {
+                _consignmentService.SyncConsignmentBill(Filter.ParamBeginDate,Filter.ParamEndDate);
+                QuerySignmentBill(null);
+                MessageBox.Show("已获取最新数据");
+            }
         }
         #endregion
 

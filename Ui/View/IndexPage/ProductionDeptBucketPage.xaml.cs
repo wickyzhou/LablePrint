@@ -25,6 +25,7 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DG1.ItemsSource = new BucketService().GetAllBucket();
+            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
 
         private void modify_Click(object sender, RoutedEventArgs e)
@@ -43,11 +44,6 @@ namespace Ui.View.IndexPage
                 bucketModify.DG1.DataContext = DG1.SelectedItem;
                 bucketModify.ShowDialog();
             }
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.DG1.Height = SystemParameters.PrimaryScreenHeight * 0.7;
         }
     }
 }

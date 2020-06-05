@@ -18,26 +18,50 @@ namespace Model
 
         public string ItemName { get; set; }
 
+        public int CaseId { get; set; }
+
         public string CaseName { get; set; }
 
-        public float ETotalQuatity { get; set; }
+        public int BrandId { get; set; }
 
+        public string BrandName { get; set; }
 
-        private float eCurrencyQuatity;
+        private float eTotalQuantity;
 
-        public float ECurrencyQuatity
+        public float ETotalQuantity
         {
-            get { return eCurrencyQuatity; }
+            get { return eTotalQuantity; }
             set
             {
-                eCurrencyQuatity = value;
-                this.RaisePropertyChanged(nameof(ECurrencyQuatity));
+                eTotalQuantity = value;
+                this.RaisePropertyChanged(nameof(ETotalQuantity));
+            }
+        }
+
+        private float eCurrencyQuantity;
+
+        public float ECurrencyQuantity
+        {
+            get { return eCurrencyQuantity; }
+            set
+            {
+                eCurrencyQuantity = value;
+                this.RaisePropertyChanged(nameof(ECurrencyQuantity));
             }
         }
 
 
+        private float eUndoQuantity;
 
-        public float EUndoQuatity { get; set; }
+        public float EUndoQuantity
+        {
+            get { return eUndoQuantity; }
+            set
+            {
+                eUndoQuantity = value;
+                this.RaisePropertyChanged(nameof(EUndoQuantity));
+            }
+        }
 
 
         private bool isChecked;
@@ -52,6 +76,7 @@ namespace Model
             }
         }
 
+        public bool IsSystem { get; set; }
 
     }
 }

@@ -10,354 +10,364 @@
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1600" 
       >
-    <!--<Page.Resources>
-        <p:mod  x:Key="xx"/>
-    </Page.Resources>-->
-    <Grid>
+
+    <Grid  Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.8*"/>
-            <ColumnDefinition Width="0.6*"/>
-            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0" >
-            <Grid Background="Red"/>
-            <Grid DockPanel.Dock="bottom">
+
+        <Grid Grid.Column="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.8*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="LightYellow">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
-
                 <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.8*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="0.2*"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Content="刷新通知单"  Command="{Binding SyncConsignmentBillCommand}"  Style="{StaticResource BtnWarningStyle}" Height="30" ToolTip="获取最新的通知单数据，执行一次即可，所有用户有效"  >
-                        </Button>
+                    <Button Grid.Column="0" Content="更新销调"  Command="{Binding ConsignmentBillSyncCommand}"  Style="{StaticResource BtnWarningStyle}" Height="30" ToolTip="获取发货日期时间段内最新审核的销售出库和调拨单数据【 仅限于该单号《未生成托运单》,并且《未选定》,并且《未增加明细》 】"  >
+                    </Button>
 
-                        <TextBlock  Grid.Column="1" Text="发货日期 ≥" Style="{StaticResource TextBlockStyle15}"/>
-                        <DatePicker Grid.Column="2" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }"/>
-                        <TextBlock  Grid.Column="3" Text="通知单号" Style="{StaticResource TextBlockStyle15}"/>
-                        <TextBox  Grid.Column="4" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamBillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock  Grid.Column="1" Text="发货日期" Style="{StaticResource TextBlockStyle15}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <DatePicker Grid.Column="2" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamBeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
 
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.2*"/>
-                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="3" Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
 
-                        <TextBlock  Grid.Column="0" Text="区域部门" Style="{StaticResource TextBlockStyle15}"/>
-                        <TextBox  Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamDeptName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="多个关键字用【逗号】分割，或者关系" />
-
-                        <TextBlock Grid.Column="2" Text="数量 ＞" Style="{StaticResource TextBlockStyle5}"/>
-                        <TextBox Grid.Column="3" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamRestQuatity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="50" HorizontalAlignment="Left"/>
-
-                        <TextBlock Grid.Column="4" Text="仅已选" Style="{StaticResource TextBlockStyle5}"/>
-                        <CheckBox  Grid.Column="5" IsChecked="{Binding Filter.IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
-                    </Grid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="0.2*"/>
-                        </Grid.ColumnDefinitions>
+                        <DatePicker Grid.Column="4" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamEndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                    </StackPanel>
 
 
-                        <TextBlock Grid.Column="0" Text="购货单位" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBlock  Grid.Column="3" Text="系统单号" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBox  Grid.Column="4" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamBillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamCustName ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="多个关键字用【逗号】分割，或者关系"/>
-
-                        <TextBlock Grid.Column="2" Text="{Binding ConsignmentCount}" Style="{StaticResource TextBlockStyle}" />
-
-                        <Button  Grid.Column="3" Grid.ColumnSpan="2" Content="查询"  Command="{Binding QueryCommand}"  Style="{StaticResource BtnInfoStyle}" Height="30" ToolTip="默认快捷键【Enter】" IsDefault="True" >
-                        </Button>
-
-                    </Grid>
                 </Grid>
 
                 <Grid Grid.Row="1">
-                    <DataGrid x:Name="MainDataGrid"  AutoGenerateColumns="False" Style="{StaticResource DGStyle}"
-                      GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding ConsignmentBills}"  VerticalAlignment="Top"
-                          SelectedItem="{Binding SelectedConsignmentBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinHeight="600"  MaxHeight="700" SelectedIndex="0" Margin="0 15 0 0">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding ConsignmentBillSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding AddConsignmentBillCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem  Header="全选" Style="{StaticResource MenuItemCreateStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillSelectedAllCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                <MenuItem  Header="反选" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillUnSelectedAllCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="50"  HeaderStyle="{StaticResource DGColumnHeader}">
-                                <DataGridColumn.HeaderTemplate >
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridColumn.HeaderTemplate>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
 
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="-5 0 0 0" HorizontalAlignment="Center">
-                                            <Button Width="45" Margin="-5 0 0 0"  Content="{Binding SelectedStatus,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource SelectedStatusConverter}}"  Style="{StaticResource BtnSuccessCloseStyle}" 
-                                                Background="{Binding SelectedStatus,Converter={StaticResource SelectedBackgroundConverter}}"
-                                                Command="{Binding DataContext.RemoveConsignmentBillCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-    />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
+                    <TextBlock  Grid.Column="0" Text="区域部门" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBox  Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamDeptName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="多个关键字用【逗号】分割，或者关系" />
 
-                            </DataGridTemplateColumn>
+                    <TextBlock Grid.Column="2" Text="数量 ＞" Style="{StaticResource TextBlockStyle5}"/>
+
+                    <TextBox Grid.Column="3" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamRestQuatity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 0 5 0" />
+
+                    <TextBlock Grid.Column="4" Text="仅已选" Style="{StaticResource TextBlockStyle5}"/>
+                    <CheckBox  Grid.Column="5" IsChecked="{Binding Filter.IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
 
 
-                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuatity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding UndoQuatity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="发货日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="通知单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="区域部门" DataGridBoundColumn.Binding="{Binding DeptName}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="购货单位" DataGridBoundColumn.Binding="{Binding CustName}" Width="180" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="联系人" DataGridBoundColumn.Binding="{Binding ContractPerson}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="联系方式" DataGridBoundColumn.Binding="{Binding ContractPhone}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="选择状态" DataGridBoundColumn.Binding="{Binding SeletedStatus}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    <TextBlock Grid.Column="0" Text="购货单位" Style="{StaticResource TextBlockStyle15}"/>
 
-                            <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="更新时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" Width="140" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamCustName ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="多个关键字用【逗号】分割，或者关系"/>
+
+                    <TextBlock Grid.Column="2" Text="{Binding ConsignmentCount}" Style="{StaticResource TextBlockStyle}" />
+
+                    <Button  Grid.Column="3" Grid.ColumnSpan="2" Content="查询"  Command="{Binding QueryCommand}"  Style="{StaticResource BtnInfoStyle}" Height="30" ToolTip="默认快捷键【Enter】" IsDefault="True" >
+                    </Button>
+
                 </Grid>
             </Grid>
-        </DockPanel>
-        
 
-        <Grid Grid.Column="1" Margin="2 0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1.5*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="1.8*"/>
-            </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0"  Background="LightGray" Padding="2 5 2 2" MaxHeight="300" MinHeight="250">
-                <GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="托运明细 " Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center" Margin="5 0" FontSize="12" />
-                        <Button Grid.Column="1" Style="{StaticResource BtnSuccessStyle}" Content="新增" Width="60" Height="25" Margin="10 0 15 0" Command="{ Binding ShippingBillEntryAddCommand}" />
-                        <Button Grid.Column="2" Style="{StaticResource BtnInfoStyle}" Content="通知单合并明细" Width="100" Height="25" Margin="2 0" Command="{ Binding ShowShippingBillDetailLogCommand}" ToolTip="选中托运单数据行，查看通知单明细"/>
-                    </Grid>
-                </GroupBox.Header>
-                <GroupBox.Content>
-                    <DataGrid Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBillEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding SelectedShippingBillEntry,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinHeight="200" >
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding ShippingBillEntrySelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <DataGrid.ContextMenu>
+            <Grid Grid.Row="1">
+                <DataGrid x:Name="MainDataGrid"  Style="{StaticResource DGStyle}"  ItemsSource="{Binding ConsignmentBills}" 
+SelectedItem="{Binding SelectedConsignmentBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" Margin="0 15 0 0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ConsignmentBillSelectionChangedCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding ConsignmentBillSelectedListsAddCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <DataGrid.ContextMenu>
                         <ContextMenu>
-                                <MenuItem  Header="删除" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                <MenuItem  Header="修改" Style="{StaticResource MenuItemModifyStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryUpdateCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                            </ContextMenu>
+                            <MenuItem Header="全选" Style="{StaticResource MenuItemCreateStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillSelectedAllCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="反选" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillUnSelectedAllCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="50" HeaderStyle="{StaticResource DGColumnHeader}">
+                            <DataGridColumn.HeaderTemplate >
+                                <DataTemplate>
+                                    <StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="-5 0 0 0" HorizontalAlignment="Center">
+                                        <Button Width="45" Margin="-5 0 0 0" Content="{Binding SelectedStatus,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource SelectedStatusConverter}}" Style="{StaticResource BtnSuccessCloseStyle}"
+Background="{Binding SelectedStatus,Converter={StaticResource SelectedBackgroundConverter}}"
+Command="{Binding DataContext.ConsignmentBillRemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding UndoQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="发货日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="系统单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="区域部门" DataGridBoundColumn.Binding="{Binding DeptName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="购货单位" DataGridBoundColumn.Binding="{Binding CustName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <!--<DataGridTextColumn DataGridColumn.Header="选择状态" DataGridBoundColumn.Binding="{Binding SeletedStatus}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="金额" DataGridBoundColumn.Binding="{Binding ApportionedAmount,StringFormat=N2}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="货物类型" DataGridBoundColumn.Binding="{Binding GoodsType,Converter={StaticResource GoodsTypeConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding CustName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="部门" DataGridBoundColumn.Binding="{Binding DeptName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                      
-                        </DataGrid.Columns>
- 
-                    </DataGrid>
-                </GroupBox.Content>
-            </GroupBox>
+                            <DataGridTextColumn DataGridColumn.Header="更新时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" Width="140" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
 
-            <GroupBox Grid.Row="1"  Background="LightGray" Margin="0 10 0 5" Padding="5 10 0 0" MaxHeight="275" MinHeight="200">
-                <GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="已选单据" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center" Margin="5 0" FontSize="12" />
-                        <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="清空" Width="30" Height="20" Margin="2 0" Command="{ Binding ClearSelectedConsignmentBillListsCommand}"/>
-                    </Grid>
-                </GroupBox.Header>
-                <GroupBox.Content>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <ScrollViewer Grid.Row="0"  Margin="0 0 0 10" >
-                            <ListBox Style="{StaticResource HorizontalListBox}" VerticalContentAlignment="Center" SelectedValuePath="InterId" DisplayMemberPath="BillNo" ItemsSource="{Binding SelectedConsignmentBillLists,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" ItemContainerStyle="{StaticResource ItemContainer}" >
-                            </ListBox>
-                        </ScrollViewer>
+            <Grid Grid.Row="2" Margin="0 10 0 0" Background="LightYellow">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="1">
+                <GroupBox Grid.Column="0" Header=" 销调明细 " Background="LightGray" Padding="2 10" BorderBrush="Green" BorderThickness="1">
+                    <GroupBox.Content>
+                        <DataGrid  ItemsSource="{Binding ConsignmentBillEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}"
+                          SelectedItem="{Binding SelectedConsignmentBillEntry,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   IsEnabled="{Binding SelectedConsignmentBill.SelectedStatus,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource SelectedDGEnableConverter} }" >
+
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="复制" Style="{StaticResource MenuItemCreateStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillEntryCopyCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="删除" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillEntryDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="修改" Style="{StaticResource MenuItemModifyStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ConsignmentBillEntryModifyCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding ConsignmentBillEntrySelectionChangedCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="30"  HeaderStyle="{StaticResource DGColumnHeader}">
+                                    <DataGridColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text=""/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridColumn.HeaderTemplate>
+
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <CheckBox IsChecked="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Height="16"   Command="{Binding DataContext.ConsignmentBillEntryCheckBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="{Binding FRestQuatity,Converter={StaticResource CheckBoxIsEnabledConverter}}" >
+                                                </CheckBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn DataGridColumn.Header="来源" DataGridBoundColumn.Binding="{Binding IsSystem,Converter={c:ConsignmentBillEntryIsSystemConverter}}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="物料" DataGridBoundColumn.Binding="{Binding ItemName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding ETotalQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding EUndoQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding ECurrencyQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="#d34943"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox.Content>
+                </GroupBox>
+
+                <GroupBox Grid.Column="1"  Background="#e8e8e8" Margin="2 0 0 5" Padding="5 10 0 0" BorderThickness="0.5" BorderBrush="Purple">
+                    <GroupBox.Header>
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource TextBlockStyle20}" Text="{Binding SelectedConsignmentSum,StringFormat=总重量：\{0\}}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15 0 0 0" />
-                            <Button Grid.Column="1"  Command="{Binding ConsignmentBillMergeCommand}" Style="{StaticResource BtnSuccessStyle}" Height="30" Content="合并通知单" HorizontalAlignment="Right" Margin="0 0 40 5" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="已选单据" Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center" Margin="5 0" FontSize="12" />
+                            <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="清空" Width="30" Height="20" Margin="2 0" Command="{ Binding ConsignmentBillSelectedListsClearCommand}"/>
                         </Grid>
-                    </Grid>
-                </GroupBox.Content>
-            </GroupBox>
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="4*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0" VerticalAlignment="Center" Height="50">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockStyle20}" Text="{Binding SelectedConsignmentSum,StringFormat=总重量：\{0\}}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15 0 0 0" />
+                                <Button Grid.Column="1"  Command="{Binding ConsignmentBillMergeCommand}" Style="{StaticResource BtnSuccessStyle}" Height="30" Content="合并通知单" HorizontalAlignment="Right" Margin="0 0 40 5" VerticalAlignment="Center" />
+                            </Grid>
 
-            <GroupBox Grid.Row="2" Header=" 通知单明细 " Background="LightGray"  MaxHeight="300" MinHeight="250">
-                <GroupBox.Content>
-                    <DataGrid Style="{StaticResource DGStyle}" ItemsSource="{Binding ConsignmentBillEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding SelectedConsignmentBillEntry,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   IsEnabled="{Binding SelectedConsignmentBill.SelectedStatus,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource SelectedDGEnableConverter} }" >
-
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding ModifyConsignmentBillEntryCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-
-     
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="30"  HeaderStyle="{StaticResource DGColumnHeader}">
-                                <DataGridColumn.HeaderTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock Text=""/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridColumn.HeaderTemplate>
-                                <!--Checked="{Binding ConsignmentBillEntryCheckedCommand}" Unchecked="{Binding ConsignmentBillEntryUnCheckedCommand}"-->                            
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <CheckBox IsChecked="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Height="16"   Command="{Binding DataContext.ConsignmentBillEntryCheckBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="{Binding FRestQuatity,Converter={StaticResource CheckBoxIsEnabledConverter}}" >
-                                            </CheckBox>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="物料" DataGridBoundColumn.Binding="{Binding ItemName}" Width="2*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding ECurrencyQuatity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="#d34943"/>
-                            <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding EUndoQuatity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding ETotalQuatity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox.Content>
-            </GroupBox>
+                            <ScrollViewer Grid.Row="1"  Margin="0 0 0 5" >
+                                <ListBox Style="{StaticResource HorizontalListBox}" VerticalContentAlignment="Center" SelectedValuePath="InterId" DisplayMemberPath="BillNo" ItemsSource="{Binding SelectedConsignmentBillLists,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" ItemContainerStyle="{StaticResource ItemContainer}" FontSize="10" >
+                                </ListBox>
+                            </ScrollViewer>
+                        </Grid>
+                    </GroupBox.Content>
+                </GroupBox>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Column="2" Background="LightYellow">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="9*"/>
-            </Grid.RowDefinitions>
-            
-            <Grid Grid.Row="0" Margin="0 10 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="8*"/>
-                </Grid.ColumnDefinitions>
-                <Button  Grid.Column="0" Name="btnExportException" FrameworkElement.Height="28"   ContentControl.Content="导出" Control.Background="LightSeaGreen" Command="{Binding ExportShippingDataCommand}"  ToolTip="配置路径后导出数据" Foreground="Snow"  Cursor="Hand"
-                   Margin="20 0 20 0"      />
-                <TextBox Grid.Column="1"  Height="28" Foreground="Purple" Background="GhostWhite" VerticalAlignment="Center"  Margin="0 0 30 0" Text="{Binding HostConfig.HostValue}" HorizontalAlignment="Left" IsReadOnly="True" VerticalContentAlignment="Center" Padding="10 0 0 0" MinWidth="300"/>
-            </Grid>
-            
-            <DataGrid Grid.Row="1" Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBills,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding SelectedShippingBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinHeight="800"  VerticalAlignment="Top" Margin="0 10 0 0">
-                <i:Interaction.Triggers>
 
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding ShippingBillSelectionChangedCommand}"   
+        <Border Grid.Column="2"  BorderBrush="Purple" BorderThickness="1 0 0 0" Padding="3 0" Margin="2 0" CornerRadius="1 0 0 0">
+            <Border.Effect>
+                <DropShadowEffect Color="MediumPurple" BlurRadius="0" ShadowDepth="1" Opacity="0.5" Direction="180" />
+            </Border.Effect>
+            <Grid  Background="LightYellow">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0 10 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="8*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button  Grid.Column="0" Name="btnExportException" FrameworkElement.Height="28"   ContentControl.Content="导出" Control.Background="LightSeaGreen" Command="{Binding ShippingBillExportCommand}"  ToolTip="配置路径后导出数据" Foreground="Snow"  Cursor="Hand"
+                   Margin="20 0 20 0"      />
+                    <TextBox Grid.Column="1"  Height="28" Foreground="Purple" Background="GhostWhite" VerticalAlignment="Center"  Margin="0 0 30 0" Text="{Binding HostConfig.HostValue}" HorizontalAlignment="Left" IsReadOnly="True" VerticalContentAlignment="Center" Padding="10 0 0 0" MinWidth="300"/>
+                </Grid>
+
+                <DataGrid Grid.Row="1" Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBills,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding SelectedShippingBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Margin="0 10 0 0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ShippingBillSelectionChangedCommand}"   
                                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                    </i:EventTrigger>
-                    
-                    <i:EventTrigger EventName="PreviewMouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding ModifyShippingBillCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="修改" Style="{StaticResource MenuItemModifyStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillModifyCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="删除" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     
                     <DataGrid.Columns>
-                    <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="总费用" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="托运单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="托运日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-
-                    <!--<DataGridTextColumn DataGridColumn.Header="物流类型"  Width="100" HeaderStyle="{StaticResource DGColumnHeader}">
-                        <DataGridTextColumn.Binding>
-                            <MultiBinding Converter="{StaticResource LogisticsTypeConverter}">
-                                <Binding Path="DataContext.ss" RelativeSource="{RelativeSource AncestorType=Window,Mode=FindAncestor}"/>
-                                <Binding Path="LogisticsType"/>
-                            </MultiBinding>
-                        </DataGridTextColumn.Binding>
-                    </DataGridTextColumn>-->
-                        
-                    <DataGridTextColumn DataGridColumn.Header="物流类型" DataGridBoundColumn.Binding="{Binding LogisticsType,Converter={StaticResource LogisticsTypeConverter}}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        
-                    <DataGridTextColumn DataGridColumn.Header="物流公司" DataGridBoundColumn.Binding="{Binding LogisticsCompanyName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="物流单号" DataGridBoundColumn.Binding="{Binding LogisticsBillNo}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="货物类别" DataGridBoundColumn.Binding="{Binding GoodsType}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="需求人" DataGridBoundColumn.Binding="{Binding Demander}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="其他费用" DataGridBoundColumn.Binding="{Binding OtherCosts}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="运输费" DataGridBoundColumn.Binding="{Binding YunShuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="油费" DataGridBoundColumn.Binding="{Binding YouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="过路费" DataGridBoundColumn.Binding="{Binding GuoLuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="差旅费" DataGridBoundColumn.Binding="{Binding ChaiLvFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="维修费" DataGridBoundColumn.Binding="{Binding WeiXiuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="关税" DataGridBoundColumn.Binding="{Binding GuanShuiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="提货费" DataGridBoundColumn.Binding="{Binding TiHuoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="危险品费" DataGridBoundColumn.Binding="{Binding WeiXianPinFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="清关费" DataGridBoundColumn.Binding="{Binding QingGuanFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="保险费" DataGridBoundColumn.Binding="{Binding BaoXianFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="派送费" DataGridBoundColumn.Binding="{Binding PaiSongFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="总费用" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="托运单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="托运日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="物流类型" DataGridBoundColumn.Binding="{Binding LogisticsType,Converter={StaticResource LogisticsTypeConverter}}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="物流公司" DataGridBoundColumn.Binding="{Binding LogisticsCompanyName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="物流单号" DataGridBoundColumn.Binding="{Binding LogisticsBillNo}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="需求人" DataGridBoundColumn.Binding="{Binding Demander}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="其他费用" DataGridBoundColumn.Binding="{Binding OtherCosts}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="运输费" DataGridBoundColumn.Binding="{Binding YunShuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="油费" DataGridBoundColumn.Binding="{Binding YouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="过路费" DataGridBoundColumn.Binding="{Binding GuoLuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="差旅费" DataGridBoundColumn.Binding="{Binding ChaiLvFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="维修费" DataGridBoundColumn.Binding="{Binding WeiXiuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="关税" DataGridBoundColumn.Binding="{Binding GuanShuiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="提货费" DataGridBoundColumn.Binding="{Binding TiHuoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="危险品费" DataGridBoundColumn.Binding="{Binding WeiXianPinFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="清关费" DataGridBoundColumn.Binding="{Binding QingGuanFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="保险费" DataGridBoundColumn.Binding="{Binding BaoXianFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="派送费" DataGridBoundColumn.Binding="{Binding PaiSongFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="耗材费" DataGridBoundColumn.Binding="{Binding HaoCaiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="样油费" DataGridBoundColumn.Binding="{Binding YangYouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="设备费" DataGridBoundColumn.Binding="{Binding SheBeiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="成品退货费" DataGridBoundColumn.Binding="{Binding ChengPinTuiHuoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="退原材料费" DataGridBoundColumn.Binding="{Binding TuiYuanCaiLiaoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
 
 
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <GroupBox Grid.Row="2"  Background="LightGray" Padding="2 8 2 2" Margin="0 10 0 0" >
+                    <GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="托运明细 " Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center" Margin="5 0" FontSize="12" />
+                            <!--<Button Grid.Column="1" Style="{StaticResource BtnSuccessStyle}" Content="新增" Width="60" Height="25" Margin="10 0 15 0" Command="{ Binding ShippingBillEntryAddCommand}" />-->
+                            <Button Grid.Column="1" Style="{StaticResource BtnInfoStyle}" Content="通知单合并明细" Width="100" Height="25" Command="{ Binding ShippingBillDetailLogShowCommand}" ToolTip="选中托运单数据行，查看通知单明细"  Margin="10 0 15 0" />
+                        </Grid>
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <DataGrid Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBillEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedShippingBillEntry,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinHeight="200" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding ShippingBillEntrySelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem  Header="新增" Style="{StaticResource MenuItemCreateStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryAddCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem  Header="删除" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem  Header="修改" Style="{StaticResource MenuItemModifyStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryUpdateCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                </ContextMenu>
+
+                            </DataGrid.ContextMenu>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn DataGridColumn.Header="来源" DataGridBoundColumn.Binding="{Binding IsSystem,Converter={c:ConsignmentBillEntryIsSystemConverter}}"  Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="金额" DataGridBoundColumn.Binding="{Binding ApportionedAmount,StringFormat=N2}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="货物类型" DataGridBoundColumn.Binding="{Binding GoodsType,Converter={StaticResource GoodsTypeConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding CustName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="部门" DataGridBoundColumn.Binding="{Binding DeptName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </GroupBox.Content>
+                </GroupBox>
+
+            </Grid>
+        </Border>
     </Grid>
 
 </Page>

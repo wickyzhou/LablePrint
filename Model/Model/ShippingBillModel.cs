@@ -224,8 +224,67 @@ namespace Model
 			{
 				otherCosts = value;
 				this.RaisePropertyChanged(nameof(OtherCosts));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+			}
+		}
+
+		private float haoCaiFei;
+
+		public float HaoCaiFei
+		{
+			get { return haoCaiFei; }
+			set
+			{
+				haoCaiFei = value;
+				this.RaisePropertyChanged(nameof(HaoCaiFei));
+			}
+		}
+
+		private float yangYouFei;
+
+		public float YangYouFei
+		{
+			get { return yangYouFei; }
+			set
+			{
+				yangYouFei = value;
+				this.RaisePropertyChanged(nameof(YangYouFei));
+			}
+		}
+
+		private float sheBeiFei;
+
+		public float SheBeiFei
+		{
+			get { return sheBeiFei; }
+			set
+			{
+				sheBeiFei = value;
+				this.RaisePropertyChanged(nameof(SheBeiFei));
+			}
+		}
+
+		private float chengPinTuiHuoFei;
+
+		public float ChengPinTuiHuoFei
+		{
+			get { return chengPinTuiHuoFei; }
+			set
+			{
+				chengPinTuiHuoFei = value;
+				this.RaisePropertyChanged(nameof(ChengPinTuiHuoFei));
+			}
+		}
+
+
+		private float tuiYuanCaiLiaoFei;
+
+		public float TuiYuanCaiLiaoFei 
+		{
+			get { return tuiYuanCaiLiaoFei; }
+			set
+			{
+				tuiYuanCaiLiaoFei = value;
+				this.RaisePropertyChanged(nameof(TuiYuanCaiLiaoFei));
 			}
 		}
 
@@ -256,26 +315,16 @@ namespace Model
 		}
 
 
-		private int goodsType;
-
-		public int GoodsType
-		{
-			get { return goodsType; }
-			set
-			{
-				goodsType = value;
-				this.RaisePropertyChanged(nameof(GoodsType));
-
-			}
-		}
-
-		//YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; 
-		//private float totalAmount;
-
 		public float TotalAmount
 		{
+			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts+ HaoCaiFei+ YangYouFei+ SheBeiFei+ ChengPinTuiHuoFei+ TuiYuanCaiLiaoFei; }
+			private set { }
+		}
+
+		public float ApportionedAmount
+		{
 			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; }
-			set { }
+			private set { }
 		}
 
 
@@ -303,6 +352,20 @@ namespace Model
 			}
 		}
 
+		private float systemQuantity;
+
+		public float SystemQuantity
+		{
+			get { return systemQuantity; }
+			set
+			{
+				systemQuantity = value;
+				this.RaisePropertyChanged(nameof(SystemQuantity));
+			}
+		}
+
+
+
 		private string stringTotalAmount;
 
 		public string StringTotalAmount
@@ -315,6 +378,7 @@ namespace Model
 			}
 		}
 
+	
 
 
 	}
