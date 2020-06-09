@@ -16,6 +16,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="11.5"/>
         <Setter Property="Foreground" Value="Purple"/>
+        <Setter Property="Background" Value="Snow"/>
         <Setter Property="Padding" Value="5 0 0 0"/>
         <!--<Setter Property="Validation.ErrorTemplate" Value="{StaticResource validationTemplate}"/>-->
         <Style.Triggers>

@@ -30,12 +30,19 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="1" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="货物类型"/>
         <TextBlock Grid.Row="2" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="数量"/>
-        <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="部门"/>
+        <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="金额"/>
         <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="部门ID" Visibility="Hidden"/>
         <TextBlock Grid.Row="4" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="序号"/>
 
         <ComboBox Grid.Row="1" Grid.Column="2"   Style="{StaticResource ComboBoxStyleAuto}"  ItemsSource="{Binding GoodsTypeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                               SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                               SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
+            <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding GoodsTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>-->
+        </ComboBox>
 
         <TextBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource TextBoxStyle}">
             <TextBox.Text>
@@ -46,25 +53,17 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
+
+        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.ApportionedAmount}"/>
         
-        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxReadonlyStyle}" Text="{Binding ShippingBillEntry.DeptName}"/>
         <TextBox Style="{StaticResource TextBoxReadonlyStyle}" Visibility="Hidden" Text="{Binding ShippingBillEntry.DeptId}"/>
 
-        <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}" >
-            <TextBox.Text>
-                <Binding Path="ShippingBillEntry.EntryId" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
-                    <!--<Binding.ValidationRules>
-                        <StaticResource ResourceKey="NumberRule" />
-                    </Binding.ValidationRules>-->
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
+        <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}" IsReadOnly="True" Text="{Binding ShippingBillEntry.EntryId}" Background="LightGray" />
 
         <StackPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
             <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="30" IsDefault="True" />
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>
-
 
 
     </Grid>

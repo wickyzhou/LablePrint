@@ -17,8 +17,17 @@ namespace Ui.ViewModel
         {
             SaveCommand = new DelegateCommand(Save);
             ExitCommand = new DelegateCommand(Exit);
+            //GoodsTypeSelectionChangedCommand = new DelegateCommand(ChangeGoodsTypeSelection);
             Init();
         }
+
+        //private void ChangeGoodsTypeSelection(object obj)
+        //{
+        //    if ((int)obj== 3)
+        //    {
+        //        ShippingBillEntry.ApportionedAmount = (float)(ShippingBillEntry.Quantity * 0.81);
+        //    }
+        //}
 
         private ShippingBillEntryModel shippingBillEntry;
 
@@ -54,6 +63,8 @@ namespace Ui.ViewModel
 
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand ExitCommand { get; set; }
+        public DelegateCommand GoodsTypeSelectionChangedCommand { get; set; }
+
 
         public void Save(object obj)
         {

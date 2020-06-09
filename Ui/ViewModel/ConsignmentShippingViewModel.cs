@@ -241,38 +241,44 @@ namespace Ui.ViewModel
         {
             if (SelectedShippingBillEntry != null)
             {
-                if (string.IsNullOrEmpty(SelectedShippingBillEntry.CustName))
-                {
                     ShippingBillEntryModifyView edit = new ShippingBillEntryModifyView();
-
                     var quantityBeforeModify = SelectedShippingBillEntry.Quantity;
+                    var amountBeforeModify = SelectedShippingBillEntry.ApportionedAmount;
                     var cloneData = TransExpV2<ShippingBillEntryModel, ShippingBillEntryModel>.Trans(SelectedShippingBillEntry);
                     (edit.DataContext as ShippingBillEntryModifyViewModel).WithParam(cloneData, (type, entry) =>
                     {
                         edit.Close();
                         if (type == 1)
-                        {
-                            SelectedShippingBillEntry.Quantity = entry.Quantity;
-                            // 简单修改
-                            if (quantityBeforeModify == entry.Quantity)
+                        {   
+                            //系统单据只能修改Id
+                            if (entry.IsSystem)
                             {
                                 _shippingService.UpdateShippingBillEntry2(entry);
+                                SelectedShippingBillEntry.GoodsType = entry.GoodsType;
                             }
-                            else  // 重新分摊数量
+                            else
                             {
-                                float diff = entry.Quantity - quantityBeforeModify;
-                                SelectedShippingBill.TotalQuantity += diff;
-                                _shippingService.UpdateShippingBillEntry3(entry, diff);
+                                float qtyDiff = entry.Quantity - quantityBeforeModify;
+                                float amountDiff = entry.ApportionedAmount - amountBeforeModify;
+                                // 更新后台
+                                _shippingService.UpdateShippingBillEntry3(entry, qtyDiff, amountDiff);
+
+                                // 前端显示
+                                SelectedShippingBill.TotalQuantity += qtyDiff;
+                                SelectedShippingBill.TotalAmount += amountDiff;
+                                switch (entry.GoodsType)
+                                {
+                                    case 2: SelectedShippingBill.HaoCaiFei += amountDiff; break;
+                                    case 3: SelectedShippingBill.YangYouFei += amountDiff; break;
+                                    case 4: SelectedShippingBill.SheBeiFei += amountDiff; break;
+                                    case 5: SelectedShippingBill.ChengPinTuiHuoFei += amountDiff; break;
+                                    case 6: SelectedShippingBill.TuiYuanCaiLiaoFei += amountDiff; break;
+                                }
+                                GetAllShippingBillEntriesById(entry.MainId);
                             }
-                            GetAllShippingBillEntriesById(entry.MainId);
                         }
                     });
                     edit.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("无法修改系统生成的数据");
-                }
             }
         }
 
@@ -280,12 +286,22 @@ namespace Ui.ViewModel
         {
             if (SelectedShippingBillEntry != null)
             {
-                if (string.IsNullOrEmpty(SelectedShippingBillEntry.CustName))
+                if (!SelectedShippingBillEntry.IsSystem)
                 {
                     SelectedShippingBill.TotalQuantity -= SelectedShippingBillEntry.Quantity;
+                    SelectedShippingBill.TotalAmount -= SelectedShippingBillEntry.ApportionedAmount;
+                    switch (SelectedShippingBillEntry.GoodsType)
+                    {
+                        case 2: SelectedShippingBill.HaoCaiFei -= SelectedShippingBillEntry.ApportionedAmount; break;
+                        case 3: SelectedShippingBill.YangYouFei -= SelectedShippingBillEntry.ApportionedAmount; break;
+                        case 4: SelectedShippingBill.SheBeiFei -= SelectedShippingBillEntry.ApportionedAmount; break;
+                        case 5: SelectedShippingBill.ChengPinTuiHuoFei -= SelectedShippingBillEntry.ApportionedAmount; break;
+                        case 6: SelectedShippingBill.TuiYuanCaiLiaoFei -= SelectedShippingBillEntry.ApportionedAmount; break;
+                    }
                     _shippingService.DeleteShippingBillEntry(SelectedShippingBillEntry);
                     // 重新加载明细 
-                    GetAllShippingBillEntriesById(SelectedShippingBillEntry.MainId);
+                    //GetAllShippingBillEntriesById(SelectedShippingBillEntry.MainId);
+                    ShippingBillEntries.Remove(SelectedShippingBillEntry);
                 }
                 else
                 {
@@ -298,22 +314,18 @@ namespace Ui.ViewModel
 
         private void AddShippingBillEntry(object obj)
         {
-            if (ShippingBillEntries.Count() > 0)
-            {
+
                 ShippingBillEntryAddView view = new ShippingBillEntryAddView();
                 var copyEntry = ShippingBillEntries.LastOrDefault();
-                var m = copyEntry.TotalQuantity;
 
                 var entry = new ShippingBillEntryModel
                 {
                     MainId = copyEntry.MainId,
                     EntryId = copyEntry.EntryId + 1,
-                    GoodsType = 3,
                     DeptId = copyEntry.DeptId,
                     DeptName = copyEntry.DeptName,
                     CaseId = 0,
-                    CaseName = "样油",
-                    TotalAmount = copyEntry.TotalAmount
+                    IsSystem=false
                 };
                 (view.DataContext as ShippingBillEntryAddViewModel).WithParam(entry, (type, shippingBillEntry) =>
                 {
@@ -321,17 +333,28 @@ namespace Ui.ViewModel
 
                     if (type == 1)
                     {
-                        shippingBillEntry.TotalQuantity = shippingBillEntry.Quantity + m;
-                        SelectedShippingBill.TotalQuantity = shippingBillEntry.Quantity + m;
+                        SelectedShippingBill.TotalQuantity += shippingBillEntry.Quantity;
+                        SelectedShippingBill.TotalAmount += shippingBillEntry.ApportionedAmount;
+                        switch (shippingBillEntry.GoodsType)
+                        {
+                            case 2: SelectedShippingBill.HaoCaiFei+= shippingBillEntry.ApportionedAmount; break;
+                            case 3: SelectedShippingBill.YangYouFei += shippingBillEntry.ApportionedAmount; break;
+                            case 4: SelectedShippingBill.SheBeiFei += shippingBillEntry.ApportionedAmount; break;
+                            case 5: SelectedShippingBill.ChengPinTuiHuoFei += shippingBillEntry.ApportionedAmount; break;
+                            case 6: SelectedShippingBill.TuiYuanCaiLiaoFei += shippingBillEntry.ApportionedAmount; break;
+                        }
+
                         // 新增条目，修改后台分摊金额
                         _shippingService.AddShipingBillEntry(shippingBillEntry);
 
                         // 重新加载明细 
                         GetAllShippingBillEntriesById(shippingBillEntry.MainId);
+                        
+                        //ShippingBillEntries.Add(shippingBillEntry);
                     }
                 });
                 view.ShowDialog();
-            }
+            
         }
 
         private void SelectedAllConsignmentBill(object obj)

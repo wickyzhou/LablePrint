@@ -35,7 +35,7 @@ namespace Ui.Service
                         set BillDate=@BillDate  ,LogisticsType=@LogisticsType  ,LogisticsCompanyName=@LogisticsCompanyName,
                             YunShuFei=@YunShuFei  ,YouFei=@YouFei  ,GuoLuFei=@GuoLuFei  ,ChaiLvFei=@ChaiLvFei  ,WeiXiuFei=@WeiXiuFei  ,GuanShuiFei=@GuanShuiFei,
                             TiHuoFei=@TiHuoFei, WeiXianPinFei=@WeiXianPinFei, QingGuanFei=@QingGuanFei, BaoXianFei=@BaoXianFei, PaiSongFei=@PaiSongFei, Demander=@Demander, OtherCosts=@OtherCosts,TotalAmount=@TotalAmount,
-                            Note=@Note,LogisticsBillNo=@LogisticsBillNo
+                            Note=@Note,LogisticsBillNo=@LogisticsBillNo,SystemApportionedAmount=@SystemApportionedAmount
                         where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -45,7 +45,7 @@ namespace Ui.Service
 
         public bool UpdateShipingBillEntry(ShippingBillModel billModel)
         {
-            string sql = @" update SJShippingBillEntry set ApportionedAmount= Quantity/SystemQuantity*@TotalAmount,TotalAmount=@TotalAmount where MainId=@Id and IsSystem=1  ";
+            string sql = @" update SJShippingBillEntry set ApportionedAmount= Quantity/SystemQuantity*@SystemApportionedAmount where MainId=@Id and IsSystem=1  ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, billModel) > 0;
@@ -76,8 +76,16 @@ namespace Ui.Service
 
         public bool AddShipingBillEntry(ShippingBillEntryModel entryModel)
         {
-            string sql = @" insert into SJShippingBillEntry(MainId,CaseName,Quantity,BrandName,DeptName,CustName,DeptId,CustId,BrandId,CaseId,TotalQuantity,EntryId,ApportionedAmount,TotalAmount,GoodsType)
-values(@MainId,@CaseName,@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustId,@BrandId,@CaseId,@TotalQuantity,@EntryId,@ApportionedAmount,@TotalAmount,@GoodsType); update SJShippingBillEntry set TotalQuantity=@TotalQuantity,ApportionedAmount=Quantity/@TotalQuantity*TotalAmount where MainId=@MainId ; update SJShippingBill set TotalQuantity=TotalQuantity+@Quantity  where Id=@MainId ";
+            string sql = @" insert into SJShippingBillEntry(MainId,CaseName,Quantity,BrandName,DeptName,CustName,DeptId,CustId,BrandId,CaseId,EntryId,ApportionedAmount,GoodsType)
+select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@GoodsType),@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustId,@BrandId,@CaseId,@EntryId,@ApportionedAmount,@GoodsType;";
+            switch (entryModel.GoodsType)
+            {
+                case 2: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,HaoCaiFei= isnull(HaoCaiFei,0)+@ApportionedAmount  where Id = @MainId "; break;
+                case 3: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,YangYouFei= isnull(YangYouFei,0)+@ApportionedAmount  where Id = @MainId "; break;
+                case 4: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,SheBeiFei= isnull(SheBeiFei,0)+@ApportionedAmount  where Id = @MainId "; break;
+                case 5: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,HaoCaiFei= isnull(HaoCaiFei,0)+@ApportionedAmount  where Id = @MainId "; break;
+                case 6: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,TuiYuanCaiLiaoFei= isnull(TuiYuanCaiLiaoFei,0)+@ApportionedAmount  where Id = @MainId "; break;
+            }
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, entryModel) > 0;
@@ -86,34 +94,61 @@ values(@MainId,@CaseName,@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustI
 
         public bool DeleteShippingBillEntry(ShippingBillEntryModel entryModel)
         {
-            string sql = @" delete from SJShippingBillEntry where Id=@Id;
-                            update t set TotalQuantity=s,ApportionedAmount=Quantity/s * TotalAmount
-                            from ( select *, sum(Quantity)over() s from SJShippingBillEntry  where MainId=@MainId) as t; 
-                        update SJShippingBill set TotalQuantity=TotalQuantity-@Quantity  where Id=@MainId;";
+            string sql = @" delete from SJShippingBillEntry where Id=@Id;";
+            switch (entryModel.GoodsType)
+            {
+                case 2: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) - @Quantity, TotalAmount = isnull(TotalAmount, 0) - @ApportionedAmount,HaoCaiFei= isnull(HaoCaiFei,0)-@ApportionedAmount  where Id = @MainId "; break;
+                case 3: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) - @Quantity, TotalAmount = isnull(TotalAmount, 0) - @ApportionedAmount,YangYouFei= isnull(YangYouFei,0)-@ApportionedAmount  where Id = @MainId "; break;
+                case 4: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) - @Quantity, TotalAmount = isnull(TotalAmount, 0) - @ApportionedAmount,SheBeiFei= isnull(SheBeiFei,0)-@ApportionedAmount  where Id = @MainId "; break;
+                case 5: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) - @Quantity, TotalAmount = isnull(TotalAmount, 0) - @ApportionedAmount,HaoCaiFei= isnull(HaoCaiFei,0)-@ApportionedAmount  where Id = @MainId "; break;
+                case 6: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) - @Quantity, TotalAmount = isnull(TotalAmount, 0) - @ApportionedAmount,TuiYuanCaiLiaoFei= isnull(TuiYuanCaiLiaoFei,0)-@ApportionedAmount  where Id = @MainId "; break;
+            }
+
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, entryModel) > 0;
             }
         }
 
-
+        // 系统单据只能改类型
         public bool UpdateShippingBillEntry2(ShippingBillEntryModel entryModel)
         {
-            string sql = @" update  SJShippingBillEntry  set EntryId=@EntryId,GoodsType=@GoodsType where Id=@Id";
+            string sql = @" update  SJShippingBillEntry  set GoodsType=@GoodsType where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, entryModel) > 0;
             }
         }
 
-        public bool UpdateShippingBillEntry3(ShippingBillEntryModel entryModel, float diff)
+        // 非系统单据可以修改数量金额
+        public bool UpdateShippingBillEntry3(ShippingBillEntryModel entryModel,float qtyDiff,float amountDiff)
         {
-            string sql = @" update  SJShippingBillEntry  set EntryId=@EntryId,GoodsType=@GoodsType,Quantity=@Quantity where Id=@Id;
-                            update t set TotalQuantity=s,ApportionedAmount=Quantity/s * TotalAmount
-                            from ( select *, sum(Quantity)over() s from SJShippingBillEntry  where MainId=@MainId) as t; update SJShippingBill set TotalQuantity=TotalQuantity+diff where id=@MainId;";
+            //string sql = @" update  SJShippingBillEntry  set EntryId=@EntryId,GoodsType=@GoodsType,Quantity=@Quantity where Id=@Id;
+            //                update t set TotalQuantity=s,ApportionedAmount=Quantity/s * TotalAmount
+            //                from ( select *, sum(Quantity)over() s from SJShippingBillEntry  where MainId=@MainId) as t; update SJShippingBill set TotalQuantity=TotalQuantity+diff where id=@MainId;";
+            string sql = @" update  SJShippingBillEntry  set Quantity=@Quantity,ApportionedAmount=@ApportionedAmount  where Id=@Id;
+";
+
+            switch (entryModel.GoodsType)
+            {
+                case 2: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @QtyDiff, TotalAmount = isnull(TotalAmount, 0) + @AmountDiff,HaoCaiFei= isnull(HaoCaiFei,0) + @AmountDiff  where Id = @MainId "; break;
+                case 3: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @QtyDiff, TotalAmount = isnull(TotalAmount, 0) + @AmountDiff,YangYouFei= isnull(YangYouFei,0) + @AmountDiff  where Id = @MainId "; break;
+                case 4: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @QtyDiff, TotalAmount = isnull(TotalAmount, 0) + @AmountDiff,SheBeiFei= isnull(SheBeiFei,0) + @AmountDiff  where Id = @MainId "; break;
+                case 5: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @QtyDiff, TotalAmount = isnull(TotalAmount, 0) + @AmountDiff,HaoCaiFei= isnull(HaoCaiFei,0) + @AmountDiff  where Id = @MainId "; break;
+                case 6: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @QtyDiff, TotalAmount = isnull(TotalAmount, 0) + @AmountDiff,TuiYuanCaiLiaoFei= isnull(TuiYuanCaiLiaoFei,0) + @AmountDiff  where Id = @MainId "; break;
+            }
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@Id", entryModel.Id, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@MainId", entryModel.MainId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@GoodsType", entryModel.GoodsType, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@Quantity", entryModel.Quantity, DbType.Single, ParameterDirection.Input);
+            dp.Add("@ApportionedAmount", entryModel.ApportionedAmount, DbType.Single, ParameterDirection.Input);
+            dp.Add("@AmountDiff", amountDiff, DbType.Single, ParameterDirection.Input);
+            dp.Add("@QtyDiff", qtyDiff, DbType.Single, ParameterDirection.Input);
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Execute(sql, entryModel) > 0;
+                return connection.Execute(sql, dp) > 0;
             }
         }
 

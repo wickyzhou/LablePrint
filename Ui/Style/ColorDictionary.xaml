@@ -6,5 +6,6 @@
     <Color x:Key="GenericOrangeColor">#f9a124</Color>
     <Color x:Key="GenericRedColor">#d34943</Color>
     <Color x:Key="GenericBlueColor">#43a9c7</Color>
-
+    <Color x:Key="GenericReadOnlyColor">#D3D3D3</Color>
+    <Color x:Key="GenericWhiteColor">#FFFAFA</Color>
 </ResourceDictionary>

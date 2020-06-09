@@ -514,7 +514,7 @@ namespace Ui.View.IndexPage
             {
                 QuerySchemaEntryModel entryModel = GetQueryModel(schemaId);
 
-                if (string.IsNullOrWhiteSpace(entryModel.OrgId) && string.IsNullOrWhiteSpace(entryModel.Label) && string.IsNullOrWhiteSpace(entryModel.BatchNo) && string.IsNullOrWhiteSpace(entryModel.ProductionModel))
+                if (string.IsNullOrWhiteSpace(entryModel.OrgId) && string.IsNullOrWhiteSpace(entryModel.Label) && string.IsNullOrWhiteSpace(entryModel.BatchNo) && string.IsNullOrWhiteSpace(entryModel.ProductionModel) && string.IsNullOrWhiteSpace(entryModel.SafeCode))
                 {
                     MessageBox.Show("必须添加一个或多个条件，同时筛选");
                     return;

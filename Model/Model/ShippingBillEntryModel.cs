@@ -41,35 +41,39 @@ namespace Model
             {
                 quantity = value;
                 this.RaisePropertyChanged(nameof(Quantity));
+                if(GoodsType==3)
+                {
+                    ApportionedAmount = (float)(Quantity * 0.81);
+                }
             }
         }
 
 
-        private float totalQuantity;
+        //private float totalQuantity;
 
-        public float TotalQuantity
-        {
-            get { return totalQuantity; }
-            set
-            {
-                totalQuantity = value;
-                this.RaisePropertyChanged(nameof(TotalQuantity));
-            }
-        }
+        //public float TotalQuantity
+        //{
+        //    get { return totalQuantity; }
+        //    set
+        //    {
+        //        totalQuantity = value;
+        //        this.RaisePropertyChanged(nameof(TotalQuantity));
+        //    }
+        //}
 
 
 
-        private float totalAmount;
+        //private float totalAmount;
 
-        public float TotalAmount
-        {
-            get { return totalAmount; }
-            set
-            {
-                totalAmount = value;
-                this.RaisePropertyChanged(nameof(TotalAmount));
-            }
-        }
+        //public float TotalAmount
+        //{
+        //    get { return totalAmount; }
+        //    set
+        //    {
+        //        totalAmount = value;
+        //        this.RaisePropertyChanged(nameof(TotalAmount));
+        //    }
+        //}
 
         private int goodsType;
 

@@ -14,7 +14,22 @@ namespace Ui.MVVM.Common
             return ConfigurationManager.ConnectionStrings["Connection"].ToString();
         }
 
+        private static string GetConnectionStringSR()
+        {
+            return ConfigurationManager.ConnectionStrings["ConnectionSR"].ToString();
+        }
+
+
+        private static string GetConnectionStringOa()
+        {
+            return ConfigurationManager.ConnectionStrings["ConnectionOa"].ToString();
+        }
+
         public static IDbConnection UpdateConnection => new SqlServerConnection(GetConnectionString());
+
+        public static IDbConnection UpdateConnectionSR => new SqlServerConnection(GetConnectionStringSR());
+
+        public static IDbConnection UpdateConnectionOa => new SqlServerConnection(GetConnectionStringOa());
 
     }
 }

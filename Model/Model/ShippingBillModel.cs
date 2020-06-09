@@ -72,7 +72,7 @@ namespace Model
 				yunShuFei = value;
 				this.RaisePropertyChanged(nameof(YunShuFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace Model
 				youFei = value;
 				this.RaisePropertyChanged(nameof(YouFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace Model
 				guoLuFei = value;
 				this.RaisePropertyChanged(nameof(GuoLuFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace Model
 				chaiLvFei = value;
 				this.RaisePropertyChanged(nameof(ChaiLvFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Model
 				weiXiuFei = value;
 				this.RaisePropertyChanged(nameof(WeiXiuFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -142,7 +142,7 @@ namespace Model
 				guanShuiFei = value;
 				this.RaisePropertyChanged(nameof(GuanShuiFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace Model
 				tiHuoFei = value;
 				this.RaisePropertyChanged(nameof(TiHuoFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace Model
 				weiXianPinFei = value;
 				this.RaisePropertyChanged(nameof(WeiXianPinFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -184,7 +184,7 @@ namespace Model
 				qingGuanFei = value;
 				this.RaisePropertyChanged(nameof(QingGuanFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace Model
 				baoXianFei = value;
 				this.RaisePropertyChanged(nameof(BaoXianFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -212,7 +212,7 @@ namespace Model
 				paiSongFei = value;
 				this.RaisePropertyChanged(nameof(PaiSongFei));
 				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(StringTotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -224,6 +224,8 @@ namespace Model
 			{
 				otherCosts = value;
 				this.RaisePropertyChanged(nameof(OtherCosts));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
@@ -236,6 +238,7 @@ namespace Model
 			{
 				haoCaiFei = value;
 				this.RaisePropertyChanged(nameof(HaoCaiFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -248,6 +251,7 @@ namespace Model
 			{
 				yangYouFei = value;
 				this.RaisePropertyChanged(nameof(YangYouFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -260,6 +264,7 @@ namespace Model
 			{
 				sheBeiFei = value;
 				this.RaisePropertyChanged(nameof(SheBeiFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -272,6 +277,7 @@ namespace Model
 			{
 				chengPinTuiHuoFei = value;
 				this.RaisePropertyChanged(nameof(ChengPinTuiHuoFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -285,6 +291,7 @@ namespace Model
 			{
 				tuiYuanCaiLiaoFei = value;
 				this.RaisePropertyChanged(nameof(TuiYuanCaiLiaoFei));
+				this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -314,17 +321,32 @@ namespace Model
 			}
 		}
 
+		//
+
+		private float totalAmount;
 
 		public float TotalAmount
 		{
-			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts+ HaoCaiFei+ YangYouFei+ SheBeiFei+ ChengPinTuiHuoFei+ TuiYuanCaiLiaoFei; }
-			private set { }
+			get { return SystemApportionedAmount + HaoCaiFei + YangYouFei + SheBeiFei + ChengPinTuiHuoFei + TuiYuanCaiLiaoFei;  }
+			set
+			{
+				totalAmount = value;
+				this.RaisePropertyChanged(nameof(TotalAmount));
+			}
 		}
 
-		public float ApportionedAmount
+		//
+		private float systemApportionedAmount;
+
+		public float SystemApportionedAmount
 		{
 			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; }
-			private set { }
+			set
+			{
+				systemApportionedAmount = value;
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+			}
 		}
 
 
@@ -366,17 +388,17 @@ namespace Model
 
 
 
-		private string stringTotalAmount;
+		//private string stringTotalAmount;
 
-		public string StringTotalAmount
-		{
-			get { return $"金额合计：{Convert.ToString(TotalAmount)} 元 "; }
-			set
-			{
-				//stringTotalAmount = value;
-				//this.RaisePropertyChanged(nameof(StringTotalAmount));
-			}
-		}
+		//public string StringTotalAmount
+		//{
+		//	get { return $"金额合计：{Convert.ToString(TotalAmount)} 元 "; }
+		//	set
+		//	{
+		//		//stringTotalAmount = value;
+		//		//this.RaisePropertyChanged(nameof(StringTotalAmount));
+		//	}
+		//}
 
 	
 

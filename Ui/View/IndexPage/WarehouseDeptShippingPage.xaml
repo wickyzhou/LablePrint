@@ -288,7 +288,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <MenuItem Header="删除" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-                    
+
                     <DataGrid.Columns>
                         <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="总费用" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
@@ -341,14 +341,15 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
+                            
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem  Header="新增" Style="{StaticResource MenuItemCreateStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryAddCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <MenuItem  Header="删除" Style="{StaticResource MenuItemRemoveStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <MenuItem  Header="修改" Style="{StaticResource MenuItemModifyStyle}"  HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillEntryUpdateCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 </ContextMenu>
-
                             </DataGrid.ContextMenu>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn DataGridColumn.Header="来源" DataGridBoundColumn.Binding="{Binding IsSystem,Converter={c:ConsignmentBillEntryIsSystemConverter}}"  Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
@@ -359,7 +360,6 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="客户" DataGridBoundColumn.Binding="{Binding CustName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="部门" DataGridBoundColumn.Binding="{Binding DeptName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-
                             </DataGrid.Columns>
 
                         </DataGrid>
