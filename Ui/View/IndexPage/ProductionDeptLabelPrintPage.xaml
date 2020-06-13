@@ -302,7 +302,6 @@
                             <TextBlock Text="打印" FontSize="13"  Margin="3 0 0 0"/>
                         </StackPanel>
                     </Button>
-
                 </StackPanel>
 
                 <Grid Grid.Column="1">

@@ -98,7 +98,7 @@ namespace Ui.View
             {
                 label = this.TbLabel.Text;
                 // 如果客户和标签存在则返回
-                var custLabel = new LabelPrintService().GetAllSpecialRequest().Where(m => m.ID != id && m.OrgID.ToUpper() == item.OrgID.ToUpper() && m.Label?.ToUpper() == label.ToUpper());
+                var custLabel = new LabelPrintService().GetAllSpecialRequest().Where(m => m.ID != id && m.OrgID.ToUpper() == item.OrgID.ToUpper() && m.Label?.ToUpper() == label.ToUpper() && m.RequestSeq==item.RequestSeq);
                 if (custLabel.Count() > 0)
                 {
                     MessageBox.Show("该客户标签已存在");
@@ -231,7 +231,7 @@ namespace Ui.View
             if (model != null)
             {
                 SpecialRequests = new ObservableCollection<LabelPrintSpecialRequestModel>(new LabelPrintService().GetAllSpecialRequest());
-                var org = SpecialRequests.Where(m => m.OrgID.ToUpper() == model.OrgID.ToUpper());
+                var org = SpecialRequests.Where(m => m.OrgID.ToUpper() == model.OrgID.ToUpper() && m.RequestSeq==model.RequestSeq);
 
                 if (org.Count() > 0)
                 {
@@ -244,7 +244,7 @@ namespace Ui.View
                     }
 
                     // 同一个客户只能有一个类型和标签
-                    var custlabel = org.FirstOrDefault(m => m.Label.ToUpper() == model.Label.ToUpper());
+                    var custlabel = org.FirstOrDefault(m => m.Label.ToUpper() == model.Label.ToUpper() && m.RequestSeq == model.RequestSeq);
                     if (custlabel != null)
                     {
                         MessageBox.Show("该客户和标签已存在");

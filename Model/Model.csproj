@@ -32,6 +32,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="HostConfigModel.cs" />
+    <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
+    <Compile Include="Model\BarTenderTemplateModel.cs" />
     <Compile Include="Model\BatchNoPrintTotalModel.cs" />
     <Compile Include="Model\CbIdentTypeModel.cs" />
     <Compile Include="Model\CbRequestNameModel.cs" />
@@ -47,6 +49,7 @@
     <Compile Include="Model\LabelPrintSpecialRequestModel.cs" />
     <Compile Include="Model\MainMenuModel.cs" />
     <Compile Include="Model\NotificationObject.cs" />
+    <Compile Include="Model\OilSampleFlowPrintLogModel.cs" />
     <Compile Include="Model\OilSampleFlowModel.cs" />
     <Compile Include="Model\PageSizeModel.cs" />
     <Compile Include="Model\PrintSchemaParameterModel.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Model\ShippingBillEntryModel.cs" />
     <Compile Include="Model\ShippingBillExportModel.cs" />
     <Compile Include="Model\ShippingBillModel.cs" />
+    <Compile Include="Model\BarTenderPrintConfigModel.cs" />
     <Compile Include="Model\UserInformationModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\QuerySchemaCurrentStatusModel.cs" />
@@ -72,7 +76,7 @@
     <Compile Include="Model\OrganizationModel.cs" />
     <Compile Include="Model\PageOwnerModel.cs" />
     <Compile Include="Model\ViewModelBase11.cs" />
-    <Compile Include="OilSamplePrintModel.cs" />
+    <Compile Include="Model\OilSampleEntryModel.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

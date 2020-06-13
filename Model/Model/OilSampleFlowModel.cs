@@ -7,43 +7,19 @@ namespace Model
 {
     public class OilSampleFlowModel:NotificationObject
     {
-        public Int64 Id { get; set; }
+        public double Id { get; set; }
 
         public string Title { get; set; }
 
-		private int oilPrintCount;
+		private int expressPrintedCount;
 
-		public int OilPrintCount
+		public int ExpressPrintedCount
 		{
-			get { return oilPrintCount; }
+			get { return expressPrintedCount; }
 			set
 			{
-				oilPrintCount = value;
-				this.RaisePropertyChanged(nameof(OilPrintCount));
-			}
-		}
-
-		private int expressPrintCount;
-
-		public int ExpressPrintCount
-		{
-			get { return expressPrintCount; }
-			set
-			{
-				expressPrintCount = value;
-				this.RaisePropertyChanged(nameof(ExpressPrintCount));
-			}
-		}
-
-		private string currentBatchNo;
-
-		public string CurrentBatchNo
-		{
-			get { return currentBatchNo; }
-			set
-			{
-				currentBatchNo = value;
-				this.RaisePropertyChanged(nameof(CurrentBatchNo));
+				expressPrintedCount = value;
+				this.RaisePropertyChanged(nameof(ExpressPrintedCount));
 			}
 		}
 

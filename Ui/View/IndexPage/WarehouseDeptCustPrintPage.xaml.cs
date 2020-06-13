@@ -121,8 +121,8 @@ namespace Ui.View.IndexPage
                     pageSettings.Landscape = validConfig.Orientation == "竖向"?true:false;
 
             
-                        // 打印
-                        //reportDoc.PrintToPrinter(1, true, 0, 0); 完全按照模板【页面设置】配置参数，自定义需要用重载方法，载入打印机配置。
+                     // 打印
+                    //reportDoc.PrintToPrinter(1, true, 0, 0); 完全按照模板【页面设置】配置参数，自定义需要用重载方法，载入打印机配置。
                     reportDoc.PrintToPrinter(printerSettings, pageSettings, true);
                     reportDoc.Close();
                     reportDoc.Dispose();
@@ -138,7 +138,6 @@ namespace Ui.View.IndexPage
             {
                 MessageBox.Show("先选择一条需要打印的记录");
             }
-
         }
 
         private void BtnQuery_Click(object sender, RoutedEventArgs e)

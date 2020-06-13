@@ -12,14 +12,14 @@ namespace Ui.Service
     {
         public IList<OilSampleFlowModel> GetOilSampleFlow()
         {
-            string sql = @"select * from SROilSampleFlowView; ";
+            string sql = @" select *  from SROilSampleFlowView  order by title  ;";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
                 return connection.Query<OilSampleFlowModel>(sql).ToList();
             }
         }
 
-        public IList<ExpressPrintModel> GetExpressPrintData(int id)
+        public IList<ExpressPrintModel> GetExpressPrintData(double id)
         {
             string sql = @"select * from SRExpressPrintView where Id=@Id ";
             using (var connection = SqlDb.UpdateConnectionOa)
@@ -28,28 +28,49 @@ namespace Ui.Service
             }
         }
 
-        public IList<OilSamplePrintModel> GetOilSamplePrintData(int id)
+        public IList<OilSampleEntryModel> GetOilSampleEntries(double id)
         {
-            string sql = @" select *
-	                            ,cast(cast(TotalWeight/WeightPerBucket as int) as numeric(8,2)) IntegratedPrintCount
-	                            ,case when TotalWeight%WeightPerBucket>0 then 1 else 0 end PlusPrintCount
-	                            ,TotalWeight%WeightPerBucket  WeightPerBucket2
-                            from SROilSamplePrintView where WeightPerBucket>0 and Id=@Id";
+            string sql = @" select *,(select sum(PrintWeight)  from SROilSampleFlowPrintLog where FormmainId=@Id) PrintedWeight
+                            from SROilSamplePrintView where  FormmainId=@Id  order by EntryId";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
-                return connection.Query<OilSamplePrintModel>(sql, new { Id = id }).ToList();
+                return connection.Query<OilSampleEntryModel>(sql, new { Id = id }).ToList();
             }
         }
 
+        public IList<OilSampleFlowPrintLogModel> GetOilSampleFlowLog()
+        {
+            string sql = @" select top 100 * from SROilSampleFlowPrintLog order by Id desc";
+            using (var connection = SqlDb.UpdateConnectionOa)
+            {
+                return connection.Query<OilSampleFlowPrintLogModel>(sql).ToList();
+            }
+        }
 
+        public bool DeleteOilSampleFlowLog(double id)
+        {
+            string sql = @" delete from SROilSampleFlowPrintLog where Id=@Id ; ";
+            using (var connection = SqlDb.UpdateConnectionOa)
+            {
+                return connection.Execute(sql, new { Id=id}) > 0;
+            }
+        }
 
-        //public bool UpdateConsignmentBill(ConsignmentBillModel consignmentBill)
+        public bool InsertOilSampleFlowLog(OilSampleFlowPrintLogModel model)
+        {
+            string sql = @" insert into SROilSampleFlowPrintLog(FormmainId,Title,TypeId,TypeDesc,PrintCount,PrintWeight,BatchNo) values(@FormmainId,@Title,@TypeId,@TypeDesc,@PrintCount,@PrintWeight,@BatchNo) ; ";
+            using (var connection = SqlDb.UpdateConnectionOa)
+            {
+                return connection.Execute(sql, model) > 0;
+            }
+        }
+
+        //public bool UpdateOilSampleEntry(OilSampleEntryModel model)
         //{
-
-        //    string sql = @" update SJConsignmentBill set CurrencyQuantity=@CurrencyQuantity,UndoQuantity=@UndoQuantity,TotalQuantity=@TotalQuantity  where InterId=@InterId ; ";
-        //    using (var connection = SqlDb.UpdateConnection)
+        //    string sql = @"  ; ";
+        //    using (var connection = SqlDb.UpdateConnectionOa)
         //    {
-        //        return connection.Execute(sql, consignmentBill) > 0;
+        //        return connection.Execute(sql, model) > 0;
         //    }
         //}
     }

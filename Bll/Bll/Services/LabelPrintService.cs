@@ -251,8 +251,7 @@ namespace Bll.Services
                     ItemSeq= model.RequestSeq,
                     ItemValue= model.RequestName,
                     GroupSeq = 2,
-                    GroupName= "客户特殊要求标签名",
-                    ParentGroupSeq=0
+                    GroupName= "客户特殊要求标签名"
                 });
                 if(count == 1)
                 return null;

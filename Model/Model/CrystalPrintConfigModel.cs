@@ -28,5 +28,10 @@ namespace Model
         public int MarginBottom { get; set; }
 
         public string PaperName { get; set; }
+
+        public int UserId { get; set; }
+
+        public string TemplateName { get; set; }
+
     }
 }

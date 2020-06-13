@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:Ui">
 
     <Style  x:Key="DGRowStyle" Style.TargetType="{x:Type DataGridRow}" >
-        <Setter Setter.Property="Control.Height" Setter.Value="26" />
+        <Setter Setter.Property="Control.Height" Setter.Value="28" />
         <Setter Setter.Property="Control.VerticalAlignment" Setter.Value="Center" />
         <Setter Setter.Property="Control.Background" Setter.Value="WhiteSmoke" />
         <Style.Triggers>
@@ -15,7 +15,6 @@
                 <Setter Property="Background" Value="ForestGreen"/>
                 <Setter Property="Foreground" Value="Snow"/>
             </Trigger>
-
         </Style.Triggers>
     </Style>
 
@@ -78,7 +77,6 @@
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="Background" Value="#e8e8e8"/>
         <Setter Property="BorderThickness" Value="0 0 0 3"/>
-        <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="RowStyle" Value="{StaticResource DGRowStyle}"/>
         <Setter Property="CellStyle" Value="{StaticResource DGCellStyle}"/>

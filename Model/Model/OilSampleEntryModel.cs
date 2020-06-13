@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Model
 {
-   public class OilSamplePrintModel
+   public class OilSampleEntryModel:NotificationObject
     {  
-        public int Id { get; set; }
+        public double Id { get; set; }
 
         public int EntryId { get; set; }
 
@@ -29,10 +29,19 @@ namespace Model
 
         public string BatchNo { get; set; }
 
-        public int IntegratedPrintCount { get; set; }
+        public float PrintedWeight { get; set; }
 
-        public int PlusPrintCount { get; set; }
+        private int printCount;
 
-        public float WeightPerBucket2 { get; set; }
+        public int PrintCount   
+        {
+            get { return printCount; }
+            set
+            {
+                printCount = value;
+                this.RaisePropertyChanged(nameof(PrintCount));
+            }
+        }
+
     }
 }
