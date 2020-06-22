@@ -22,10 +22,12 @@
         <Grid Grid.Column="0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="150"/>
+                <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="0.8*"/>
             </Grid.RowDefinitions>
 
+      
             <Grid Grid.Row="0" Background="LightYellow">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -55,8 +57,11 @@
                     </StackPanel>
 
 
-                    <TextBlock  Grid.Column="3" Text="系统单号" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBox  Grid.Column="4" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamBillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Grid.Column="3" Text="购货单位" Style="{StaticResource TextBlockStyle15}"/>
+
+                    <TextBox Grid.Column="4" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamCustName ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="多个关键字用【逗号】分割，或者关系"/>
+
+
 
                 </Grid>
 
@@ -74,7 +79,7 @@
                     <TextBlock  Grid.Column="0" Text="区域部门" Style="{StaticResource TextBlockStyle15}"/>
                     <TextBox  Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamDeptName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="多个关键字用【逗号】分割，或者关系" />
 
-                    <TextBlock Grid.Column="2" Text="数量 ＞" Style="{StaticResource TextBlockStyle5}"/>
+                    <TextBlock Grid.Column="2" Text="重量 ＞" Style="{StaticResource TextBlockStyle5}"/>
 
                     <TextBox Grid.Column="3" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamRestQuatity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 0 5 0" />
 
@@ -85,28 +90,54 @@
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.2*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="0.2*"/>
                     </Grid.ColumnDefinitions>
 
 
-                    <TextBlock Grid.Column="0" Text="购货单位" Style="{StaticResource TextBlockStyle15}"/>
 
-                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamCustName ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="多个关键字用【逗号】分割，或者关系"/>
+                    <TextBlock  Grid.Column="0" Text="单号类型" Style="{StaticResource TextBlockStyle15}"/>
+                    <ComboBox  Grid.Column="1" Style="{StaticResource ComboBoxStyleAuto}" Text="{Binding Filter.ParamBillType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding BillTypes}"
+                               SelectedItem=""/>
+                   
+                    <TextBlock  Grid.Column="2" Text="单号区间" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBox Grid.Column="3" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamBillBeginSeq,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 0 5 0" />
+                    
+                    <TextBlock Grid.Column="4" Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
 
-                    <TextBlock Grid.Column="2" Text="{Binding ConsignmentCount}" Style="{StaticResource TextBlockStyle}" />
-
-                    <Button  Grid.Column="3" Grid.ColumnSpan="2" Content="查询"  Command="{Binding QueryCommand}"  Style="{StaticResource BtnInfoStyle}" Height="30" ToolTip="默认快捷键【Enter】" IsDefault="True" >
+                    <TextBox Grid.Column="5" Style="{StaticResource TextBoxStyle}" Text="{Binding Filter.ParamBillEndSeq,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 0 5 0" />
+                    
+                    
+                    <Button  Grid.Column="6" Grid.ColumnSpan="2" Content="查询"  Command="{Binding QueryCommand}"  Style="{StaticResource BtnInfoStyle}" Height="30" ToolTip="默认快捷键【Enter】" IsDefault="True" >
                     </Button>
 
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Background="AliceBlue">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="2" Text="条数合计：" Style="{StaticResource TextBlockStyle5}"/>
+                <TextBox Grid.Column="3" Style="{StaticResource TextBoxReadonlyStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ConsignmentBillsCount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                
+                <TextBlock Grid.Column="0" Text="重量合计：" Style="{StaticResource TextBlockStyle5}"/>
+                <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding ConsignmentBillsSumQuantity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            
+            <Grid Grid.Row="2">
                 <DataGrid x:Name="MainDataGrid"  Style="{StaticResource DGStyle}"  ItemsSource="{Binding ConsignmentBills}" 
-SelectedItem="{Binding SelectedConsignmentBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" Margin="0 15 0 0">
+SelectedItem="{Binding SelectedConsignmentBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" Margin="0 10 0 0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding ConsignmentBillSelectionChangedCommand}"
@@ -142,7 +173,7 @@ Command="{Binding DataContext.ConsignmentBillRemoveCommand, RelativeSource={Rela
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="重量" DataGridBoundColumn.Binding="{Binding CurrencyQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding UndoQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="发货日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
@@ -156,7 +187,7 @@ Command="{Binding DataContext.ConsignmentBillRemoveCommand, RelativeSource={Rela
                 </DataGrid>
             </Grid>
 
-            <Grid Grid.Row="2" Margin="0 10 0 0" Background="LightYellow">
+            <Grid Grid.Row="3" Margin="0 10 0 0" Background="LightYellow">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.5*"/>
                     <ColumnDefinition Width="*"/>
@@ -204,8 +235,8 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
 
                                 <DataGridTextColumn DataGridColumn.Header="来源" DataGridBoundColumn.Binding="{Binding IsSystem,Converter={c:ConsignmentBillEntryIsSystemConverter}}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                                <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                                <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="0.5*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="物料" DataGridBoundColumn.Binding="{Binding ItemName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="总数" DataGridBoundColumn.Binding="{Binding ETotalQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="可用" DataGridBoundColumn.Binding="{Binding EUndoQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>

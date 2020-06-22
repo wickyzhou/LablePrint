@@ -8,16 +8,16 @@ using System.Windows.Media;
 
 namespace Ui.Converter
 {
-    public class OilSampleTemplatePage4BackgroundConverter : BaseValueConverter<OilSampleTemplatePage4BackgroundConverter>
+    public class OilSampleEntryIsCheckedConverter : BaseValueConverter<OilSampleEntryIsCheckedConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {   
-            if(value==null)
+        {
+            if (value == null)
                 return new SolidColorBrush(Colors.LightGray);
 
-            int status = int.Parse(value.ToString().Substring(0,1));
-            if (status==4 )
-                    return new SolidColorBrush((Color)Application.Current.Resources["GenericRedColor"]);
+
+            if ((bool)value)
+                return new SolidColorBrush(Colors.ForestGreen);
 
             return new SolidColorBrush(Colors.LightGray);
         }

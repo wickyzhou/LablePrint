@@ -1,4 +1,5 @@
-﻿using Bll.Services;
+﻿
+using Bll.Services;
 using Common;
 using Model;
 using System;
@@ -8,9 +9,11 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Ui.Service;
 using wf = System.Windows.Forms;
 
 namespace Ui.View.IndexPage
@@ -25,6 +28,8 @@ namespace Ui.View.IndexPage
         private ObservableCollection<ProductiveTaskListModel> ob;
         private List<ProductiveTaskListModel> lists;
         readonly static UserModel user = MemoryCache.Default["user"] as UserModel;
+        private static readonly ProductiveTaskWorkService _work = new ProductiveTaskWorkService();
+
         public ProductionDeptProductiveTaskPage()
         {
             InitializeComponent();
@@ -90,11 +95,11 @@ namespace Ui.View.IndexPage
             if (opd.ShowDialog() == wf.DialogResult.OK)
             {
                 string result = new FileHelper().ImportExcelToDatabase(opd.FileName);
-                if (result==null)
+                if (result == null)
                 {
-                  r=(int)new ProductiveTaskListService().AuditProductiveTaskList(this.DP2.SelectedDate.Value);
+                    r = (int)new ProductiveTaskListService().AuditProductiveTaskList(this.DP2.SelectedDate.Value);
                 }
-              
+
                 this.AuditText.Text = "已审核";
                 MessageBox.Show($"成功 {r} 条");
             }
@@ -103,7 +108,7 @@ namespace Ui.View.IndexPage
 
         private void Export_Click(object sender, RoutedEventArgs e)
         {
-        
+
             //string exportDirectory1 = Configuration.  .ConfigurationSettings.AppSettings["Debug"];
             if (string.IsNullOrWhiteSpace(exportDirectory))
             {
@@ -206,7 +211,22 @@ namespace Ui.View.IndexPage
         {
             if (this.AuditText.Text == "确认审核")
             {
-                int rowCount =(int)new ProductiveTaskListService().AuditProductiveTaskList(this.DP2.SelectedDate.Value);
+                DateTime dateTime = this.DP2.SelectedDate.Value;
+                // 多个客户共用一个字段
+                //var lists = _work.GetProductiveTaskList(this.DP2.SelectedDate.Value);
+                var works = _work.GetMutiOrgNoteWorkDetail(dateTime);
+                foreach (var item in works)
+                {
+                    string f1 = GetNewNote(dateTime,item);
+                    string f2 = GetNewNote(dateTime,item); 
+                    string f3 = GetNewNote(dateTime,item);
+                    if (f1!=item.FRequest1 || f2!=item.FRequest2 || f3!=item.FRequest3)
+                    {
+                        _work.UpdateProductiveTaskWork(new ProductiveTaskWorkModel { FICMONo = item.FICMONo, FRequest1 = f1, FRequest2 = f2, FRequest3 = f3 });
+                    }
+                }
+              
+                int rowCount = (int)new ProductiveTaskListService().AuditProductiveTaskList(dateTime);
                 if (rowCount > 0)
                 {
                     this.AuditText.Text = "已审核";
@@ -254,10 +274,9 @@ namespace Ui.View.IndexPage
                 {
                     MessageBox.Show("修改失败，请联系管理员");
                 }
-
-
             }
         }
+
         private void CheckAll_Checked(object sender, RoutedEventArgs e)
         {
             var itemsSource = this.MainDataGrid.ItemsSource;
@@ -280,6 +299,20 @@ namespace Ui.View.IndexPage
         {
             var model = (sender as DataGridRow).Item as ProductiveTaskListModel;
             model.IsChecked = !model.IsChecked;
+        }
+
+        private string GetNewNote(DateTime date,ProductiveTaskWorkModel model)
+        {
+            string note1 = @"/" + model.FOrgNo1 + " " + model.FModal2 + " " + model.FModal3 + " " + model.FRequest1;//   "/2678 38*1kg JW790A(专用4) 华南,HW/2733 3*1kg JW790A 奥凯盛，样油200G ";
+            string noteNew = string.Empty;
+            Regex rg = new Regex(@"/(\d{4})");
+            var matches = rg.Matches(note1);
+            foreach (Match item in matches)
+            {
+                noteNew+=_work.GetProductiveTaskListFNote(date, model.FICMONo, item.Groups[1].ToString());
+            }
+           
+            return noteNew;
         }
     }
 

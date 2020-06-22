@@ -12,8 +12,11 @@ namespace Ui.Converter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int status = (int)value;
-            if (status == 4 || status == 2)
+            if (value == null)
+                return new SolidColorBrush(Colors.LightGray);
+
+            int status = int.Parse(value.ToString().Substring(0,1));
+            if (status == 4 || status == 2 || status == 3)
                 return new SolidColorBrush((Color)Application.Current.Resources["GenericRedColor"]);
 
             return new SolidColorBrush(Colors.LightGray);

@@ -5,22 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.View.InfoWindow"
         mc:Ignorable="d"
-        Title="修改打印张数" Style="{StaticResource WindowStyle400*200}">
+        xmlns:domain="clr-namespace:Ui.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        Title="修改打印张数" Style="{StaticResource WindowStyle600*400}">
+    <i:Interaction.Behaviors>
+        <domain:ValidationExceptionBehavior/>
+    </i:Interaction.Behaviors>
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" >
-            <TextBlock   Style="{StaticResource TextBlockStyle15}" Text="打印数量"/>
-            <TextBox Width="180" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.PrintCount}" Height="30"/>
-        </StackPanel>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
         
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" >
-            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 90 0" Height="30" IsDefault="True" />
+
+            <TextBlock Grid.Row="1" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="打印数量"/>
+        <TextBox Grid.Row="1" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}"  Height="30">
+            <TextBox.Text>
+                <Binding Path="OilSampleEntry.CurrencyPrintCount" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <StaticResource ResourceKey="NumberRule" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
+
+
+        <TextBlock Grid.Row="2" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="品名"/>
+        <TextBox Grid.Row="2" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.ProductionName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="型号"/>
+        <TextBox Grid.Row="3" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.ProductionModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30"/>
+        
+        <TextBlock Grid.Row="4" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="净重"/>
+        <TextBox Grid.Row="4" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.WeightPerBucket,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="总重量（Kg）"/>
+        <TextBox Grid.Row="5" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.TotalWeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="1"   Style="{StaticResource TextBlockStyle15}" Text="总张数"/>
+        <TextBox Grid.Row="6" Grid.Column="2"  Width="300" Style="{StaticResource TextBoxStyle}" Text="{Binding OilSampleEntry.PrintTotalCount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30" IsReadOnly="True" Background="LightGray"/>
+
+        <StackPanel Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="-20 0 0 0" >
+            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 120 0" Height="30" IsDefault="True" />
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>
     </Grid>

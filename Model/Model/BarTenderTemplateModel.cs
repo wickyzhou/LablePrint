@@ -17,6 +17,6 @@ namespace Model
 
         public string TemplateFolderPath { get; set; }
 
-
+        public int TemplateTotalPage { get; set; }
     }
 }

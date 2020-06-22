@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Model
 {
-    public class BarTenderPrintConfigModel
+    public class BarTenderPrintConfigModel:NotificationObject
     {
         public int Id { get; set; }
 
@@ -19,13 +19,67 @@ namespace Model
 
         public string PrinterName { get; set; }
 
-        public int TemplatePerPage { get; set; }
 
-        public string TemplateFileName { get; set; }
+        private int templatePerPage;
 
-        public string TemplateFullName { get; set; }
+        public int TemplatePerPage
+        {
+            get { return templatePerPage; }
+            set
+            {
+                templatePerPage = value;
+                this.RaisePropertyChanged(nameof(TemplatePerPage));
+            }
+        }
 
-        public string TemplateFolderPath { get; set; }
+        private string templateFileName;
+
+        public string TemplateFileName
+        {
+            get { return templateFileName; }
+            set
+            {
+                templateFileName = value;
+                this.RaisePropertyChanged(nameof(TemplateFileName));
+            }
+        }
+
+        private string templateFullName;
+
+        public string TemplateFullName
+        {
+            get { return templateFullName; }
+            set
+            {
+                templateFullName = value;
+                this.RaisePropertyChanged(nameof(TemplateFullName));
+            }
+        }
+
+        private string templateFolderPath;
+
+        public string TemplateFolderPath
+        {
+            get { return templateFolderPath; }
+            set
+            {
+                templateFolderPath = value;
+                this.RaisePropertyChanged(nameof(TemplateFolderPath));
+            }
+        }
+
+        private int templateTotalPage;
+
+        public int TemplateTotalPage
+        {
+            get { return templateTotalPage; }
+            set
+            {
+                templateTotalPage = value;
+                this.RaisePropertyChanged(nameof(TemplateTotalPage));
+            }
+        }
+
 
     }
 }

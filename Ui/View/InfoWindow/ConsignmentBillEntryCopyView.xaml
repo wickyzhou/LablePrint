@@ -42,7 +42,7 @@
         
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="物料名称" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBillEntry.ItemName}" Style="{StaticResource TextBoxReadonlyStyle}" />
+            <TextBox Text="{Binding ConsignmentBillEntry.ItemName}" Style="{StaticResource TextBoxReadonlyStyle}" HorizontalAlignment="Stretch" />
         </StackPanel>
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">

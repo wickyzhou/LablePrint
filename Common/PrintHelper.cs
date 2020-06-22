@@ -3,15 +3,9 @@ using Dal;
 using Model;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing.Printing;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Seagull.Framework;
 using static System.Drawing.Printing.PrinterSettings;
 
 namespace Common
@@ -235,57 +229,6 @@ namespace Common
             return list;
         }
 
-
-        public string BarTenderOilSamplePrint(BarTenderPrintConfigModel config, OilSampleEntryModel data)
-        {
-            string batchNo=string.Empty;
-            string printerName = config.PrinterName;
-            string templateName = config.TemplateFullName;
-            BarTender.Application btApp = new BarTender.Application();
-            try
-            {
-                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
-                btFormat.PrintSetup.Printer = printerName;
-
-                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
-                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
-                var list = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
-                btFormat.PrintSetup.IdenticalCopiesOfLabel = data.PrintCount;
-
-                if (list.Contains("ProductionDate"))
-                    btFormat.SetNamedSubStringValue("ProductionDate", data.ProductionDate);
-                if (list.Contains("ProductionModel"))
-                    btFormat.SetNamedSubStringValue("ProductionModel", data.ProductionModel);
-                if (list.Contains("ProductionName"))
-                    btFormat.SetNamedSubStringValue("ProductionName", data.ProductionName);
-                if (list.Contains("ExpirationMonth"))
-                    btFormat.SetNamedSubStringValue("ExpirationMonth", data.ExpirationMonth);
-                if (list.Contains("BatchNo"))
-                    btFormat.SetNamedSubStringValue("BatchNo", data.BatchNo);
-                if (list.Contains("CheckNo"))
-                    btFormat.SetNamedSubStringValue("CheckNo", data.CheckNo);
-                if (list.Contains("RoughWeight"))
-                    btFormat.SetNamedSubStringValue("RoughWeight", data.RoughWeight);
-
-                /* var s= 结果是0 可能是成功的意思 */
-                var s = btFormat.PrintOut(false, false);
-                btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                return batchNo;
-            }
-            catch (Exception ex)
-            {
-                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                if (btApp != null)
-                {
-                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                }
-            }
-        }
 
     }
 }

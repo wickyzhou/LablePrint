@@ -12,7 +12,7 @@ namespace Ui.Converter
         {
             if (value == null)
                 return "打印"; 
-            return (int)value > 0 ? "打印" : "已打印";
+            return (int)value > 0 ? "已打印" : "打印";
         }
     }
 }

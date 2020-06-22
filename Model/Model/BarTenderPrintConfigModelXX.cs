@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Model
 {
-    public class BarTenderPrintConfigModelXX
+    public class BarTenderPrintConfigModelXX:NotificationObject
     {
         public int Id { get; set; }
 
@@ -19,7 +19,19 @@ namespace Model
 
         public string PrinterName { get; set; }
 
-        public BarTenderTemplateModel ExpressTemplateSelectedItem { get; set; }
+        private BarTenderTemplateModel expressTemplateSelectedItem;
+
+        public BarTenderTemplateModel ExpressTemplateSelectedItem
+        {
+            get { return expressTemplateSelectedItem; }
+            set
+            {
+                expressTemplateSelectedItem = value;
+                this.RaisePropertyChanged(nameof(ExpressTemplateSelectedItem));
+            }
+        }
+
+        public int TemplateTotalPage { get; set; }
 
     }
 }

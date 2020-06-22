@@ -43,12 +43,12 @@
     <Compile Include="Model\CrystalPrintConfigModel.cs" />
     <Compile Include="Model\CustomerModel.cs" />
     <Compile Include="Model\EnumModel.cs" />
-    <Compile Include="Model\ExpressPrintModel.cs" />
     <Compile Include="Model\LabelPrintCommonAdjustmentModel.cs" />
     <Compile Include="Model\LabelPrintCurrencyModel.cs" />
     <Compile Include="Model\LabelPrintSpecialRequestModel.cs" />
     <Compile Include="Model\MainMenuModel.cs" />
     <Compile Include="Model\NotificationObject.cs" />
+    <Compile Include="Model\OilSampleExpressPrintModel.cs" />
     <Compile Include="Model\OilSampleFlowPrintLogModel.cs" />
     <Compile Include="Model\OilSampleFlowModel.cs" />
     <Compile Include="Model\PageSizeModel.cs" />
@@ -56,6 +56,7 @@
     <Compile Include="Model\PrintTemplateRefModel.cs" />
     <Compile Include="Model\ProductionClassModel.cs" />
     <Compile Include="Model\ProductiveTaskListModel.cs" />
+    <Compile Include="Model\ProductiveTaskWorkModel.cs" />
     <Compile Include="Model\QuerySchemaConfigModel.cs" />
     <Compile Include="Model\QuerySchemaDynamicBtnModel.cs" />
     <Compile Include="Model\QuerySchemaEntryModel.cs" />

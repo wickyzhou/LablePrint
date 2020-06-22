@@ -5,4 +5,5 @@
     <local:NumberRule x:Key="NumberRule" />
     <local:DateRule x:Key="DateRule"/>
     <local:ConsignmentBillEntryModifyQuantityRule x:Key="ConsignmentBillEntryModifyQuantityRule"/>
+    <local:OilSamplePrintCountRule x:Key="OilSamplePrintCountRule"/>
 </ResourceDictionary>

@@ -23,6 +23,15 @@ namespace Ui.Service
             }
         }
 
+        public IList<EnumModel> GetEnumLists(int groupSeq)
+        {
+            string sql = @"select * from SJEnumTable where GroupSeq=@GroupSeq";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<EnumModel>(sql,new { GroupSeq= groupSeq}).ToList();
+            }
+        }
+
         public IList<HostConfigModel> GetHostConfig(int typeId, string host)
         {
             string sql = @"select Id,TypeId,TypeDesciption,Host,Value HostValue,UserId from SJHostConfig where TypeId=@TypeId and Host=@Host ";
@@ -65,8 +74,8 @@ namespace Ui.Service
 
         public int InsertBarTenderPrintConfig(BarTenderPrintConfigModel model)
         {
-            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath)
-                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath);select SCOPE_IDENTITY() as Id;";
+            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath,TemplateTotalPage)
+                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath,@TemplateTotalPage);select SCOPE_IDENTITY() as Id;";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return Convert.ToInt32(connection.ExecuteScalar(sql, model));
@@ -76,7 +85,7 @@ namespace Ui.Service
         public bool UpdateBarTenderPrintConfig(BarTenderPrintConfigModel model)
         {
             string sql = @" update SJBarTenderPrintConfig set TemplateTypeId=@TemplateTypeId,TemplateTypeName=@TemplateTypeName,TemplateFullName=@TemplateFullName,
-                            TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage,PrinterName=@PrinterName where Id=@Id; ";
+                            TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage,PrinterName=@PrinterName,TemplateTotalPage=@TemplateTotalPage where Id=@Id; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, model) > 0;
@@ -106,10 +115,10 @@ namespace Ui.Service
             dp.Add("@TemplateFullName", model.ExpressTemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
             dp.Add("@TemplateFileName", model.ExpressTemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
             dp.Add("@TemplateFolderPath", model.ExpressTemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateTotalPage", model.ExpressTemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
 
-
-            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath)
-                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath);select SCOPE_IDENTITY() as Id;";
+            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath,TemplateTotalPage)
+                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath,@TemplateTotalPage);select SCOPE_IDENTITY() as Id;";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return Convert.ToInt32(connection.ExecuteScalar(sql, dp));
@@ -125,9 +134,10 @@ namespace Ui.Service
             dp.Add("@TemplateFullName", model.ExpressTemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
             dp.Add("@TemplateFileName", model.ExpressTemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
             dp.Add("@TemplateFolderPath", model.ExpressTemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateTotalPage", model.ExpressTemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
 
             string sql = @" update SJBarTenderPrintConfig set PrinterName=@PrinterName
-                            ,TemplateFullName=@TemplateFullName,TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage,TemplateFolderPath=@TemplateFolderPath where Id=@Id; ";
+                            ,TemplateFullName=@TemplateFullName,TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage,TemplateFolderPath=@TemplateFolderPath,TemplateTotalPage=@TemplateTotalPage where Id=@Id; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, dp) > 0;
@@ -201,12 +211,25 @@ namespace Ui.Service
                 {   
                     var s = Path.GetFileName(item).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
                     if (s.Count() == 2 && int.TryParse(s[0], out int p))
-                        lists.Add(new BarTenderTemplateModel { TemplatePerPage = p, TemplateFileName = Path.GetFileName(item), TemplateFullName = item ,TemplateFolderPath= folderPath }) ;
+                    {
+
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = p, TemplatePerPage = int.Parse(s[1].Substring(0,1)), TemplateFileName = Path.GetFileName(s[1]), TemplateFullName = item, TemplateFolderPath = folderPath });
+                    }
                     else
-                        lists.Add(new BarTenderTemplateModel { TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = 1,TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
                 }
             }
             return lists;
+        }
+
+
+        public int GetCurrentDateNextSerialNumber(DateTime settleDate, string colName)
+        {
+            string sql = @" select "+ colName+ " from SJCurrentDateNextSerialNumber where SettleDate=@SettleDate; update SJCurrentDateNextSerialNumber set  "+colName+"  += 1 where  SettleDate=@SettleDate;";
+            using (var connection = SqlDb.UpdateConnectionOa)
+            {
+                return Convert.ToInt32(connection.ExecuteScalar(sql, new { SettleDate = settleDate }));
+            }
         }
     }
 }

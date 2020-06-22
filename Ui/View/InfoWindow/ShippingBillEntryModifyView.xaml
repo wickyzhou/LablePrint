@@ -46,7 +46,7 @@
             <TextBox.Text>
                 <Binding Path="ShippingBillEntry.Quantity" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
-                        <StaticResource ResourceKey="NumberRule" />
+                        <StaticResource ResourceKey="OilSamplePrintCountRule" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

@@ -38,12 +38,13 @@ namespace Ui.ViewModel
             Filter = new ConsignmentBillParameterModel()
             {
                 ParamRestQuatity = 0,
-                ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddMonths(-1).ToShortDateString()),
+                ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddDays(-7).ToShortDateString()),
                 ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString())
             };
             //初始化表格数据
-
             HostConfig = GetHostConfig();
+            BillTypes = _commonService.GetEnumLists(5).ToList();
+
             //DataInit();
             GetShippingBills();
             InitQueryConSignmentBill();
@@ -466,7 +467,7 @@ namespace Ui.ViewModel
 
         #region 数据属性
 
-
+        public List<EnumModel> BillTypes { get; set; }
 
         private ConsignmentBillParameterModel filter;
 
@@ -491,6 +492,34 @@ namespace Ui.ViewModel
                 this.RaisePropertyChanged(nameof(ConsignmentBills));
             }
         }
+
+        private float consignmentBillsSumQuantity;
+
+        public float ConsignmentBillsSumQuantity
+        {
+            get { return consignmentBillsSumQuantity; }
+            set
+            {
+                consignmentBillsSumQuantity = value;
+                this.RaisePropertyChanged(nameof(ConsignmentBillsSumQuantity));
+            }
+        }
+
+        private int consignmentBillsCount;
+
+        public int ConsignmentBillsCount
+        {
+            get { return consignmentBillsCount; }
+            set
+            {
+                consignmentBillsCount = value;
+                this.RaisePropertyChanged(nameof(ConsignmentBillsCount));
+            }
+        }
+
+
+
+
 
         private ConsignmentBillModel selectedConsignmentBill;
 
@@ -814,8 +843,8 @@ namespace Ui.ViewModel
             {
                 ConsignmentBills.Add(x);
             });
-            ConsignmentCount = ConsignmentBills.Count();
-
+            ConsignmentBillsCount = ConsignmentBills.Count();
+            ConsignmentBillsSumQuantity = ConsignmentBills.Sum(m=>m.CurrencyQuantity);
             SelectedConsignmentBillEntry = null;
             SelectedConsignmentBill = null;
             ConsignmentBillEntries.Clear();

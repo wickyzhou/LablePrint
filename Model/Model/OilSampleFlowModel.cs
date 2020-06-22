@@ -7,7 +7,7 @@ namespace Model
 {
     public class OilSampleFlowModel:NotificationObject
     {
-        public double Id { get; set; }
+        public decimal Id { get; set; }
 
         public string Title { get; set; }
 

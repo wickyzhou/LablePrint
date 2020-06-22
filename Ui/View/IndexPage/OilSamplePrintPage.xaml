@@ -19,64 +19,131 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1.2*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding OilSampleFlows,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}" SelectedItem="{Binding OilSampleFlowSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding OilSampleFlowSelectionChangedCommand}"
+            <GroupBox Grid.Row="0"  Padding="2 10 2 0" Margin="0 8 0 0" BorderBrush="LightGray" BorderThickness="1.5">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="OA流程" Style="{StaticResource TextBlockStyle5}"/>
+                        <Button Grid.Column="1" Content="待办(默认)" Style="{StaticResource BtnInfoStyle}" Margin="10 0" Command="{Binding DealingFlowShowCommand}"/>
+                        <Button Grid.Column="2" Content="已办" Style="{StaticResource BtnInfoStyle1}" Command="{Binding DealedFlowShowCommand}"/>
+                    </Grid>
+                </GroupBox.Header>
+                <GroupBox.Content>
+                    <DataGrid  ItemsSource="{Binding OilSampleFlows,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}" SelectedItem="{Binding OilSampleFlowSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding OilSampleFlowSelectionChangedCommand}"
 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn DataGridColumn.Header="标题" DataGridBoundColumn.Binding="{Binding Title}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn DataGridColumn.Header="标题" DataGridBoundColumn.Binding="{Binding Title}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
 
-                        <DataGridTemplateColumn Width="70"   HeaderStyle="{StaticResource DGColumnHeader}">
-                            <DataGridColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                    <TextBlock Text="快递单"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridColumn.HeaderTemplate>
+                            <DataGridTemplateColumn Width="70"   HeaderStyle="{StaticResource DGColumnHeader}">
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="快递单"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
 
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                    <Button Command="{Binding DataContext.ExpressPrintCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"  Margin="5 0" Width="50" Style="{StaticResource BtnInfoStyle1}" 
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Command="{Binding DataContext.ExpressPrintCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"  Margin="5 0" Width="50" Style="{StaticResource BtnInfoStyle1}" 
                                             Content="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintContentConverter} }"
                                             Background="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintBackgroundConverter}}"
                                             />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-                <GroupBox Grid.Row="1" Header="样油明细" Padding="2 10 2 0" Margin="0 5 0 0" BorderBrush="LightGray" BorderThickness="1.5">
+                </GroupBox.Content>
+            </GroupBox>
+                 
+                <GroupBox Grid.Row="1"  Padding="2 10 2 0" Margin="0 8 0 0" BorderBrush="LightGray" BorderThickness="1.5">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock  Grid.Column="0"   Style="{StaticResource TextBlockStyle15}" Text="样油明细"/>
+                        <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="打印选择项" Command="{Binding OilSampleEntryMergePrintCommand}" Margin="5 0"/>
+                        <!--<TextBlock Grid.Column="2" Text="{Binding PrintTotalNum,StringFormat=合计：\{0\}}" Style="{StaticResource TextBlockStyle5}"/>-->
+                    </Grid>
+                </GroupBox.Header>
                     <GroupBox.Content>
-                        <DataGrid  ItemsSource="{Binding OilSampleEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}"
-                                   SelectedItem="{Binding OilSampleEntrySelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid  ItemsSource="{Binding OilSampleEntries,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  CellStyle="{StaticResource DGCellStyle1}"
+                                   SelectedItem="{Binding OilSampleEntrySelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   GridLinesVisibility="Horizontal" IsReadOnly="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"  HeadersVisibility="Column"  AutoGenerateColumns="False"
+                                   >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding OilSampleEntryModifyCommand}"
 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Height" Value="28"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Value="false">
+                                        <Setter Property="DataGridRow.Background" Value="AliceBlue"></Setter>
+                                    </DataTrigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="LightYellow"/>
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Value="true">
+                                        <Setter Property="Background" Value="Green"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
                         <DataGrid.Columns>
-                                <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                            <DataGridTemplateColumn Width="80"   HeaderStyle="{StaticResource DGColumnHeader}">
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text=""/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Command="{Binding DataContext.OilSampleEntryPrintLogModifyCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="&#xe72a;" Style="{StaticResource SubIconButton1}" ToolTip="清空本行打印记录" Margin="0 0 5 0" Width="30"/>
+                                            <CheckBox IsChecked="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Height="16" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                            <!--<DataGridTextColumn DataGridColumn.Header="主表Id" DataGridBoundColumn.Binding="{Binding FormmainId}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="子表Id" DataGridBoundColumn.Binding="{Binding Id}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                            <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="品名" DataGridBoundColumn.Binding="{Binding ProductionName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="规格" DataGridBoundColumn.Binding="{Binding WeightPerBucket}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="总重(Kg)" DataGridBoundColumn.Binding="{Binding TotalWeight}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="已打(Kg)" DataGridBoundColumn.Binding="{Binding PrintedWeight}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="总张数" DataGridBoundColumn.Binding="{Binding TotalWeight}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="已打张数" DataGridBoundColumn.Binding="{Binding TotalWeight}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="本次张数" DataGridBoundColumn.Binding="{Binding PrintCount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="Chocolate"/>
-                            <DataGridTemplateColumn Width="80"   HeaderStyle="{StaticResource DGColumnHeader}">
+                            <DataGridTextColumn DataGridColumn.Header="总张数" DataGridBoundColumn.Binding="{Binding PrintTotalCount}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="已打张数" DataGridBoundColumn.Binding="{Binding PrintedCount}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="本次张数" DataGridBoundColumn.Binding="{Binding CurrencyPrintCount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="Chocolate"/>
+                            <!--<DataGridTemplateColumn Width="120"   HeaderStyle="{StaticResource DGColumnHeader}">
                                     <DataGridColumn.HeaderTemplate>
                                         <DataTemplate>
                                             <StackPanel>
@@ -90,10 +157,13 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                             <StackPanel Orientation="Horizontal">
                                             <Button Command="{Binding DataContext.OilSamplePrintCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="标签打印" Margin="5 0" Width="60"
                                             Style="{StaticResource BtnInfoStyle1}"/>
-                                            </StackPanel>
+
+                                            <Button Command="{Binding DataContext.OilSampleEntryModifyCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="&#xe63c;" Margin="2 0" Width="40"
+                                            Style="{StaticResource SubIconButton1}" ToolTip="修改"/>
+                                        </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                </DataGridTemplateColumn>-->
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox.Content>
@@ -104,20 +174,23 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
 
             <GroupBox Grid.Row="2" Header="打印日志" Padding="2 10 2 0" Margin="0 5 0 0" BorderBrush="LightGray" BorderThickness="1.5">
                 <GroupBox.Content>
-                    <DataGrid  ItemsSource="{Binding OilSampleFlowLogs,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}" SelectedItem="{Binding OilSampleFlowSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2 10">
+                    <DataGrid  ItemsSource="{Binding OilSampleFlowLogs,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource DGStyle}" SelectedItem="{Binding OilSampleFlowLogSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="2 10">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding OilSampleFlowLogSelectionChangedCommand}"
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding OilSampleFlowLogModifyCommand}"
 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <DataGrid.Columns>
-                            <DataGridTextColumn DataGridColumn.Header="标题" DataGridBoundColumn.Binding="{Binding Title}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="类型" DataGridBoundColumn.Binding="{Binding TypeDesc}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="张数" DataGridBoundColumn.Binding="{Binding PrintCount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="重量" DataGridBoundColumn.Binding="{Binding PrintWeight}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTemplateColumn Width="80"   HeaderStyle="{StaticResource DGColumnHeader}">
+                            <DataGridTextColumn DataGridColumn.Header="标题" DataGridBoundColumn.Binding="{Binding Title}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                  
+                            <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="已打印总数" DataGridBoundColumn.Binding="{Binding PrintedCount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="Chocolate"/>
+                            <DataGridTextColumn DataGridColumn.Header="本次张数" DataGridBoundColumn.Binding="{Binding PrintCount}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="打印时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=dd-HH:mm:ss}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <!--<DataGridTemplateColumn Width="80"   HeaderStyle="{StaticResource DGColumnHeader}">
                                 <DataGridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -129,11 +202,11 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Command="{Binding OilSampleFlowLogDeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="删除" Margin="5 0" Width="60" Style="{StaticResource BtnDangerStyle}" />
+                                            <Button Command="{Binding OilSampleFlowLogUpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="修改" Margin="5 0" Width="60" Style="{StaticResource BtnWarningStyle}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox.Content>
@@ -145,12 +218,10 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
             <Grid.RowDefinitions>
                 <RowDefinition Height="15"/>
                 <RowDefinition Height="220"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="400"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="220"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-
 
             <GroupBox Grid.Row="1" Background="LightYellow" Margin="20"  Padding="10" BorderBrush="MediumSeaGreen" >
                 <GroupBox.Header>
@@ -222,7 +293,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="2.5*"/>
+
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
@@ -254,7 +325,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </ComboBox>
                         </Grid>
 
-                        <Grid  Grid.Row="2" Background="AliceBlue">
+                        <!--<Grid  Grid.Row="2" Background="AliceBlue">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition/>
@@ -263,15 +334,15 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Demo3" Grid.Row="0" Grid.Column="0" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage4BackgroundConverter} }" 
+                            <TextBlock Text="Demo3" Grid.Row="0" Grid.Column="0" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage3BackgroundConverter} }" 
                                            TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                            <TextBlock Text="Demo1" Grid.Row="0" Grid.Column="1" Background="{StaticResource GenericRedBrush}" 
+                            <TextBlock Text="Demo1" Grid.Row="0" Grid.Column="1" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage1BackgroundConverter}}" 
                                            TextAlignment="Center" Foreground="Snow" Padding="8"/>
                             <TextBlock Text="Demo4" Grid.Row="1" Grid.Column="0" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage4BackgroundConverter} }" 
                                            TextAlignment="Center" Foreground="Snow" Padding="8"/>
                             <TextBlock Text="Demo2" Grid.Row="1" Grid.Column="1" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage2BackgroundConverter} }" 
                                            TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                        </Grid>
+                        </Grid>-->
                     </Grid>
                 </GroupBox.Content>
             </GroupBox>

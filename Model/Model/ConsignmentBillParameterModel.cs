@@ -105,6 +105,45 @@ namespace Model
         }
 
 
+        private int paramBillType;
+
+        public int ParamBillType
+        {
+            get { return paramBillType; }
+            set
+            {
+                paramBillType = value;
+                this.RaisePropertyChanged(nameof(ParamBillType));
+            }
+        }
+
+   
+
+        private int paramBillBeginSeq;
+
+        public int ParamBillBeginSeq
+        {
+            get { return paramBillBeginSeq; }
+            set
+            {
+                paramBillBeginSeq = value;
+                this.RaisePropertyChanged(nameof(ParamBillBeginSeq));
+            }
+        }
+
+        private int paramBillEndSeq;
+
+        public int ParamBillEndSeq
+        {
+            get { return paramBillEndSeq; }
+            set
+            {
+                paramBillEndSeq = value;
+                this.RaisePropertyChanged(nameof(ParamBillEndSeq));
+            }
+        }
+
+
         //public DateTime ParamDate { get; set; }
 
         //public string ParamBillNo { get; set; }

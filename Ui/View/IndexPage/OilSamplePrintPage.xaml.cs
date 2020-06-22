@@ -24,7 +24,6 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new OilSamplePrintViewModel();
-            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
         }
     }
 }
