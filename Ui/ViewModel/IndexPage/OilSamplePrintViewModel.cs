@@ -61,9 +61,12 @@ namespace Ui.ViewModel.IndexPage
             OilSampleEntryPrintLogModifyCommand = new DelegateCommand(ModifyOilSampleEntryPrintLog);
             OilSampleEntryCheckedCommand = new DelegateCommand(CheckOilSampleEntry);
             OilSampleEntryMergePrintCommand = new DelegateCommand(MergePrintOilSampleEntry);
+            OilSampleEntryOrderPrintCommand = new DelegateCommand(OrderPrintOilSampleEntry);
             DealingFlowShowCommand = new DelegateCommand(ShowDealingFlow);
             DealedFlowShowCommand = new DelegateCommand(ShowDealedFlow);
         }
+
+
 
         private void ShowDealedFlow(object obj)
         {
@@ -76,6 +79,62 @@ namespace Ui.ViewModel.IndexPage
             OilSampleFlows.Clear();
             _oilSampleService.GetOilSampleFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
         }
+
+
+        private void OrderPrintOilSampleEntry(object obj)
+        {
+            int printCount = 0;
+            int previousCounts = 0;
+            if (string.IsNullOrEmpty(OilSamplePrintConfig.PrinterName) || OilSamplePrintConfig.TemplateFileName == null)
+            {
+                MessageBox.Show("请选择模板和打印机");
+                return;
+            }
+
+            var data = new ObservableCollection<OilSampleEntryModel>();
+            foreach (var item in OilSampleEntries)
+            {
+                if (item.CurrencyPrintCount > 0)
+                {
+
+                    printCount += item.CurrencyPrintCount;
+
+                    if (printCount >= 4)
+                    {
+                        item.CurrencyPrintCount =  4 - previousCounts;
+                        printCount = 4;
+                        data.Add(item);
+                        break;
+                    }
+                    else
+                    {
+                        previousCounts += item.CurrencyPrintCount;
+                        data.Add(item);
+                    }
+                }
+            }
+            if (printCount == 0 || printCount > 4)
+            {
+                MessageBox.Show("本流程明细已经全部打印完毕");
+                return;
+            }
+                
+
+            var r = new PrintService().BarTenderOilSampleEntryMergePrint(OilSamplePrintConfig, data, printCount, OilSampleTemplates);
+            if (r)
+            {
+                // 重新加载明细
+                OilSampleEntries.Clear();
+                OilSampleFlowLogs.Clear();
+                _oilSampleService.GetOilSampleEntries(OilSampleFlowSelectedItem.Id).ToList().ForEach(x => OilSampleEntries.Add(x));
+                _oilSampleService.GetOilSampleFlowLog().ToList().ForEach(x => OilSampleFlowLogs.Add(x));
+                MessageBox.Show("打印成功");
+            }
+            else
+                MessageBox.Show("打印过程出错，请联系管理员 ");
+
+        }
+
 
         private void MergePrintOilSampleEntry(object obj)
         {
@@ -95,14 +154,14 @@ namespace Ui.ViewModel.IndexPage
             var data = new ObservableCollection<OilSampleEntryModel>();
             foreach (var item in OilSampleEntries)
             {
-                if (item.IsChecked && item.CurrencyPrintCount>0)
+                if (item.IsChecked && item.CurrencyPrintCount > 0)
                 {
                     printCount += item.CurrencyPrintCount;
                     data.Add(item);
                 }
             }
 
-            if (OilSampleEntries.Count>1 && printCount > 4)
+            if (OilSampleEntries.Count > 1 && printCount > 4)
             {
                 MessageBox.Show($"多条明细最多选择打印4小张");
                 return;
@@ -114,6 +173,9 @@ namespace Ui.ViewModel.IndexPage
                 MessageBox.Show($"打印张数为0，请修改数量");
                 return;
             }
+
+            if (printCount > 4)
+                printCount = 4;
 
             var r = new PrintService().BarTenderOilSampleEntryMergePrint(OilSamplePrintConfig, data, printCount, OilSampleTemplates);
             if (r)
@@ -131,7 +193,7 @@ namespace Ui.ViewModel.IndexPage
 
         private void CheckOilSampleEntry(object obj)
         {
-           // OilSampleEntrySelectedItem.IsChecked = !OilSampleEntrySelectedItem.IsChecked;
+            // OilSampleEntrySelectedItem.IsChecked = !OilSampleEntrySelectedItem.IsChecked;
         }
 
         private void ModifyOilSampleEntryPrintLog(object obj)
@@ -528,7 +590,8 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand OilSampleEntryMergePrintCommand { get; set; }
         public DelegateCommand DealingFlowShowCommand { get; set; }
         public DelegateCommand DealedFlowShowCommand { get; set; }
-       
+        public DelegateCommand OilSampleEntryOrderPrintCommand { get; set; }
+
 
         private ObservableCollection<OilSampleFlowModel> oilSampleFlows;
 
@@ -674,7 +737,7 @@ namespace Ui.ViewModel.IndexPage
         }
 
 
-        private int printTotalNum=0;
+        private int printTotalNum = 0;
 
         public int PrintTotalNum
         {

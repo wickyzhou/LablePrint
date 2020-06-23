@@ -14,7 +14,7 @@ namespace Ui.Service
         // 默认是待办
         public IList<OilSampleFlowModel> GetOilSampleFlow()
         {
-            string sql = @" select *  from SROilSampleFlowView  order by title  ;";
+            string sql = @" select *  from SROilSampleFlowView  order by title  desc ;";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
                 return connection.Query<OilSampleFlowModel>(sql).ToList();
@@ -33,7 +33,7 @@ namespace Ui.Service
                                      and a.state = 4 --待办
                                      and b.field0002=2612005562338331437 -- 样油
                                      and b.start_date>='2020-06-01'
-                            order by title  ; ";
+                            order by title desc ; ";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
                 return connection.Query<OilSampleFlowModel>(sql).ToList();
@@ -49,7 +49,7 @@ namespace Ui.Service
             string sql = @" select Id,FormmainId,EntryId,ProductionName,ProductionModel,RoughWeight,WeightPerBucket,TotalWeight,ExpirationMonth,CheckNo,ProductionDate,BatchNo,
                                         PrintTotalCount, isnull(PrintedCount,0) PrintedCount,PrintTotalCount-isnull(PrintedCount,0) CurrencyPrintCount
                             from(	
-                                    select *,ceiling(TotalWeight/WeightPerBucket) PrintTotalCount
+                                    select *,ceiling(TotalWeight/WeightPerBucket ) PrintTotalCount
 	                                        ,(select max(PrintedCount)  from SROilSampleFlowPrintLog where FormsonId=a.id) PrintedCount
                                     from SROilSamplePrintView a where  FormmainId=@FormmainId  ) 
                             as t

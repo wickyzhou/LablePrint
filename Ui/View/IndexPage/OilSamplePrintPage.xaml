@@ -83,6 +83,8 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                         </Grid.ColumnDefinitions>
                         <TextBlock  Grid.Column="0"   Style="{StaticResource TextBlockStyle15}" Text="样油明细"/>
                         <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="打印选择项" Command="{Binding OilSampleEntryMergePrintCommand}" Margin="5 0"/>
+                        <Button Grid.Column="2" Style="{StaticResource BtnThemeStyle}" Content="顺序打印" Command="{Binding OilSampleEntryOrderPrintCommand}" Margin="20 0" Height="30" Width="80"/>
+                        
                         <!--<TextBlock Grid.Column="2" Text="{Binding PrintTotalNum,StringFormat=合计：\{0\}}" Style="{StaticResource TextBlockStyle5}"/>-->
                     </Grid>
                 </GroupBox.Header>

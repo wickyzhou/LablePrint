@@ -165,8 +165,8 @@ namespace Ui.Service
         public bool BarTenderOilSampleEntryMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data,int printTotalNum,List<BarTenderTemplateModel> barTenderTemplates)
         {
             string printerName = config.PrinterName;
-            int templatePerPage = printTotalNum > 4 ? 4 : printTotalNum;
-            string templateName = barTenderTemplates.FirstOrDefault(m=>m.TemplatePerPage== templatePerPage && m.TemplateTotalPage==4).TemplateFullName;
+
+            string templateName = barTenderTemplates.FirstOrDefault(m=>m.TemplatePerPage== printTotalNum && m.TemplateTotalPage==4).TemplateFullName;
             List<OilSampleFlowPrintLogModel> logs = new List<OilSampleFlowPrintLogModel>();
             BarTender.Application btApp = new BarTender.Application();
             try

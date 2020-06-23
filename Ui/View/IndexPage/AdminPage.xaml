@@ -19,40 +19,40 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <Grid Grid.Row="0" Grid.Column="0" Background="Azure">
-            <Button x:Name="BtnDemo" Style="{StaticResource BtnThemeStyle}"  Content="MVVM Demo" 
-                     Click="BtnDemo_Click"/>
+        <Grid Grid.Row="0" Grid.Column="0" Background="Azure" Margin="2">
+            <Button x:Name="BtnDemo" Style="{StaticResource BtnThemeStyle}"  Content="MVVM Demo"
+                     Click="BtnDemo_Click" Width="300" Height="50"/>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="1" Background="Blue">
-            <Button x:Name="BtnUser" Style="{StaticResource BtnThemeStyle}"  Content="用户管理" Click="BtnUser_Click"/>
-        </Grid>
-        
-        <Grid Grid.Row="0" Grid.Column="2" Background="Chocolate">
-            <Button x:Name="BtnPage" Style="{StaticResource BtnThemeStyle}" Content="页面授权" Click="BtnPage_Click"/>
+        <Grid Grid.Row="0" Grid.Column="1" Background="Blue" Margin="2">
+            <Button x:Name="BtnUser" Style="{StaticResource BtnThemeStyle}"  Content="用户管理" Click="BtnUser_Click" Width="300" Height="50"/>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Background="DarkOrchid">
-            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}"  Content="测试1" Click="Btn21_Click"/>
+        <Grid Grid.Row="0" Grid.Column="2" Background="Chocolate" Margin="2">
+            <Button x:Name="BtnPage" Style="{StaticResource BtnThemeStyle}" Content="页面授权" Click="BtnPage_Click" Width="300" Height="50"/>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen">
-
+        <Grid Grid.Row="1" Grid.Column="0" Background="DarkOrchid" Margin="2">
+            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}"  Content="测试1" Click="Btn21_Click" Width="300" Height="50" />
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="2" Background="Goldenrod">
+        <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen" Margin="2">
 
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="0" Background="HotPink">
+        <Grid Grid.Row="1" Grid.Column="2" Background="Goldenrod" Margin="2">
+
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="0" Background="HotPink" Margin="2">
             <TextBlock Text="第3行"/>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1" Background="Khaki">
+        <Grid Grid.Row="2" Grid.Column="1" Background="Khaki" Margin="2">
 
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="2" Background="LavenderBlush">
+        <Grid Grid.Row="2" Grid.Column="2" Background="LavenderBlush" Margin="2">
 
         </Grid>
 
