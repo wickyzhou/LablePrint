@@ -39,15 +39,16 @@ namespace Ui.ViewModel
             {
                 ParamRestQuatity = 0,
                 ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddDays(-7).ToShortDateString()),
-                ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString())
+                ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString()),
+                ParamBillType=1
             };
             //初始化表格数据
             HostConfig = GetHostConfig();
             BillTypes = _commonService.GetEnumLists(5).ToList();
 
-            //DataInit();
-            GetShippingBills();
-            InitQueryConSignmentBill();
+            DataInit();
+            //GetShippingBills();
+            //InitQueryConSignmentBill();
 
 
             #region 命令属性
@@ -256,6 +257,7 @@ namespace Ui.ViewModel
                             {
                                 _shippingService.UpdateShippingBillEntry2(entry);
                                 SelectedShippingBillEntry.GoodsType = entry.GoodsType;
+                                SelectedShippingBillEntry.Note = entry.Note;
                             }
                             else
                             {
@@ -267,6 +269,7 @@ namespace Ui.ViewModel
                                 // 前端显示
                                 SelectedShippingBill.TotalQuantity += qtyDiff;
                                 SelectedShippingBill.TotalAmount += amountDiff;
+                                SelectedShippingBill.Note = entry.Note;
                                 switch (entry.GoodsType)
                                 {
                                     case 2: SelectedShippingBill.HaoCaiFei += amountDiff; break;
@@ -326,7 +329,8 @@ namespace Ui.ViewModel
                     DeptId = copyEntry.DeptId,
                     DeptName = copyEntry.DeptName,
                     CaseId = 0,
-                    IsSystem=false
+                    IsSystem=false,
+                    Note = copyEntry.Note
                 };
                 (view.DataContext as ShippingBillEntryAddViewModel).WithParam(entry, (type, shippingBillEntry) =>
                 {
@@ -375,17 +379,16 @@ namespace Ui.ViewModel
                 {
                     foreach (var item in ConsignmentBills)
                     {
-                        if (SelectedConsignmentBillLists.Where(x => x.InterId == item.InterId).Count() == 0)
+                        if (SelectedConsignmentBillLists.Where(x => x.InterId == item.InterId ).Count() == 0)
                         {
+                            item.SelectedStatus = item.TotalQuantity == item.CurrencyQuantity ? 2 : 1;
                             SelectedConsignmentBillLists.Add(item);
                             sb.Append(",'" + item.BillNo + "'");
-                            SelectedConsignmentSum += item.CurrencyQuantity;
                         }
                     }
                     _consignmentService.AddUserCurrencyOperation(user.ID, sb.ToString().Substring(1));
+                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
                     QuerySignmentBill(null);
-
-
                 }
                 else
                 {
@@ -409,11 +412,10 @@ namespace Ui.ViewModel
                     foreach (var item in bills)
                     {
                         SelectedConsignmentBillLists.Remove(SelectedConsignmentBillLists.FirstOrDefault(x => x.InterId == item.InterId));
-                        SelectedConsignmentSum -= item.CurrencyQuantity;
                         sb.Append(",'" + item.BillNo + "'");
                     }
-                    SelectedConsignmentSum = (float)Math.Round((double)SelectedConsignmentSum, 2);
                     _consignmentService.RemoveUserCurrencyOperation(sb.ToString().Substring(1));
+                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
                     QuerySignmentBill(null);
                 }
             }
@@ -698,7 +700,6 @@ namespace Ui.ViewModel
         {
             ConsignmentBills.Clear();
             _consignmentService.GetAllConsignmentBills(0).ToList().ForEach(x => ConsignmentBills.Add(x));
-            ConsignmentCount = ConsignmentBills.Count();
         }
 
         public void GetShippingBills()
@@ -767,37 +768,30 @@ namespace Ui.ViewModel
 
             SelectedConsignmentBillLists.Clear();
             _consignmentService.GetUserSelectedConsignmentBill(user.ID).ToList().ForEach(x => SelectedConsignmentBillLists.Add(x));
-
-            //ConsignmentBills.Clear();
-            //_consignmentService.GetAllConsignmentBills(user.ID).ToList().ForEach(x =>
-            //{
-            //    ConsignmentBills.Add(x);
-            //    if (x.SelectedStatus > 0)
-            //    {
-            //        SelectedConsignmentBillLists.Add(x);
-            //    }
-            //});
-            //ConsignmentCount = ConsignmentBills.Count();
-            //SelectedConsignmentSum = SelectedConsignmentBillLists.Sum(x => x.CurrencyQuatity);
-            //SelectedConsignmentBillEntry = null;
+            SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
         }
 
         private void QuerySignmentBill(object obj)
         {
             ConsignmentBills.Clear();
-            var para = Filter;//(ConsignmentBillParameterModel)obj;
+            //var para = Filter;//(ConsignmentBillParameterModel)obj;
 
             List<string> filters = new List<string>();
 
+           if( Filter.ParamBillBeginSeq>0 && Filter.ParamBillEndSeq >0)
+                filters.Add($" and BillSeq between {Filter.ParamBillBeginSeq}  and  {Filter.ParamBillEndSeq} ");
+           else if(Filter.ParamBillBeginSeq > 0)
+                filters.Add($" and a.BillNo like '%{Filter.ParamBillBeginSeq}%' ");
 
-            if (!string.IsNullOrEmpty(para.ParamBillNo))
-            {
-                filters.Add($" and a.BillNo like '%{para.ParamBillNo}%' ");
-            }
 
-            if (!string.IsNullOrEmpty(para.ParamDeptName))
+            //if (!string.IsNullOrEmpty(para.ParamBillNo))
+            //{
+            //    filters.Add($" and a.BillNo like '%{para.ParamBillNo}%' ");
+            //}
+
+            if (!string.IsNullOrEmpty(Filter.ParamDeptName))
             {
-                string deptName = para.ParamDeptName.Replace("，", ",");
+                string deptName = Filter.ParamDeptName.Replace("，", ",");
                 if (deptName.Contains(","))
                 {
                     string orfield = string.Empty;
@@ -814,9 +808,9 @@ namespace Ui.ViewModel
                 }
             }
 
-            if (!string.IsNullOrEmpty(para.ParamCustName))
+            if (!string.IsNullOrEmpty(Filter.ParamCustName))
             {
-                string custName = para.ParamCustName.Replace("，", ",");
+                string custName = Filter.ParamCustName.Replace("，", ",");
                 if (custName.Contains(","))
                 {
                     string orfield = string.Empty;
@@ -833,12 +827,12 @@ namespace Ui.ViewModel
                 }
             }
 
-            if (para.IsSelected)
+            if (Filter.IsSelected)
             {
                 filters.Add($" and SelectedStatus > 0  ");
             }
 
-            string filter = $" and BillDate >= '{para.ParamBeginDate}' and BillDate <= '{para.ParamEndDate}'  and UndoQuantity>{Filter.ParamRestQuatity} " + string.Join(" ", filters);
+            string filter = $" and BillDate >= '{Filter.ParamBeginDate}' and BillDate <= '{Filter.ParamEndDate}' and BillType={Filter.ParamBillType}  and UndoQuantity>{Filter.ParamRestQuatity} " + string.Join(" ", filters);
             _consignmentService.GetAllConsignmentBills(user.ID, filter).ToList().ForEach(x =>
             {
                 ConsignmentBills.Add(x);
@@ -888,7 +882,7 @@ namespace Ui.ViewModel
 
                     // 添加已选数据，求和
                     SelectedConsignmentBillLists.Insert(0, SelectedConsignmentBill);
-                    SelectedConsignmentSum += SelectedConsignmentBill.CurrencyQuantity;
+                    SelectedConsignmentSum= SelectedConsignmentBillLists.Where(m=> m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
                     SelectedConsignmentBillEntry = null;
 
                     // 同步数据到数据库
@@ -911,7 +905,7 @@ namespace Ui.ViewModel
             {
                 //移除数据求和
                 SelectedConsignmentBillLists.Remove(SelectedConsignmentBillLists.FirstOrDefault(x => x.InterId == SelectedConsignmentBill.InterId));
-                SelectedConsignmentSum -= SelectedConsignmentBill.CurrencyQuantity;
+                SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
 
                 // 修改选择状态
                 SelectedConsignmentBill.SelectedStatus = 0;
@@ -979,25 +973,23 @@ namespace Ui.ViewModel
                     // 重新加载主表
                     _shippingService.UpdateShipingBill(shippingBill);
 
-                    SelectedShippingBill.BaoXianFei = shippingBill.BaoXianFei;
+           
                     SelectedShippingBill.BillDate = shippingBill.BillDate;
                     SelectedShippingBill.ChaiLvFei = shippingBill.ChaiLvFei;
                     SelectedShippingBill.Demander = shippingBill.Demander;
-                    SelectedShippingBill.GuanShuiFei = shippingBill.GuanShuiFei;
                     SelectedShippingBill.GuoLuFei = shippingBill.GuoLuFei;
                     SelectedShippingBill.LogisticsBillNo = shippingBill.LogisticsBillNo;
                     SelectedShippingBill.LogisticsCompanyName = shippingBill.LogisticsCompanyName;
                     SelectedShippingBill.LogisticsType = shippingBill.LogisticsType;
                     SelectedShippingBill.Note = shippingBill.Note;
                     SelectedShippingBill.OtherCosts = shippingBill.OtherCosts;
-                    SelectedShippingBill.PaiSongFei = shippingBill.PaiSongFei;
-                    SelectedShippingBill.QingGuanFei = shippingBill.QingGuanFei;
-                    SelectedShippingBill.TiHuoFei = shippingBill.TiHuoFei;
                     SelectedShippingBill.TotalAmount = shippingBill.TotalAmount;
-                    SelectedShippingBill.WeiXianPinFei = shippingBill.WeiXianPinFei;
                     SelectedShippingBill.WeiXiuFei = shippingBill.WeiXiuFei;
                     SelectedShippingBill.YouFei = shippingBill.YouFei;
                     SelectedShippingBill.YunShuFei = shippingBill.YunShuFei;
+                    SelectedShippingBill.GuoNeiDuanFeiYong = shippingBill.GuoNeiDuanFeiYong;
+                    SelectedShippingBill.GuoJiDuanFeiYong = shippingBill.GuoJiDuanFeiYong;
+                    SelectedShippingBill.YunShuDuanFeiYong = shippingBill.YunShuDuanFeiYong;
 
                     // 重新加载明细
                     if (totalAmountBeforeModify != shippingBill.TotalAmount)

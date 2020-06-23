@@ -24,6 +24,13 @@ namespace Ui.View.InfoWindow
             InitializeComponent();
             this.DataContext = new ShippingBillDetailLogViewModel(mainId);
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) => 
+            {
+                if (this.WindowState == WindowState.Normal)
+                    this.WindowState = WindowState.Maximized;
+                else if (WindowState == WindowState.Maximized)
+                    this.WindowState = WindowState.Normal;
+            }));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
         }

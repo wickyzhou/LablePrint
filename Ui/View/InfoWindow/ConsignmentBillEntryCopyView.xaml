@@ -22,9 +22,15 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="本次数量" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox  Style="{StaticResource TextBoxStyle}" Width="300" Name="TbFocus">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0.3*"/>
+        </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="本次数量" Style="{StaticResource TextBlockStyle20}"/>
+            <TextBox  Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Width="300" Name="TbFocus">
                 <TextBox.Text>
                     <Binding Path="ConsignmentBillEntry.ECurrencyQuantity" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -33,19 +39,19 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="案子名称" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBillEntry.CaseName}" Style="{StaticResource TextBoxReadonlyStyle}"/>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="物料名称" Style="{StaticResource TextBlockStyle20}"/>
-            <TextBox Text="{Binding ConsignmentBillEntry.ItemName}" Style="{StaticResource TextBoxReadonlyStyle}" HorizontalAlignment="Stretch" />
-        </StackPanel>
 
-        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
+
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="案子名称" Style="{StaticResource TextBlockStyle20}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding ConsignmentBillEntry.CaseName}" Style="{StaticResource TextBoxReadonlyStyle}"/>
+
+
+
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="物料名称" Style="{StaticResource TextBlockStyle20}"/>
+        <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding ConsignmentBillEntry.ItemName}" Style="{StaticResource TextBoxReadonlyStyle}" HorizontalAlignment="Stretch" />
+
+
+        <StackPanel Grid.Row="5"  Grid.Column="1" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 100 0" Height="30" IsDefault="True"/>
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>

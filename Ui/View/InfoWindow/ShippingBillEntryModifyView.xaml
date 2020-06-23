@@ -28,12 +28,13 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="1" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="货物类型"/>
         <TextBlock Grid.Row="2" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="数量"/>
         <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="金额"/>
-        <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="部门ID" Visibility="Hidden"/>
-        <TextBlock Grid.Row="4" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="序号"/>
+        <TextBlock Grid.Row="4" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="备注" />
+        <TextBlock Grid.Row="5" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="序号"/>
 
         <ComboBox Grid.Row="1" Grid.Column="2"   Style="{StaticResource ComboBoxStyleAuto}"  ItemsSource="{Binding GoodsTypeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
@@ -56,11 +57,11 @@
                       Background="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsEnabledStyleConverter}}"
                   IsReadOnly="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsReadOnlyConverter}}"/>
 
-        <TextBox Style="{StaticResource TextBoxReadonlyStyle}" Visibility="Hidden" Text="{Binding ShippingBillEntry.DeptId}"/>
+        <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.Note}"/>
 
-        <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ShippingBillEntry.EntryId}" Style="{StaticResource TextBoxStyle}"  Background="LightGray"  IsReadOnly="True" />
+        <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding ShippingBillEntry.EntryId}" Style="{StaticResource TextBoxStyle}"  Background="LightGray"  IsReadOnly="True" />
 
-        <StackPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
+        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
             <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="30" IsDefault="True" />
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>

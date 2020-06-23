@@ -63,6 +63,14 @@ namespace Ui.View
                 }
                 this.Close();
             }));
+
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>
+            {
+                if (this.WindowState == WindowState.Normal)
+                    this.WindowState = WindowState.Maximized;
+                else if (WindowState == WindowState.Maximized)
+                    this.WindowState = WindowState.Normal;
+            }));
         }
 
 

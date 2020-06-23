@@ -34,6 +34,13 @@ namespace Ui.View
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>
+            {
+                if (this.WindowState == WindowState.Normal)
+                    this.WindowState = WindowState.Maximized;
+                else if (WindowState == WindowState.Maximized)
+                    this.WindowState = WindowState.Normal;
+            }));
         }
 
 

@@ -546,10 +546,14 @@ namespace Common
 
                 row1.CreateCell(0).SetCellValue("托运单号"); row1.CreateCell(1).SetCellValue("托运日期"); row1.CreateCell(2).SetCellValue("总数量"); row1.CreateCell(3).SetCellValue("总费用"); row1.CreateCell(4).SetCellValue("物流类型");
                 row1.CreateCell(5).SetCellValue("物流公司"); row1.CreateCell(6).SetCellValue("物流单号"); row1.CreateCell(7).SetCellValue("运输费"); row1.CreateCell(8).SetCellValue("邮费"); row1.CreateCell(9).SetCellValue("过路费");
-                row1.CreateCell(10).SetCellValue("差旅费"); row1.CreateCell(11).SetCellValue("维修费"); row1.CreateCell(12).SetCellValue("关税费"); row1.CreateCell(13).SetCellValue("提货费"); row1.CreateCell(14).SetCellValue("危险品费");
-                row1.CreateCell(15).SetCellValue("清关费"); row1.CreateCell(16).SetCellValue("保险费"); row1.CreateCell(17).SetCellValue("派送费"); row1.CreateCell(18).SetCellValue("需求人"); row1.CreateCell(19).SetCellValue("其他费用");
-                row1.CreateCell(20).SetCellValue("备注"); row1.CreateCell(21).SetCellValue("商品类型"); row1.CreateCell(22).SetCellValue("明细序号"); row1.CreateCell(23).SetCellValue("案子名称"); row1.CreateCell(24).SetCellValue("品牌名称");
-                row1.CreateCell(25).SetCellValue("部门名称"); row1.CreateCell(26).SetCellValue("客户名称"); row1.CreateCell(27).SetCellValue("明细数量"); row1.CreateCell(28).SetCellValue("分摊金额");
+                row1.CreateCell(10).SetCellValue("差旅费"); row1.CreateCell(11).SetCellValue("维修费"); 
+                
+                row1.CreateCell(12).SetCellValue("国内端"); row1.CreateCell(13).SetCellValue("国际端"); row1.CreateCell(14).SetCellValue("运输端");
+
+                
+                row1.CreateCell(15).SetCellValue("需求人"); row1.CreateCell(16).SetCellValue("其他费用");
+                row1.CreateCell(17).SetCellValue("备注"); row1.CreateCell(18).SetCellValue("商品类型"); row1.CreateCell(19).SetCellValue("明细序号"); row1.CreateCell(20).SetCellValue("案子名称"); row1.CreateCell(21).SetCellValue("品牌名称");
+                row1.CreateCell(22).SetCellValue("部门名称"); row1.CreateCell(23).SetCellValue("客户名称"); row1.CreateCell(24).SetCellValue("明细数量"); row1.CreateCell(25).SetCellValue("分摊金额");
 
                 for (int i = 0; i < lists.Count; i++)
                 {
@@ -558,10 +562,13 @@ namespace Common
 
                     row.CreateCell(0).SetCellValue(lists[i].BillNo); row.CreateCell(1).SetCellValue(Convert.ToDateTime(lists[i].BillDate).ToString("yyyy-MM-dd")); row.CreateCell(2).SetCellValue(lists[i].TotalQuantity); row.CreateCell(3).SetCellValue(lists[i].TotalAmount); row.CreateCell(4).SetCellValue(lists[i].LogisticsTypeName);
                     row.CreateCell(5).SetCellValue(lists[i].LogisticsCompanyName); row.CreateCell(6).SetCellValue(lists[i].LogisticsBillNo); row.CreateCell(7).SetCellValue(lists[i].YunShuFei); row.CreateCell(8).SetCellValue(lists[i].YouFei); row.CreateCell(9).SetCellValue(lists[i].GuoLuFei);
-                    row.CreateCell(10).SetCellValue(lists[i].ChaiLvFei); row.CreateCell(11).SetCellValue(lists[i].WeiXiuFei); row.CreateCell(12).SetCellValue(lists[i].GuanShuiFei); row.CreateCell(13).SetCellValue(lists[i].TiHuoFei); row.CreateCell(14).SetCellValue(lists[i].WeiXianPinFei);
-                    row.CreateCell(15).SetCellValue(lists[i].QingGuanFei); row.CreateCell(16).SetCellValue(lists[i].BaoXianFei); row.CreateCell(17).SetCellValue(lists[i].PaiSongFei); row.CreateCell(18).SetCellValue(lists[i].Demander); row.CreateCell(19).SetCellValue(lists[i].OtherCosts);
-                    row.CreateCell(20).SetCellValue(lists[i].Note); row.CreateCell(21).SetCellValue(lists[i].GoodsTypeName); row.CreateCell(22).SetCellValue(lists[i].EntryId); row.CreateCell(23).SetCellValue(lists[i].CaseName); row.CreateCell(24).SetCellValue(lists[i].BrandName);
-                    row.CreateCell(25).SetCellValue(lists[i].DeptName); row.CreateCell(26).SetCellValue(lists[i].CustName); row.CreateCell(27).SetCellValue(lists[i].Quatity); row.CreateCell(28).SetCellValue(lists[i].ApportionedAmount);
+                    row.CreateCell(10).SetCellValue(lists[i].ChaiLvFei); row.CreateCell(11).SetCellValue(lists[i].WeiXiuFei); 
+                    
+                    row.CreateCell(12).SetCellValue(lists[i].GuoNeiDuanFeiYong); row.CreateCell(13).SetCellValue(lists[i].GuoJiDuanFeiYong); row.CreateCell(14).SetCellValue(lists[i].YunShuDuanFeiYong);
+
+                    row.CreateCell(15).SetCellValue(lists[i].Demander); row.CreateCell(16).SetCellValue(lists[i].OtherCosts);
+                    row.CreateCell(17).SetCellValue(lists[i].Note); row.CreateCell(18).SetCellValue(lists[i].GoodsTypeName); row.CreateCell(19).SetCellValue(lists[i].EntryId); row.CreateCell(20).SetCellValue(lists[i].CaseName); row.CreateCell(21).SetCellValue(lists[i].BrandName);
+                    row.CreateCell(22).SetCellValue(lists[i].DeptName); row.CreateCell(23).SetCellValue(lists[i].CustName); row.CreateCell(24).SetCellValue(lists[i].Quatity); row.CreateCell(25).SetCellValue(lists[i].ApportionedAmount);
                 }
 
                 FileStream fs = new FileStream(fName, FileMode.Create);//新建才不会报错

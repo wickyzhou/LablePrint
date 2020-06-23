@@ -122,8 +122,6 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
                         <ColumnDefinition Width="0.3*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -140,12 +138,9 @@
                     <TextBlock Grid.Column="2" Grid.Row="0" Text="运输费" Style="{StaticResource TextBlockStyle15}"/>
                     <TextBlock Grid.Column="2" Grid.Row="1" Text="过路费" Style="{StaticResource TextBlockStyle15}"/>
                     <TextBlock Grid.Column="2" Grid.Row="2" Text="维修费" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="4" Grid.Row="0" Text="关税" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="4" Grid.Row="1" Text="提货费" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="4" Grid.Row="2" Text="危险品费" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="6" Grid.Row="0" Text="清关费" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="6" Grid.Row="1" Text="保险费" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="6" Grid.Row="2" Text="派送费" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBlock Grid.Column="4" Grid.Row="0" Text="国内端" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBlock Grid.Column="4" Grid.Row="1" Text="国际端" Style="{StaticResource TextBlockStyle15}"/>
+                    <TextBlock Grid.Column="4" Grid.Row="2" Text="运输端" Style="{StaticResource TextBlockStyle15}"/>
 
                     <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10">
                         <Grid.ColumnDefinitions>
@@ -163,15 +158,15 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0"  Text="手工添加:" Style="{StaticResource TextBlockStyle}"/>
                         <TextBlock Grid.Column="1"  Text="耗材" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="2"  Text="{Binding ShippingBill.HaoCaiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" />
+                        <TextBox  Grid.Column="2"  Text="{Binding ShippingBill.HaoCaiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0"  />
                         <TextBlock Grid.Column="3"  Text="样油" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="4"  Text="{Binding ShippingBill.YangYouFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" />
+                        <TextBox  Grid.Column="4"  Text="{Binding ShippingBill.YangYouFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0" />
                         <TextBlock Grid.Column="5"  Text="设备" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="6"  Text="{Binding ShippingBill.SheBeiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}"  />
+                        <TextBox  Grid.Column="6"  Text="{Binding ShippingBill.SheBeiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0"  />
                         <TextBlock Grid.Column="7"  Text="成品退货" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="8"  Text="{Binding ShippingBill.ChengPinTuiHuoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}"  />
+                        <TextBox  Grid.Column="8"  Text="{Binding ShippingBill.ChengPinTuiHuoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="0 0 10 0" />
                         <TextBlock Grid.Column="9"  Text="退原材料" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="10"  Text="{Binding ShippingBill.TuiYuanCaiLiaoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" />
+                        <TextBox  Grid.Column="10"  Text="{Binding ShippingBill.TuiYuanCaiLiaoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0" />
                     </Grid>
                     
                     <TextBox  Grid.Column="1" Grid.Row="0" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource LinShiErJiYiJiWuLiuBackgroundConverter}}">
@@ -236,7 +231,7 @@
 
                     <TextBox  Grid.Column="5" Grid.Row="0" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}" >
                         <TextBox.Text>
-                            <Binding Path="ShippingBill.GuanShuiFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                            <Binding Path="ShippingBill.GuoNeiDuanFeiYong" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                                 <Binding.ValidationRules>
                                     <StaticResource ResourceKey="NumberRule" />
                                 </Binding.ValidationRules>
@@ -246,7 +241,7 @@
 
                     <TextBox  Grid.Column="5" Grid.Row="1" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
                         <TextBox.Text>
-                            <Binding Path="ShippingBill.TiHuoFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                            <Binding Path="ShippingBill.GuoJiDuanFeiYong" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                                 <Binding.ValidationRules>
                                     <StaticResource ResourceKey="NumberRule" />
                                 </Binding.ValidationRules>
@@ -256,7 +251,7 @@
 
                     <TextBox  Grid.Column="5" Grid.Row="2" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
                         <TextBox.Text>
-                            <Binding Path="ShippingBill.WeiXianPinFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                            <Binding Path="ShippingBill.YunShuDuanFeiYong" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                                 <Binding.ValidationRules>
                                     <StaticResource ResourceKey="NumberRule" />
                                 </Binding.ValidationRules>
@@ -264,35 +259,6 @@
                         </TextBox.Text>
                     </TextBox>
 
-                    <TextBox  Grid.Column="7" Grid.Row="0" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
-                        <TextBox.Text>
-                            <Binding Path="ShippingBill.QingGuanFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="NumberRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-
-                    <TextBox  Grid.Column="7" Grid.Row="1" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
-                        <TextBox.Text>
-                            <Binding Path="ShippingBill.BaoXianFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="NumberRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-
-                    <TextBox  Grid.Column="7" Grid.Row="2" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
-                        <TextBox.Text>
-                            <Binding Path="ShippingBill.PaiSongFei" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="NumberRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
                 </Grid>
             </GroupBox.Content>
 

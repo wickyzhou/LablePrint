@@ -33,9 +33,10 @@ namespace Ui.Service
         {
             string sql = @" update SJShippingBill 
                         set BillDate=@BillDate  ,LogisticsType=@LogisticsType  ,LogisticsCompanyName=@LogisticsCompanyName,
-                            YunShuFei=@YunShuFei  ,YouFei=@YouFei  ,GuoLuFei=@GuoLuFei  ,ChaiLvFei=@ChaiLvFei  ,WeiXiuFei=@WeiXiuFei  ,GuanShuiFei=@GuanShuiFei,
-                            TiHuoFei=@TiHuoFei, WeiXianPinFei=@WeiXianPinFei, QingGuanFei=@QingGuanFei, BaoXianFei=@BaoXianFei, PaiSongFei=@PaiSongFei, Demander=@Demander, OtherCosts=@OtherCosts,TotalAmount=@TotalAmount,
-                            Note=@Note,LogisticsBillNo=@LogisticsBillNo,SystemApportionedAmount=@SystemApportionedAmount
+                            YunShuFei=@YunShuFei  ,YouFei=@YouFei  ,GuoLuFei=@GuoLuFei  ,ChaiLvFei=@ChaiLvFei  ,WeiXiuFei=@WeiXiuFei ,
+                            Demander=@Demander, OtherCosts=@OtherCosts,TotalAmount=@TotalAmount,
+                            Note=@Note,LogisticsBillNo=@LogisticsBillNo,SystemApportionedAmount=@SystemApportionedAmount,
+                            GuoNeiDuanFeiYong=@GuoNeiDuanFeiYong,GuoJiDuanFeiYong=@GuoJiDuanFeiYong,YunShuDuanFeiYong=@YunShuDuanFeiYong
                         where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -65,9 +66,11 @@ namespace Ui.Service
         {
             string sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate,
                             (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName,
-                            LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,GuanShuiFei,TiHuoFei,WeiXianPinFei,QingGuanFei,BaoXianFei,PaiSongFei,Demander,OtherCosts,Note	,
+                            LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,Note	,
                              (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = a.GoodsType) GoodsTypeName ,
-                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,ApportionedAmount from  SJShippingBill a join SJShippingBillEntry b on a.Id=b.MainId  ";
+							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong
+                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,ApportionedAmount from  SJShippingBill a join SJShippingBillEntry b on a.Id=b.MainId  
+                        order by BillNo,EntryId ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<ShippingBillExportModel>(sql).ToList();
@@ -76,8 +79,8 @@ namespace Ui.Service
 
         public bool AddShipingBillEntry(ShippingBillEntryModel entryModel)
         {
-            string sql = @" insert into SJShippingBillEntry(MainId,CaseName,Quantity,BrandName,DeptName,CustName,DeptId,CustId,BrandId,CaseId,EntryId,ApportionedAmount,GoodsType)
-select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@GoodsType),@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustId,@BrandId,@CaseId,@EntryId,@ApportionedAmount,@GoodsType;";
+            string sql = @" insert into SJShippingBillEntry(MainId,CaseName,Quantity,BrandName,DeptName,CustName,DeptId,CustId,BrandId,CaseId,EntryId,ApportionedAmount,GoodsType,Note)
+select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@GoodsType),@Quantity,@BrandName,@DeptName,@CustName,@DeptId,@CustId,@BrandId,@CaseId,@EntryId,@ApportionedAmount,@GoodsType,@Note;";
             switch (entryModel.GoodsType)
             {
                 case 2: sql += " update SJShippingBill set TotalQuantity = isnull(TotalQuantity, 0) + @Quantity, TotalAmount = isnull(TotalAmount, 0) + @ApportionedAmount,HaoCaiFei= isnull(HaoCaiFei,0)+@ApportionedAmount  where Id = @MainId "; break;
@@ -113,7 +116,7 @@ select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@
         // 系统单据只能改类型
         public bool UpdateShippingBillEntry2(ShippingBillEntryModel entryModel)
         {
-            string sql = @" update  SJShippingBillEntry  set GoodsType=@GoodsType where Id=@Id";
+            string sql = @" update  SJShippingBillEntry  set GoodsType=@GoodsType,Note=@Note where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, entryModel) > 0;
@@ -126,7 +129,7 @@ select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@
             //string sql = @" update  SJShippingBillEntry  set EntryId=@EntryId,GoodsType=@GoodsType,Quantity=@Quantity where Id=@Id;
             //                update t set TotalQuantity=s,ApportionedAmount=Quantity/s * TotalAmount
             //                from ( select *, sum(Quantity)over() s from SJShippingBillEntry  where MainId=@MainId) as t; update SJShippingBill set TotalQuantity=TotalQuantity+diff where id=@MainId;";
-            string sql = @" update  SJShippingBillEntry  set Quantity=@Quantity,ApportionedAmount=@ApportionedAmount  where Id=@Id;
+            string sql = @" update  SJShippingBillEntry  set Quantity=@Quantity,ApportionedAmount=@ApportionedAmount,Note=@Note  where Id=@Id;
 ";
 
             switch (entryModel.GoodsType)
@@ -146,6 +149,7 @@ select @MainId,(select ItemValue from SJEnumTable where GroupSeq=4 and ItemSeq=@
             dp.Add("@ApportionedAmount", entryModel.ApportionedAmount, DbType.Single, ParameterDirection.Input);
             dp.Add("@AmountDiff", amountDiff, DbType.Single, ParameterDirection.Input);
             dp.Add("@QtyDiff", qtyDiff, DbType.Single, ParameterDirection.Input);
+            dp.Add("@Note", entryModel.Note, DbType.String, ParameterDirection.Input);
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, dp) > 0;

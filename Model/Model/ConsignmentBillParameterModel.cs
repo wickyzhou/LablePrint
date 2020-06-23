@@ -104,6 +104,18 @@ namespace Model
             }
         }
 
+        //private EnumModel paramBillType;
+
+        //public EnumModel ParamBillType
+        //{
+        //    get { return paramBillType; }
+        //    set
+        //    {
+        //        paramBillType = value;
+        //        this.RaisePropertyChanged(nameof(ParamBillType));
+        //    }
+        //}
+
 
         private int paramBillType;
 
@@ -117,7 +129,7 @@ namespace Model
             }
         }
 
-   
+
 
         private int paramBillBeginSeq;
 

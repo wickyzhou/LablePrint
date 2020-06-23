@@ -57,7 +57,7 @@ namespace Ui.ViewModel
 
         public void Save(object obj)
         {
-            if (!this.IsValid || ShippingBillEntry.Quantity <= 0|| ShippingBillEntry.GoodsType<=0 || ShippingBillEntry.EntryId<=0)
+            if (!this.IsValid || ShippingBillEntry.ApportionedAmount <= 0|| ShippingBillEntry.GoodsType<=0 || ShippingBillEntry.EntryId<=0)
             {
                 MessageBox.Show("输入的格式有误或者有数据未填写");
                 return;

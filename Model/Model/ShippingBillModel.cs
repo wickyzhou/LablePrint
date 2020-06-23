@@ -132,89 +132,11 @@ namespace Model
 			}
 		}
 
-		private float guanShuiFei;
 
-		public float GuanShuiFei
-		{
-			get { return guanShuiFei; }
-			set
-			{
-				guanShuiFei = value;
-				this.RaisePropertyChanged(nameof(GuanShuiFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
 
-		private float tiHuoFei;
 
-		public float TiHuoFei
-		{
-			get { return tiHuoFei; }
-			set
-			{
-				tiHuoFei = value;
-				this.RaisePropertyChanged(nameof(TiHuoFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
 
-		private float weiXianPinFei;
 
-		public float WeiXianPinFei
-		{
-			get { return weiXianPinFei; }
-			set
-			{
-				weiXianPinFei = value;
-				this.RaisePropertyChanged(nameof(WeiXianPinFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
-
-		private float qingGuanFei;
-
-		public float QingGuanFei
-		{
-			get { return qingGuanFei; }
-			set
-			{
-				qingGuanFei = value;
-				this.RaisePropertyChanged(nameof(QingGuanFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
-
-		private float baoXianFei;
-
-		public float BaoXianFei
-		{
-			get { return baoXianFei; }
-			set
-			{
-				baoXianFei = value;
-				this.RaisePropertyChanged(nameof(BaoXianFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
-
-		private float paiSongFei;
-
-		public float PaiSongFei
-		{
-			get { return paiSongFei; }
-			set
-			{
-				paiSongFei = value;
-				this.RaisePropertyChanged(nameof(PaiSongFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-			}
-		}
 
 		private float otherCosts;
 		public float OtherCosts
@@ -340,7 +262,7 @@ namespace Model
 
 		public float SystemApportionedAmount
 		{
-			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuanShuiFei + TiHuoFei + WeiXianPinFei + QingGuanFei + BaoXianFei + PaiSongFei + OtherCosts; }
+			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong  + OtherCosts; }
 			set
 			{
 				systemApportionedAmount = value;
@@ -386,22 +308,48 @@ namespace Model
 			}
 		}
 
+		private float guoNeiDuanFeiYong;
+
+		public float GuoNeiDuanFeiYong
+		{
+			get { return guoNeiDuanFeiYong; }
+			set
+			{
+				guoNeiDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(GuoNeiDuanFeiYong));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+			}
+		}
 
 
-		//private string stringTotalAmount;
+		private float guoJiDuanFeiYong;
 
-		//public string StringTotalAmount
-		//{
-		//	get { return $"金额合计：{Convert.ToString(TotalAmount)} 元 "; }
-		//	set
-		//	{
-		//		//stringTotalAmount = value;
-		//		//this.RaisePropertyChanged(nameof(StringTotalAmount));
-		//	}
-		//}
+		public float GuoJiDuanFeiYong
+		{
+			get { return guoJiDuanFeiYong; }
+			set
+			{
+				guoJiDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(GuoJiDuanFeiYong));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+			}
+		}
 
-	
+		private int yunShuDuanFeiYong;
 
+		public int YunShuDuanFeiYong
+		{
+			get { return yunShuDuanFeiYong; }
+			set
+			{
+				yunShuDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(YunShuDuanFeiYong));
+				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				this.RaisePropertyChanged(nameof(TotalAmount));
+			}
+		}
 
 	}
 }

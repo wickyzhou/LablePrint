@@ -45,7 +45,7 @@ namespace Ui.Service
         public bool AddConsignmentBill(ConsignmentBillModel consignmentBill)
         {
 
-            string sql = @" insert into SJConsignmentBillUserCurrencyOperation(BillNo,UserId,SelectedStatus) values(@BillNo,@UserId,@SelectedStatus);";
+            string sql = @" insert into SJConsignmentBillUserCurrencyOperation(BillNo,UserId,SelectedStatus,CurrencyQuantity,InterId) values(@BillNo,@UserId,@SelectedStatus,@CurrencyQuantity,@InterId);";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, consignmentBill) > 0;
@@ -145,7 +145,7 @@ namespace Ui.Service
 
         public bool AddUserCurrencyOperation(int userId, string billNos)
         {
-            string sql = @"  insert into SJConsignmentBillUserCurrencyOperation (BillNo,UserId,SelectedStatus) select  BillNo,@UserId,case when UndoQuantity=CurrencyQuantity then 2 else 1 end from  SJConsignmentBill  where BillNo in (" + billNos + ")";
+            string sql = @"  insert into SJConsignmentBillUserCurrencyOperation (BillNo,UserId,SelectedStatus,CurrencyQuantity,InterId) select  BillNo,@UserId,case when UndoQuantity=CurrencyQuantity then 2 else 1 end,CurrencyQuantity,InterId  from  SJConsignmentBill  where BillNo in (" + billNos + ")";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, new { UserId = userId }) > 0;
@@ -175,7 +175,7 @@ namespace Ui.Service
 
             string sql = @" insert into  SJConsignmentBillEntry(InterId,EntryId,ItemId,ItemName,CaseId,CaseName,BrandId,BrandName,IsChecked,ETotalQuantity,EUndoQuantity,ECurrencyQuantity,IsSystem)
                             values(@InterId,@EntryId,@ItemId,@ItemName,@CaseId,@CaseName,@BrandId,@BrandName,@IsChecked,@ECurrencyQuantity,@ECurrencyQuantity,@ECurrencyQuantity,@IsSystem);Set @Id=SCOPE_IDENTITY();
-                            insert into SJConsignmentBillUserCurrencyOperation (BillNo,UserId,InsEntryStatus,EId,InterId) select  BillNo," + userId.ToString() + @",1,@Id,InterId   from SJConsignmentBill where InterId=@InterId ;  ";
+                            insert into SJConsignmentBillUserCurrencyOperation (BillNo,UserId,InsEntryStatus,EId,InterId,CurrencyQuantity) select  BillNo," + userId.ToString() + @",1,@Id,InterId,CurrencyQuantity   from SJConsignmentBill where InterId=@InterId ;  ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 var p = new DynamicParameters();

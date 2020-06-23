@@ -23,5 +23,9 @@ namespace Model
         public string CaseName { get; set; }
         public string ItemName { get; set; }
         public float CurrencyQuantity { get; set; }
+        public string SourceBillNo { get; set; }
+        public int SourceInterId { get; set; }
+        public int SourceEntryId { get; set; }
+        public float SourceEntryQty { get; set; }
     }
 }

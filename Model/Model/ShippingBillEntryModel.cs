@@ -102,6 +102,18 @@ namespace Model
         }
 
 
+        private string note;
+
+        public string Note
+        {
+            get { return note; }
+            set
+            {
+                note = value;
+                this.RaisePropertyChanged(nameof(Note));
+            }
+        }
+
 
 
     }

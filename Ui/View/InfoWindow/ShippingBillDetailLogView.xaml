@@ -18,6 +18,14 @@
                 <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="物料" DataGridBoundColumn.Binding="{Binding ItemName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding CurrencyQuantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                <DataGridTextColumn DataGridColumn.Header="源单号" DataGridBoundColumn.Binding="{Binding SourceBillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                <DataGridTextColumn DataGridColumn.Header="源序号" DataGridBoundColumn.Binding="{Binding SourceEntryId}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                <DataGridTextColumn DataGridColumn.Header="源数量" DataGridBoundColumn.Binding="{Binding SourceEntryQty}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
+                <DataGridTextColumn DataGridColumn.Header="源单Id" DataGridBoundColumn.Binding="{Binding SourceInterId}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

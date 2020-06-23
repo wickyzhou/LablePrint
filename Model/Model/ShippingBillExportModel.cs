@@ -28,12 +28,13 @@ namespace Model
         public float GuoLuFei { get; set; }
         public float ChaiLvFei { get; set; }
         public float WeiXiuFei { get; set; }
-        public float GuanShuiFei { get; set; }
-        public float TiHuoFei { get; set; }
-        public float WeiXianPinFei { get; set; }
-        public float QingGuanFei { get; set; }
-        public float BaoXianFei { get; set; }
-        public float PaiSongFei { get; set; }
+
+        public float GuoNeiDuanFeiYong { get; set; }
+        public float GuoJiDuanFeiYong { get; set; }
+
+        public float YunShuDuanFeiYong { get; set; }
+
+
         public float OtherCosts { get; set; }
         public float Quatity { get; set; }
         public float ApportionedAmount { get; set; }
