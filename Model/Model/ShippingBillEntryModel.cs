@@ -41,10 +41,10 @@ namespace Model
             {
                 quantity = value;
                 this.RaisePropertyChanged(nameof(Quantity));
-                if(GoodsType==3)
-                {
-                    ApportionedAmount = (float)(Quantity * 0.81);
-                }
+                //if(GoodsType==3)
+                //{
+                //    ApportionedAmount = (float)(Quantity * 0.81);
+                //}
             }
         }
 
@@ -89,15 +89,15 @@ namespace Model
 
 
 
-        private float apportionedAmount;
+        private float amount;
 
-        public float ApportionedAmount
+        public float Amount
         {
-            get { return apportionedAmount; }
+            get { return amount; }
             set
             {
-                apportionedAmount = value;
-                this.RaisePropertyChanged(nameof(ApportionedAmount));
+                amount = value;
+                this.RaisePropertyChanged(nameof(Amount));
             }
         }
 

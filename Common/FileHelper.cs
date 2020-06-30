@@ -540,7 +540,7 @@ namespace Common
                 sheet.SetColumnWidth(10, 10 * 256); sheet.SetColumnWidth(11, 10 * 256); sheet.SetColumnWidth(12, 10 * 256); sheet.SetColumnWidth(13, 10 * 256); sheet.SetColumnWidth(14, 10 * 256);
                 sheet.SetColumnWidth(15, 10 * 256); sheet.SetColumnWidth(16, 10 * 256); sheet.SetColumnWidth(17, 10 * 256); sheet.SetColumnWidth(18, 10 * 256); sheet.SetColumnWidth(19, 10 * 256);
                 sheet.SetColumnWidth(20, 10 * 256); sheet.SetColumnWidth(21, 10 * 256); sheet.SetColumnWidth(22, 10 * 256); sheet.SetColumnWidth(23, 10 * 256); sheet.SetColumnWidth(24, 10 * 256);
-                sheet.SetColumnWidth(25, 10 * 256); sheet.SetColumnWidth(26, 10 * 256); sheet.SetColumnWidth(27, 10 * 256); sheet.SetColumnWidth(28, 10 * 256);
+                sheet.SetColumnWidth(25, 10 * 256); sheet.SetColumnWidth(26, 10 * 256); sheet.SetColumnWidth(27, 10 * 256); sheet.SetColumnWidth(28, 10 * 256); sheet.SetColumnWidth(29, 40 * 256);
                 IRow row1 = sheet.CreateRow(0);
                 row1.Height = (short)20.5 * 20;
 
@@ -552,8 +552,8 @@ namespace Common
 
                 
                 row1.CreateCell(15).SetCellValue("需求人"); row1.CreateCell(16).SetCellValue("其他费用");
-                row1.CreateCell(17).SetCellValue("备注"); row1.CreateCell(18).SetCellValue("商品类型"); row1.CreateCell(19).SetCellValue("明细序号"); row1.CreateCell(20).SetCellValue("案子名称"); row1.CreateCell(21).SetCellValue("品牌名称");
-                row1.CreateCell(22).SetCellValue("部门名称"); row1.CreateCell(23).SetCellValue("客户名称"); row1.CreateCell(24).SetCellValue("明细数量"); row1.CreateCell(25).SetCellValue("分摊金额");
+                row1.CreateCell(17).SetCellValue("主表备注"); row1.CreateCell(18).SetCellValue("商品类型"); row1.CreateCell(19).SetCellValue("明细序号"); row1.CreateCell(20).SetCellValue("案子名称"); row1.CreateCell(21).SetCellValue("品牌名称");
+                row1.CreateCell(22).SetCellValue("部门名称"); row1.CreateCell(23).SetCellValue("客户名称"); row1.CreateCell(24).SetCellValue("明细数量"); row1.CreateCell(25).SetCellValue("明细金额"); row1.CreateCell(26).SetCellValue("子表备注");
 
                 for (int i = 0; i < lists.Count; i++)
                 {
@@ -567,8 +567,9 @@ namespace Common
                     row.CreateCell(12).SetCellValue(lists[i].GuoNeiDuanFeiYong); row.CreateCell(13).SetCellValue(lists[i].GuoJiDuanFeiYong); row.CreateCell(14).SetCellValue(lists[i].YunShuDuanFeiYong);
 
                     row.CreateCell(15).SetCellValue(lists[i].Demander); row.CreateCell(16).SetCellValue(lists[i].OtherCosts);
-                    row.CreateCell(17).SetCellValue(lists[i].Note); row.CreateCell(18).SetCellValue(lists[i].GoodsTypeName); row.CreateCell(19).SetCellValue(lists[i].EntryId); row.CreateCell(20).SetCellValue(lists[i].CaseName); row.CreateCell(21).SetCellValue(lists[i].BrandName);
-                    row.CreateCell(22).SetCellValue(lists[i].DeptName); row.CreateCell(23).SetCellValue(lists[i].CustName); row.CreateCell(24).SetCellValue(lists[i].Quatity); row.CreateCell(25).SetCellValue(lists[i].ApportionedAmount);
+                    row.CreateCell(17).SetCellValue(lists[i].NoteA); row.CreateCell(18).SetCellValue(lists[i].GoodsTypeName); row.CreateCell(19).SetCellValue(lists[i].EntryId); row.CreateCell(20).SetCellValue(lists[i].CaseName); row.CreateCell(21).SetCellValue(lists[i].BrandName);
+                    row.CreateCell(22).SetCellValue(lists[i].DeptName); row.CreateCell(23).SetCellValue(lists[i].CustName); row.CreateCell(24).SetCellValue(lists[i].Quantity); row.CreateCell(25).SetCellValue(lists[i].Amount);
+                    row.CreateCell(26).SetCellValue(lists[i].NoteB);
                 }
 
                 FileStream fs = new FileStream(fName, FileMode.Create);//新建才不会报错

@@ -291,7 +291,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="5*"/>
-                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0 10 0 0">
@@ -304,54 +304,66 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                     <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="0 0 30 0" Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30"/>
                 </Grid>
 
-                <DataGrid Grid.Row="1" Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBills,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding SelectedShippingBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Margin="0 10 0 0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding ShippingBillSelectionChangedCommand}"   
+                <GroupBox Grid.Row="1"  Background="LightGray" Padding="2 5 2 2" Margin="0 5 0 0" >
+                    <GroupBox.Header>
+                        <Grid>
+                            <Button Content="新增托运单" Command= "{Binding ShippingBillCreateCommand}" Style="{StaticResource BtnSuccessStyle}"/>
+                        </Grid>
+                    </GroupBox.Header>
+                    <GroupBox.Content>
+                        <DataGrid Grid.Row="1" Style="{StaticResource DGStyle}" ItemsSource="{Binding ShippingBills,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding SelectedShippingBill,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Margin="0 5 0 0"
+                                  SelectedIndex="0">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding ShippingBillSelectionChangedCommand}"   
                                                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding ShippingBillModifyCommand}"
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding ShippingBillModifyCommand}"
 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
 
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="修改" Style="{StaticResource MenuItemModifyStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillModifyCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                            <MenuItem Header="删除" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="修改" Style="{StaticResource MenuItemModifyStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillModifyCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="删除" Style="{StaticResource MenuItemRemoveStyle}" HorizontalAlignment="Left" Command="{Binding PlacementTarget.DataContext.ShippingBillDeleteCommand,RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="总费用" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="托运单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="托运日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="物流类型" DataGridBoundColumn.Binding="{Binding LogisticsType,Converter={StaticResource LogisticsTypeConverter}}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="物流公司" DataGridBoundColumn.Binding="{Binding LogisticsCompanyName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="物流单号" DataGridBoundColumn.Binding="{Binding LogisticsBillNo}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="需求人" DataGridBoundColumn.Binding="{Binding Demander}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="其他费用" DataGridBoundColumn.Binding="{Binding OtherCosts}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="运输费" DataGridBoundColumn.Binding="{Binding YunShuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="油费" DataGridBoundColumn.Binding="{Binding YouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="过路费" DataGridBoundColumn.Binding="{Binding GuoLuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="差旅费" DataGridBoundColumn.Binding="{Binding ChaiLvFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="维修费" DataGridBoundColumn.Binding="{Binding WeiXiuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="国内端" DataGridBoundColumn.Binding="{Binding GuoNeiDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="国际端" DataGridBoundColumn.Binding="{Binding GuoJiDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="运输端" DataGridBoundColumn.Binding="{Binding YunShuDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="耗材费" DataGridBoundColumn.Binding="{Binding HaoCaiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="样油费" DataGridBoundColumn.Binding="{Binding YangYouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="设备费" DataGridBoundColumn.Binding="{Binding SheBeiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="成品退货费" DataGridBoundColumn.Binding="{Binding ChengPinTuiHuoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="退原材料费" DataGridBoundColumn.Binding="{Binding TuiYuanCaiLiaoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGrid.Columns>
+                                <!--<DataGridTextColumn DataGridColumn.Header="不摊费用" DataGridBoundColumn.Binding="{Binding UnApportionedAmount}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                                <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="分摊数量" DataGridBoundColumn.Binding="{Binding SystemApportionedQuantity}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="总金额" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="分摊金额" DataGridBoundColumn.Binding="{Binding SystemApportionedAmount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="托运单号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="托运日期" DataGridBoundColumn.Binding="{Binding BillDate,StringFormat=yyyy-MM-dd}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="物流类型" DataGridBoundColumn.Binding="{Binding LogisticsType,Converter={StaticResource LogisticsTypeConverter}}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="物流公司" DataGridBoundColumn.Binding="{Binding LogisticsCompanyName}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="物流单号" DataGridBoundColumn.Binding="{Binding LogisticsBillNo}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="需求人" DataGridBoundColumn.Binding="{Binding Demander}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="其他费用" DataGridBoundColumn.Binding="{Binding OtherCosts}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="运输费" DataGridBoundColumn.Binding="{Binding YunShuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="油费" DataGridBoundColumn.Binding="{Binding YouFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="过路费" DataGridBoundColumn.Binding="{Binding GuoLuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="差旅费" DataGridBoundColumn.Binding="{Binding ChaiLvFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="维修费" DataGridBoundColumn.Binding="{Binding WeiXiuFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="国内端" DataGridBoundColumn.Binding="{Binding GuoNeiDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="国际端" DataGridBoundColumn.Binding="{Binding GuoJiDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <!--<DataGridTextColumn DataGridColumn.Header="运输端" DataGridBoundColumn.Binding="{Binding YunShuDuanFeiYong}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                                <!--<DataGridTextColumn DataGridColumn.Header="耗材费" DataGridBoundColumn.Binding="{Binding HaoCaiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                       
+                                <!--<DataGridTextColumn DataGridColumn.Header="设备费" DataGridBoundColumn.Binding="{Binding SheBeiFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                                <!--<DataGridTextColumn DataGridColumn.Header="成品退货费" DataGridBoundColumn.Binding="{Binding ChengPinTuiHuoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="退原材料费" DataGridBoundColumn.Binding="{Binding TuiYuanCaiLiaoFei}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-
-                    </DataGrid.Columns>
-                </DataGrid>
-
+                    </GroupBox.Content>
+                    </GroupBox>
+                        
                 <GroupBox Grid.Row="2"  Background="LightGray" Padding="2 8 2 2" Margin="0 15 0 0" >
                     <GroupBox.Header>
                         <Grid>
@@ -363,7 +375,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <TextBlock Grid.Column="0" Text="托运明细 " Style="{StaticResource TextBlockStyle}" VerticalAlignment="Center" Margin="5 0" FontSize="12" />
                             <!--<Button Grid.Column="1" Style="{StaticResource BtnSuccessStyle}" Content="新增" Width="60" Height="25" Margin="10 0 15 0" Command="{ Binding ShippingBillEntryAddCommand}" />-->
                             <Button Grid.Column="1" Style="{StaticResource BtnInfoStyle}" Content="通知单合并明细" Width="100" Height="25" Command="{ Binding ShippingBillDetailLogShowCommand}" ToolTip="选中托运单数据行，查看通知单明细"  Margin="10 0 15 0" />
-                            <Button Grid.Column="2" Style="{StaticResource BtnSuccessStyle}" Content="新增" Width="80" Height="30" Command="{ Binding ShippingBillEntryAddCommand}" ToolTip="其他类型数据增加"  Margin="10 0 15 0" />
+                            <Button Grid.Column="2" Style="{StaticResource BtnSuccessStyle}" Content="新增明细" Width="60" Command="{ Binding ShippingBillEntryAddCommand}" ToolTip="其他类型数据增加"  Margin="10 0 15 0" />
                         </Grid>
                     </GroupBox.Header>
                     <GroupBox.Content>
@@ -392,7 +404,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 <DataGridTextColumn DataGridColumn.Header="来源" DataGridBoundColumn.Binding="{Binding IsSystem,Converter={c:ConsignmentBillEntryIsSystemConverter}}"  Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                                <DataGridTextColumn DataGridColumn.Header="金额" DataGridBoundColumn.Binding="{Binding ApportionedAmount,StringFormat=N2}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="金额" DataGridBoundColumn.Binding="{Binding Amount,StringFormat=N2}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="货物类型" DataGridBoundColumn.Binding="{Binding GoodsType,Converter={StaticResource GoodsTypeConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>

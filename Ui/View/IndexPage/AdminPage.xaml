@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       Title="AdminPage" >
 
-    <Grid Background="LightYellow" Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
+    <Grid  Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>

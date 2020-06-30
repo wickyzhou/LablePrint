@@ -57,9 +57,9 @@ namespace Ui.ViewModel
 
         public void Save(object obj)
         {
-            if (!this.IsValid || ShippingBillEntry.ApportionedAmount <= 0|| ShippingBillEntry.GoodsType<=0 || ShippingBillEntry.EntryId<=0)
+            if (!this.IsValid || ShippingBillEntry.Quantity <= 0|| ShippingBillEntry.GoodsType<=0 || ShippingBillEntry.EntryId<=0 || (ShippingBillEntry.Amount <= 0 && ShippingBillEntry.GoodsType != 1 && ShippingBillEntry.GoodsType != 3))
             {
-                MessageBox.Show("输入的格式有误或者有数据未填写");
+                MessageBox.Show("输入的格式有误 --> 数量必填 --> 除成品样油其余需填金额");
                 return;
             }
             _callBack?.Invoke(1, ShippingBillEntry);

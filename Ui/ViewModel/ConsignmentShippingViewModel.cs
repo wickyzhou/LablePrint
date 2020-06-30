@@ -21,13 +21,17 @@ namespace Ui.ViewModel
         private ShippingBillService _shippingService;
         private ConsignmentBillService _consignmentService;
         private CommonService _commonService;
-        private string _hostName = Dns.GetHostName();
+        private static readonly string _hostName = Dns.GetHostName();
         private static readonly UserModel user = MemoryCache.Default["user"] as UserModel;
+        private int userDataId;
         public ConsignmentShippingViewModel()
         {
+
             _shippingService = new ShippingBillService();
             _consignmentService = new ConsignmentBillService();
             _commonService = new CommonService();
+
+            userDataId = _commonService.GetUserDataId(user, 7);
 
             ConsignmentBills = new ObservableCollection<ConsignmentBillModel>();
             SelectedConsignmentBillLists = new ObservableCollection<ConsignmentBillModel>();
@@ -40,7 +44,7 @@ namespace Ui.ViewModel
                 ParamRestQuatity = 0,
                 ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddDays(-7).ToShortDateString()),
                 ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString()),
-                ParamBillType=1
+                ParamBillType = 1
             };
             //初始化表格数据
             HostConfig = GetHostConfig();
@@ -79,6 +83,7 @@ namespace Ui.ViewModel
             ShippingBillDeleteCommand = new DelegateCommand(DeleteShippingBill);
             ShippingBillExportCommand = new DelegateCommand(ExportShippingData);
             ShippingBillDetailLogShowCommand = new DelegateCommand(ShowShippingBillDetailLog);
+            ShippingBillCreateCommand = new DelegateCommand(CreateShippingBill);
             #endregion
 
             #region 托运单子表
@@ -89,6 +94,14 @@ namespace Ui.ViewModel
             #endregion
 
             #endregion
+        }
+
+        private void CreateShippingBill(object obj)
+        {
+            int id = _shippingService.AddShippingBill();
+            if (id > 0)
+                ShippingBills.Insert(0, _shippingService.GetShippingBillById(id));
+            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "CreateShippingBill",ActionDesc="新增托运单",UserId=user.ID,MainMenuId=7, PKId = id });
         }
 
         private void DeleteShippingBill(object obj)
@@ -102,33 +115,54 @@ namespace Ui.ViewModel
             if (result == MessageBoxResult.Yes)
             {
                 int id = SelectedShippingBill.Id;
-                string billNos = _consignmentService.GetConsignmentBillNosByShippingBillId(id);
-                if (!string.IsNullOrEmpty(billNos))
+
+                if (SelectedShippingBill.IsSystem == 0)
                 {
-                    string lockMessage = _consignmentService.GetConsignmentBillLock(billNos);
-                    if (string.IsNullOrEmpty(lockMessage))
+                    bool succ = _shippingService.DeleteNonSystemShipingBill(id);
+                    if (succ)
                     {
-                        string rollbackMessage = _shippingService.DeleteShipingBill(id);
-                        if (string.IsNullOrEmpty(rollbackMessage))
-                        {
-                            ShippingBills.Remove(SelectedShippingBill);
-                            ShippingBillEntries.Clear();
-                            QuerySignmentBill(null);
-                        }
-                        else
-                        {
-                            MessageBox.Show(rollbackMessage);
-                        }
+                        ShippingBills.Remove(SelectedShippingBill);
+                        ShippingBillEntries.Clear();
+                        QuerySignmentBill(null);
                     }
                     else
                     {
-                        MessageBox.Show(lockMessage);
+                        MessageBox.Show("删除出现异常");
+                        return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("合成此托运单的明细单据丢失，请联系管理员");
+                    string billNos = _consignmentService.GetConsignmentBillNosByShippingBillId(id);
+                    if (!string.IsNullOrEmpty(billNos))
+                    {
+                        string lockMessage = _consignmentService.GetConsignmentBillLock(billNos);
+                        if (string.IsNullOrEmpty(lockMessage))
+                        {
+                            string rollbackMessage = _shippingService.DeleteShipingBill(id);
+                            if (string.IsNullOrEmpty(rollbackMessage))
+                            {
+                                ShippingBills.Remove(SelectedShippingBill);
+                                ShippingBillEntries.Clear();
+                                QuerySignmentBill(null);
+                            }
+                            else
+                            {
+                                MessageBox.Show(rollbackMessage);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(lockMessage);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("合成此托运单的明细单据丢失，请联系管理员");
+                    }
                 }
+
+                _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "DeleteShippingBill", ActionDesc = "删除托运单", UserId = user.ID, MainMenuId = 7,PKId= id });
             }
         }
 
@@ -139,6 +173,7 @@ namespace Ui.ViewModel
                 SelectedConsignmentBillEntry = (ConsignmentBillEntryModel)obj;
             }
         }
+
         private void DeleteConsignmentBillEntry(object obj)
         {
 
@@ -199,7 +234,7 @@ namespace Ui.ViewModel
                     if (type == 1)
                     {
                         // 修改字表界面和后台
-                        int id = _consignmentService.AddConsignmentBillEntry(entry,user.ID);
+                        int id = _consignmentService.AddConsignmentBillEntry(entry, user.ID);
                         entry.ETotalQuantity = entry.ECurrencyQuantity;
                         entry.EUndoQuantity = entry.ECurrencyQuantity;
                         entry.Id = id;
@@ -230,7 +265,6 @@ namespace Ui.ViewModel
             });
         }
 
-
         private void ShippingBillEntrySelectionChanged(object obj)
         {
             if (obj != null)
@@ -241,71 +275,87 @@ namespace Ui.ViewModel
 
         private void UpdateShippingBillEntry(object obj)
         {
+            if (SelectedShippingBill == null)
+                return;
             if (SelectedShippingBillEntry != null)
             {
-                    ShippingBillEntryModifyView edit = new ShippingBillEntryModifyView();
-                    var quantityBeforeModify = SelectedShippingBillEntry.Quantity;
-                    var amountBeforeModify = SelectedShippingBillEntry.ApportionedAmount;
-                    var cloneData = TransExpV2<ShippingBillEntryModel, ShippingBillEntryModel>.Trans(SelectedShippingBillEntry);
-                    (edit.DataContext as ShippingBillEntryModifyViewModel).WithParam(cloneData, (type, entry) =>
+                ShippingBillEntryModifyView edit = new ShippingBillEntryModifyView();
+                var quantityBeforeModify = SelectedShippingBillEntry.Quantity;
+                var amountBeforeModify = SelectedShippingBillEntry.Amount;
+                var cloneData = TransExpV2<ShippingBillEntryModel, ShippingBillEntryModel>.Trans(SelectedShippingBillEntry);
+                (edit.DataContext as ShippingBillEntryModifyViewModel).WithParam(cloneData, (type, entry) =>
+                {
+                    edit.Close();
+                    if (type == 1)
                     {
-                        edit.Close();
-                        if (type == 1)
-                        {   
-                            //系统单据只能修改Id
-                            if (entry.IsSystem)
-                            {
-                                _shippingService.UpdateShippingBillEntry2(entry);
-                                SelectedShippingBillEntry.GoodsType = entry.GoodsType;
-                                SelectedShippingBillEntry.Note = entry.Note;
-                            }
-                            else
-                            {
-                                float qtyDiff = entry.Quantity - quantityBeforeModify;
-                                float amountDiff = entry.ApportionedAmount - amountBeforeModify;
-                                // 更新后台
-                                _shippingService.UpdateShippingBillEntry3(entry, qtyDiff, amountDiff);
-
-                                // 前端显示
-                                SelectedShippingBill.TotalQuantity += qtyDiff;
-                                SelectedShippingBill.TotalAmount += amountDiff;
-                                SelectedShippingBill.Note = entry.Note;
-                                switch (entry.GoodsType)
-                                {
-                                    case 2: SelectedShippingBill.HaoCaiFei += amountDiff; break;
-                                    case 3: SelectedShippingBill.YangYouFei += amountDiff; break;
-                                    case 4: SelectedShippingBill.SheBeiFei += amountDiff; break;
-                                    case 5: SelectedShippingBill.ChengPinTuiHuoFei += amountDiff; break;
-                                    case 6: SelectedShippingBill.TuiYuanCaiLiaoFei += amountDiff; break;
-                                }
-                                GetAllShippingBillEntriesById(entry.MainId);
-                            }
+                        //系统单据只能修改类型Id和备注
+                        if (entry.IsSystem)
+                        {
+                            _shippingService.UpdateShippingBillEntry2(entry);
+                            SelectedShippingBillEntry.GoodsType = entry.GoodsType;
+                            SelectedShippingBillEntry.Note = entry.Note;
                         }
-                    });
-                    edit.ShowDialog();
+                        else
+                        {
+
+                            // 前端显示
+                            float qtyDiff = entry.Quantity - quantityBeforeModify;
+                            float amountDiff = entry.Amount - amountBeforeModify;
+                            SelectedShippingBill.TotalQuantity += qtyDiff;
+                            SelectedShippingBill.TotalAmount += amountDiff;
+                            if (entry.GoodsType == 1 || entry.GoodsType == 3)
+                                SelectedShippingBill.SystemApportionedQuantity += qtyDiff;
+                            else
+                                SelectedShippingBill.UnApportionedAmount += amountDiff;
+
+                            //分摊明细金额，更新数据
+                            _shippingService.UpdateShipingBillEntry(entry);
+                            _shippingService.UpdateShipingBillEntry(SelectedShippingBill);
+                            // 更新主表
+                            _shippingService.UpdateShipingBill2(SelectedShippingBill);
+
+                            // 重新加载明细
+                            GetAllShippingBillEntriesById(entry.MainId);
+                        }
+               
+                    }
+                });
+                edit.ShowDialog();
             }
         }
 
         private void DeleteShippingBillEntry(object obj)
         {
+            if (SelectedShippingBill == null)
+                return;
+
             if (SelectedShippingBillEntry != null)
             {
                 if (!SelectedShippingBillEntry.IsSystem)
                 {
-                    SelectedShippingBill.TotalQuantity -= SelectedShippingBillEntry.Quantity;
-                    SelectedShippingBill.TotalAmount -= SelectedShippingBillEntry.ApportionedAmount;
-                    switch (SelectedShippingBillEntry.GoodsType)
-                    {
-                        case 2: SelectedShippingBill.HaoCaiFei -= SelectedShippingBillEntry.ApportionedAmount; break;
-                        case 3: SelectedShippingBill.YangYouFei -= SelectedShippingBillEntry.ApportionedAmount; break;
-                        case 4: SelectedShippingBill.SheBeiFei -= SelectedShippingBillEntry.ApportionedAmount; break;
-                        case 5: SelectedShippingBill.ChengPinTuiHuoFei -= SelectedShippingBillEntry.ApportionedAmount; break;
-                        case 6: SelectedShippingBill.TuiYuanCaiLiaoFei -= SelectedShippingBillEntry.ApportionedAmount; break;
-                    }
+                    // 删除子表行
                     _shippingService.DeleteShippingBillEntry(SelectedShippingBillEntry);
+
+                    SelectedShippingBill.TotalQuantity -= SelectedShippingBillEntry.Quantity;
+                    SelectedShippingBill.TotalAmount -= SelectedShippingBillEntry.Amount;
+
+                    if (SelectedShippingBillEntry.GoodsType == 1 || SelectedShippingBillEntry.GoodsType == 3)
+                    {
+                        SelectedShippingBill.SystemApportionedQuantity -= SelectedShippingBillEntry.Quantity;
+                        _shippingService.UpdateShipingBillEntry(SelectedShippingBill);
+                    }
+                    else
+                    {
+                        SelectedShippingBill.UnApportionedAmount -= SelectedShippingBillEntry.Amount;
+
+                    }
+
+
+                    // 更新主表
+                    _shippingService.UpdateShipingBill2(SelectedShippingBill);
+
                     // 重新加载明细 
-                    //GetAllShippingBillEntriesById(SelectedShippingBillEntry.MainId);
-                    ShippingBillEntries.Remove(SelectedShippingBillEntry);
+                    GetAllShippingBillEntriesById(SelectedShippingBillEntry.MainId);
                 }
                 else
                 {
@@ -318,48 +368,57 @@ namespace Ui.ViewModel
 
         private void AddShippingBillEntry(object obj)
         {
+            if (SelectedShippingBill == null)
+            {
+                MessageBox.Show("请先选择主表行记录，再新增明细");
+                return;
+            }
 
-                ShippingBillEntryAddView view = new ShippingBillEntryAddView();
-                var copyEntry = ShippingBillEntries.LastOrDefault();
-
-                var entry = new ShippingBillEntryModel
+            ShippingBillEntryModel entry;
+            ShippingBillEntryAddView view = new ShippingBillEntryAddView();
+            var copyEntry = ShippingBillEntries.LastOrDefault();
+            if (copyEntry == null)
+                entry = new ShippingBillEntryModel { MainId = SelectedShippingBill.Id, EntryId = 1, IsSystem = false, Amount = 0 };
+            else
+                entry = new ShippingBillEntryModel
                 {
                     MainId = copyEntry.MainId,
                     EntryId = copyEntry.EntryId + 1,
-                    DeptId = copyEntry.DeptId,
-                    DeptName = copyEntry.DeptName,
-                    CaseId = 0,
-                    IsSystem=false,
-                    Note = copyEntry.Note
+                    IsSystem = false
                 };
-                (view.DataContext as ShippingBillEntryAddViewModel).WithParam(entry, (type, shippingBillEntry) =>
+            (view.DataContext as ShippingBillEntryAddViewModel).WithParam(entry, (type, shippingBillEntry) =>
+            {
+                view.Close();
+
+                if (type == 1)
                 {
-                    view.Close();
+                    SelectedShippingBill.TotalQuantity += shippingBillEntry.Quantity;
+                    SelectedShippingBill.TotalAmount += shippingBillEntry.Amount;
 
-                    if (type == 1)
+
+                    // 新增条目，修改后台分摊金额
+                    if (shippingBillEntry.GoodsType == 1 || shippingBillEntry.GoodsType == 3)
                     {
-                        SelectedShippingBill.TotalQuantity += shippingBillEntry.Quantity;
-                        SelectedShippingBill.TotalAmount += shippingBillEntry.ApportionedAmount;
-                        switch (shippingBillEntry.GoodsType)
-                        {
-                            case 2: SelectedShippingBill.HaoCaiFei+= shippingBillEntry.ApportionedAmount; break;
-                            case 3: SelectedShippingBill.YangYouFei += shippingBillEntry.ApportionedAmount; break;
-                            case 4: SelectedShippingBill.SheBeiFei += shippingBillEntry.ApportionedAmount; break;
-                            case 5: SelectedShippingBill.ChengPinTuiHuoFei += shippingBillEntry.ApportionedAmount; break;
-                            case 6: SelectedShippingBill.TuiYuanCaiLiaoFei += shippingBillEntry.ApportionedAmount; break;
-                        }
-
-                        // 新增条目，修改后台分摊金额
-                        _shippingService.AddShipingBillEntry(shippingBillEntry);
-
-                        // 重新加载明细 
-                        GetAllShippingBillEntriesById(shippingBillEntry.MainId);
-                        
-                        //ShippingBillEntries.Add(shippingBillEntry);
+                        SelectedShippingBill.SystemApportionedAmount += shippingBillEntry.Amount;
+                        SelectedShippingBill.SystemApportionedQuantity += shippingBillEntry.Quantity;
+                        _shippingService.AddShipingBillEntry(shippingBillEntry); //添加明细
+                        _shippingService.UpdateShipingBillEntry(SelectedShippingBill); //分摊金额
                     }
-                });
-                view.ShowDialog();
-            
+                    else
+                    {
+                        SelectedShippingBill.UnApportionedAmount += shippingBillEntry.Amount;
+                        _shippingService.AddShipingBillEntry2(shippingBillEntry);
+                    }
+
+                    // 更新主表
+                    _shippingService.UpdateShipingBill2(SelectedShippingBill);
+
+                    // 重新加载明细 
+                    GetAllShippingBillEntriesById(shippingBillEntry.MainId);
+                }
+            });
+            view.ShowDialog();
+
         }
 
         private void SelectedAllConsignmentBill(object obj)
@@ -379,7 +438,7 @@ namespace Ui.ViewModel
                 {
                     foreach (var item in ConsignmentBills)
                     {
-                        if (SelectedConsignmentBillLists.Where(x => x.InterId == item.InterId ).Count() == 0)
+                        if (SelectedConsignmentBillLists.Where(x => x.InterId == item.InterId).Count() == 0)
                         {
                             item.SelectedStatus = item.TotalQuantity == item.CurrencyQuantity ? 2 : 1;
                             SelectedConsignmentBillLists.Add(item);
@@ -387,7 +446,7 @@ namespace Ui.ViewModel
                         }
                     }
                     _consignmentService.AddUserCurrencyOperation(user.ID, sb.ToString().Substring(1));
-                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
+                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m => m.CurrencyQuantity);
                     QuerySignmentBill(null);
                 }
                 else
@@ -415,7 +474,7 @@ namespace Ui.ViewModel
                         sb.Append(",'" + item.BillNo + "'");
                     }
                     _consignmentService.RemoveUserCurrencyOperation(sb.ToString().Substring(1));
-                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
+                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m => m.CurrencyQuantity);
                     QuerySignmentBill(null);
                 }
             }
@@ -456,7 +515,6 @@ namespace Ui.ViewModel
                 MessageBox.Show("导出成功");
             }
         }
-
 
         private void ShowShippingBillDetailLog(object obj)
         {
@@ -518,10 +576,6 @@ namespace Ui.ViewModel
                 this.RaisePropertyChanged(nameof(ConsignmentBillsCount));
             }
         }
-
-
-
-
 
         private ConsignmentBillModel selectedConsignmentBill;
 
@@ -669,10 +723,8 @@ namespace Ui.ViewModel
         public DelegateCommand ConsignmentBillMergeCommand { get; set; }
         public DelegateCommand ConsignmentBillSelectedListsAddCommand { get; set; }
         public DelegateCommand ConsignmentBillRemoveCommand { get; set; }
-
         public DelegateCommand ConsignmentBillSelectionChangedCommand { get; set; }
         public DelegateCommand ConsignmentBillEntryCheckBoxCommand { get; set; }
-
         public DelegateCommand ShippingBillModifyCommand { get; set; }
         public DelegateCommand ShippingBillDeleteCommand { get; set; }
         public DelegateCommand ShippingBillSelectionChangedCommand { get; set; }
@@ -689,7 +741,7 @@ namespace Ui.ViewModel
         public DelegateCommand ConsignmentBillEntryCopyCommand { get; set; }
         public DelegateCommand ConsignmentBillEntryDeleteCommand { get; set; }
         public DelegateCommand ConsignmentBillEntrySelectionChangedCommand { get; set; }
-
+        public DelegateCommand ShippingBillCreateCommand { get; set; }
 
 
         #endregion
@@ -705,7 +757,7 @@ namespace Ui.ViewModel
         public void GetShippingBills()
         {
             ShippingBills.Clear();
-            _shippingService.GetAllShippingBills().ToList().ForEach(x => ShippingBills.Add(x));
+            _shippingService.GetAllShippingBills(userDataId).ToList().ForEach(x => ShippingBills.Add(x));
         }
 
         private void GetAllShippingBillEntriesById(int id)
@@ -768,7 +820,7 @@ namespace Ui.ViewModel
 
             SelectedConsignmentBillLists.Clear();
             _consignmentService.GetUserSelectedConsignmentBill(user.ID).ToList().ForEach(x => SelectedConsignmentBillLists.Add(x));
-            SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
+            SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m => m.CurrencyQuantity);
         }
 
         private void QuerySignmentBill(object obj)
@@ -778,9 +830,9 @@ namespace Ui.ViewModel
 
             List<string> filters = new List<string>();
 
-           if( Filter.ParamBillBeginSeq>0 && Filter.ParamBillEndSeq >0)
+            if (Filter.ParamBillBeginSeq > 0 && Filter.ParamBillEndSeq > 0)
                 filters.Add($" and BillSeq between {Filter.ParamBillBeginSeq}  and  {Filter.ParamBillEndSeq} ");
-           else if(Filter.ParamBillBeginSeq > 0)
+            else if (Filter.ParamBillBeginSeq > 0)
                 filters.Add($" and a.BillNo like '%{Filter.ParamBillBeginSeq}%' ");
 
 
@@ -838,7 +890,7 @@ namespace Ui.ViewModel
                 ConsignmentBills.Add(x);
             });
             ConsignmentBillsCount = ConsignmentBills.Count();
-            ConsignmentBillsSumQuantity = ConsignmentBills.Sum(m=>m.CurrencyQuantity);
+            ConsignmentBillsSumQuantity = ConsignmentBills.Sum(m => m.CurrencyQuantity);
             SelectedConsignmentBillEntry = null;
             SelectedConsignmentBill = null;
             ConsignmentBillEntries.Clear();
@@ -850,7 +902,7 @@ namespace Ui.ViewModel
             {
                 string fInterIds = string.Join(",", SelectedConsignmentBillLists.Select(m => m.InterId));
                 string fbillNos = "'" + string.Join("','", SelectedConsignmentBillLists.Select(m => m.BillNo)) + "'";
-                string rollbackMsg=_consignmentService.MergeConsignmentBill(user.ID, fInterIds, fbillNos);
+                string rollbackMsg = _consignmentService.MergeConsignmentBill(user.ID, fInterIds, fbillNos);
                 if (string.IsNullOrEmpty(rollbackMsg))
                 {
                     SelectedConsignmentBillLists.Clear();
@@ -882,7 +934,7 @@ namespace Ui.ViewModel
 
                     // 添加已选数据，求和
                     SelectedConsignmentBillLists.Insert(0, SelectedConsignmentBill);
-                    SelectedConsignmentSum= SelectedConsignmentBillLists.Where(m=> m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
+                    SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m => m.CurrencyQuantity);
                     SelectedConsignmentBillEntry = null;
 
                     // 同步数据到数据库
@@ -893,8 +945,7 @@ namespace Ui.ViewModel
                     MessageBox.Show($"【{ownerName}】，请选择其他数据");
                 }
 
-
-
+           
             }
 
         }
@@ -905,7 +956,7 @@ namespace Ui.ViewModel
             {
                 //移除数据求和
                 SelectedConsignmentBillLists.Remove(SelectedConsignmentBillLists.FirstOrDefault(x => x.InterId == SelectedConsignmentBill.InterId));
-                SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m=>m.CurrencyQuantity);
+                SelectedConsignmentSum = SelectedConsignmentBillLists.Where(m => m.SelectedStatus > 0).Sum(m => m.CurrencyQuantity);
 
                 // 修改选择状态
                 SelectedConsignmentBill.SelectedStatus = 0;
@@ -973,7 +1024,9 @@ namespace Ui.ViewModel
                     // 重新加载主表
                     _shippingService.UpdateShipingBill(shippingBill);
 
-           
+                    // 重新分摊
+                    _shippingService.UpdateShipingBillEntry(shippingBill);
+
                     SelectedShippingBill.BillDate = shippingBill.BillDate;
                     SelectedShippingBill.ChaiLvFei = shippingBill.ChaiLvFei;
                     SelectedShippingBill.Demander = shippingBill.Demander;
@@ -990,13 +1043,16 @@ namespace Ui.ViewModel
                     SelectedShippingBill.GuoNeiDuanFeiYong = shippingBill.GuoNeiDuanFeiYong;
                     SelectedShippingBill.GuoJiDuanFeiYong = shippingBill.GuoJiDuanFeiYong;
                     SelectedShippingBill.YunShuDuanFeiYong = shippingBill.YunShuDuanFeiYong;
+                    SelectedShippingBill.TotalAmount = shippingBill.TotalAmount;
+                    SelectedShippingBill.TotalQuantity = shippingBill.TotalQuantity;
+                    SelectedShippingBill.SystemApportionedAmount = shippingBill.SystemApportionedAmount;
+                    SelectedShippingBill.SystemApportionedQuantity = shippingBill.SystemApportionedQuantity;
 
                     // 重新加载明细
-                    if (totalAmountBeforeModify != shippingBill.TotalAmount)
-                    {
-                        _shippingService.UpdateShipingBillEntry(shippingBill);
-                        GetAllShippingBillEntriesById(shippingBill.Id);
-                    }
+
+                    _shippingService.UpdateShipingBillEntry(shippingBill);
+                    GetAllShippingBillEntriesById(shippingBill.Id);
+                    _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ModifyShippingBill", ActionDesc = "修改托运单", UserId = user.ID, MainMenuId = 7, PKId = shippingBill.Id });
                 }
             });
             edit.ShowDialog();
@@ -1023,7 +1079,7 @@ namespace Ui.ViewModel
                 $"\r\n 3.【单据号未被选定】\r\n 4.【单据号从未合并托运单】", "【删除警告！！！】", MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Yes)
             {
-                _consignmentService.SyncConsignmentBill(Filter.ParamBeginDate,Filter.ParamEndDate);
+                _consignmentService.SyncConsignmentBill(Filter.ParamBeginDate, Filter.ParamEndDate);
                 QuerySignmentBill(null);
                 MessageBox.Show("已获取最新数据");
             }

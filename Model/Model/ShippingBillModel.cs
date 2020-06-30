@@ -71,8 +71,8 @@ namespace Model
 			{
 				yunShuFei = value;
 				this.RaisePropertyChanged(nameof(YunShuFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
@@ -85,8 +85,8 @@ namespace Model
 			{
 				youFei = value;
 				this.RaisePropertyChanged(nameof(YouFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
@@ -99,8 +99,8 @@ namespace Model
 			{
 				guoLuFei = value;
 				this.RaisePropertyChanged(nameof(GuoLuFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
@@ -113,8 +113,8 @@ namespace Model
 			{
 				chaiLvFei = value;
 				this.RaisePropertyChanged(nameof(ChaiLvFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
@@ -127,14 +127,10 @@ namespace Model
 			{
 				weiXiuFei = value;
 				this.RaisePropertyChanged(nameof(WeiXiuFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
-
-
-
-
 
 
 
@@ -146,110 +142,63 @@ namespace Model
 			{
 				otherCosts = value;
 				this.RaisePropertyChanged(nameof(OtherCosts));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
+
+				SystemApportionedAmount=YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
+				//this.RaisePropertyChanged(nameof(TotalAmount));
+				//this.RaisePropertyChanged(nameof(SystemApportionedAmount));
 			}
 		}
 
-		private float haoCaiFei;
+		private float guoNeiDuanFeiYong;
 
-		public float HaoCaiFei
+		public float GuoNeiDuanFeiYong
 		{
-			get { return haoCaiFei; }
+			get { return guoNeiDuanFeiYong; }
 			set
 			{
-				haoCaiFei = value;
-				this.RaisePropertyChanged(nameof(HaoCaiFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				guoNeiDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(GuoNeiDuanFeiYong));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
-		private float yangYouFei;
 
-		public float YangYouFei
+		private float guoJiDuanFeiYong;
+
+		public float GuoJiDuanFeiYong
 		{
-			get { return yangYouFei; }
+			get { return guoJiDuanFeiYong; }
 			set
 			{
-				yangYouFei = value;
-				this.RaisePropertyChanged(nameof(YangYouFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				guoJiDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(GuoJiDuanFeiYong));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
-		private float sheBeiFei;
+		private int yunShuDuanFeiYong;
 
-		public float SheBeiFei
+		public int YunShuDuanFeiYong
 		{
-			get { return sheBeiFei; }
+			get { return yunShuDuanFeiYong; }
 			set
 			{
-				sheBeiFei = value;
-				this.RaisePropertyChanged(nameof(SheBeiFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				yunShuDuanFeiYong = value;
+				this.RaisePropertyChanged(nameof(YunShuDuanFeiYong));
+				SystemApportionedAmount = YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong + OtherCosts;
+				TotalAmount = UnApportionedAmount + SystemApportionedAmount;
 			}
 		}
 
-		private float chengPinTuiHuoFei;
-
-		public float ChengPinTuiHuoFei
-		{
-			get { return chengPinTuiHuoFei; }
-			set
-			{
-				chengPinTuiHuoFei = value;
-				this.RaisePropertyChanged(nameof(ChengPinTuiHuoFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-			}
-		}
-
-
-		private float tuiYuanCaiLiaoFei;
-
-		public float TuiYuanCaiLiaoFei 
-		{
-			get { return tuiYuanCaiLiaoFei; }
-			set
-			{
-				tuiYuanCaiLiaoFei = value;
-				this.RaisePropertyChanged(nameof(TuiYuanCaiLiaoFei));
-				this.RaisePropertyChanged(nameof(TotalAmount));
-			}
-		}
-
-
-		private string demander;
-
-		public string Demander
-		{
-			get { return demander; }
-			set
-			{
-				demander = value;
-				this.RaisePropertyChanged(nameof(Demander));
-			}
-		}
-
-
-		private string note;
-
-		public string Note
-		{
-			get { return note; }
-			set
-			{
-				note = value;
-				this.RaisePropertyChanged(nameof(Note));
-			}
-		}
-
-		//
 
 		private float totalAmount;
 
 		public float TotalAmount
 		{
-			get { return SystemApportionedAmount + HaoCaiFei + YangYouFei + SheBeiFei + ChengPinTuiHuoFei + TuiYuanCaiLiaoFei;  }
+			get { return totalAmount; } //return SystemApportionedAmount + HaoCaiFei + YangYouFei + SheBeiFei + ChengPinTuiHuoFei + TuiYuanCaiLiaoFei;  
 			set
 			{
 				totalAmount = value;
@@ -262,12 +211,13 @@ namespace Model
 
 		public float SystemApportionedAmount
 		{
-			get { return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong  + OtherCosts; }
+			get { return systemApportionedAmount; } //return YunShuFei + YouFei + GuoLuFei + ChaiLvFei + WeiXiuFei + GuoNeiDuanFeiYong + GuoJiDuanFeiYong + YunShuDuanFeiYong  + OtherCosts; 
 			set
 			{
 				systemApportionedAmount = value;
 				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				
+				//this.RaisePropertyChanged(nameof(TotalAmount));
 			}
 		}
 
@@ -308,46 +258,66 @@ namespace Model
 			}
 		}
 
-		private float guoNeiDuanFeiYong;
+	
+		private int isSystem;
 
-		public float GuoNeiDuanFeiYong
+		public int IsSystem
 		{
-			get { return guoNeiDuanFeiYong; }
+			get { return isSystem; }
 			set
 			{
-				guoNeiDuanFeiYong = value;
-				this.RaisePropertyChanged(nameof(GuoNeiDuanFeiYong));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				isSystem = value;
+				this.RaisePropertyChanged(nameof(IsSystem));
+			}
+		}
+
+		private float systemApportionedQuantity;
+
+		public float SystemApportionedQuantity
+		{
+			get { return systemApportionedQuantity; }
+			set
+			{
+				systemApportionedQuantity = value;
+				this.RaisePropertyChanged(nameof(SystemApportionedQuantity));
+			}
+		}
+
+		private float unApportionedAmount;
+
+		public float UnApportionedAmount
+		{
+			get { return unApportionedAmount; }
+			set
+			{
+				unApportionedAmount = value;
+				this.RaisePropertyChanged(nameof(UnApportionedAmount));
 			}
 		}
 
 
-		private float guoJiDuanFeiYong;
+		private string demander;
 
-		public float GuoJiDuanFeiYong
+		public string Demander
 		{
-			get { return guoJiDuanFeiYong; }
+			get { return demander; }
 			set
 			{
-				guoJiDuanFeiYong = value;
-				this.RaisePropertyChanged(nameof(GuoJiDuanFeiYong));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				demander = value;
+				this.RaisePropertyChanged(nameof(Demander));
 			}
 		}
 
-		private int yunShuDuanFeiYong;
 
-		public int YunShuDuanFeiYong
+		private string note;
+
+		public string Note
 		{
-			get { return yunShuDuanFeiYong; }
+			get { return note; }
 			set
 			{
-				yunShuDuanFeiYong = value;
-				this.RaisePropertyChanged(nameof(YunShuDuanFeiYong));
-				this.RaisePropertyChanged(nameof(SystemApportionedAmount));
-				this.RaisePropertyChanged(nameof(TotalAmount));
+				note = value;
+				this.RaisePropertyChanged(nameof(Note));
 			}
 		}
 

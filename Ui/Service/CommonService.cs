@@ -8,6 +8,9 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using Ui.MVVM.Common;
 
 namespace Ui.Service
@@ -28,7 +31,7 @@ namespace Ui.Service
             string sql = @"select * from SJEnumTable where GroupSeq=@GroupSeq";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<EnumModel>(sql,new { GroupSeq= groupSeq}).ToList();
+                return connection.Query<EnumModel>(sql, new { GroupSeq = groupSeq }).ToList();
             }
         }
 
@@ -97,8 +100,8 @@ namespace Ui.Service
             string sql = @"select * from SJBarTenderPrintConfig where TemplateTypeId=@TemplateTypeId and HostName=@HostName and UserId=@UserId ";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<BarTenderPrintConfigModelXX, BarTenderTemplateModel, BarTenderPrintConfigModelXX>(sql, (c,t) => { c.ExpressTemplateSelectedItem = t; return c; }
-              ,new { UserId = userId, TemplateTypeId = typeId, HostName = hostName}, splitOn: "TemplatePerPage"
+                return connection.Query<BarTenderPrintConfigModelXX, BarTenderTemplateModel, BarTenderPrintConfigModelXX>(sql, (c, t) => { c.ExpressTemplateSelectedItem = t; return c; }
+              , new { UserId = userId, TemplateTypeId = typeId, HostName = hostName }, splitOn: "TemplatePerPage"
               ).FirstOrDefault();
             }
         }
@@ -107,7 +110,7 @@ namespace Ui.Service
         {
             DynamicParameters dp = new DynamicParameters();
             dp.Add("@UserId", model.UserId, DbType.Int32, ParameterDirection.Input);
-            dp.Add("@HostName", model.HostName , DbType.String, ParameterDirection.Input);
+            dp.Add("@HostName", model.HostName, DbType.String, ParameterDirection.Input);
             dp.Add("@TemplateTypeId", model.TemplateTypeId, DbType.Int32, ParameterDirection.Input);
             dp.Add("@TemplateTypeName", model.TemplateTypeName, DbType.String, ParameterDirection.Input);
             dp.Add("@PrinterName", model.PrinterName, DbType.String, ParameterDirection.Input);
@@ -208,15 +211,15 @@ namespace Ui.Service
             if (Directory.Exists(folderPath))
             {
                 foreach (var item in Directory.GetFiles(folderPath, "*.btw"))
-                {   
+                {
                     var s = Path.GetFileName(item).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
                     if (s.Count() == 2 && int.TryParse(s[0], out int p))
                     {
 
-                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = p, TemplatePerPage = int.Parse(s[1].Substring(0,1)), TemplateFileName = Path.GetFileName(s[1]), TemplateFullName = item, TemplateFolderPath = folderPath });
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = p, TemplatePerPage = int.Parse(s[1].Substring(0, 1)), TemplateFileName = Path.GetFileName(s[1]), TemplateFullName = item, TemplateFolderPath = folderPath });
                     }
                     else
-                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = 1,TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = 1, TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
                 }
             }
             return lists;
@@ -225,11 +228,42 @@ namespace Ui.Service
 
         public int GetCurrentDateNextSerialNumber(DateTime settleDate, string colName)
         {
-            string sql = @" select "+ colName+ " from SJCurrentDateNextSerialNumber where SettleDate=@SettleDate; update SJCurrentDateNextSerialNumber set  "+colName+"  += 1 where  SettleDate=@SettleDate;";
+            string sql = @" select " + colName + " from SJCurrentDateNextSerialNumber where SettleDate=@SettleDate; update SJCurrentDateNextSerialNumber set  " + colName + "  += 1 where  SettleDate=@SettleDate;";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
                 return Convert.ToInt32(connection.ExecuteScalar(sql, new { SettleDate = settleDate }));
             }
         }
+
+        public int GetUserDataId(UserModel user, int menuId)
+        {
+            if (user.SuperAdmin)
+                return -1;
+            return GetPageAdmin(user.ID, menuId) ? -1 : user.ID;
+        }
+
+        public bool GetPageAdmin(int userId, int menuId)
+        {
+            string sql = @" select MainMenuAdmin from SJPageOwner where UserId=@UserId and MainMenuId=@MainMenuId";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return Convert.ToBoolean(connection.ExecuteScalar(sql, new { UserId = userId, MainMenuId = menuId }));
+            }
+        }
+
+
+        public void WriteActionLog(ActionOperationLogModel model)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                //Thread.Sleep(20000);
+                string sql = @" insert into SJActionOperationLog(MainMenuId,UserId,ActionName,ActionDesc,PKId) values(@MainMenuId,@UserId,@ActionName,@ActionDesc,@PKId) ;";
+                using (var connection = SqlDb.UpdateConnection)
+                {
+                    connection.Execute(sql, model);
+                }
+            });
+        }
     }
+
 }

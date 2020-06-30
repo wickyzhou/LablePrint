@@ -68,11 +68,13 @@ namespace Ui.ViewModel
 
         public void Save(object obj)
         {
-            if (!this.IsValid||ShippingBillEntry.ApportionedAmount<=0||shippingBillEntry.GoodsType==1)
+            if (!this.IsValid||ShippingBillEntry.Quantity<=0 || (ShippingBillEntry.Amount<=0 && ShippingBillEntry.GoodsType != 1 && ShippingBillEntry.GoodsType != 3 ))
             {
-                MessageBox.Show("输入的格式有误 --> 有数据未填写 --> 不能添加成品");
+                MessageBox.Show("输入的格式有误 --> 数量必填 --> 除成品样油其余需填金额");
                 return;
             }
+            ShippingBillEntry.CaseName = !string.IsNullOrEmpty(ShippingBillEntry.CaseName) ? ShippingBillEntry.CaseName : new ShippingBillService().GetCaseNameByGoodsType(shippingBillEntry.GoodsType);
+
             _callBack?.Invoke(1, ShippingBillEntry);
         }
 

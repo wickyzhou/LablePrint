@@ -16,7 +16,9 @@ namespace Model
         public string LogisticsCompanyName { get; set; }
         public string LogisticsBillNo { get; set; }
         public string Demander { get; set; }
-        public string Note { get; set; }
+        public string NoteA { get; set; }
+        public string NoteB { get; set; }
+
         public string GoodsTypeName { get; set; }
         public string CaseName { get; set; }
         public string BrandName { get; set; }
@@ -36,12 +38,14 @@ namespace Model
 
 
         public float OtherCosts { get; set; }
-        public float Quatity { get; set; }
-        public float ApportionedAmount { get; set; }
+        public float Quantity { get; set; }
+        public float Amount { get; set; }
 
         public float TotalQuantity { get; set; }
 
         public float TotalAmount { get; set; }
+
+        public float MyProperty { get; set; }
 
     }
 }

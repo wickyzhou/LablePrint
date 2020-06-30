@@ -32,6 +32,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="HostConfigModel.cs" />
+    <Compile Include="Model\ActionOperationLogModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
     <Compile Include="Model\BarTenderTemplateModel.cs" />
     <Compile Include="Model\BatchNoPrintTotalModel.cs" />

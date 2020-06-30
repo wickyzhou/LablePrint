@@ -20,6 +20,10 @@
             <ColumnDefinition Width="0.3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -35,33 +39,45 @@
         <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="金额"/>
         <TextBlock Grid.Row="4" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="备注" />
         <TextBlock Grid.Row="5" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="序号"/>
+        <TextBlock Grid.Row="6" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="品牌"/>
+        <TextBlock Grid.Row="7" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="案子"/>
+        <TextBlock Grid.Row="8" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="部门"/>
+        <TextBlock Grid.Row="9" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="客户"/>
 
         <ComboBox Grid.Row="1" Grid.Column="2"   Style="{StaticResource ComboBoxStyleAuto}"  ItemsSource="{Binding GoodsTypeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                    IsEnabled="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewGoodsTypeIsEnabledConverter}}">
         </ComboBox>
 
-        <TextBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource TextBoxStyle}" 
-                 IsReadOnly="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsReadOnlyConverter}}"
-                 Background="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsEnabledStyleConverter}}"        >
+        <TextBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource TextBoxStyle}">
             <TextBox.Text>
                 <Binding Path="ShippingBillEntry.Quantity" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
-                        <StaticResource ResourceKey="OilSamplePrintCountRule" />
+                        <StaticResource ResourceKey="NumberRule" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
         </TextBox>
 
-        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.ApportionedAmount}"
+        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.Amount}"
                       Background="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsEnabledStyleConverter}}"
-                  IsReadOnly="{Binding ShippingBillEntry.IsSystem,Converter={c:ShippingBillEntryModifyViewIsReadOnlyConverter}}"/>
+                  IsReadOnly="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsReadOnlyConverter}}"/>
 
         <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.Note}"/>
 
         <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding ShippingBillEntry.EntryId}" Style="{StaticResource TextBoxStyle}"  Background="LightGray"  IsReadOnly="True" />
 
-        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
+        <TextBox Grid.Row="6" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.BrandName}"/>
+
+        <TextBox Grid.Row="7" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.CaseName}"/>
+
+        <TextBox Grid.Row="8" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.DeptName}"/>
+
+        <TextBox Grid.Row="9" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  Text="{Binding ShippingBillEntry.CustName}"/>
+
+
+
+        <StackPanel Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -30 0 0">
             <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="30" IsDefault="True" />
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
         </StackPanel>

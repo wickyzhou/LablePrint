@@ -17,7 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="15"/>
             <RowDefinition Height="1.6*"/>
-            <RowDefinition Height="2.2*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <GroupBox  Grid.Row="1" Header="{Binding ShippingBill.BillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Padding="5 15" BorderBrush="LightSeaGreen" BorderThickness="1">
@@ -31,7 +31,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.3*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -46,7 +46,7 @@
                     <TextBlock Grid.Column="3" Grid.Row="0" Text="物流公司" Style="{StaticResource TextBlockStyle15}" />
 
                     <TextBlock Grid.Column="3" Grid.Row="1" Text="需求发出人" Style="{StaticResource TextBlockStyle15}" />
-                    <TextBlock Grid.Column="5" Grid.Row="1" Text="系统数量" Style="{StaticResource TextBlockStyle15}" />
+                    <TextBlock Grid.Column="5" Grid.Row="1" Text="分摊数量" Style="{StaticResource TextBlockStyle15}" ToolTip="样油和成品合计数量" />
                     
                     <TextBox  Grid.Column="6" Grid.Row="0" Style="{StaticResource TextBoxStyle}"  
                           Text= "{Binding ShippingBill.LogisticsBillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  />
@@ -91,7 +91,7 @@
                     
                     <TextBox  Grid.Column="4" Grid.Row="0" Text="{Binding ShippingBill.LogisticsCompanyName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" />
                     <TextBox  Grid.Column="4" Grid.Row="1" Text="{Binding ShippingBill.Demander,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" />
-                    <TextBox  Grid.Column="6" Grid.Row="1" Text="{Binding ShippingBill.SystemQuantity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Width="auto" />
+                    <TextBox  Grid.Column="6" Grid.Row="1" Text="{Binding ShippingBill.SystemApportionedQuantity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Width="auto" />
                 </Grid>
             </GroupBox.Content>
         </GroupBox>
@@ -104,13 +104,20 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0"  Text="合计金额" Style="{StaticResource TextBlockStyle}"  Margin="10 0 5 0"/>
                     <TextBox  Grid.Column="1"  Text="{Binding ShippingBill.TotalAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Background="White" Foreground="{StaticResource GenericRedBrush}"/>
 
                     <TextBlock Grid.Column="2"  Text="分摊金额" Style="{StaticResource TextBlockStyle}" Margin="20 0 5 0"/>
-                    <TextBox  Grid.Column="3"  Text="{Binding ShippingBill.SystemApportionedAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Background="White" Foreground="{StaticResource GenericRedBrush}"  />
+
+                    <TextBox  Grid.Column="3"  Text="{Binding ShippingBill.SystemApportionedAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Background="White" Foreground="{StaticResource GenericRedBrush}" ToolTip="成品样油费用合计" />
+
+                    <TextBlock Grid.Column="4"  Text="固定金额" Style="{StaticResource TextBlockStyle}" Margin="20 0 5 0"/>
+                    
+                    <TextBox  Grid.Column="5"  Text="{Binding ShippingBill.UnApportionedAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Background="White" Foreground="{StaticResource GenericRedBrush}" ToolTip="除成品样油外费用合计" />
                 </Grid>
             </GroupBox.Header>
             <GroupBox.Content>
@@ -128,8 +135,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="其他费用" Style="{StaticResource TextBlockStyle15}"/>
@@ -140,34 +145,9 @@
                     <TextBlock Grid.Column="2" Grid.Row="2" Text="维修费" Style="{StaticResource TextBlockStyle15}"/>
                     <TextBlock Grid.Column="4" Grid.Row="0" Text="国内端" Style="{StaticResource TextBlockStyle15}"/>
                     <TextBlock Grid.Column="4" Grid.Row="1" Text="国际端" Style="{StaticResource TextBlockStyle15}"/>
-                    <TextBlock Grid.Column="4" Grid.Row="2" Text="运输端" Style="{StaticResource TextBlockStyle15}"/>
+                    <!--<TextBlock Grid.Column="4" Grid.Row="2" Text="运输端" Style="{StaticResource TextBlockStyle15}"/>-->
 
-                    <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"  Text="手工添加:" Style="{StaticResource TextBlockStyle}"/>
-                        <TextBlock Grid.Column="1"  Text="耗材" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="2"  Text="{Binding ShippingBill.HaoCaiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0"  />
-                        <TextBlock Grid.Column="3"  Text="样油" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="4"  Text="{Binding ShippingBill.YangYouFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0" />
-                        <TextBlock Grid.Column="5"  Text="设备" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="6"  Text="{Binding ShippingBill.SheBeiFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0"  />
-                        <TextBlock Grid.Column="7"  Text="成品退货" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="8"  Text="{Binding ShippingBill.ChengPinTuiHuoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="0 0 10 0" />
-                        <TextBlock Grid.Column="9"  Text="退原材料" Style="{StaticResource TextBlockStyle10}"/>
-                        <TextBox  Grid.Column="10"  Text="{Binding ShippingBill.TuiYuanCaiLiaoFei,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Margin="0 0 10 0" />
-                    </Grid>
+
                     
                     <TextBox  Grid.Column="1" Grid.Row="0" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource LinShiErJiYiJiWuLiuBackgroundConverter}}">
                         <TextBox.Text>
@@ -249,7 +229,7 @@
                         </TextBox.Text>
                     </TextBox>
 
-                    <TextBox  Grid.Column="5" Grid.Row="2" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
+                    <!--<TextBox  Grid.Column="5" Grid.Row="2" Style="{StaticResource TextBoxStyle}" Background="{Binding ShippingBill.LogisticsType,Converter={StaticResource GuoJiWuliuBackgroundConverter}}">
                         <TextBox.Text>
                             <Binding Path="ShippingBill.YunShuDuanFeiYong" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                                 <Binding.ValidationRules>
@@ -257,7 +237,7 @@
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
-                    </TextBox>
+                    </TextBox>-->
 
                 </Grid>
             </GroupBox.Content>
@@ -270,6 +250,5 @@
                 <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
             </StackPanel>
         </Grid>
-
     </Grid>
 </Window>

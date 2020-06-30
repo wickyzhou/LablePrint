@@ -155,7 +155,7 @@ namespace Ui.View.IndexPage
             }
             if (lists.Count() == 0)
             {
-                ob = new ObservableCollection<ProductiveTaskListModel>(new List<ProductiveTaskListModel> { new ProductiveTaskListModel { FBucketName = "暂无数据，请先点击【生成数据】", FAuditTip = "确认审核" } });
+                ob = new ObservableCollection<ProductiveTaskListModel>(new List<ProductiveTaskListModel> { new ProductiveTaskListModel { FBucketName = "暂无数据，请先点击【生成数据】", FAuditTip = "确认审核",RowHashValue=new byte[] { 0} } });
                 return;
             }
             ob = new ObservableCollection<ProductiveTaskListModel>(lists);

@@ -7,6 +7,7 @@
         xmlns:domain="clr-namespace:Ui.ViewModel"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         mc:Ignorable="d"
+         xmlns:c="clr-namespace:Ui.Converter"
         Title="新增" Style="{StaticResource WindowStyle600*400}">
     <i:Interaction.Behaviors>
         <domain:ValidationExceptionBehavior/>
@@ -19,6 +20,9 @@
             <ColumnDefinition Width="0.3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.4*"/>
+            <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -34,18 +38,17 @@
         <TextBlock Grid.Row="3" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="金额"/>
         <TextBlock Grid.Row="4" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="备注" />
         <TextBlock Grid.Row="5" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="序号"/>
+        <TextBlock Grid.Row="6" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="案子"/>
+        <TextBlock Grid.Row="7" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="品牌"/>
+        <TextBlock Grid.Row="8" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="客户"/>
+        <TextBlock Grid.Row="9" Grid.Column="1"  Style="{StaticResource TextBlockStyle15}" Text="部门"/>
 
         <ComboBox Grid.Row="1" Grid.Column="2"   Style="{StaticResource ComboBoxStyleAuto}"  ItemsSource="{Binding GoodsTypeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                               SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding GoodsTypeSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>-->
+                               SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue"    SelectedValue="{Binding ShippingBillEntry.GoodsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="GT" >
         </ComboBox>
 
-        <TextBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource TextBoxStyle}">
+        <TextBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource TextBoxStyle}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" >
             <TextBox.Text>
                 <Binding Path="ShippingBillEntry.Quantity" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
@@ -55,17 +58,39 @@
             </TextBox.Text>
         </TextBox>
 
-        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.ApportionedAmount}"/>
+        <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStyle}"  
+   IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+                 Text="{Binding ShippingBillEntry.Amount,UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"
+                 ToolTip="成品和样油此处填写无效，系统自动分摊"
+                          Background="{Binding ShippingBillEntry.GoodsType,Converter={c:ShippingBillEntryModifyViewBackgroundStyleConverter}}"
+                 IsReadOnly="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsReadOnlyConverter}}">
+        </TextBox>
 
-        <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.Note}"/>
+        <TextBox Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.Note}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+                />
 
         <TextBox Grid.Row="5" Grid.Column="2" Style="{StaticResource TextBoxStyle}" IsReadOnly="True" Text="{Binding ShippingBillEntry.EntryId}" Background="LightGray" />
 
-        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
-            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="30" IsDefault="True" />
-            <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30"/>
-        </StackPanel>
+        <TextBox Grid.Row="6" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.CaseName}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+             ToolTip="除成品外，不需要填写，默认是货物类型"   />
+        <TextBox Grid.Row="7" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.BrandName}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+                />
 
+        <TextBox Grid.Row="8" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.CustName}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+                />
+
+        <TextBox Grid.Row="9" Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding ShippingBillEntry.DeptName}"  
+                 IsEnabled="{Binding ShippingBillEntry.GoodsType, Converter={c:ShippingBillAddViewAmountIsEnableConverter}}" 
+                />
+
+        <StackPanel Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 -50 0 0">
+            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="26" IsDefault="True" />
+            <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="26"/>
+        </StackPanel>
 
     </Grid>
 </Window>
