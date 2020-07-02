@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using wf = System.Windows.Forms;
 
 namespace Common
@@ -417,10 +418,11 @@ namespace Common
             switch (cell.CellType)
             {
                 case CellType.Numeric:  //日期也会被识别为数字单元格类型
-                    if (HSSFDateUtil.IsCellDateFormatted(cell))
+                    bool r;
+                    try {  r = DateUtil.IsCellDateFormatted(cell); }
+                    catch { r = false; }
+                    if (r)
                     {
-
-
                         _result = cell.DateCellValue.ToString("yyyy-MM-dd"); break;
                     }
                     else
@@ -435,13 +437,16 @@ namespace Common
                 case CellType.Formula:
                     if (cell.CachedFormulaResultType == CellType.Numeric)
                     {
-                        if (DateUtil.IsCellDateFormatted(cell))
+                        bool r1;
+                        try { r1 = DateUtil.IsCellDateFormatted(cell); }
+                        catch { r1 = false; }
+                        if (r1)
                         {
-                            _result = cell.DateCellValue.ToString("yyyy-MM-dd");
+                            _result = cell.DateCellValue.ToString("yyyy-MM-dd"); break;
                         }
                         else
                         {
-                            _result = cell.NumericCellValue;
+                            _result = cell.NumericCellValue; break;
                         }
                     }
                     else if (cell.CachedFormulaResultType == CellType.String)
@@ -470,7 +475,6 @@ namespace Common
             }
             return _result;
         }
-
 
         public static string[] GetTenderPrintTemplates(string folderPath)
         {
@@ -519,8 +523,6 @@ namespace Common
                 throw new Exception(ex.Message);
             }
         }
-
-
 
         public void ExportShippingBillToExcel(IList<ShippingBillExportModel> lists, string hostValue)
         {
@@ -582,6 +584,84 @@ namespace Common
             }
 
         }
+
+        public DataTable ConvertExcelToDataTable(string fileName,bool firstSheet)
+        {
+            IWorkbook wb = null;
+            DataTable dataTable = new DataTable();
+            if (!File.Exists(fileName))
+                return null;
+
+            try
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);//FileShare 及时文件打开也可以读取里面的内容
+
+                if (fileName.IndexOf("xlsx") > 0)
+                {
+                    wb = new XSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else if (fileName.IndexOf("xls") > 0)
+                {
+                    wb = new HSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else
+                    return null;
+
+                if (firstSheet)
+                {   
+                    // 增加列
+                    ISheet sh = wb.GetSheetAt(0);
+                    IRow header = sh.GetRow(0);
+                    for (int i = 0; i < header.Cells.Count; i++)
+                    {
+                        DataColumn dc = new DataColumn(header.GetCell(i).StringCellValue);
+                        dataTable.Columns.Add(dc);
+                    }
+                    int colCount = dataTable.Columns.Count;
+
+                    // 增加行 
+                    for (int i = 1; i <= sh.LastRowNum ; i++)
+                    {
+                        IRow rowdata = sh.GetRow(i);
+                        DataRow dr = dataTable.NewRow();
+
+                        //空行跳过
+                        if (rowdata == null || rowdata.Cells.Count == 0)
+                            continue;
+                        else
+                        {
+                            for (int j = 0; j < colCount; j++)
+                            {
+                                dr[header.GetCell(j).StringCellValue] = j<= rowdata.Cells.Count()? GetCellValue(rowdata.GetCell(j)):"";
+                            }
+                            dataTable.Rows.Add(dr);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < wb.NumberOfSheets; i++)
+                    {
+                        if (!wb.IsSheetHidden(i))//对所有不是隐藏的表执行转换
+                        {
+                            AddVisiableSheetToDataSet(wb, wb.GetSheetAt(i).SheetName);
+                        }
+                    }
+                }
+                return dataTable;
+            }
+
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message.ToString());
+            }
+        }
+
+
+
     }
 
 }

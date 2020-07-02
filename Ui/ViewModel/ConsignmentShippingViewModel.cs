@@ -98,7 +98,7 @@ namespace Ui.ViewModel
 
         private void CreateShippingBill(object obj)
         {
-            int id = _shippingService.AddShippingBill();
+            int id = _shippingService.AddShippingBill(user.ID);
             if (id > 0)
                 ShippingBills.Insert(0, _shippingService.GetShippingBillById(id));
             _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "CreateShippingBill",ActionDesc="新增托运单",UserId=user.ID,MainMenuId=7, PKId = id });
@@ -508,12 +508,17 @@ namespace Ui.ViewModel
             }
 
             // 导出数据 HostConfig.HostValue
-            var lists = _shippingService.GetExprotShippingBill();
+            var lists = _shippingService.GetExprotShippingBill(userDataId);
             if (lists.Count() > 0)
             {
                 new FileHelper().ExportShippingBillToExcel(lists, HostConfig.HostValue);
                 MessageBox.Show("导出成功");
             }
+            else
+            {
+                MessageBox.Show("没有数据");
+            }
+            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1 });
         }
 
         private void ShowShippingBillDetailLog(object obj)
@@ -1018,7 +1023,6 @@ namespace Ui.ViewModel
             (edit.DataContext as ShippingBillModifyViewModel).WithParam(cloneData, (type, shippingBill) =>
             {
                 edit.Close();
-
                 if (type == 1)
                 {
                     // 重新加载主表

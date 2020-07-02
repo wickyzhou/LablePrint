@@ -13,11 +13,11 @@ namespace Ui.Service
     {
         public IList<ShippingBillModel> GetAllShippingBills(int userDataId)
         {
-            string sql = string.Empty;
+            string sql ;
             if (userDataId==-1)
-                sql += @"select * from SJShippingBill order by Id desc ";
+                sql = @"select * from SJShippingBill order by Id desc ";
             else
-                sql += @"select * from SJShippingBill where UserId=@UserDataId order by Id desc ";
+                sql = @"select * from SJShippingBill where UserId=@UserDataId order by Id desc ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<ShippingBillModel>(sql,new { UserDataId=userDataId }).ToList();
@@ -99,18 +99,30 @@ namespace Ui.Service
             }
         }
 
-        public IList<ShippingBillExportModel> GetExprotShippingBill()
+        public IList<ShippingBillExportModel> GetExprotShippingBill(int userDataId)
         {
-            string sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate,
+            string sql;
+            if(userDataId==-1)
+            sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate,
                             (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName,
                             LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,a.Note NoteA	,
                              (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = b.GoodsType) GoodsTypeName ,
 							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,
-                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB from  SJShippingBill a join SJShippingBillEntry b on a.Id=b.MainId  
+                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB from  SJShippingBill a left join SJShippingBillEntry b on a.Id=b.MainId  
                         order by BillNo,EntryId ";
+            else
+                sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate,
+                            (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName,
+                            LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,a.Note NoteA	,
+                             (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = b.GoodsType) GoodsTypeName ,
+							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,
+                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB from  SJShippingBill a left join SJShippingBillEntry b on a.Id=b.MainId
+                            where a.UserId=@UserId
+                        order by BillNo,EntryId ";
+
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<ShippingBillExportModel>(sql).ToList();
+                return connection.Query<ShippingBillExportModel>(sql,new { UserId=userDataId}).ToList();
             }
         }
 
@@ -220,13 +232,14 @@ namespace Ui.Service
 
 
 
-        public int AddShippingBill()
+        public int AddShippingBill(int userId)
         {
 
             using (var connection = SqlDb.UpdateConnection)
             {
                 var dp = new DynamicParameters();
                 dp.Add("@Id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                dp.Add("@UserId",userId, dbType: DbType.Int32, direction: ParameterDirection.Input);
                 connection.Execute("SJCreateShippingBillProc", dp, null, null, CommandType.StoredProcedure);
                 return dp.Get<int>("@Id");
             }

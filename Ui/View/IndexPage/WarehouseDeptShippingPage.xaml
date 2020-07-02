@@ -49,11 +49,11 @@
 
                     <TextBlock  Grid.Column="1" Text="发货日期" Style="{StaticResource TextBlockStyle15}"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="2">
-                        <DatePicker Grid.Column="2" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamBeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                        <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamBeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
 
-                        <TextBlock Grid.Column="3" Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
+                        <TextBlock  Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
 
-                        <DatePicker Grid.Column="4" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamEndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                        <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamEndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
                     </StackPanel>
 
 

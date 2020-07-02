@@ -48,6 +48,10 @@
     <Compile Include="Model\LabelPrintCurrencyModel.cs" />
     <Compile Include="Model\LabelPrintSpecialRequestModel.cs" />
     <Compile Include="Model\MainMenuModel.cs" />
+    <Compile Include="Model\MaterialBomModel.cs" />
+    <Compile Include="Model\MaterialDemandModel.cs" />
+    <Compile Include="Model\MaterialPlanInventoryParameterModel.cs" />
+    <Compile Include="Model\MaterialPlanSeorderModel.cs" />
     <Compile Include="Model\NotificationObject.cs" />
     <Compile Include="Model\OilSampleExpressPrintModel.cs" />
     <Compile Include="Model\OilSampleFlowPrintLogModel.cs" />
