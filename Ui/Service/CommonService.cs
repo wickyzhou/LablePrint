@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Common;
+using Dapper;
 using Microsoft.ReportingServices.DataProcessing;
 using Model;
 using System;
@@ -44,7 +45,38 @@ namespace Ui.Service
             }
         }
 
+        public HostConfigModel GetHostConfig(int typeId, string host,int userId)
+        {
+            string sql = @"select Id,TypeId,TypeDesciption,Host,Value HostValue,UserId from SJHostConfig where TypeId=@TypeId and Host=@Host and UserId=@UserId;";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<HostConfigModel>(sql, new { TypeId = typeId, Host = host,UserId= userId }).FirstOrDefault();
+            }
+        }
+
+        public HostConfigModel GetHostConfig(HostConfigModel model)
+        {
+            string sql = @"select Id,TypeId,TypeDesciption,Host,Value HostValue,UserId from SJHostConfig where TypeId=@TypeId and Host=@Host ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<HostConfigModel>(sql, model).FirstOrDefault();
+            }
+        }
+
         public bool SaveHostConfig(HostConfigModel model)
+        {
+            string sql = @" 
+                            if(exists(select 1 from SJHostConfig where Host=@Host and UserId=@UserId and TypeId=@TypeId))
+                                 update SJHostConfig set Value=@HostValue where Id=@Id;
+                            else
+                                insert into SJHostConfig(TypeId,TypeDesciption,Host,Value,UserId) values(@TypeId,@TypeDesciption,@Host,@HostValue,@UserId)";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, model) > 0;
+            }
+        }
+
+        public bool InsertHostConfig(HostConfigModel model)
         {
             string sql = @" insert into SJHostConfig(TypeId,TypeDesciption,Host,Value,UserId) values(@TypeId,@TypeDesciption,@Host,@HostValue,@UserId)";
             using (var connection = SqlDb.UpdateConnection)
@@ -53,6 +85,14 @@ namespace Ui.Service
             }
         }
 
+        public bool UpdateHostConfig(HostConfigModel model)
+        {
+            string sql = @" update SJHostConfig set Value=@Value where Id=@Id;";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, model) > 0;
+            }
+        }
 
         public List<string> GetComputerPrinters()
         {
@@ -150,9 +190,6 @@ namespace Ui.Service
         #endregion
 
 
-
-
-
         #region 水晶报表打印相关
         public CrystalPrintConfigModel GetCrystalPrintConfig(int userId, int typeId, string hostName)
         {
@@ -162,7 +199,6 @@ namespace Ui.Service
                 return connection.Query<CrystalPrintConfigModel>(sql, new { UserId = userId, TypeId = typeId, HostName = hostName }).FirstOrDefault();
             }
         }
-
 
         public List<PageSizeModel> GetPrinterPageSizes(string printerName)
         {
@@ -182,7 +218,6 @@ namespace Ui.Service
 
             return lists;
         }
-
 
         public bool InsertCrystalPrintConfig(CrystalPrintConfigModel model)
         {
@@ -204,7 +239,6 @@ namespace Ui.Service
         }
         #endregion
 
-
         public List<BarTenderTemplateModel> GetTenderPrintTemplates(string folderPath)
         {
             List<BarTenderTemplateModel> lists = new List<BarTenderTemplateModel>();
@@ -224,7 +258,6 @@ namespace Ui.Service
             }
             return lists;
         }
-
 
         public int GetCurrentDateNextSerialNumber(DateTime settleDate, string colName)
         {
@@ -251,19 +284,36 @@ namespace Ui.Service
             }
         }
 
-
         public void WriteActionLog(ActionOperationLogModel model)
         {
             Task.Factory.StartNew(() =>
             {
                 //Thread.Sleep(20000);
-                string sql = @" insert into SJActionOperationLog(MainMenuId,UserId,ActionName,ActionDesc,PKId) values(@MainMenuId,@UserId,@ActionName,@ActionDesc,@PKId) ;";
+                string sql = @" insert into SJActionOperationLog(MainMenuId,UserId,ActionName,ActionDesc,PKId,HostName) values(@MainMenuId,@UserId,@ActionName,@ActionDesc,@PKId,@HostName) ;";
                 using (var connection = SqlDb.UpdateConnection)
                 {
                     connection.Execute(sql, model);
                 }
             });
         }
+
+        public void WriteApplicationExceptionLog(string message,string stackTrace)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                //Thread.Sleep(20000);
+                string sql = @" insert into SJApplicationExceptionLog(ExceptionMessage,StackTrace) values(@Message,@StackTrace) ;";
+                using (var connection = SqlDb.UpdateConnection)
+                {
+                    connection.Execute(sql, new { Message =message, StackTrace= stackTrace });
+                }
+            });
+        }
+
+        //public void ExportToExcel(DataTable dt,string folderPath,string excelName)
+        //{
+        //    new DataTableImportExportHelper().ExportDataTableToExcel(dt, folderPath, excelName);
+        //}
 
 
 

@@ -22,7 +22,7 @@ namespace Ui.ViewModel.IndexPage
 
         private MaterialPlanInventoryService _materialPlanInventoryService;
         private static readonly string _hostName = Dns.GetHostName();
-        private static readonly UserModel user = MemoryCache.Default["user"] as UserModel;
+        private static readonly UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
 
         public MaterialPlanInventoryViewModel()
         {

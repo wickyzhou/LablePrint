@@ -25,7 +25,7 @@ namespace Ui.View.IndexPage
     public partial class WarehouseDeptCustPrintPage : Page
     {
         List<CustomerModel> lists;
-        readonly static UserModel user = MemoryCache.Default["user"] as UserModel;
+        readonly static UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         public WarehouseDeptCustPrintPage()
         {
             InitializeComponent();

@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
-      d:DesignHeight="550" d:DesignWidth="800">
+      d:DesignHeight="550" d:DesignWidth="1200">
 
 
     <Grid Style="{StaticResource ContentAreaGridStyle}" Name="MainGrid">
@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
 
-        <Grid Background="Red"  Margin="5">
+        <Grid Background="Bisque"  Margin="5">
             <Canvas Width="100" Height="100" Background="White" Margin="80" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
                     <TextBox x:Name="tbBucketCount" Text="0" Height="50" Width="50" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"
@@ -32,43 +32,66 @@
         </Grid>
 
 
-        <Grid Grid.Row="0" Grid.Column="1"  Background="LightYellow"  Margin="5">
+        <Grid Grid.Row="0" Grid.Column="1"  Background="Bisque"  Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.8*"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="0.8*"/>
+            </Grid.RowDefinitions>
 
-                <Button Name="BtnModifyDate" Content="生成领料时间更新" Style="{StaticResource BtnSuccessStyle}" Width="150"  Click="BtnModifyDate_Click" Height="50"
-                        VerticalAlignment="Center"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <DatePicker SelectedDate="{Binding SelectedDate,StringFormat=yyyy-MM-dd}"  Width="120" Style="{StaticResource DatePickerStyle}" 
+                        HorizontalAlignment="Center" ToolTip="随便选择需要月份的某一天"
+                    Margin="5 0 20 0"    />
+
+                <Button  Name="BtnGenData" Content="生成最新数据" Style="{StaticResource BtnWarningStyle}"   Command="{Binding GenNewDataCommand}"  Width="100" ToolTip="选取上面日期的年月计算生成数据,【系统每天凌晨5点会自动生成数据】"
+            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Margin="0 10 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="6*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="选择目录" Style="{StaticResource BtnWarningStyle}" Command="{Binding DirectorySelectCommand}"  ToolTip="选择文件导出的固定目录" Margin="10 5 5 5" />
+                <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="5 0" Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30" HorizontalAlignment="Stretch"/>
+                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ExportCommand}"  ToolTip="配置路径后导出数据" Margin="5 5 10 5" />
             </Grid>
+        </Grid>
 
 
-        <Grid Grid.Row="0" Grid.Column="2" Background="Green" Margin="5">
+        <Grid Grid.Row="0" Grid.Column="2" Background="Bisque" Margin="5">
 
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="3" Background="Yellow" Margin="5">
+        <Grid Grid.Row="0" Grid.Column="3" Background="Bisque" Margin="5">
 
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Background="Aqua" Margin="5">
+        <Grid Grid.Row="1" Grid.Column="0" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1" Background="Khaki" Margin="5">
+        <Grid Grid.Row="1" Grid.Column="1" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="2" Background="PaleGoldenrod" Margin="5">
+        <Grid Grid.Row="1" Grid.Column="2" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="3" Background="Navy" Margin="5">
+        <Grid Grid.Row="1" Grid.Column="3" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="0" Background="RosyBrown" Margin="5">
+        <Grid Grid.Row="2" Grid.Column="0" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="1" Background="Tan" Margin="5">
+        <Grid Grid.Row="2" Grid.Column="1" Background="Bisque" Margin="5">
 
         </Grid>
         <Grid Grid.Row="2" Grid.Column="2" Background="Bisque" Margin="5">
 
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="3" Background="Moccasin" Margin="5">
+        <Grid Grid.Row="2" Grid.Column="3" Background="Bisque" Margin="5">
 
         </Grid>
 

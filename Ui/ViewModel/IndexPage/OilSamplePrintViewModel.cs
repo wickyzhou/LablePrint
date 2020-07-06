@@ -20,7 +20,7 @@ namespace Ui.ViewModel.IndexPage
     {
         private static readonly OilSampleService _oilSampleService = new OilSampleService();
         private static readonly CommonService _commonService = new CommonService();
-        private static readonly UserModel _user = MemoryCache.Default["user"] as UserModel;
+        private static readonly UserModel _user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         private static readonly string _hostName = Dns.GetHostName();
 
         public OilSamplePrintViewModel()

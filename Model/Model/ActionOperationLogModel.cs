@@ -21,5 +21,7 @@ namespace Model
 
         public int PKId { get; set; }
 
+        public string HostName { get; set; }
+
     }
 }

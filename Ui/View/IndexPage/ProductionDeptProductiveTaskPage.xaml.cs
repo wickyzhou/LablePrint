@@ -27,7 +27,7 @@ namespace Ui.View.IndexPage
 
         private ObservableCollection<ProductiveTaskListModel> ob;
         private List<ProductiveTaskListModel> lists;
-        readonly static UserModel user = MemoryCache.Default["user"] as UserModel;
+        readonly static UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         private static readonly ProductiveTaskWorkService _work = new ProductiveTaskWorkService();
 
         public ProductionDeptProductiveTaskPage()

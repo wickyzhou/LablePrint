@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Common;
+using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Ui.View.InfoWindow;
+using wf=System.Windows.Forms;
+using Ui.Service;
+using System.IO;
+using Ui.ViewModel.IndexPage;
 
 namespace Ui.View.IndexPage
 {
@@ -23,16 +18,7 @@ namespace Ui.View.IndexPage
         public ProductionDeptIndexPage()
         {
             InitializeComponent();
-            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
-        }
-
-        private void BtnModifyDate_Click(object sender, RoutedEventArgs e)
-        {
-            //ProductionDeptModifyDate window = new ProductionDeptModifyDate()
-            //{
-            //    Owner = Window.GetWindow(this)
-            //};
-            //window.ShowDialog();
+            this.DataContext = new ProductionDeptIndexPageViewModel();
         }
     }
 }

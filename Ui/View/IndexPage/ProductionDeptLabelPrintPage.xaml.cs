@@ -36,7 +36,7 @@ namespace Ui.View.IndexPage
         readonly static string printTemplatesFolderPath = ConfigurationManager.AppSettings["PrintTemplatesFolderPath"];
         readonly static string printerSelectedIndex = ConfigurationManager.AppSettings["PrinterSelectedIndex"];
         readonly static string orientationIndex = ConfigurationManager.AppSettings["OrientationIndex"];
-        readonly static UserModel user = MemoryCache.Default["user"] as UserModel;
+        readonly static UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         List<string> PrinterNames;
 
         List<QuerySchemaCurrentStatusModel> schemaList;

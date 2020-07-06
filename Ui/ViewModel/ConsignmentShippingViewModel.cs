@@ -22,7 +22,7 @@ namespace Ui.ViewModel
         private ConsignmentBillService _consignmentService;
         private CommonService _commonService;
         private static readonly string _hostName = Dns.GetHostName();
-        private static readonly UserModel user = MemoryCache.Default["user"] as UserModel;
+        private static readonly UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         private int userDataId;
         public ConsignmentShippingViewModel()
         {
@@ -101,7 +101,7 @@ namespace Ui.ViewModel
             int id = _shippingService.AddShippingBill(user.ID);
             if (id > 0)
                 ShippingBills.Insert(0, _shippingService.GetShippingBillById(id));
-            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "CreateShippingBill",ActionDesc="新增托运单",UserId=user.ID,MainMenuId=7, PKId = id });
+            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "CreateShippingBill",ActionDesc="新增托运单",UserId=user.ID,MainMenuId=7, PKId = id,HostName=_hostName });
         }
 
         private void DeleteShippingBill(object obj)
@@ -162,7 +162,7 @@ namespace Ui.ViewModel
                     }
                 }
 
-                _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "DeleteShippingBill", ActionDesc = "删除托运单", UserId = user.ID, MainMenuId = 7,PKId= id });
+                _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "DeleteShippingBill", ActionDesc = "删除托运单", UserId = user.ID, MainMenuId = 7,PKId= id, HostName = _hostName });
             }
         }
 
@@ -518,7 +518,7 @@ namespace Ui.ViewModel
             {
                 MessageBox.Show("没有数据");
             }
-            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1 });
+            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1, HostName = _hostName });
         }
 
         private void ShowShippingBillDetailLog(object obj)
@@ -1056,7 +1056,7 @@ namespace Ui.ViewModel
 
                     _shippingService.UpdateShipingBillEntry(shippingBill);
                     GetAllShippingBillEntriesById(shippingBill.Id);
-                    _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ModifyShippingBill", ActionDesc = "修改托运单", UserId = user.ID, MainMenuId = 7, PKId = shippingBill.Id });
+                    _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ModifyShippingBill", ActionDesc = "修改托运单", UserId = user.ID, MainMenuId = 7, PKId = shippingBill.Id, HostName = _hostName });
                 }
             });
             edit.ShowDialog();

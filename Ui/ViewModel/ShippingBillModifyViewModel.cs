@@ -25,7 +25,7 @@ namespace Ui.ViewModel
         {
             if ((int)obj == 1)
             {
-                ShippingBill.YunShuFei = (float)(ShippingBill.SystemQuantity * 0.81);
+                ShippingBill.YunShuFei = (float)(ShippingBill.SystemApportionedQuantity * 0.81);
             }
         }
 

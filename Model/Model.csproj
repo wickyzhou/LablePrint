@@ -75,7 +75,9 @@
     <Compile Include="Model\ShippingBillExportModel.cs" />
     <Compile Include="Model\ShippingBillModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModel.cs" />
+    <Compile Include="Model\UserCacheModel.cs" />
     <Compile Include="Model\UserInformationModel.cs" />
+    <Compile Include="Model\UserLoginInModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\QuerySchemaCurrentStatusModel.cs" />
     <Compile Include="Model\UserRoleModel.cs" />

@@ -16,13 +16,14 @@ namespace Bll.Services
             return user.GetAllUsers();
         }
 
-        public int RecordLoginLog(int id)
+        public int RecordLoginLog(int id,string hostName)
         {
-            return user.RecordLoginLog(id);
+            return user.RecordLoginLog(id,hostName);
         }
-        public int RecordLogoutLog(int id)
+
+        public void RecordLogoutLog(int id,bool isSystemLogout)
         {
-            return user.RecordLogoutLog(id);
+             user.RecordLogoutLog(id, isSystemLogout);
         }
 
         public int ModifyUserPassword( int userId,string ps)
