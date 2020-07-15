@@ -321,5 +321,34 @@ namespace Model
 			}
 		}
 
+
+		private string supercargo;
+
+		public string Supercargo
+		{
+			get { return supercargo; }
+			set
+			{
+				supercargo = value;
+				this.RaisePropertyChanged(nameof(Supercargo));
+			}
+		}
+
+		private string driver;
+
+		public string Driver
+		{
+			get { return driver; }
+			set
+			{
+				driver = value;
+				this.RaisePropertyChanged(nameof(Driver));
+			}
+		}
+
+		public int UserId { get; set; }
+
+		public string UserName { get; set; }
+
 	}
 }

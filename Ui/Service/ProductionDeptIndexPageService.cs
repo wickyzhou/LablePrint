@@ -28,5 +28,13 @@ namespace Ui.Service
         {
             return SqlHelper.ExecuteDataTable(" select *from SJEarningRatioView where 日期 = @RiQi  ", new SqlParameter[] { new SqlParameter("@RiQi", date) });
         }
+
+        public int SyncBucketInfo()
+        {
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return Convert.ToInt32( connection.ExecuteScalar("SJSyncBucketInfo", null, null, null, CommandType.StoredProcedure));
+            }
+        }
     }
 }

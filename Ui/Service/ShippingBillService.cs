@@ -1,8 +1,10 @@
-﻿using Dapper;
+﻿using Dal;
+using Dapper;
 using Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using Ui.MVVM.Common;
@@ -15,9 +17,9 @@ namespace Ui.Service
         {
             string sql ;
             if (userDataId==-1)
-                sql = @"select * from SJShippingBill order by Id desc ";
+                sql = @"select *, (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a order by Id desc ";
             else
-                sql = @"select * from SJShippingBill where UserId=@UserDataId order by Id desc ";
+                sql = @"select * , (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a where UserId=@UserDataId order by Id desc ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<ShippingBillModel>(sql,new { UserDataId=userDataId }).ToList();
@@ -40,7 +42,7 @@ namespace Ui.Service
                             YunShuFei=@YunShuFei  ,YouFei=@YouFei  ,GuoLuFei=@GuoLuFei  ,ChaiLvFei=@ChaiLvFei  ,WeiXiuFei=@WeiXiuFei ,
                             Demander=@Demander, OtherCosts=@OtherCosts,TotalAmount=@TotalAmount,
                             Note=@Note,LogisticsBillNo=@LogisticsBillNo,SystemApportionedAmount=@SystemApportionedAmount,
-                            GuoNeiDuanFeiYong=@GuoNeiDuanFeiYong,GuoJiDuanFeiYong=@GuoJiDuanFeiYong,YunShuDuanFeiYong=@YunShuDuanFeiYong
+                            GuoNeiDuanFeiYong=@GuoNeiDuanFeiYong,GuoJiDuanFeiYong=@GuoJiDuanFeiYong,YunShuDuanFeiYong=@YunShuDuanFeiYong,Supercargo=@Supercargo,Driver=@Driver
                         where Id=@Id";
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -107,17 +109,18 @@ namespace Ui.Service
                             (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName,
                             LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,a.Note NoteA	,
                              (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = b.GoodsType) GoodsTypeName ,
-							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,
+							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,Supercargo,Driver
                             EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB from  SJShippingBill a left join SJShippingBillEntry b on a.Id=b.MainId  
                         order by BillNo,EntryId ";
             else
-                sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate,
-                            (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName,
-                            LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,a.Note NoteA	,
-                             (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = b.GoodsType) GoodsTypeName ,
-							 GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,
-                            EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB from  SJShippingBill a left join SJShippingBillEntry b on a.Id=b.MainId
-                            where a.UserId=@UserId
+                sql = @"select TotalQuantity,TotalAmount, BillNo,BillDate
+                            , (select ItemValue from  SJEnumTable where GroupSeq=3 and ItemSeq = a.LogisticsType) LogisticsTypeName
+                            , LogisticsCompanyName,LogisticsBillNo,YunShuFei,YouFei,GuoLuFei,ChaiLvFei,WeiXiuFei,Demander,OtherCosts,a.Note NoteA	
+                            , (select ItemValue from  SJEnumTable where GroupSeq=4 and ItemSeq = b.GoodsType) GoodsTypeName 
+							, GuoNeiDuanFeiYong,GuoJiDuanFeiYong,YunShuDuanFeiYong,Supercargo,Driver
+                            , EntryId,CaseName,BrandName,DeptName,CustName,Quantity,Amount,b.Note NoteB
+                        from  SJShippingBill a left join SJShippingBillEntry b on a.Id=b.MainId
+                        where a.UserId=@UserId
                         order by BillNo,EntryId ";
 
             using (var connection = SqlDb.UpdateConnection)
@@ -125,6 +128,18 @@ namespace Ui.Service
                 return connection.Query<ShippingBillExportModel>(sql,new { UserId=userDataId}).ToList();
             }
         }
+
+        public DataTable GetShippingBillExprotDataTable(int userDataId)
+        {
+            string sql;
+            if (userDataId == -1)
+                sql = @" select * from SJShippingBillExportView order by 系统单号,明细序号;";
+            else
+                sql = @"select * from SJShippingBillExportView where UserId=@UserId  order by 系统单号,明细序号";
+
+            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
+        }
+
 
         public bool AddShipingBillEntry(ShippingBillEntryModel entryModel)
         {
@@ -247,7 +262,7 @@ namespace Ui.Service
 
         public ShippingBillModel GetShippingBillById(int id)
         {
-            string sql = @" select * from SJShippingBill where Id=@Id ;";
+            string sql = @" select *,(select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a where Id=@Id ;";
             using (var connection = SqlDb.UpdateConnection)
             {
               return  connection.Query<ShippingBillModel>(sql,new { Id=id}).FirstOrDefault();

@@ -13,7 +13,7 @@ namespace Data
     {
         public IEnumerable<MainMenuModel> GetAllMenu()
         {
-            DataTable data = SqlHelper.ExecuteDataTable(" SELECT * FROM SJMainMenu",null);
+            DataTable data = SqlHelper.ExecuteDataTable(" SELECT * FROM SJMainMenu order by ShowOrder ;", null);
             return SqlHelper.DataTableToModelList<MainMenuModel>(data);
         }
 
@@ -22,7 +22,8 @@ namespace Data
             DataTable data = SqlHelper.ExecuteDataTable(
                 @" SELECT a.* FROM SJMainMenu a join SJPageOwner b on a.ID=b.MainMenuId where UserId=@UserId
                     union
-                   SELECT a.* FROM SJMainMenu a join  SJPageOwner b on a.ID = b.MainMenuId join  SJUserRole c on b.RoleId = c.RoleId where c.UserId = @UserId", 
+                   SELECT a.* FROM SJMainMenu a join  SJPageOwner b on a.ID = b.MainMenuId join  SJUserRole c on b.RoleId = c.RoleId where c.UserId = @UserId
+                     order by ShowOrder ;", 
                 new SqlParameter[] { new SqlParameter("@UserId", userId) });
             return SqlHelper.DataTableToModelList<MainMenuModel>(data);
         }

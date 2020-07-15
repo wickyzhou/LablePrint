@@ -67,11 +67,17 @@ namespace Ui.ViewModel.IndexPage
                 MessageBox.Show("更新成功");
             });
 
+            BucketSyncCommand = new DelegateCommand((obj) =>
+            {
+                int count = _service.SyncBucketInfo();
+                MessageBox.Show($"成功更新【{count}】条桶子名称");
+            });
         }
 
         public DelegateCommand ExportCommand { get; set; }
         public DelegateCommand DirectorySelectCommand { get; set; }
         public DelegateCommand GenNewDataCommand { get; set; }
+        public DelegateCommand BucketSyncCommand { get; set; }
 
 
         private DateTime selectedDate = DateTime.Now;

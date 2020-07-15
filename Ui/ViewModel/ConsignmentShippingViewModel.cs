@@ -26,7 +26,7 @@ namespace Ui.ViewModel
         private int userDataId;
         public ConsignmentShippingViewModel()
         {
-
+      
             _shippingService = new ShippingBillService();
             _consignmentService = new ConsignmentBillService();
             _commonService = new CommonService();
@@ -46,15 +46,15 @@ namespace Ui.ViewModel
                 ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString()),
                 ParamBillType = 1
             };
-            //初始化表格数据
-            HostConfig = GetHostConfig();
+
+            HostConfig = _commonService.GetHostConfig(4, _hostName, user.ID) ?? new HostConfigModel() { TypeId = 4, Host = _hostName, UserId = user.ID,TypeDesciption="物流托运单" };
             BillTypes = _commonService.GetEnumLists(5).ToList();
 
             DataInit();
             //GetShippingBills();
             //InitQueryConSignmentBill();
 
-
+            InitCommand();
             #region 命令属性
             QueryCommand = new DelegateCommand(QuerySignmentBill);
 
@@ -96,6 +96,38 @@ namespace Ui.ViewModel
             #endregion
         }
 
+        private void InitCommand()
+        {
+            DirectorySelectCommand = new DelegateCommand((obj) =>
+            {
+                // 导出目录选择
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    HostConfig.HostValue = fbd.SelectedPath;
+                    var result = _commonService.SaveHostConfig(HostConfig);
+                    if (result)
+                    {
+                        HostConfig = _commonService.GetHostConfig(4, _hostName, user.ID);
+                    }
+                }
+            });
+
+            ShippingBillExportCommand = new DelegateCommand((obj) =>
+            {
+                // 导出数据
+                if (Directory.Exists(HostConfig.HostValue))
+                {
+                    ExportShippingData(obj);
+                }
+                else
+                {
+                    MessageBox.Show("目录不存在，请先选择导出的目录");
+                }
+            });
+        }
+
         private void CreateShippingBill(object obj)
         {
             int id = _shippingService.AddShippingBill(user.ID);
@@ -111,7 +143,7 @@ namespace Ui.ViewModel
                 + $"\r\n   总重量：【{SelectedShippingBill.TotalQuantity}】"
                 + $"\r\n  系统单号：【{SelectedShippingBill.BillNo}】"
                 + $"\r\n  托运日期：【{SelectedShippingBill.BillDate}】"
-                , "【删除警告！！！】", MessageBoxButton.YesNoCancel);
+                , "【删除警告！！！】", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
                 int id = SelectedShippingBill.Id;
@@ -297,7 +329,6 @@ namespace Ui.ViewModel
                         }
                         else
                         {
-
                             // 前端显示
                             float qtyDiff = entry.Quantity - quantityBeforeModify;
                             float amountDiff = entry.Amount - amountBeforeModify;
@@ -488,36 +519,47 @@ namespace Ui.ViewModel
 
         private void ExportShippingData(object obj)
         {
-            // 导出路径选择
-            if (!Directory.Exists(HostConfig.HostValue))
-            {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    HostConfig.HostValue = fbd.SelectedPath;
-                    var result = _commonService.SaveHostConfig(new HostConfigModel
-                    {
-                        TypeId = 4,
-                        TypeDesciption = "托运单导出",
-                        Host = _hostName,
-                        HostValue = fbd.SelectedPath,
-                        UserId = user.ID
-                    });
-                }
-            }
-
-            // 导出数据 HostConfig.HostValue
-            var lists = _shippingService.GetExprotShippingBill(userDataId);
-            if (lists.Count() > 0)
+            if (Directory.Exists(HostConfig.HostValue))
             {
-                new FileHelper().ExportShippingBillToExcel(lists, HostConfig.HostValue);
+                new DataTableImportExportHelper().ExportDataTableToExcel(_shippingService.GetShippingBillExprotDataTable(userDataId), HostConfig.HostValue, HostConfig.TypeDesciption );
                 MessageBox.Show("导出成功");
             }
             else
             {
-                MessageBox.Show("没有数据");
+                MessageBox.Show("目录不存在，请先选择导出的目录");
             }
+
+            //// 导出路径选择
+            //if (!Directory.Exists(HostConfig.HostValue))
+            //{
+            //    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+            //    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //    {
+            //        HostConfig.HostValue = fbd.SelectedPath;
+            //        var result = _commonService.SaveHostConfig(new HostConfigModel
+            //        {
+            //            TypeId = 4,
+            //            TypeDesciption = "托运单导出",
+            //            Host = _hostName,
+            //            HostValue = fbd.SelectedPath,
+            //            UserId = user.ID
+            //        });
+            //    }
+            //}
+
+            //// 导出数据 HostConfig.HostValue
+            //var lists = _shippingService.GetExprotShippingBill(userDataId);
+            //if (lists.Count() > 0)
+            //{
+            //    new FileHelper().ExportShippingBillToExcel(lists, HostConfig.HostValue);
+            //    MessageBox.Show("导出成功");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("没有数据");
+            //}
             _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1, HostName = _hostName });
         }
 
@@ -747,6 +789,7 @@ namespace Ui.ViewModel
         public DelegateCommand ConsignmentBillEntryDeleteCommand { get; set; }
         public DelegateCommand ConsignmentBillEntrySelectionChangedCommand { get; set; }
         public DelegateCommand ShippingBillCreateCommand { get; set; }
+        public DelegateCommand DirectorySelectCommand { get; set; }
 
 
         #endregion
@@ -1051,6 +1094,8 @@ namespace Ui.ViewModel
                     SelectedShippingBill.TotalQuantity = shippingBill.TotalQuantity;
                     SelectedShippingBill.SystemApportionedAmount = shippingBill.SystemApportionedAmount;
                     SelectedShippingBill.SystemApportionedQuantity = shippingBill.SystemApportionedQuantity;
+                    SelectedShippingBill.Driver = shippingBill.Driver;
+                    SelectedShippingBill.Supercargo = shippingBill.Supercargo;
 
                     // 重新加载明细
 
@@ -1088,6 +1133,7 @@ namespace Ui.ViewModel
                 MessageBox.Show("已获取最新数据");
             }
         }
+
         #endregion
 
 

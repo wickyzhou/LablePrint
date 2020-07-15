@@ -294,14 +294,26 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                     <RowDefinition Height="8*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0 10 0 0">
+                <!--<Grid Grid.Row="0" Margin="0 10 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="8*"/>
                     </Grid.ColumnDefinitions>
-                    <Button  Grid.Column="0" Name="btnExportException" FrameworkElement.Height="30"   ContentControl.Content="导出" Control.Background="LightSeaGreen" Command="{Binding ShippingBillExportCommand}"  ToolTip="配置路径后导出数据" Foreground="Snow"  Cursor="Hand"
+                    --><!--<Button  Grid.Column="0" Name="btnExportException" FrameworkElement.Height="30"   ContentControl.Content="导出" Control.Background="LightSeaGreen" Command="{Binding ShippingBillExportCommand}"  ToolTip="配置路径后导出数据" Foreground="Snow"  Cursor="Hand"
                    Margin="20 0 20 0"      />
-                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="0 0 30 0" Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30"/>
+                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"  Margin="0 0 30 0" Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30"/>--><!--
+                </Grid>-->
+
+
+                <Grid Grid.Row="0" Margin="0 10 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="选择目录" Style="{StaticResource BtnWarningStyle}" Command="{Binding DirectorySelectCommand}"  ToolTip="选择文件导出的固定目录" HorizontalAlignment="Right"  />
+                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"   Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30" HorizontalAlignment="Stretch" Margin="5 0"/>
+                    <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ShippingBillExportCommand}"  ToolTip="导出数据到选定目录" Margin="15 5 20 5" />
                 </Grid>
 
                 <GroupBox Grid.Row="1"  Background="LightGray" Padding="2 5 2 2" Margin="0 5 0 0" >
@@ -333,7 +345,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </DataGrid.ContextMenu>
 
                             <DataGrid.Columns>
-                                <!--<DataGridTextColumn DataGridColumn.Header="不摊费用" DataGridBoundColumn.Binding="{Binding UnApportionedAmount}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+                                <DataGridTextColumn DataGridColumn.Header="制单人" DataGridBoundColumn.Binding="{Binding UserName}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="总数量" DataGridBoundColumn.Binding="{Binding TotalQuantity}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="分摊数量" DataGridBoundColumn.Binding="{Binding SystemApportionedQuantity}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="总金额" DataGridBoundColumn.Binding="{Binding TotalAmount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>

@@ -20,5 +20,6 @@ namespace Ui.View.IndexPage
             InitializeComponent();
             this.DataContext = new ProductionDeptIndexPageViewModel();
         }
+
     }
 }

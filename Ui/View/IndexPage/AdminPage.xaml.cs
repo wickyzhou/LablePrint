@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using K3ApiModel;
+using K3ApiModel.PurchaseRequisition;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Ui.MVVM.View;
+using Ui.Service;
+using Ui.ViewModel.IndexPage;
 
 namespace Ui.View.IndexPage
 {
@@ -23,8 +17,10 @@ namespace Ui.View.IndexPage
         public AdminPage()
         {
             InitializeComponent();
-            this.MainGrid.Height = SystemParameters.PrimaryScreenHeight - 160;
+            this.DataContext = new AdminPageViewModel();
+            new CommonService().GetDataGridColumnHeader(this.DGActionOperationLog,1);
         }
+
 
         private void BtnDemo_Click(object sender, RoutedEventArgs e)
         {
@@ -42,7 +38,6 @@ namespace Ui.View.IndexPage
                 Owner = Window.GetWindow(this)
             };
             window.ShowDialog();
-
         }
 
         private void BtnPage_Click(object sender, RoutedEventArgs e)
@@ -57,6 +52,32 @@ namespace Ui.View.IndexPage
                 Owner = Window.GetWindow(this)
             };
             window.ShowDialog();
+        }
+
+        private void ShowJson_Click(object sender, RoutedEventArgs e)
+        {
+            PurchaseRequisitionMainModel main = new PurchaseRequisitionMainModel()
+            {
+                FHeadSelfP0131 = new BaseNumberNameModel() { FNumber = "FSQLX02", FName = "生产部" },
+                FPlanCategory = new BaseNumberNameModel() { FNumber = "STD", FName = "标准" },
+                FBizType = new BaseNumberNameModel() { FNumber = "FPLX01", FName = "外购入库" },
+                FDeptID = new BaseNumberNameModel() { FNumber = "05.04.02", FName = "生产制造组" },
+                //FCheckerID = new BaseNumberNameModel(),
+                FSelTranType = new BaseNumberNameModel() { FNumber = "81", FName = "销售订单" },
+                FRequesterID = new BaseNumberNameModel() { FNumber = "22", FName = "付子明" },
+                Fdate = DateTime.Now.Date.ToString("yyyy-MM-dd")
+            };
+            PurchaseRequisitionSonModel son = new PurchaseRequisitionSonModel()
+            {
+                //FItemID = 681,//new BaseNumberNameModel(),
+                //FAuxPropID = 0,// new BaseNumberNameModel(),
+                //FUnitID = 287,//new BaseNumberNameModel(),
+                //FBomInterID = 0,//new BaseNumberNameModel(),
+                //FSupplyID = 0,//new BaseNumberNameModel(),
+                //FPlanMode = 14036//new BaseNumberNameModel()
+            };
+            //PurchaseRequisitionApiModel model = new PurchaseRequisitionApiModel() {Data = new PurchaseRequisitionDataModel() {Page1= new PurchaseRequisitionMainModel[] { main } ,Page2= new PurchaseRequisitionSonModel[] { son } } }; 
+            //this.RtbJson.AppendText(JsonHelper.ObjectToJson(model));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Dal;
 using Dapper;
 using Microsoft.ReportingServices.DataProcessing;
 using Model;
@@ -12,6 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using Ui.MVVM.Common;
 
 namespace Ui.Service
@@ -45,12 +48,12 @@ namespace Ui.Service
             }
         }
 
-        public HostConfigModel GetHostConfig(int typeId, string host,int userId)
+        public HostConfigModel GetHostConfig(int typeId, string host, int userId)
         {
             string sql = @"select Id,TypeId,TypeDesciption,Host,Value HostValue,UserId from SJHostConfig where TypeId=@TypeId and Host=@Host and UserId=@UserId;";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<HostConfigModel>(sql, new { TypeId = typeId, Host = host,UserId= userId }).FirstOrDefault();
+                return connection.Query<HostConfigModel>(sql, new { TypeId = typeId, Host = host, UserId = userId }).FirstOrDefault();
             }
         }
 
@@ -297,7 +300,7 @@ namespace Ui.Service
             });
         }
 
-        public void WriteApplicationExceptionLog(string message,string stackTrace)
+        public void WriteApplicationExceptionLog(string message, string stackTrace)
         {
             Task.Factory.StartNew(() =>
             {
@@ -305,18 +308,56 @@ namespace Ui.Service
                 string sql = @" insert into SJApplicationExceptionLog(ExceptionMessage,StackTrace) values(@Message,@StackTrace) ;";
                 using (var connection = SqlDb.UpdateConnection)
                 {
-                    connection.Execute(sql, new { Message =message, StackTrace= stackTrace });
+                    connection.Execute(sql, new { Message = message, StackTrace = stackTrace });
                 }
             });
         }
 
-        //public void ExportToExcel(DataTable dt,string folderPath,string excelName)
-        //{
-        //    new DataTableImportExportHelper().ExportDataTableToExcel(dt, folderPath, excelName);
-        //}
+        public void GetDataGridColumnHeader(DataGrid dataGrid, int beginColumn)
+        {
+
+            List<DataGridColumnHeaderModel> headers;
+
+            string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName order by ColumnOrder desc ;";
+
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                headers = connection.Query<DataGridColumnHeaderModel>(sql, new { DataGridName = dataGrid.Name }).ToList();
+            }
+
+            DataGridTextColumnInit(dataGrid, headers, beginColumn);
+        }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataGrid">界面的控件DataGrid</param>
+        /// <param name="headers">数据列对应的表头名称</param>
+        /// <param name="beginColumn">从第几列开始，动态生成，可以设置【数据列】相对【模板列】前后位置</param>
+        private void DataGridTextColumnInit(DataGrid dataGrid, IList<DataGridColumnHeaderModel> headers, int beginColumn)
+        {
+            foreach (var item in headers)
+            {
+                DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
+                dataGridTextColumn.Header = item.ColumnHeaderName;
+                dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
+                dataGridTextColumn.Binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
+                //var s = item.ColumnWidthUnitType.IndexOf('*');
+                dataGridTextColumn.Width = item.ColumnWidthUnitType.IndexOf('*') > -1 ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
+                dataGridTextColumn.Visibility = item.ColumnVisibility ? Visibility.Visible : Visibility.Hidden;
+                dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
 
+            }
+        }
+
+        /// <summary>
+        /// 获取Id和代码用来匹配excel导入的物料代码是否合法
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetAllItems()
+        {
+            return SqlHelper.ExecuteDataTable(@" select FItemID,FNumber from t_ICItem where FDeleted=0 ;", null);
+        }
     }
-
 }

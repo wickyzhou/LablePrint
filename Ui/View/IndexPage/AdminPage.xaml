@@ -3,8 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Ui.View.IndexPage"
-      mc:Ignorable="d" 
+         xmlns:c="clr-namespace:Ui.Converter"
+      xmlns:p="clr-namespace:Model;assembly=Model"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" d:DesignHeight="750" d:DesignWidth="1200"
       Title="AdminPage" >
 
     <Grid  Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
@@ -18,7 +20,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid Grid.Row="0" Grid.Column="0" Background="Azure" Margin="2">
             <Button x:Name="BtnDemo" Style="{StaticResource BtnThemeStyle}"  Content="MVVM Demo"
                      Click="BtnDemo_Click" Width="300" Height="50"/>
@@ -37,11 +39,73 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen" Margin="2">
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" x:Name="ShowJson" Click="ShowJson_Click" Style="{StaticResource BtnInfoStyle}" Content="转化为Json字符串" HorizontalAlignment="Stretch" Width="auto" Margin="5 0"/>
+            <RichTextBox x:Name="RtbJson" Grid.Row="1" Margin="0 2"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="2" Background="Goldenrod" Margin="2">
+            <GroupBox Header="后台自动生成列">
+                <GroupBox.Content>
+                    <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding Lists}" Name="DGActionOperationLog">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding OilSampleEntryModifyCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
 
+                        <DataGrid.Columns>
+                            <!--<DataGridTextColumn DataGridColumn.Header="标题" DataGridBoundColumn.Binding="{Binding Title}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
+
+                            <DataGridTemplateColumn Width="70"   HeaderStyle="{StaticResource DGColumnHeader}">
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="快递单"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Command="{Binding DataContext.ExpressPrintCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"  Margin="5 0" Width="50" Style="{StaticResource BtnInfoStyle1}" 
+                                            Content="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintContentConverter} }"
+                                            Background="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintBackgroundConverter}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                            <DataGridTemplateColumn Width="70"   HeaderStyle="{StaticResource DGColumnHeader}">
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="模板列2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Command="{Binding DataContext.ExpressPrintCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"  Margin="5 0" Width="50" Style="{StaticResource BtnInfoStyle1}" 
+                                            Content="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintContentConverter} }"
+                                            Background="{Binding ExpressPrintedCount,Converter={c:OilSampleFlowExpressPrintBackgroundConverter}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox.Content>
+            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Background="HotPink" Margin="2">

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ImportVerificationModel;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,16 @@ namespace Ui.Service
             return true;
         }
 
+        public IList<PurchaseRequisitionImportVerificationModel> GetCheckedPurchaseRequisitionMaterialLists()
+        {
+            string sql = @" ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<PurchaseRequisitionImportVerificationModel>(sql).ToList();
+            }
+        }
+
+        
 
         //public bool DeleteOilSampleFlowLog(decimal id)
         //{

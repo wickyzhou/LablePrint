@@ -125,7 +125,7 @@ namespace Common
                         btFormat.SetNamedSubStringValue("DangerousComment", model.DangerousComment);
 
                     /* var s= 结果是0 可能是成功的意思 */
-                    var s = btFormat.PrintOut(false, false);
+                    //var s = btFormat.PrintOut(false, false);
 
                     currentPrintBeginValue += model.PrintCount;
                 }

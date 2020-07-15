@@ -138,7 +138,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <!--<DataGridTextColumn DataGridColumn.Header="主表Id" DataGridBoundColumn.Binding="{Binding FormmainId}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="子表Id" DataGridBoundColumn.Binding="{Binding Id}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
                             <DataGridTextColumn DataGridColumn.Header="序号" DataGridBoundColumn.Binding="{Binding EntryId}" Width="40" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                                <DataGridTextColumn DataGridColumn.Header="品名" DataGridBoundColumn.Binding="{Binding ProductionName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="品名" DataGridBoundColumn.Binding="{Binding ProductionName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}" />
                                 <DataGridTextColumn DataGridColumn.Header="型号" DataGridBoundColumn.Binding="{Binding ProductionModel}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                                 <DataGridTextColumn DataGridColumn.Header="规格" DataGridBoundColumn.Binding="{Binding WeightPerBucket}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="总重(Kg)" DataGridBoundColumn.Binding="{Binding TotalWeight}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>

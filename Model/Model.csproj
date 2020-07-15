@@ -31,7 +31,22 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="K3ApiModel\Request\K3ApiCheckBillDataRequestMode.cs" />
+    <Compile Include="K3ApiModel\Request\K3ApiCheckBillRequestMode.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiCheckBillResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiInsertDataResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiInsertResponseModel.cs" />
+    <Compile Include="K3ApiModel\Request\K3ApiInsertDataRequestModel.cs" />
+    <Compile Include="K3ApiModel\BaseNumberNameModel.cs" />
+    <Compile Include="K3ApiModel\Request\K3ApiInsertRequestModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiResponseModel.cs" />
     <Compile Include="HostConfigModel.cs" />
+    <Compile Include="ImportVerificationModel\PurchaseRequisitionImportVerificationModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiTokenDataResponseModel.cs" />
+    <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionFKModel.cs" />
+    <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionMainModel.cs" />
+    <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionSonModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiTokenResponseModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
     <Compile Include="Model\BarTenderTemplateModel.cs" />
@@ -43,6 +58,7 @@
     <Compile Include="Model\ConsignmentBillParameterModel.cs" />
     <Compile Include="Model\CrystalPrintConfigModel.cs" />
     <Compile Include="Model\CustomerModel.cs" />
+    <Compile Include="Model\DataGridColumnHeaderModel.cs" />
     <Compile Include="Model\EnumModel.cs" />
     <Compile Include="Model\LabelPrintCommonAdjustmentModel.cs" />
     <Compile Include="Model\LabelPrintCurrencyModel.cs" />

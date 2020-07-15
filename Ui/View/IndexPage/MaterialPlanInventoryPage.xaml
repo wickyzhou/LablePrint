@@ -141,5 +141,53 @@
             </GroupBox.Content>
         </GroupBox>
 
+        <GroupBox Grid.Column="2" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
+            <GroupBox.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  导入采购申请模板  " Command="{Binding PurchaseRequisitionImportCommand}" Style="{StaticResource BtnWarningStyle}" Margin="3 0"/>
+                        <TextBox Grid.Column="1" Text="{Binding ImportFileFullName1,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}"   Width="auto"  />
+                    </Grid>
+
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="0.6*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  生成K3采购申请  " Command="{Binding PurchaseRequisitionInsertK3Command}" Style="{StaticResource BtnWarningStyle}"  Margin="3 0" ToolTip="生成成功后，单据就在K3里面了,需要修改删除的话得进K3"/>
+                        <TextBox Grid.Column="1" Text="{Binding K3InsertResponseData.BillNo,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
+                                 Style="{StaticResource TextBoxStyle}" ToolTip="审核本单据"  />
+                        <TextBox Grid.Column="2" Text="{Binding K3InsertResponseData.BillInterID,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
+                                 Style="{StaticResource TextBoxStyle}"   />
+
+                        <Button Grid.Column="3" Content="审核" Command="{Binding PurchaseRequisitionCheckBill2K3Command}" Style="{StaticResource BtnThemeStyle}"  ToolTip="此审核对应界面的审核，系统新增数据后台直接开启了多级审核"/>
+                    </Grid>
+                    
+                    <DataGrid Grid.Row="2" Style="{StaticResource ImportExcelDataGridStyle}" ItemsSource="{Binding CheckedPurchaseRequisitionMaterialLists}" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn DataGridColumn.Header="行号" DataGridBoundColumn.Binding="{Binding Seq}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="验证结果" DataGridBoundColumn.Binding="{Binding IsPassed,Converter={c:ValidationResultValueConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="代码" DataGridBoundColumn.Binding="{Binding FNumber}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="系统Id" DataGridBoundColumn.Binding="{Binding SystemId}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox.Content>
+            
+        </GroupBox>
     </Grid>
 </Page>

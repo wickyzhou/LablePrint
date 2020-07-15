@@ -414,6 +414,8 @@ namespace Common
         /// <returns></returns>
         private object GetCellValue(ICell cell)
         {
+            if (cell == null)
+                return "";
             object _result = " ";
             switch (cell.CellType)
             {
@@ -613,12 +615,15 @@ namespace Common
                 {   
                     // 增加列
                     ISheet sh = wb.GetSheetAt(0);
+                    if (sh == null) return null;
                     IRow header = sh.GetRow(0);
+                    if (header == null) return null;
                     for (int i = 0; i < header.Cells.Count; i++)
                     {
                         DataColumn dc = new DataColumn(header.GetCell(i).StringCellValue);
                         dataTable.Columns.Add(dc);
                     }
+                    dataTable.Columns.Add(new DataColumn("Seq"));
                     int colCount = dataTable.Columns.Count;
 
                     // 增加行 
@@ -632,16 +637,18 @@ namespace Common
                             continue;
                         else
                         {
-                            for (int j = 0; j < colCount; j++)
+      
+                            for (int j = 0; j < colCount-1; j++)
                             {
                                 dr[header.GetCell(j).StringCellValue] = j<= rowdata.Cells.Count()? GetCellValue(rowdata.GetCell(j)):"";
                             }
+                            dr[colCount-1] = i + 1;
                             dataTable.Rows.Add(dr);
                         }
                     }
                 }
                 else
-                {
+                {   // 此处没有实现
                     for (int i = 0; i < wb.NumberOfSheets; i++)
                     {
                         if (!wb.IsSheetHidden(i))//对所有不是隐藏的表执行转换

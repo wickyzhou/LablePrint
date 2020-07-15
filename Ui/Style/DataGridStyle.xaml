@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Ui"
                     xmlns:cmd="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
-                    xmlns:l="clr-namespace:Ui.View.IndexPage">
+                    xmlns:l="clr-namespace:Ui.View.IndexPage"
+                     xmlns:c="clr-namespace:Ui.Converter">
 
     <Style  x:Key="DGRowStyle" Style.TargetType="{x:Type DataGridRow}" >
         <Setter Setter.Property="Control.Height" Setter.Value="28" />
@@ -200,7 +201,40 @@
         </Setter>
     </Style>
 
+    <Style TargetType="DataGrid" x:Key="ImportExcelDataGridStyle">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource DGCellStyle2}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="26"/>
 
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                        </Trigger>
+
+                        <DataTrigger Binding="{Binding IsPassed,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericRedBrush}"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style  x:Key="DGColumnHeader" TargetType="DataGridColumnHeader">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Height" Value="28"/>

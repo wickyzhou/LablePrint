@@ -12,6 +12,7 @@ namespace Ui.Converter
     {
         private static T Converter = null;
 
+
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return Converter ?? new T();
