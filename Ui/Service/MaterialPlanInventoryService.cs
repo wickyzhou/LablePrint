@@ -1,8 +1,10 @@
-﻿using Dapper;
+﻿using Dal;
+using Dapper;
 using ImportVerificationModel;
 using Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Ui.MVVM.Common;
@@ -29,13 +31,18 @@ namespace Ui.Service
             }
         }
 
-        public IList<MaterialBomModel> GetMaterialBomLists(string itemIds)
+        public IList<MaterialBomModel> GetMaterialBomLists(string fNumbers)
         {
-            string sql = @"  select* from SJMaterialBomView where ItemId in( "+ itemIds + ") ;";
+            string sql = @"  select * from SJMaterialBomView where FNumber in( " + fNumbers + ") ;";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<MaterialBomModel>(sql).ToList();
             }
+        }
+
+        public DataTable GetMaterialBomLists()
+        {
+            return SqlHelper.ExecuteDataTable(@" select * from SJMaterialBomView ;", null);
         }
 
         public IList<int> GetMaterialFItemIds(string itemNames)

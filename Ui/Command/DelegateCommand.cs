@@ -23,8 +23,7 @@ namespace Ui.Command
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public DelegateCommand(Action<object> execute)
-      : this(execute, null)
+        public DelegateCommand(Action<object> execute): this(execute, null)
         { }
 
         public DelegateCommand(Action<object> execute, Func<object, bool> canExecute)

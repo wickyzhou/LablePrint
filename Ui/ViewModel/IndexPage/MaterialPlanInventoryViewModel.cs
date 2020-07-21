@@ -198,10 +198,44 @@ namespace Ui.ViewModel.IndexPage
 
             MouseLeftClickCommand1 = new DelegateCommand((obj) =>
             {
-                MaterialBomModel dr = (obj as DataGridRow).Item as MaterialBomModel;
-                dr.IsChecked = !dr.IsChecked;
+                //MaterialBomModel dr = (obj as DataGridRow).Item as MaterialBomModel;
+                //dr.IsChecked = !dr.IsChecked;
             });
-            ImportCommand = new DelegateCommand(Import);
+
+            ImportCommand = new DelegateCommand((obj) =>
+            {
+                StringBuilder sb = new StringBuilder();
+                //文件选择窗口
+                System.Windows.Forms.OpenFileDialog opd = new System.Windows.Forms.OpenFileDialog();
+                opd.Title = "选择文件";
+                //第一个参数是名称，随意取，第二个是模式匹配， 多个也是用“|”分割
+                opd.Filter = "EXCEL文件|*.xls*";
+
+                if (opd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    ImportFileFullName = opd.FileName;
+                    DataTable dataTable1 = new FileHelper().ConvertExcelToDataTable(opd.FileName, true);
+                    DataTable dataTable2 = _materialPlanInventoryService.GetMaterialBomLists();
+
+                    var query1 = from a in dataTable1.AsEnumerable()
+                                 join b in dataTable2.AsEnumerable()
+                                 on a.Field<string>("物料代码") equals b.Field<string>("Number")
+                                    into temp
+                                 from tt in temp.DefaultIfEmpty()
+                                 select new MaterialBomModel
+                                 {
+                                     Seq = Convert.ToInt32(a.Field<string>("Seq")),
+                                     Number = a.Field<string>("物料代码"),
+                                     ItemName = tt == null ? "" : tt.Field<string>("ItemName"),
+                                     BomCount = tt == null ? 0 : tt.Field<int>("BomCount"),
+                                     ItemId = tt == null ? 0 : tt.Field<int>("ItemId")
+                                 };
+                    MaterialBomLists.Clear();
+                    MaterialBomLists = new ObservableCollection<MaterialBomModel>(query1);
+                    
+                }
+                opd.Dispose();
+            });
 
             PurchaseRequisitionImportCommand = new DelegateCommand((obj) =>
             {
@@ -225,16 +259,16 @@ namespace Ui.ViewModel.IndexPage
                     var query1 = from a in dataTable1.AsEnumerable()
                                  join b in dataTable2.AsEnumerable()
                                  on a.Field<string>("物料代码") equals b.Field<string>("FNumber")
-                                 into temp
+                                    into temp
                                  from tt in temp.DefaultIfEmpty()
                                  select new PurchaseRequisitionImportVerificationModel
                                  {
                                      Seq = Convert.ToInt32(a.Field<string>("Seq")),
                                      FNumber = a.Field<string>("物料代码"),
-                                     FName = a.Field<string>("物料名称"),
                                      Quantity = Convert.ToDouble(a.Field<string>("数量")),
+                                     FName = tt == null ? "" : tt.Field<string>("FName"),
                                      SystemId = tt == null ? 0 : Convert.ToInt32(tt["FItemID"]),
-                                     IsPassed = tt == null ? false : true
+                                     IsPassed = tt == null || string.IsNullOrEmpty(a.Field<string>("物料代码")) || Convert.ToDouble(a.Field<string>("数量")) <= 0 ? false : true
                                  };
                     CheckedPurchaseRequisitionMaterialLists.Clear();
                     CheckedPurchaseRequisitionMaterialLists = new ObservableCollection<PurchaseRequisitionImportVerificationModel>(query1);
@@ -248,8 +282,8 @@ namespace Ui.ViewModel.IndexPage
                 MessageBoxResult result = System.Windows.MessageBox.Show("验证失败的数据将会被过滤，是否继续？", "【温馨提示】", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
-                    var sons = new List<PurchaseRequisitionSonModel>(); 
-                     var ss = CheckedPurchaseRequisitionMaterialLists.AsQueryable().Where(x => x.IsPassed);
+                    var sons = new List<PurchaseRequisitionSonModel>();
+                    var ss = CheckedPurchaseRequisitionMaterialLists.AsQueryable().Where(x => x.IsPassed);
                     var emp = _employeeLists.Where(m => m.FName == User.UserName).FirstOrDefault();
                     foreach (var item in ss)
                     {
@@ -301,7 +335,7 @@ namespace Ui.ViewModel.IndexPage
                     PurchaseRequisitionMainModel main = new PurchaseRequisitionMainModel()
                     {
                         //FHeadSelfP0131 = new BaseNumberNameModel() { FNumber = "10.01", FName = "销售部" },
-                        
+
                         FHeadSelfP0131 = new BaseNumberNameModel() { FNumber = "FSQLX02", FName = "生产部" },
                         FPlanCategory = new BaseNumberNameModel() { FNumber = "STD", FName = "标准" },
                         FBizType = new BaseNumberNameModel() { FNumber = "FPLX01", FName = "外购入库" },
@@ -330,7 +364,7 @@ namespace Ui.ViewModel.IndexPage
                     string postJson = JsonHelper.ObjectToJson(requestModel);
                     K3ApiInsertResponseModel response = new K3ApiService("Purchase_Requisition").Insert(postJson);
                     K3InsertResponseData = response.Data;
-                 
+
 
                     //if (response.StatusCode == 200)
                     //{
@@ -403,33 +437,7 @@ namespace Ui.ViewModel.IndexPage
             });
         }
 
-        private void Import(object obj)
-        {
-            StringBuilder sb = new StringBuilder();
-            //文件选择窗口
-            System.Windows.Forms.OpenFileDialog opd = new System.Windows.Forms.OpenFileDialog();
-            opd.Title = "选择文件";
-            //第一个参数是名称，随意取，第二个是模式匹配， 多个也是用“|”分割
-            opd.Filter = "EXCEL文件|*.xls*";
 
-            if (opd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                ImportFileFullName = opd.FileName;
-                DataTable dt = new FileHelper().ConvertExcelToDataTable(opd.FileName, true);
-                foreach (var item in dt.AsEnumerable().Select(m => m.Field<string>(0)))
-                {
-                    if (!string.IsNullOrEmpty(item))
-                        sb.Append(",'" + item + "'");
-                }
-                string itemNames = sb.ToString().Substring(1);
-                var itemList = _materialPlanInventoryService.GetMaterialFItemIds(itemNames);
-                if (itemList.Count > 0)
-                {
-                    _materialPlanInventoryService.GetMaterialBomLists(string.Join(",", itemList)).ToList().ForEach(x => MaterialBomLists.Add(x));
-                }
-            }
-            opd.Dispose();
-        }
 
 
 

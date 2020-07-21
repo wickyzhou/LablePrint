@@ -329,6 +329,15 @@ namespace Ui.Service
         }
 
 
+        public IList<ExportViewTypedColumnModel> GetExportViewTypedColumnWithCheckBox(int groupId)
+        {
+            string sql = @" select * from SJExportViewTypedColumn where IsValid=1 and ViewGroupId = @ViewGroupId";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<ExportViewTypedColumnModel>(sql, new { ViewGroupId = groupId}).ToList();
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -347,7 +356,6 @@ namespace Ui.Service
                 dataGridTextColumn.Width = item.ColumnWidthUnitType.IndexOf('*') > -1 ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
                 dataGridTextColumn.Visibility = item.ColumnVisibility ? Visibility.Visible : Visibility.Hidden;
                 dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-
             }
         }
 
@@ -357,7 +365,7 @@ namespace Ui.Service
         /// <returns></returns>
         public DataTable GetAllItems()
         {
-            return SqlHelper.ExecuteDataTable(@" select FItemID,FNumber from t_ICItem where FDeleted=0 ;", null);
+            return SqlHelper.ExecuteDataTable(@" select FItemID,FNumber,FName from t_ICItem where FDeleted=0 ;", null);
         }
     }
 }

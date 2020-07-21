@@ -1,8 +1,10 @@
-﻿using Common;
+﻿
+using Common;
 using Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Ui.Command;
 using Ui.Service;
+using Ui.View;
 using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel
@@ -522,44 +525,39 @@ namespace Ui.ViewModel
 
             if (Directory.Exists(HostConfig.HostValue))
             {
-                new DataTableImportExportHelper().ExportDataTableToExcel(_shippingService.GetShippingBillExprotDataTable(userDataId), HostConfig.HostValue, HostConfig.TypeDesciption );
-                MessageBox.Show("导出成功");
+                ExportView view = new ExportView();
+                (view.DataContext as ExportViewModel).Export(1, (type,outputEntity,checkBoxValue)=> 
+                {
+                    view.Close();
+                    if (type==1)
+                    {
+                        DataTable datatable = new DataTable();
+                        if (outputEntity == 1)
+                        {
+                            datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
+                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
+                            MessageBox.Show("导出成功");
+                        }
+                        else if (outputEntity == 2)
+                        {
+                            datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId);
+                            new DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
+                            MessageBox.Show("导出成功");
+                        }
+                        else if (outputEntity == 3)
+                        {
+                            datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
+                            new DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue,1);
+                            MessageBox.Show("导出成功");
+                        }
+                    }
+                });
+                view.ShowDialog();
             }
             else
             {
                 MessageBox.Show("目录不存在，请先选择导出的目录");
             }
-
-            //// 导出路径选择
-            //if (!Directory.Exists(HostConfig.HostValue))
-            //{
-            //    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-            //    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //    {
-            //        HostConfig.HostValue = fbd.SelectedPath;
-            //        var result = _commonService.SaveHostConfig(new HostConfigModel
-            //        {
-            //            TypeId = 4,
-            //            TypeDesciption = "托运单导出",
-            //            Host = _hostName,
-            //            HostValue = fbd.SelectedPath,
-            //            UserId = user.ID
-            //        });
-            //    }
-            //}
-
-            //// 导出数据 HostConfig.HostValue
-            //var lists = _shippingService.GetExprotShippingBill(userDataId);
-            //if (lists.Count() > 0)
-            //{
-            //    new FileHelper().ExportShippingBillToExcel(lists, HostConfig.HostValue);
-            //    MessageBox.Show("导出成功");
-            //}
-            //else
-            //{
-            //    MessageBox.Show("没有数据");
-            //}
             _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1, HostName = _hostName });
         }
 

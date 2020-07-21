@@ -214,17 +214,17 @@ namespace Ui.View.IndexPage
                 DateTime dateTime = this.DP2.SelectedDate.Value;
                 // 多个客户共用一个字段
                 //var lists = _work.GetProductiveTaskList(this.DP2.SelectedDate.Value);
-                var works = _work.GetMutiOrgNoteWorkDetail(dateTime);
-                foreach (var item in works)
-                {
-                    string f1 = GetNewNote(dateTime,item);
-                    string f2 = GetNewNote(dateTime,item); 
-                    string f3 = GetNewNote(dateTime,item);
-                    if (f1!=item.FRequest1 || f2!=item.FRequest2 || f3!=item.FRequest3)
-                    {
-                        _work.UpdateProductiveTaskWork(new ProductiveTaskWorkModel { FICMONo = item.FICMONo, FRequest1 = f1, FRequest2 = f2, FRequest3 = f3 });
-                    }
-                }
+                //var works = _work.GetMutiOrgNoteWorkDetail(dateTime);
+                //foreach (var item in works)
+                //{
+                //    string f1 = GetNewNote(dateTime,item);
+                //    string f2 = GetNewNote(dateTime,item); 
+                //    string f3 = GetNewNote(dateTime,item);
+                //    if (f1!=item.FRequest1 || f2!=item.FRequest2 || f3!=item.FRequest3)
+                //    {
+                //        _work.UpdateProductiveTaskWork(new ProductiveTaskWorkModel { FICMONo = item.FICMONo, FRequest1 = f1, FRequest2 = f2, FRequest3 = f3 });
+                //    }
+                //}
               
                 int rowCount = (int)new ProductiveTaskListService().AuditProductiveTaskList(dateTime);
                 if (rowCount > 0)
@@ -303,7 +303,7 @@ namespace Ui.View.IndexPage
 
         private string GetNewNote(DateTime date,ProductiveTaskWorkModel model)
         {
-            string note1 = @"/" + model.FOrgNo1 + " " + model.FModal2 + " " + model.FModal3 + " " + model.FRequest1;//   "/2678 38*1kg JW790A(专用4) 华南,HW/2733 3*1kg JW790A 奥凯盛，样油200G ";
+            string note1 = @"/" + model.FOrgNo1 + " " + model.FModal2 + " " + model.FModal3+ " " + model.FRequest1;//   "/2678 38*1kg JW790A(专用4) 华南,HW/2733 3*1kg JW790A 奥凯盛，样油200G ";
             string noteNew = string.Empty;
             Regex rg = new Regex(@"/(\d{4})");
             var matches = rg.Matches(note1);

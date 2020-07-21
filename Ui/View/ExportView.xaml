@@ -1,0 +1,58 @@
+﻿<Window x:Class="Ui.View.ExportView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ui.View"
+        xmlns:c="clr-namespace:Ui.Converter"
+              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1600" Style="{StaticResource WindowStyle400*225}" 
+        Title="导出数据">
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="0.3*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1" VerticalAlignment="Bottom" Margin="0 0 0 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="1" VerticalAlignment="Center"   IsChecked="{Binding Entity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={c:RadioButtonCheckConverter},ConverterParameter=1}" FontSize="14" VerticalContentAlignment="Center"
+                             Command="{Binding DynamicGrid1ShowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsChecked}">汇总</RadioButton>
+            <RadioButton Grid.Column="2" VerticalAlignment="Center" FontSize="14" VerticalContentAlignment="Center"
+                         IsChecked="{Binding Entity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={c:RadioButtonCheckConverter},ConverterParameter=2}"
+                             Command="{Binding DynamicGrid2ShowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsChecked}">明细</RadioButton>
+            <RadioButton x:Name="rbTyped" Grid.Column="3" VerticalAlignment="Center" FontSize="14" VerticalContentAlignment="Center"
+                           IsChecked="{Binding Entity,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={c:RadioButtonCheckConverter},ConverterParameter=3}"
+                         Command="{Binding DynamicGrid3ShowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsChecked}"
+                         >分类汇总</RadioButton>
+        </Grid>
+        
+        <Grid Grid.Row="2" Name="DynamicExportParamterGrid" Visibility="{Binding DynamicVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="0 5 0 0">
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="1" Content="物流类型" Margin="5" VerticalContentAlignment="Center" IsChecked="True" FontSize="11" FontFamily="微软雅黑" Command="{Binding MyCommand}"/>
+            <CheckBox Grid.Column="2" Content="用户" Margin="5" VerticalContentAlignment="Center"  FontSize="11" FontFamily="微软雅黑"/>-->
+        </Grid>
+        
+        <Grid Grid.Row="3">
+            <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 100 0" Height="30" IsDefault="True"  />
+                <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="30" />
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Window>

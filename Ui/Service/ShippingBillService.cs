@@ -129,16 +129,7 @@ namespace Ui.Service
             }
         }
 
-        public DataTable GetShippingBillExprotDataTable(int userDataId)
-        {
-            string sql;
-            if (userDataId == -1)
-                sql = @" select * from SJShippingBillExportView order by 系统单号,明细序号;";
-            else
-                sql = @"select * from SJShippingBillExportView where UserId=@UserId  order by 系统单号,明细序号";
 
-            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
-        }
 
 
         public bool AddShipingBillEntry(ShippingBillEntryModel entryModel)
@@ -280,7 +271,42 @@ namespace Ui.Service
             }
         }
 
-     
+
+
+        public DataTable GetShippingBillExprotDataTable1(int userDataId)
+        {
+            string sql;
+            if (userDataId == -1)
+                sql = @" select * from SJShippingBillExportView1 order by 系统单号;";
+            else
+                sql = @"select * from SJShippingBillExportView1 where UserId=@UserId  order by 系统单号";
+
+            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
+        }
+
+        public DataTable GetShippingBillExprotDataTable2(int userDataId)
+        {
+            string sql;
+            if (userDataId == -1)
+                sql = @" select * from SJShippingBillExportView2 order by 系统单号,明细序号;";
+            else
+                sql = @" select * from SJShippingBillExportView2 where UserId=@UserId  order by 系统单号,明细序号";
+
+            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
+        }
+
+        public DataTable GetShippingBillExprotDataTable3(int userDataId)
+        {
+            string sql;
+            if (userDataId == -1)
+                sql = @" select * from SJShippingBillExportView1 order by 系统单号;";
+            else
+                sql = @"select * from SJShippingBillExportView1 where UserId=@UserId  order by 系统单号;";
+
+            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
+        }
+
+
     }
 }
 

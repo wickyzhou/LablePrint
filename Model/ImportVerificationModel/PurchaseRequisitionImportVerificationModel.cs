@@ -7,9 +7,9 @@ namespace ImportVerificationModel
 {
     public class PurchaseRequisitionImportVerificationModel
     {
-        public int Seq { get; set; }
-
         public bool IsPassed { get; set; }
+
+        public int Seq { get; set; }
 
         public string FNumber { get; set; }
 

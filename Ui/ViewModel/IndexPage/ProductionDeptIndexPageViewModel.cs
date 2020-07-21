@@ -23,6 +23,11 @@ namespace Ui.ViewModel.IndexPage
             _service = new ProductionDeptIndexPageService();
             HostConfig = CommonService.GetHostConfig(5, HostName, User.ID) ?? new HostConfigModel() { TypeId=5,Host=HostName,UserId=User.ID,TypeDesciption= "投入产出率" };
             DelegateCommandInit();
+            GeneralParameter = new GeneralParameterModel() 
+            {
+                ParamBeginDate = DateTime.Now.AddMonths(-1).AddDays(1 - DateTime.Now.Day).Date,
+                ParamEndDate = DateTime.Now.AddMonths(-1).AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1)
+            };
         }
 
         private void DelegateCommandInit()
@@ -60,6 +65,21 @@ namespace Ui.ViewModel.IndexPage
               
             });
 
+            ProfitLossExportCommand = new DelegateCommand((obj) =>
+            {
+                // 导出数据
+                if (Directory.Exists(HostConfig.HostValue))
+                {
+                    ExportHelper.ExportDataTableToExcel(_service.GetProfitLoss(GeneralParameter.ParamBeginDate,GeneralParameter.ParamEndDate), HostConfig.HostValue, $"盘盈盘亏");
+                    MessageBox.Show("导出成功");
+                }
+                else
+                {
+                    MessageBox.Show("目录不存在，请先选择导出的目录");
+                }
+            });
+
+
             GenNewDataCommand = new DelegateCommand((obj) =>
             {
                 DateTime date = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
@@ -78,6 +98,7 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand DirectorySelectCommand { get; set; }
         public DelegateCommand GenNewDataCommand { get; set; }
         public DelegateCommand BucketSyncCommand { get; set; }
+        public DelegateCommand ProfitLossExportCommand { get; set; }
 
 
         private DateTime selectedDate = DateTime.Now;
@@ -92,6 +113,17 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        private GeneralParameterModel generalParameter;
+
+        public GeneralParameterModel GeneralParameter
+        {
+            get { return generalParameter; }
+            set
+            {
+                generalParameter = value;
+                this.RaisePropertyChanged(nameof(GeneralParameter));
+            }
+        }
 
 
 

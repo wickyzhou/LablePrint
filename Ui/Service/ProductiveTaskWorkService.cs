@@ -36,7 +36,7 @@ namespace Ui.Service
             string sql = @" select FNote from SJICMOList where FProductionDate=@FProductionDate and FWorkNo = @FWorkNo and FOrgID=@FOrgID; ";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return Convert.ToString( connection.ExecuteScalar<ProductiveTaskWorkModel>(sql, new { FProductionDate = productionDate, FWorkNo= fWorkNo, FOrgID= fOrgId }));
+                return Convert.ToString( connection.ExecuteScalar(sql, new { FProductionDate = productionDate, FWorkNo= fWorkNo, FOrgID= fOrgId }));
             }
         }
 

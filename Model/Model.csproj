@@ -60,11 +60,15 @@
     <Compile Include="Model\CustomerModel.cs" />
     <Compile Include="Model\DataGridColumnHeaderModel.cs" />
     <Compile Include="Model\EnumModel.cs" />
+    <Compile Include="Model\ExportDynamicCheckBoxModel.cs" />
+    <Compile Include="Model\ExportRadioButtonModel.cs" />
+    <Compile Include="Model\ExportViewTypedColumnModel.cs" />
+    <Compile Include="Model\GeneralParameterModel.cs" />
     <Compile Include="Model\LabelPrintCommonAdjustmentModel.cs" />
     <Compile Include="Model\LabelPrintCurrencyModel.cs" />
     <Compile Include="Model\LabelPrintSpecialRequestModel.cs" />
     <Compile Include="Model\MainMenuModel.cs" />
-    <Compile Include="Model\MaterialBomModel.cs" />
+    <Compile Include="ImportVerificationModel\MaterialBomModel.cs" />
     <Compile Include="Model\MaterialDemandModel.cs" />
     <Compile Include="Model\MaterialPlanInventoryParameterModel.cs" />
     <Compile Include="Model\MaterialPlanSeorderModel.cs" />

@@ -1,5 +1,4 @@
-﻿using Dal;
-using NPOI.HSSF.UserModel;
+﻿using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
@@ -7,8 +6,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Ui.Service;
 
-namespace Common
+namespace Ui.Helper
 {
     public class DataTableImportExportHelper
     {
@@ -26,7 +26,7 @@ namespace Common
 
             IRow row0 = sheet.CreateRow(0);
             row0.Height = (short)20 * 20;
-            
+
             //表头
             for (int i = 0; i < dataTable.Columns.Count; i++)
             {
@@ -44,10 +44,10 @@ namespace Common
                     if (s.Name == "Int16" || s.Name == "Int32" || s.Name == "Int64" || s.Name == "Float" || s.Name == "Double" || s.Name == "Decimal")
                     {
                         var x = dataTable.Rows[j][z];
-                        object value =x.GetType().Name== "DBNull"?0:x;
+                        object value = x.GetType().Name == "DBNull" ? 0 : x;
                         row1.CreateCell(z).SetCellValue(Convert.ToDouble(value));
                     }
-                       
+
                     else if (s.Name == "DateTime")
                         row1.CreateCell(z).SetCellValue(Convert.ToDateTime(dataTable.Rows[j][z]).ToString("yyyy-MM-dd HH:mm:ss"));
                     else
@@ -60,7 +60,7 @@ namespace Common
             fs.Close();
         }
 
-        public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName,int checkBoxValue,int groupId)
+        public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName, int checkBoxValue, int groupId)
         {
             string fullName = Path.Combine(filePath, $"{fileName}{DateTime.Now:yyyy-MM-dd}.xls");
 
@@ -71,7 +71,7 @@ namespace Common
             IWorkbook wb = new HSSFWorkbook();
 
             // 获取字段
-            // var typedColumn = new CommonService().GetExportViewTypedColumnWithCheckBox(groupId)
+            var typedColumn = new CommonService().GetExportViewTypedColumnWithCheckBox(groupId);
 
 
             //var result1 = dataTable.AsEnumerable().GroupBy(x => x.Field<string>(typedColumnName)).Select(x => x.First());

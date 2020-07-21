@@ -146,18 +146,29 @@
         </Border>
     </ControlTemplate>
     
-    <Style x:Key="WindowStyle600*400" TargetType="{x:Type Window}">
+    <Style x:Key="WindowStyle600*440" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="Height" Value="400"/>
+        <Setter Property="Height" Value="440"/>
         <Setter Property="Width" Value="600"/>
     </Style>
 
-    <Style x:Key="WindowStyle400*200" TargetType="{x:Type Window}">
+    <Style x:Key="WindowStyle500*280" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Height" Value="280"/>
+    </Style>
+
+    <Style x:Key="WindowStyle400*225" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -165,7 +176,9 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="Width" Value="400"/>
-        <Setter Property="Height" Value="200"/>
+        <Setter Property="Height" Value="225"/>
     </Style>
+
+
 </ResourceDictionary>
 

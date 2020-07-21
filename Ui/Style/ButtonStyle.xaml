@@ -230,6 +230,7 @@
     </Style>
 
     <Style x:Key="BtnInfoStyle1" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>
@@ -266,6 +267,7 @@
     </Style>
 
     <Style x:Key="BtnInfoStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>
@@ -296,6 +298,7 @@
 
 
     <Style x:Key="BtnSuccessStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>
         <Setter Property="Height" Value="25"/>
@@ -323,6 +326,7 @@
     </Style>
 
     <Style x:Key="BtnWarningStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>
         <Setter Property="Height" Value="25"/>
@@ -350,6 +354,7 @@
     </Style>
 
     <Style x:Key="BtnDangerStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>
         <Setter Property="Height" Value="25"/>
@@ -377,6 +382,7 @@
     </Style>
 
     <Style x:Key="BtnThemeStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Height" Value="25"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>

@@ -36,5 +36,12 @@ namespace Ui.Service
                 return Convert.ToInt32( connection.ExecuteScalar("SJSyncBucketInfo", null, null, null, CommandType.StoredProcedure));
             }
         }
+
+        public DataTable GetProfitLoss(DateTime beginDate,DateTime endDate)
+        {
+            string sql = "select * from SJProfitLossView where fdate>=@BeginDate and fdate<=@EndDate ; ";
+
+            return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@BeginDate", beginDate), new SqlParameter("@EndDate", endDate) });
+        }
     }
 }

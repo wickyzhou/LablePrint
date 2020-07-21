@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Model
 {
-    public class MaterialBomModel:NotificationObject
+    public class ExportDynamicCheckBoxModel:NotificationObject
     {
-		private bool isChecked =false;
+		private bool isChecked;
 
-		public bool  IsChecked
+		public bool IsChecked
 		{
 			get { return isChecked; }
 			set
@@ -19,11 +19,5 @@ namespace Model
 			}
 		}
 
-		public int ItemId { get; set; }
-
-        public string ItemName { get; set; }
-
-        public int BomCount { get; set; }
-
-    }
+	}
 }
