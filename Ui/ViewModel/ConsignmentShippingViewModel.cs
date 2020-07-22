@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +86,7 @@ namespace Ui.ViewModel
             ShippingBillSelectionChangedCommand = new DelegateCommand(ShippingBillSelectionChanged);
             ShippingBillModifyCommand = new DelegateCommand(ModifyShippingBill);
             ShippingBillDeleteCommand = new DelegateCommand(DeleteShippingBill);
-            ShippingBillExportCommand = new DelegateCommand(ExportShippingData);
+            //ShippingBillExportCommand = new DelegateCommand(ExportShippingData);
             ShippingBillDetailLogShowCommand = new DelegateCommand(ShowShippingBillDetailLog);
             ShippingBillCreateCommand = new DelegateCommand(CreateShippingBill);
             #endregion
@@ -119,15 +121,47 @@ namespace Ui.ViewModel
 
             ShippingBillExportCommand = new DelegateCommand((obj) =>
             {
-                // 导出数据
                 if (Directory.Exists(HostConfig.HostValue))
                 {
-                    ExportShippingData(obj);
+                    ExportView view = new ExportView();
+                    (view.DataContext as ExportViewModel).Export(1, (type, outputEntity, checkBoxValue, orderedColumns) =>
+                    {
+                        view.Close();
+                        if (type == 1)
+                        {
+                            DataTable datatable = new DataTable();
+                            if (outputEntity == 1)
+                            {
+                                datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
+                                new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
+                                MessageBox.Show("导出成功");
+                            }
+                            else if (outputEntity == 2)
+                            {
+                                datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId);
+                                new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
+                                MessageBox.Show("导出成功");
+                            }
+                            else if (outputEntity == 3)
+                            {
+                                datatable = _shippingService.GetShippingBillExprotDataTable3(userDataId, string.Join(",", orderedColumns));
+                                new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue, 1, orderedColumns);
+                                MessageBox.Show("导出成功");
+                            }
+                        }
+                    });
+                    view.ShowDialog();
                 }
                 else
                 {
                     MessageBox.Show("目录不存在，请先选择导出的目录");
+                    DirectorySelectCommand.Execute(null);
+                   // MethodBase.GetCurrentMethod().Invoke(null,null);
+                    //递归调用
+                   // StackFrame frame = new StackFrame(0);
+                   //frame.GetMethod().Invoke(0,null);
                 }
+                _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1, HostName = _hostName });
             });
         }
 
@@ -523,42 +557,7 @@ namespace Ui.ViewModel
         private void ExportShippingData(object obj)
         {
 
-            if (Directory.Exists(HostConfig.HostValue))
-            {
-                ExportView view = new ExportView();
-                (view.DataContext as ExportViewModel).Export(1, (type,outputEntity,checkBoxValue,orderedColumns)=> 
-                {
-                    view.Close();
-                    if (type==1)
-                    {
-                        DataTable datatable = new DataTable();
-                        if (outputEntity == 1)
-                        {
-                            datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
-                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
-                            MessageBox.Show("导出成功");
-                        }
-                        else if (outputEntity == 2)
-                        {
-                            datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId);
-                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
-                            MessageBox.Show("导出成功");
-                        }
-                        else if (outputEntity == 3)
-                        {
-                            datatable = _shippingService.GetShippingBillExprotDataTable3(userDataId, string.Join(",",orderedColumns));
-                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue,1, orderedColumns);
-                            MessageBox.Show("导出成功");
-                        }
-                    }
-                });
-                view.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("目录不存在，请先选择导出的目录");
-            }
-            _commonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportShippingData", ActionDesc = "导出托运单", UserId = user.ID, MainMenuId = 7, PKId = -1, HostName = _hostName });
+          
         }
 
         private void ShowShippingBillDetailLog(object obj)

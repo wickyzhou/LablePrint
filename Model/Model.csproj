@@ -48,6 +48,7 @@
     <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionSonModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiTokenResponseModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
+    <Compile Include="Model\AmountRangeModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
     <Compile Include="Model\BarTenderTemplateModel.cs" />
     <Compile Include="Model\BatchNoPrintTotalModel.cs" />
@@ -87,6 +88,8 @@
     <Compile Include="Model\QuerySchemaEntryModel.cs" />
     <Compile Include="Model\QuerySchemaModel.cs" />
     <Compile Include="Model\QuerySchemaSeqModel.cs" />
+    <Compile Include="Model\SalesRebateModel.cs" />
+    <Compile Include="Model\SalesRebateQueryParameterModel.cs" />
     <Compile Include="Model\SelectedConsignmentBillsModel.cs" />
     <Compile Include="Model\SellOrderListModel.cs" />
     <Compile Include="Model\BucketModel.cs" />

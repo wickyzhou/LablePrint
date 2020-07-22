@@ -313,7 +313,7 @@ namespace Ui.Service
             });
         }
 
-        public void GetDataGridColumnHeader(DataGrid dataGrid, int beginColumn)
+        public void GetDataGridColumnHeader(DataGrid dataGrid, int beginColumn=0)
         {
 
             List<DataGridColumnHeaderModel> headers;
