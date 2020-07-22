@@ -329,14 +329,28 @@ namespace Ui.Service
         }
 
 
+        public IEnumerable<ExportViewTypedColumnModel> GetExportViewTypedColumnUniqueValue(int groupId,int checkBoxValue,string orderedFieldName)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@groupId", groupId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@checkBoxValue", checkBoxValue, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@orderedFieldName", orderedFieldName, DbType.String, ParameterDirection.Input);
+
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<ExportViewTypedColumnModel>("SJGetExportViewTypedColumn", dp,null,true,null, System.Data.CommandType.StoredProcedure);
+            }
+        }
+
         public IList<ExportViewTypedColumnModel> GetExportViewTypedColumnWithCheckBox(int groupId)
         {
             string sql = @" select * from SJExportViewTypedColumn where IsValid=1 and ViewGroupId = @ViewGroupId";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<ExportViewTypedColumnModel>(sql, new { ViewGroupId = groupId}).ToList();
+                return connection.Query<ExportViewTypedColumnModel>(sql, new { ViewGroupId = groupId }).ToList();
             }
         }
+
 
         /// <summary>
         /// 

@@ -526,7 +526,7 @@ namespace Ui.ViewModel
             if (Directory.Exists(HostConfig.HostValue))
             {
                 ExportView view = new ExportView();
-                (view.DataContext as ExportViewModel).Export(1, (type,outputEntity,checkBoxValue)=> 
+                (view.DataContext as ExportViewModel).Export(1, (type,outputEntity,checkBoxValue,orderedColumns)=> 
                 {
                     view.Close();
                     if (type==1)
@@ -541,13 +541,13 @@ namespace Ui.ViewModel
                         else if (outputEntity == 2)
                         {
                             datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId);
-                            new DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
+                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
                             MessageBox.Show("导出成功");
                         }
                         else if (outputEntity == 3)
                         {
-                            datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
-                            new DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue,1);
+                            datatable = _shippingService.GetShippingBillExprotDataTable3(userDataId, string.Join(",",orderedColumns));
+                            new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue,1, orderedColumns);
                             MessageBox.Show("导出成功");
                         }
                     }

@@ -62,7 +62,7 @@ namespace Ui.View
                 checkBox.Foreground = new SolidColorBrush((Color)Application.Current.Resources["GenericRedColor"]);
                 checkBox.HorizontalAlignment = HorizontalAlignment.Center;
                 checkBox.Command = (this.DataContext as ExportViewModel).CheckBoxSelectCommand;
-                checkBox.CommandParameter = xx[i].TypedColumnId;
+                checkBox.CommandParameter = new List<object> { xx[i].TypedColumnId, xx[i].TypedColumnName};
 
 
                 /* //这种方法是可行的，但是跟viewmodel就不相关了
@@ -73,23 +73,10 @@ namespace Ui.View
               this.DynamicExportParamterGrid.CommandBindings.Add(cb);
                 */
 
-                //  CommandBinding cb = new CommandBinding();
-                //cb.Command = (this.DataContext as ExportViewModel).CheckBoxSelectCommand;
-                //this.DynamicExportParamterGrid.CommandBindings.Add(cb);
-
-                //CommandBinding commandBinding = new CommandBinding();
-                //commandBinding.Command = new RoutedCommand("CheckBoxSelectCommand", typeof(ExportViewModel));
-                //checkBox.CommandBindings.Add(commandBinding);
-                //checkBox.Command = new RoutedCommand("CheckBoxSelectCommand", typeof(ExportViewModel));
-
                 this.DynamicExportParamterGrid.Children.Add(checkBox);
                 Grid.SetColumn(checkBox, i + 1);
             }
         }
-        void cb_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            MessageBox.Show("触发了事件");
-            e.Handled = true;
-        }
+
     }
 }

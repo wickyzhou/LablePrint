@@ -295,13 +295,13 @@ namespace Ui.Service
             return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
         }
 
-        public DataTable GetShippingBillExprotDataTable3(int userDataId)
+        public DataTable GetShippingBillExprotDataTable3(int userDataId,string orderedColumns)
         {
             string sql;
             if (userDataId == -1)
-                sql = @" select * from SJShippingBillExportView1 order by 系统单号;";
+                sql = @" select dense_rank()over( order by " + orderedColumns + @") 组号 ,* from SJShippingBillExportView1 ; ";
             else
-                sql = @"select * from SJShippingBillExportView1 where UserId=@UserId  order by 系统单号;";
+                sql = @" select dense_rank()over( order by " + orderedColumns + @") 组号 ,* from SJShippingBillExportView1 where UserId=@UserId ;";
 
             return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
         }
