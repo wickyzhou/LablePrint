@@ -13,11 +13,13 @@ namespace Ui.ViewModel
     public class BaseViewModel : NotificationObject
     {
 
-        public UserModel User { get; set; }= (MemoryCache.Default["UserCache"] as UserCacheModel).User;
+        public UserModel User { get; set; } = (MemoryCache.Default["UserCache"] as UserCacheModel).User ;
 
         public string HostName { get; set; } = Dns.GetHostName();
 
         public CommonService CommonService { get; set; } = new CommonService();
+
+        public ComboBoxSearchService ComboBoxSearchService { get; set; } = new ComboBoxSearchService();
 
         private HostConfigModel hostConfig;
 

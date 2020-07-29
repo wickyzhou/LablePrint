@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Model
 {
-    public class AmountRangeModel
+    public class SalesRebateAmountRangeModel
     {
         public int Id { get; set; }
 
@@ -24,6 +24,5 @@ namespace Model
         public bool IsValid { get; set; }
 
         public DateTime CreateTime { get; set; }
-
     }
 }

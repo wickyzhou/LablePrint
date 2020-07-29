@@ -8,5 +8,7 @@
     <FontFamily x:Key="Iconfont1">/Resource/#iconfont</FontFamily>
 
     <FontFamily x:Key="SchemaSeqIconfont">/Resource/SchemaSeq/#iconfont</FontFamily>
-    
+
+    <FontFamily x:Key="QueryIconfont">/Resource/QueryIcon/#iconfont</FontFamily>
+
 </ResourceDictionary>

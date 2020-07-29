@@ -4,7 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ui.View.IndexPage"
-      mc:Ignorable="d" 
+      xmlns:c="clr-namespace:Ui.Converter"
+      xmlns:p="clr-namespace:Model;assembly=Model"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="1000"
       Title="SalesRebatePage">
 
@@ -69,10 +72,27 @@
 
         </Grid>
 
-        <DataGrid Name="DGSalesRebate" Grid.Row="3" Style="{StaticResource SingleSelectionDataGridStyle}"
-                  ItemsSource="{Binding SalesRebateLists}"
-                  >
+        <GroupBox Grid.Row="3" Padding="0 2" Margin="0 5">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Style="{StaticResource BtnSuccessStyle}" Content="新增" Command="{Binding SalesRebateCreateCommand}"/>
+                    <Button Grid.Column="1" Style="{StaticResource BtnSuccessStyle}" Content="复制" Margin="15 0 0 0" Command="{Binding SalesRebateCopyCommand}"/>
+                </Grid>
+            </GroupBox.Header>
+            <GroupBox.Content>
+                <DataGrid Name="DGSalesRebate"  Style="{StaticResource SingleSelectionDataGridStyle}"
+                  ItemsSource="{Binding SalesRebateLists}" SelectedItem="{Binding SalesRebateSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding SalesRebateModifyCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </DataGrid>
+            </GroupBox.Content>
+        </GroupBox>
 
-        </DataGrid>
     </Grid>
 </Page>

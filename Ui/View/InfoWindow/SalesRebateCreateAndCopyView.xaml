@@ -1,0 +1,151 @@
+﻿<Window x:Class="Ui.View.InfoWindow.SalesRebateCreateAndCopyView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ui.View.InfoWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        mc:Ignorable="d"
+         xmlns:c="clr-namespace:Ui.Converter"
+        xmlns:cb="clr-namespace:Ui.Extension"
+        Title="新增" Style="{StaticResource WindowStyle700*500}">
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.6*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+         
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="返利类型" Style="{StaticResource TextBlockStyle15}"/>
+            <ComboBox  Grid.Row="0" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+                              SelectedValue="{Binding Entity.RebateClass,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                               >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            
+
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="计算字段" Style="{StaticResource TextBlockStyle15}"/>
+            <ComboBox  Grid.Row="0" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding IsTaxAmountLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+                              SelectedValue="{Binding Entity.IsTaxAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                               >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="比例类型" Style="{StaticResource TextBlockStyle15}"/>
+            <ComboBox  Grid.Row="0" Grid.Column="5"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebatePctClassLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+                              SelectedValue="{Binding Entity.RebatePctClass,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                               >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <!--IsEnabled="{Binding SalesRebateEntity.RebatePctClass}"-->
+            <TextBox Grid.Row="0" Grid.Column="6" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding SalesRebateEntity.RebatePct}" IsEnabled="{Binding Entity.RebatePctClass,Converter={c:SalesRebateFixedPercentIsEnabledConverter}}"  />
+
+            <TextBlock Grid.Row="1"  Grid.Column="0" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
+
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="1"  DataSource="{Binding OrganizationLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+                                            SelectedItem="{Binding OrganizationSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       Style="{StaticResource SearchComboBoxStyle}">
+            </cb:SearchComboBox>
+
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="案子名称" Style="{StaticResource TextBlockStyle15}"/>
+
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="3"  DataSource="{Binding CaseLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+                                            SelectedItem="{Binding CaseSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       Style="{StaticResource SearchComboBoxStyle}">
+          
+            <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </cb:SearchComboBox>
+
+            <TextBlock Grid.Row="1" Grid.Column="4" Text="产品型号" Style="{StaticResource TextBlockStyle15}"/>
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="5"  DataSource="{Binding MaterialLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+                                            SelectedItem="{Binding MaterialSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       Style="{StaticResource SearchComboBoxStyle}">
+            </cb:SearchComboBox>
+
+        </Grid>
+
+        <GroupBox Grid.Row="1" Margin="0 10 0 0"  Padding="0 8" IsEnabled="{Binding Entity.RebatePctClass,Converter={c:SalesRebateAmountRangeIsEnabledConverter}}">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Text="分段返利" Style="{StaticResource TextBlockStyle15}"/>
+                    <Button Grid.Column="1"  Content="添加" Command="{Binding SalesRebateAmountRangeCreatecommand}" Style="{StaticResource BtnSuccessStyle}"/>
+
+                    <ComboBox Name="material" Grid.Row="1" Grid.Column="2"  SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+                                            SelectedItem="{Binding MaterialSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       Style="{StaticResource SearchComboBoxStyle}"  KeyUp="material_KeyUp">
+                    </ComboBox>
+
+                </Grid>
+            </GroupBox.Header>
+            <GroupBox.Content>
+                <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding SalesRebateAmountRangeLists}" SelectedItem="{Binding SalesRebateAmountRangeSelectedItem}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn DataGridColumn.Header="Id" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.Id}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="金额下限" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.TaxAmountLower}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="金额上限" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.TaxAmountUpper}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="返利比例" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.SalesRebatePct}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="生效日期" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.EffectiveDate,StringFormat=yyyy-MM-dd}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="截止日期" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.ExpirationDate,StringFormat=yyyy-MM-dd}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="当前使用" DataGridBoundColumn.Binding="{Binding SalesRebateAmountRangeEntity.IsValid}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                    </DataGrid.Columns>
+
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding SalesRebateAmountRangeModifyCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                    
+                </DataGrid>
+            </GroupBox.Content>
+        </GroupBox>
+
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 150 0" Height="26"/>
+            <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="26" />
+        </StackPanel>
+    </Grid>
+</Window>

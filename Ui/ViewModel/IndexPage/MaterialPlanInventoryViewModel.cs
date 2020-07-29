@@ -365,33 +365,6 @@ namespace Ui.ViewModel.IndexPage
                     K3ApiInsertResponseModel response = new K3ApiService("Purchase_Requisition").Insert(postJson);
                     K3InsertResponseData = response.Data;
 
-
-                    //if (response.StatusCode == 200)
-                    //{
-                    //    K3InsertResponseData = response.Data;
-                    //    fBillNo = response.Data.BillNo;
-                    //    var check = new K3ApiCheckBillRequestMode()
-                    //    {
-                    //        Data = new K3ApiCheckBillDataRequestMode()
-                    //        {
-                    //            FBillNo = K3InsertResponseData.BillNo,
-                    //            FChecker = emp.FName,
-                    //            FCheckDirection = 1,// 1 开启多级审核，预审
-                    //            FDealComment = ""
-                    //        }
-                    //    };
-                    //    int count = 0;
-                    //    string json = JsonHelper.ObjectToJson(check);
-                    //    var checkRes = new K3ApiService("Purchase_Requisition").CheckBill(json);
-                    //    while (checkRes.StatusCode != 200 && count < 3)
-                    //    {
-                    //        checkRes = new K3ApiService("Purchase_Requisition").CheckBill(json);
-                    //        count++;
-                    //    }
-
-                    //    MessageBox.Show($"{checkRes.Message}");
-                    //}
-                    //else
                     MessageBox.Show($"{response.Message}");
                 }
             });

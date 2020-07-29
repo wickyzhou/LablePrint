@@ -45,7 +45,8 @@
                     <TextBlock Text="{TemplateBinding Title}" Margin="10 0 0 0" FontFamily="微软雅黑,黑体" FontSize="12" Foreground="#fff" VerticalAlignment="Center"></TextBlock>
                     <Grid Grid.Row="0" Background="#111" >
                         <StackPanel  HorizontalAlignment="Right" MaxHeight="26" Background="#111" Orientation="Horizontal">
-                            <Button Style="{StaticResource BtnCloseStyle}" Content="&#xe724;"  Command="{x:Static ApplicationCommands.Close}" ToolTip="关闭" Margin=" 0 3 5 0" />
+                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助或最大化" Name="BtnHelp" Command="{x:Static ApplicationCommands.Help}" FontSize="22" Margin="0 1 0 0 "/>
+                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{x:Static ApplicationCommands.Close}" ToolTip="关闭" Margin="8 2 10 0"/>
                         </StackPanel>
                     </Grid>
                     <Border Background="#d6e7f1" CornerRadius="3" Grid.Row="1" Margin="3" BorderThickness="1" >
@@ -90,8 +91,8 @@
                             <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
-                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助" Name="BtnHelp" Command="{Binding WindowHelpCommand}" FontSize="22" Margin="0 1 0 0 "/>
-                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{Binding WindowCloseCommand}" ToolTip="关闭" Margin="8 2 10 0"/>
+                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助或最大化" Name="BtnHelp" Command="{x:Static ApplicationCommands.Help}" FontSize="22" Margin="0 1 0 0 "/>
+                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{x:Static ApplicationCommands.Close}" ToolTip="关闭" Margin="8 2 10 0"/>
                         </StackPanel>
                     </Grid>
                     <Border Background="#d6e7f1" CornerRadius="3" Grid.Row="1" Margin="2" BorderThickness="2">
@@ -133,6 +134,7 @@
                             <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助或最大化" Name="BtnHelp" Command="{x:Static ApplicationCommands.Help}" FontSize="22" Margin="0 1 0 0 "/>
                             <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{x:Static ApplicationCommands.Close}" ToolTip="关闭" Margin="8 2 10 0"/>
                         </StackPanel>
                     </Grid>
@@ -145,6 +147,20 @@
             </Border>
         </Border>
     </ControlTemplate>
+
+
+
+
+    <Style x:Key="WindowStyle700*500" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="500"/>
+        <Setter Property="Width" Value="700"/>
+    </Style>
     
     <Style x:Key="WindowStyle600*440" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
@@ -156,6 +172,8 @@
         <Setter Property="Height" Value="440"/>
         <Setter Property="Width" Value="600"/>
     </Style>
+    
+    
 
     <Style x:Key="WindowStyle500*280" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
