@@ -69,7 +69,6 @@ namespace Ui.View.InfoWindow
                 }
                 else if (e.Key == Key.Up || e.Key == Key.Down)
                 {
-                  
                     if (comboBox.Items.Count > 0)
                     {
                         comboBox.IsDropDownOpen = true;

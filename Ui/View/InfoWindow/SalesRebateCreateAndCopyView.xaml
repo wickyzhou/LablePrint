@@ -29,76 +29,75 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
-         
+
+
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="1"  DataSource="{Binding OrganizationLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+                                            SelectedItem="{Binding OrganizationSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                       Style="{StaticResource SearchComboBoxStyle}" Margin="0,20,0,0" VerticalAlignment="Top"/>
+
+
             <TextBlock Grid.Row="0" Grid.Column="0" Text="返利类型" Style="{StaticResource TextBlockStyle15}"/>
-            <ComboBox  Grid.Row="0" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox  Grid.Row="0" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding Entity.RebateClass,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding Entity.RebateClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                                                       CommandParameter="{Binding SelectedValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-            
+
 
             <TextBlock Grid.Row="0" Grid.Column="2" Text="计算字段" Style="{StaticResource TextBlockStyle15}"/>
-            <ComboBox  Grid.Row="0" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding IsTaxAmountLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox  Grid.Row="0" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding IsTaxAmountLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding Entity.IsTaxAmount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding Entity.IsTaxAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                                                       CommandParameter="{Binding SelectedValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
 
             <TextBlock Grid.Row="0" Grid.Column="4" Text="比例类型" Style="{StaticResource TextBlockStyle15}"/>
-            <ComboBox  Grid.Row="0" Grid.Column="5"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebatePctClassLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox  Grid.Row="0" Grid.Column="5"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebatePctClassLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding Entity.RebatePctClass,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding Entity.RebatePctClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                                                       CommandParameter="{Binding SelectedValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
             <!--IsEnabled="{Binding SalesRebateEntity.RebatePctClass}"-->
-            <TextBox Grid.Row="0" Grid.Column="6" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding SalesRebateEntity.RebatePct}" IsEnabled="{Binding Entity.RebatePctClass,Converter={c:SalesRebateFixedPercentIsEnabledConverter}}"  />
+            <TextBox Grid.Row="0" Grid.Column="6" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding SalesRebateEntity.RebatePct}" IsEnabled="{Binding Entity.RebatePctClass, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}"  />
 
             <TextBlock Grid.Row="1"  Grid.Column="0" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
 
-            <cb:SearchComboBox Grid.Row="1" Grid.Column="1"  DataSource="{Binding OrganizationLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
-                                            SelectedItem="{Binding OrganizationSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       Style="{StaticResource SearchComboBoxStyle}">
-            </cb:SearchComboBox>
-
             <TextBlock Grid.Row="1" Grid.Column="2" Text="案子名称" Style="{StaticResource TextBlockStyle15}"/>
 
-            <cb:SearchComboBox Grid.Row="1" Grid.Column="3"  DataSource="{Binding CaseLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="3"  DataSource="{Binding CaseLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
                                             SelectedItem="{Binding CaseSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        Style="{StaticResource SearchComboBoxStyle}">
-          
-            <i:Interaction.Triggers>
+
+                <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding LogisticsTypeSelectionChangedCommand}"   
-                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                                                       CommandParameter="{Binding SelectedValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </cb:SearchComboBox>
 
             <TextBlock Grid.Row="1" Grid.Column="4" Text="产品型号" Style="{StaticResource TextBlockStyle15}"/>
-            <cb:SearchComboBox Grid.Row="1" Grid.Column="5"  DataSource="{Binding MaterialLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
+            <cb:SearchComboBox Grid.Row="1" Grid.Column="5"  DataSource="{Binding MaterialLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   SelectedValuePath="Id" DisplayMemberPath="SearchText" 
                                             SelectedItem="{Binding MaterialSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                       Style="{StaticResource SearchComboBoxStyle}">
-            </cb:SearchComboBox>
+                                       Style="{StaticResource SearchComboBoxStyle}"/>
 
         </Grid>
 
