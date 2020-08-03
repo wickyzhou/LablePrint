@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using Ui.MVVM.Common;
 
 namespace Ui.Service
@@ -318,7 +319,7 @@ namespace Ui.Service
 
             List<DataGridColumnHeaderModel> headers;
 
-            string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName order by ColumnOrder desc ;";
+            string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName  and ColumnVisibility=1 order by ColumnOrder desc ;";
 
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -364,11 +365,11 @@ namespace Ui.Service
             {
                 DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
                 dataGridTextColumn.Header = item.ColumnHeaderName;
+
                 dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
                 dataGridTextColumn.Binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
-                //var s = item.ColumnWidthUnitType.IndexOf('*');
                 dataGridTextColumn.Width = item.ColumnWidthUnitType.IndexOf('*') > -1 ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
-                dataGridTextColumn.Visibility = item.ColumnVisibility ? Visibility.Visible : Visibility.Hidden;
+                //dataGridTextColumn.Visibility = item.ColumnVisibility ? Visibility.Visible : Visibility.Hidden;
                 dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
             }
         }
@@ -381,5 +382,7 @@ namespace Ui.Service
         {
             return SqlHelper.ExecuteDataTable(@" select FItemID,FNumber,FName from t_ICItem where FDeleted=0 ;", null);
         }
+
+
     }
 }

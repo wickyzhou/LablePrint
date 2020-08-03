@@ -48,23 +48,18 @@ namespace Ui.View.InfoWindow
         {
             var comboBox = sender as ComboBox;
             var textBox = comboBox.Template.FindName("PART_EditableTextBox", comboBox) as TextBox;
-
+            var viewModel = this.DataContext as SalesRebateCreateAndCopyViewModel;
             if (!string.IsNullOrWhiteSpace(textBox.Text))
             {
-                var viewModel = this.DataContext as SalesRebateCreateAndCopyViewModel;
 
                 if (e.Key == Key.Enter)
                 {
                     if (viewModel.MaterialSearchedItem != null)
                     {
                         comboBox.IsDropDownOpen = false;
-                        comboBox.Text = viewModel.MaterialSearchedItem.SearchText;
-                        CbText = viewModel.MaterialSearchedItem.SearchText;
-                        textBox.Select(textBox.Text.Length, 0);
-                        if (viewModel.MaterialSearchedItem != null)
-                        {
-                            Console.WriteLine($"{ viewModel.MaterialSearchedItem.SearchText} \t {CbText}  \t {textBox.Text}");
-                        }
+                        //comboBox.Text = viewModel.MaterialSearchedItem.SearchText;
+                        //CbText = viewModel.MaterialSearchedItem.SearchText;
+                        textBox.Select(0, 0);
                     }
                 }
                 else if (e.Key == Key.Up || e.Key == Key.Down)
@@ -74,14 +69,10 @@ namespace Ui.View.InfoWindow
                         comboBox.IsDropDownOpen = true;
                         //按键盘上下键选择item,不按确认，又直接输入第二个搜索关键字， 再次按上下键时，会聚焦到下拉框滚动条（上下键会控制滚动条滚动）
                         if (comboBox.SelectedIndex == -1)
-                        comboBox.SelectedIndex =  0;
+                            comboBox.SelectedIndex = 0;
 
-                        comboBox.Text = viewModel.MaterialSearchedItem.SearchText;
-                        CbText = viewModel.MaterialSearchedItem.SearchText;
-                        if (viewModel.MaterialSearchedItem != null)
-                        {
-                            Console.WriteLine($"{ viewModel.MaterialSearchedItem.SearchText} \t {CbText}  \t {textBox.Text}");
-                        }
+                        //comboBox.Text = viewModel.MaterialSearchedItem.SearchText;
+                        //CbText = viewModel.MaterialSearchedItem.SearchText;
                     }
                 }
                 else
@@ -94,11 +85,6 @@ namespace Ui.View.InfoWindow
                         comboBox.Text = textShow;
                         CbText = textShow;
                         textBox.Select(textBox.Text.Length, 0);
-                        if (viewModel.MaterialSearchedItem!=null)
-                        {
-                            Console.WriteLine($"{ viewModel.MaterialSearchedItem.SearchText} \t {CbText}  \t {textBox.Text}");
-                        }
-                     
                     }
                 }
             }

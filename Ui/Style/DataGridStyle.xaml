@@ -192,8 +192,8 @@
                         </Trigger>
 
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                            <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

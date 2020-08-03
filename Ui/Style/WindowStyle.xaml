@@ -161,6 +161,8 @@
         <Setter Property="Height" Value="500"/>
         <Setter Property="Width" Value="700"/>
     </Style>
+
+
     
     <Style x:Key="WindowStyle600*440" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
@@ -185,6 +187,19 @@
         <Setter Property="Width" Value="500"/>
         <Setter Property="Height" Value="280"/>
     </Style>
+
+    <Style x:Key="WindowStyle500*350" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Height" Value="350"/>
+    </Style>
+    
+    
 
     <Style x:Key="WindowStyle400*225" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>

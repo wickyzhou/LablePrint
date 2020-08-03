@@ -5,12 +5,42 @@ using System.Text;
 
 namespace Model
 {
-    public class ComboBoxSearchModel
+    public class ComboBoxSearchModel:NotificationObject
     {
-        public int Id { get; set; }
+		private int id;
 
-        public string Name { get; set; }
+		public int Id
+		{
+			get { return id; }
+			set
+			{
+				id = value;
+				this.RaisePropertyChanged(nameof(Id));
+			}
+		}
 
-        public string SearchText { get; set; }
+		private string name;
+
+		public string Name
+		{
+			get { return name; }
+			set
+			{
+				name = value;
+				this.RaisePropertyChanged(nameof(Name));
+			}
+		}
+
+		private string searchText;
+
+		public string SearchText
+		{
+			get { return searchText; }
+			set
+			{
+				searchText = value;
+				this.RaisePropertyChanged(nameof(SearchText));
+			}
+		}
     }
 }

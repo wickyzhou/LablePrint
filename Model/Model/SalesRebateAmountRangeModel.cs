@@ -9,20 +9,23 @@ namespace Model
     {
         public int Id { get; set; }
 
-        public int SalesRebateId { get; set; }
+        public double AmountLower { get; set; }
 
-        public double TaxAmountLower { get; set; }
+        public double AmountUpper { get; set; }
 
-        public double TaxAmountUpper { get; set; }
-
-        public double RebatePct { get; set; }
+        public double SalesRebatePctValue { get; set; }
 
         public DateTime EffectiveDate { get; set; }
 
         public DateTime ExpirationDate { get; set; }
 
-        public bool IsValid { get; set; }
+        public int IsValid { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public Guid Guid { get; set; }
+
+        public string IsValidName { get; set; }
+
     }
 }

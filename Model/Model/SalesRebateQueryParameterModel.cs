@@ -31,15 +31,15 @@ namespace Model
 			}
 		}
 
-		private string custName;
+		private string orgName;
 
-		public string CustName
+		public string OrgName
 		{
-			get { return custName; }
+			get { return orgName; }
 			set
 			{
-				custName = value;
-				this.RaisePropertyChanged(nameof(CustName));
+				orgName = value;
+				this.RaisePropertyChanged(nameof(OrgName));
 			}
 		}
 

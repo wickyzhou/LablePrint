@@ -23,40 +23,39 @@
         </Grid>
         <Grid Grid.Row="1" Background="AntiqueWhite">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.3*"/>
-                <ColumnDefinition Width="0.8*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
             <TextBlock  Grid.Column="1" Text="结算开始日期" Style="{StaticResource TextBlockStyle15}"/>
             <DatePicker Grid.Column="2"   Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamBeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
             <TextBlock  Grid.Column="3" Text="结算结束日期" Style="{StaticResource TextBlockStyle15}"/>
             <DatePicker Grid.Column="4" Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ParamEndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
-            <Button Grid.Column="5" Style="{StaticResource BtnThemeStyle}" Content="计算返利比例" Margin="10 0" Height="35" Command="{Binding SalesRebatePercentageCalculateCommand}"/>
-            <Button Grid.Column="6" Style="{StaticResource BtnThemeStyle}" Content="计算返利金额" Margin="10 0" Height="35" Command="{Binding SalesRebateAmountCalculateCommand}"/>
+
+            <Button Grid.Column="5" Style="{StaticResource BtnThemeStyle}" Content="计算返利金额" Margin="10 0" Height="35" Command="{Binding SalesRebateAmountCalculateCommand}"/>
 
 
         </Grid>
 
         <Grid Grid.Row="2" Background="AntiqueWhite">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="39*"/>
-                <ColumnDefinition Width="104*"/>
-                <ColumnDefinition Width="130*"/>
-                <ColumnDefinition Width="104*"/>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="104*"/>
-                <ColumnDefinition Width="130*"/>
-                <ColumnDefinition Width="194*"/>
-                <ColumnDefinition Width="65*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock  Grid.Column="1" Text="产品型号" Style="{StaticResource TextBlockStyle15}"/>
+            <TextBlock  Grid.Column="5" Text="产品型号" Style="{StaticResource TextBlockStyle15}"/>
             
-            <TextBox Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.ProductionModelName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
+            <TextBox Grid.Column="6" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.ProductionModelName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
               ToolTip="模糊匹配"/>
 
             <TextBlock  Grid.Column="3" Text="案子名称" Style="{StaticResource TextBlockStyle15}"/>
@@ -64,32 +63,32 @@
 
             <TextBox Grid.Column="4" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.CaseName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
 
-            <TextBlock  Grid.Column="5" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
+            <TextBlock  Grid.Column="1" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
 
-            <TextBox Grid.Column="6" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.CustName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
+            <TextBox Grid.Column="2" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.OrgName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
             
-            <Button Grid.Column="7" Style="{StaticResource BtnInfoStyle}" Content="查询" Margin="10 0" IsDefault="True" ToolTip="快捷键【Enter】" Height="35"  Command="{Binding SalesRebateQueryCommand}"/>
+            <Button Grid.Column="7" Style="{StaticResource BtnInfoStyle}" Content="查询" Margin="10 0" IsDefault="True" ToolTip="快捷键【Enter】"  Command="{Binding SalesRebateQueryCommand}"/>
 
         </Grid>
 
-        <GroupBox Grid.Row="3" Padding="0 2" Margin="0 5">
+        <GroupBox Grid.Row="3" Padding="1 2" Margin="0 5">
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{StaticResource BtnSuccessStyle}" Content="新增" Command="{Binding SalesRebateCreateCommand}"/>
-                    <Button Grid.Column="1" Style="{StaticResource BtnSuccessStyle}" Content="复制" Margin="15 0 0 0" Command="{Binding SalesRebateCopyCommand}"/>
+                    <Button Grid.Column="0" Style="{StaticResource BtnThemeStyle}" Content="新增" Command="{Binding SalesRebateCreateCommand}"/>
+                    <Button Grid.Column="1" Style="{StaticResource BtnInfoStyle}" Content="复制" Command="{Binding SalesRebateCopyCommand}"/>
+                    <Button Grid.Column="2" Style="{StaticResource BtnWarningStyle}" Content="修改"  Command="{Binding SalesRebateModifyCommand}"/>
+                    <Button Grid.Column="3" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}"/>
                 </Grid>
             </GroupBox.Header>
             <GroupBox.Content>
                 <DataGrid Name="DGSalesRebate"  Style="{StaticResource SingleSelectionDataGridStyle}"
                   ItemsSource="{Binding SalesRebateLists}" SelectedItem="{Binding SalesRebateSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                    <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding SalesRebateModifyCommand}"
-CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
-                    </i:EventTrigger>
                 </DataGrid>
             </GroupBox.Content>
         </GroupBox>

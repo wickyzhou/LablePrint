@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ui.View.InfoWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:domain="clr-namespace:Ui.ViewModel"
         mc:Ignorable="d"
-            Title="修改金额分段" Style="{StaticResource WindowStyle500*280}" >
+        Title="添加分段金额" Style="{StaticResource WindowStyle500*350}" >
+    <i:Interaction.Behaviors>
+        <domain:ValidationExceptionBehavior/>
+    </i:Interaction.Behaviors>
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.2*"/>
@@ -14,8 +19,8 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="0.7*"/>
-            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="0.8*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.8*"/>
@@ -23,19 +28,19 @@
             <ColumnDefinition Width="0.3*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="1"  Grid.Column="0" Text="是否启用" Style="{StaticResource TextBlockStyle15}"/>
-        <TextBlock Grid.Row="2"  Grid.Column="0" Text="金额下限" Style="{StaticResource TextBlockStyle15}"/>
-        <TextBlock Grid.Row="3"  Grid.Column="0" Text="金额上限" Style="{StaticResource TextBlockStyle15}"/>
-        <TextBlock Grid.Row="4"  Grid.Column="0" Text="返利比例" Style="{StaticResource TextBlockStyle15}"/>
+        <TextBlock Grid.Row="2"  Grid.Column="0" Text="金额下限(万元)" Style="{StaticResource TextBlockStyle15}"/>
+        <TextBlock Grid.Row="3"  Grid.Column="0" Text="金额上限(万元)" Style="{StaticResource TextBlockStyle15}"/>
+        <TextBlock Grid.Row="4"  Grid.Column="0" Text="返利比例(%)" Style="{StaticResource TextBlockStyle15}"/>
 
 
         <ComboBox Grid.Row="1" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding IsValidLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-           SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" SelectedValue="{Binding Entity.IsValid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+           SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" SelectedValue="{Binding Entity.IsValid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" TabIndex="0"/>
 
-        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.TaxAmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="单位（万元）"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="≥本值" TabIndex="1"/>
 
-        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.TaxAmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="单位（万元）" />
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.AmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="＜本值" TabIndex="2"/>
 
-        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.SalesRebatePct,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ToolTip="只填数字，不需要填百分号，例如【15.2】表示返利比例为 15.2%" />
+        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.SalesRebatePctValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="只填数字，不需要填百分号，例如【99.99】表示返利比例为 99.99%" TabIndex="3"/>
 
         <TextBlock Grid.Row="5"  Grid.Column="0" Text="生效日期" Style="{StaticResource TextBlockStyle15}"/>
 
@@ -43,19 +48,21 @@
         <Grid Grid.Row="5" Grid.Column="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.8*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <DatePicker Grid.Column="0"  Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Entity.EffectiveDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+            <!--<DatePicker Grid.Column="0"  Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Entity.EffectiveDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>-->
+            <TextBox Grid.Column="0" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding Entity.EffectiveDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日" TabIndex="4"/>
+            <TextBlock  Grid.Column="1" Text="截止日期" Style="{StaticResource TextBlockStyle15}" />
 
-            <TextBlock  Grid.Column="1" Text="截止日期" Style="{StaticResource TextBlockStyle5}"/>
+            <TextBox Grid.Column="2" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding Entity.ExpirationDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日" TabIndex="5"/>
 
-            <DatePicker Grid.Column="2"  Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Entity.ExpirationDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+            <!--<DatePicker Grid.Column="2"  Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Entity.ExpirationDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>-->
         </Grid>
 
 
-        <StackPanel Grid.Row="6" Grid.RowSpan="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10 0 0 0">
-            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 120 0" Height="26" IsDefault="True" />
+        <StackPanel Grid.Row="6" Grid.RowSpan="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnSuccessStyle}" Content="确认" Margin="0 0 100 0" Height="26" IsDefault="True" />
             <Button Command="{Binding ExitCommand}" Style="{StaticResource BtnInfoStyle}" Content="取消" Height="26"/>
         </StackPanel>
     </Grid>
