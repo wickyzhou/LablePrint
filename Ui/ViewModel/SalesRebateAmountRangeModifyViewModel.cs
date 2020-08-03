@@ -15,8 +15,15 @@ namespace Ui.ViewModel
             IsValidLists = CommonService.GetEnumLists(999);
         }
 
+        public override void WithParam(SalesRebateAmountRangeModel entity, Action<int, SalesRebateAmountRangeModel> callBack)
+        {
+            base.WithParam(entity, callBack);
+        }
+
         public override void Save(object obj)
         {
+            Entity.IsValidName= IsValidSelectedItem.ItemValue;
+
             if (Entity.IsValid == 1 && ( Entity.AmountUpper < 0 || Entity.AmountLower < 0 || Entity.SalesRebatePctValue <= 0))
             {
                 MessageBox.Show("必须填写上下限、比例值、是否有效");
@@ -36,5 +43,8 @@ namespace Ui.ViewModel
         }
 
         public IEnumerable<EnumModel> IsValidLists { get; set; }
+
+        public EnumModel IsValidSelectedItem { get; set; }
+
     }
 }

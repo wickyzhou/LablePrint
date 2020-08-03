@@ -68,11 +68,11 @@ namespace Ui.ViewModel
                     {
                         if (_salesRebateAmountRangeService.Insert(outputEntity))
                         {
-                            SalesRebateAmountRangeLists.Clear();
-                            _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                            //SalesRebateAmountRangeLists.Clear();
+                            //_salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                            SalesRebateAmountRangeLists.Add(outputEntity);
+                            IsHistory = false;
                         }
-                        //SalesRebateAmountRangeLists.Add(outputEntity);
-                        IsHistory = false;
                     }
                 });
                 view.ShowDialog();
@@ -92,8 +92,9 @@ namespace Ui.ViewModel
                     {
                         if (_salesRebateAmountRangeService.Update(outputEntity))
                         {
-                            SalesRebateAmountRangeLists.Clear();
-                            _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                            //SalesRebateAmountRangeLists.Clear();
+                            //_salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                            ModelTypeHelper.PropertyMapper(SalesRebateAmountRangeSelectedItem, outputEntity);
                             IsHistory = false;
                         }
                     }

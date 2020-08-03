@@ -48,7 +48,6 @@
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="False">
                 <Setter Property="Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"/>
-
                 <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
             </Trigger>
         </Style.Triggers>
@@ -104,8 +103,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
+
     <Style TargetType="DataGrid" x:Key="DGStyle">
         <!--<Setter Property="IsReadOnly" Value="True"/>-->
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
@@ -132,7 +130,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <Style TargetType="DataGrid" x:Key="DGCheckBoxStyle">
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
@@ -164,9 +161,6 @@
         <Setter Property="CellStyle" Value="{StaticResource DGCellStyle2}"/>
     </Style>
 
-
-
-
     <Style TargetType="DataGrid" x:Key="SingleSelectionDataGridStyle">
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
@@ -179,12 +173,11 @@
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
-        <Setter Property="CellStyle" Value="{StaticResource DGCellStyle2}"/>
+        <Setter Property="CellStyle" Value="{StaticResource DGCellStyle}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Height" Value="26"/>
-
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>

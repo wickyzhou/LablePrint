@@ -34,7 +34,9 @@
 
 
         <ComboBox Grid.Row="1" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding IsValidLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-           SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" SelectedValue="{Binding Entity.IsValid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False" TabIndex="0"/>
+           SelectedItem="{Binding IsValidSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+           SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" SelectedValue="{Binding
+            Entity.IsValid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False" TabIndex="0"/>
 
         <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Entity.AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="≥本值" TabIndex="1" />
 

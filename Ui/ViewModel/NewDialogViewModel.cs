@@ -29,7 +29,7 @@ namespace Ui.ViewModel
 			}
 		}
 
-		public  void WithParam(T entity, Action<int, T> callBack)
+		public virtual void WithParam(T entity, Action<int, T> callBack)
 		{
 			Entity = entity;
 			CallBack = callBack;

@@ -13,7 +13,7 @@
     <Style TargetType="TextBox" x:Key="TextBoxStyle" BasedOn="{x:Null}">
         <Setter Property="Margin" Value="2 0"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Height" Value="26"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
