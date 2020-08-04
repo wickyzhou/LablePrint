@@ -89,6 +89,12 @@
             <GroupBox.Content>
                 <DataGrid Name="DGSalesRebate"  Style="{StaticResource SingleSelectionDataGridStyle}"
                   ItemsSource="{Binding SalesRebateLists}" SelectedItem="{Binding SalesRebateSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding SalesRebateModifyCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </DataGrid>
             </GroupBox.Content>
         </GroupBox>

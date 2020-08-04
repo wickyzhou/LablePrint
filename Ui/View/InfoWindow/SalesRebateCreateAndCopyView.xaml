@@ -51,10 +51,10 @@
 
 
             <TextBox Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding Entity.RebatePctValue}" IsEnabled="{Binding Entity.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" ToolTip="填写比例数字，例如99%，只需要填【99】"         TabIndex="3" />
-            
+
             <TextBlock Grid.Row="3" Grid.Column="3" Style="{StaticResource TextBlockStyle}" Text="%" FontSize="15" HorizontalAlignment="Left"
                 />
-            
+
 
             <TextBlock Grid.Row="0"  Grid.Column="4" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
             <cb:SearchComboBox Grid.Row="0" Grid.Column="5"  
@@ -108,17 +108,23 @@
                     <Button Grid.Column="2"  Content="添加" Command="{Binding SalesRebateAmountRangeCreateCommand}" Style="{StaticResource BtnThemeStyle}" Margin="8 0"/>
                     <Button Grid.Column="3"  Content="修改" Command="{Binding SalesRebateAmountRangeModifyCommand}" Style="{StaticResource BtnWarningStyle}"  Margin="8 0"/>
                     <!--<TextBlock Grid.Column="3"  Text="所有数据" Style="{StaticResource TextBlockStyle15}" Width="80"/>-->
-                    <CheckBox IsChecked="{Binding IsHistory}"  Grid.Column="5" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center"
+                    <CheckBox IsChecked="{Binding IsHistory}"  Grid.Column="5" Content="显示历史返利数据"  VerticalAlignment="Center" VerticalContentAlignment="Center"
                                Command="{Binding SalesRebateAmountRangeHistoryShowCommand}" 
                               CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 </Grid>
             </GroupBox.Header>
             <GroupBox.Content>
                 <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding SalesRebateAmountRangeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SalesRebateAmountRangeSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding SalesRebateAmountRangeModifyCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <DataGrid.Columns>
                         <!--<DataGridTextColumn DataGridColumn.Header="Guid" DataGridBoundColumn.Binding="{Binding Guid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>-->
-                        <DataGridTextColumn DataGridColumn.Header="(万元)下限>" DataGridBoundColumn.Binding="{Binding AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        <DataGridTextColumn DataGridColumn.Header="(万元)上限≤" DataGridBoundColumn.Binding="{Binding AmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="(万元)下限≥" DataGridBoundColumn.Binding="{Binding AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        <DataGridTextColumn DataGridColumn.Header="(万元)上限＜" DataGridBoundColumn.Binding="{Binding AmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="返利比例(%)" DataGridBoundColumn.Binding="{Binding SalesRebatePctValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="生效日期" DataGridBoundColumn.Binding="{Binding EffectiveDate,StringFormat=yyyy-MM-dd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         <DataGridTextColumn DataGridColumn.Header="截止日期" DataGridBoundColumn.Binding="{Binding ExpirationDate,StringFormat=yyyy-MM-dd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>

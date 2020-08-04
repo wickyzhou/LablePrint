@@ -48,7 +48,6 @@ namespace Common
             return JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented, timeCoverter);
         }
 
-
         public static string ObjectToJson(object obj)
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());

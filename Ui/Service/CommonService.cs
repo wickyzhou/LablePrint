@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Ui.MVVM.Common;
 
 namespace Ui.Service
@@ -365,11 +366,19 @@ namespace Ui.Service
             {
                 DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
                 dataGridTextColumn.Header = item.ColumnHeaderName;
-
                 dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
-                dataGridTextColumn.Binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
                 dataGridTextColumn.Width = item.ColumnWidthUnitType.IndexOf('*') > -1 ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
-                //dataGridTextColumn.Visibility = item.ColumnVisibility ? Visibility.Visible : Visibility.Hidden;
+
+                Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
+                if (!string.IsNullOrEmpty(item.BindingStringFormat))
+                    binding.StringFormat = item.BindingStringFormat;
+               
+                dataGridTextColumn.Binding = binding;
+
+                Binding binding1 = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
+                binding1.Converter = App.Current.Resources["ValueEqualZeroConverter"] as IValueConverter;
+                //dataGridTextColumn.Foreground = new SolidColorBrush((Color)Application.Current.Resources["GenericOrangeColor"]);
+                
                 dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
             }
         }

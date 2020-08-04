@@ -19,9 +19,6 @@
                 <Setter Property="Foreground" Value="Snow"/>
                 <Setter Property="FontSize" Value="13"/>
             </Trigger>
-
-
-
         </Style.Triggers>
     </Style>
 
@@ -104,6 +101,23 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SingleSelectionDataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
+                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
     <Style TargetType="DataGrid" x:Key="DGStyle">
         <!--<Setter Property="IsReadOnly" Value="True"/>-->
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
@@ -173,7 +187,7 @@
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
-        <Setter Property="CellStyle" Value="{StaticResource DGCellStyle}"/>
+        <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -187,10 +201,11 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
                             <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                            <Setter Property="FontSize" Value="12.5"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-              </Setter.Value>
+            </Setter.Value>
         </Setter>
     </Style>
 
@@ -211,7 +226,6 @@
             <Setter.Value>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Height" Value="26"/>
-
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
@@ -227,7 +241,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style  x:Key="DGColumnHeader" TargetType="DataGridColumnHeader">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Height" Value="28"/>

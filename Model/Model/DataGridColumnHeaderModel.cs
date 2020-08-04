@@ -31,5 +31,6 @@ namespace Model
 
         public string Note { get; set; }
 
+        public string BindingStringFormat { get; set; }
     }
 }
