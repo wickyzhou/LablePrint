@@ -11,18 +11,18 @@ namespace Ui.MVVM.Common
     {
         private static string GetConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings["Connection"].ToString();
+            return "Password=K3admin;Persist Security Info=True;User ID=sa;Initial Catalog=AIS20200115215325;Data Source=192.168.2.150;Pooling=true;Max Pool Size=40000;Min Pool Size=0;";  //ConfigurationManager.ConnectionStrings["Connection"].ToString();
         }
 
         private static string GetConnectionStringSR()
         {
-            return ConfigurationManager.ConnectionStrings["ConnectionSR"].ToString();
+            return "Password=K3admin;Persist Security Info=True;User ID=sa;Initial Catalog=AIS20170824161725;Data Source=192.168.2.150;Pooling=true;Max Pool Size=40000;Min Pool Size=0;"; //ConfigurationManager.ConnectionStrings["ConnectionSR"].ToString();
         }
 
 
         private static string GetConnectionStringOa()
         {
-            return ConfigurationManager.ConnectionStrings["ConnectionOa"].ToString();
+            return "Password=sokan,123;Persist Security Info=True;User ID=oa;Initial Catalog=v3x;Data Source=192.168.1.240;Pooling=true;Max Pool Size=40000;Min Pool Size=0;"; //ConfigurationManager.ConnectionStrings["ConnectionOa"].ToString();
         }
 
         public static IDbConnection UpdateConnection => new SqlServerConnection(GetConnectionString());

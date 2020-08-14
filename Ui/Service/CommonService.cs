@@ -393,5 +393,24 @@ namespace Ui.Service
         }
 
 
+
+
+        public List<ImportTemplateExcelHeaderFieldMappingModel> GetImportTemplateSJExcelHeaderFieldMappingLists(string tableName)
+        {
+            string sql = @" select * from SJImportTemplateExcelHeaderFieldMapping where TableName=@TableName";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<ImportTemplateExcelHeaderFieldMappingModel>(sql, new { TableName = tableName }).ToList();
+            }
+        }
+
+
+        public object ImportExcelToDatabaseTable(string fileName,string tableName)
+        {
+            var filedMapping = GetImportTemplateSJExcelHeaderFieldMappingLists(tableName);
+            DataTable dataTable = new FileHelper().ConvertExcelToDataTable2(fileName, true, filedMapping);
+            SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+            return dataTable.Rows[1][0];
+        }
     }
 }

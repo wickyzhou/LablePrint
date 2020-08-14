@@ -31,9 +31,13 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="ImportVerificationModel\ICStockBill29ImportVerificationModel.cs" />
+    <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliveryMainModel.cs" />
+    <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliverySonModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillDataRequestMode.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillRequestMode.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiCheckBillResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiInsertDataMultiResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertDataResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertResponseModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiInsertDataRequestModel.cs" />
@@ -50,7 +54,11 @@
     <Compile Include="Model\ActionOperationLogModel.cs" />
     <Compile Include="Model\CaseModel.cs" />
     <Compile Include="Model\ComboBoxSearchModel.cs" />
+    <Compile Include="Model\ImportTemplateExcelHeaderFieldMappingModel.cs" />
+    <Compile Include="Model\ItemProfitAccountingModel.cs" />
+    <Compile Include="Model\ItemProfitAccountingMonthlyModel.cs" />
     <Compile Include="Model\MaterialModel.cs" />
+    <Compile Include="Model\OaItemCostModel.cs" />
     <Compile Include="Model\ProductionModel.cs" />
     <Compile Include="Model\SalesRebateAmountRangeModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
