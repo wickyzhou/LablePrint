@@ -43,8 +43,7 @@
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
                               SelectedValue="{Binding Entity.MinusLastPeriodRebateType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TabIndex="0"               />
-            
-
+           
             <TextBlock Grid.Row="1" Grid.Column="0" Text="计算字段" Style="{StaticResource TextBlockStyle15}"/>
             <ComboBox  Grid.Row="1" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding TaxAmountTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
