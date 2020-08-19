@@ -31,7 +31,6 @@ namespace Ui.ViewModel.IndexPage
             {
                 CheckedICStockBill29VerificationLists = new ObservableCollection<ICStockBill29ImportVerificationModel>();
                 K3InsertResponseData = new K3ApiInsertDataMultiResponseModel();
-
             });
         }
 
@@ -52,11 +51,14 @@ namespace Ui.ViewModel.IndexPage
                 }
                 opd.Dispose();
             });
-
             ICStockBill29InsertK3Command = new DelegateCommand((obj) =>
-            {
+            {   
+
+
                 if (CheckedICStockBill29VerificationLists.Count == 0)
                     MessageBox.Show("请先导入Excel模板数据");
+                else if(CheckedICStockBill29VerificationLists.Where(m=>!m.IsPassed).Count()>0)
+                    MessageBox.Show("必须全部数据验证成功才允许导入，请修改Excel数据");
                 else
                 {   
                     var depts = CheckedICStockBill29VerificationLists.GroupBy(m => m.DeptFNumber);
@@ -125,7 +127,6 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand ICStockBill29ImportCommand { get; set; }
         public DelegateCommand ICStockBill29InsertK3Command { get; set; }
 
-
         private string importFileFullName;
 
         public string ImportFileFullName
@@ -164,3 +165,5 @@ namespace Ui.ViewModel.IndexPage
 
     }
 }
+
+

@@ -46,6 +46,7 @@ namespace Ui.ViewModel
                     RebatePctTypeLists = CommonService.GetEnumLists(8);
                     OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
                     CaseLists = ComboBoxSearchService.GetCaseLists();
+                    MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
                     _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
                     CaseSearchedItem = new ComboBoxSearchModel() { Id = Entity.CaseId, SearchText = Entity.CaseName };
                     MaterialSearchedItem = new ComboBoxSearchModel() { Id = Entity.MaterialId, SearchText = Entity.MaterialName };
@@ -125,14 +126,14 @@ namespace Ui.ViewModel
         public override void Save(object obj)
         {
 
-            if (Entity.RebateClass == 0 || Entity.RebatePctType == 0 || Entity.TaxAmountType == 0)
+            if (Entity.RebateClass == 0 || Entity.RebatePctType == 0 || Entity.TaxAmountType == 0 || Entity.MinusLastPeriodRebateType == 0)
             {
                 MessageBox.Show("下拉框必须选择");
                 return;
             }
             else if (Entity.RebateClass == 5 && Entity.MaterialId == -1)
             {
-                MessageBox.Show("产品型号 必须键盘【Enter】或者鼠标 选择");
+                MessageBox.Show("物料代码 必须键盘【Enter】或者鼠标 选择");
                 return;
             }
             else if (Entity.RebateClass == 3 && Entity.CaseId == -1)
@@ -307,6 +308,18 @@ namespace Ui.ViewModel
             }
         }
 
+        //是否减掉上期折扣
+        private IList<EnumModel> minusLastPeriodRebateLists;
+
+        public IList<EnumModel> MinusLastPeriodRebateLists
+        {
+            get { return minusLastPeriodRebateLists; }
+            set
+            {
+                minusLastPeriodRebateLists = value;
+                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateLists));
+            }
+        }
 
     }
 }

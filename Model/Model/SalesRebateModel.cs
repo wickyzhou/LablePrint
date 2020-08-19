@@ -205,5 +205,118 @@ namespace Model
             }
         }
 
+
+        private int minusLastPeriodRebateType;
+
+        public int MinusLastPeriodRebateType
+        {
+            get { return minusLastPeriodRebateType; }
+            set
+            {
+                minusLastPeriodRebateType = value;
+                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateType));
+            }
+        }
+
+
+
+        private string minusLastPeriodRebateTypeName;
+
+        public string MinusLastPeriodRebateTypeName
+        {
+            get { return minusLastPeriodRebateTypeName; }
+            set
+            {
+                minusLastPeriodRebateTypeName = value;
+                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateTypeName));
+            }
+        }
+
+        private DateTime? settleDateBegin;
+
+        public DateTime? SettleDateBegin
+        {
+            get { return settleDateBegin; }
+            set
+            {
+                settleDateBegin = value;
+                this.RaisePropertyChanged(nameof(SettleDateBegin));
+            }
+        }
+
+        private DateTime? settleDateEnd;
+
+        public DateTime? SettleDateEnd
+        {
+            get { return settleDateEnd; }
+            set
+            {
+                settleDateEnd = value;
+                this.RaisePropertyChanged(nameof(SettleDateEnd));
+            }
+        }
+
+        private double orgTotalAmount;
+
+        public double OrgTotalAmount
+        {
+            get { return orgTotalAmount; }
+            set
+            {
+                orgTotalAmount = value;
+                this.RaisePropertyChanged(nameof(OrgTotalAmount));
+            }
+        }
+
+        private bool deleted;
+
+        public bool Deleted
+        {
+            get { return deleted; }
+            set
+            {
+                deleted = value;
+                this.RaisePropertyChanged(nameof(Deleted));
+            }
+        }
+
+        private string k3BillNo;
+
+        public string K3BillNo
+        {
+            get { return k3BillNo; }
+            set
+            {
+                k3BillNo = value;
+                this.RaisePropertyChanged(nameof(K3BillNo));
+            }
+        }
+
+
+        private string orgCode;
+
+        public string OrgCode
+        {
+            get { return orgCode; }
+            set
+            {
+                orgCode = value;
+                this.RaisePropertyChanged(nameof(OrgCode));
+            }
+        }
+
+        private int userId;
+
+        public int UserId
+        {
+            get { return userId; }
+            set
+            {
+                userId = value;
+                this.RaisePropertyChanged(nameof(UserId));
+            }
+        }
+
+
     }
 }

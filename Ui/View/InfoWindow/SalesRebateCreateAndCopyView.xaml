@@ -8,7 +8,7 @@
         mc:Ignorable="d"
          xmlns:c="clr-namespace:Ui.Converter"
         xmlns:cb="clr-namespace:Ui.Extension"
-        Title="新增" Style="{StaticResource WindowStyle700*500}">
+        Title="新增" Style="{StaticResource WindowStyleLevel800*600}">
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -17,13 +17,13 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.4*"/>
                 <ColumnDefinition Width="0.6*"/>
-                <ColumnDefinition Width="0.8*"/>
-                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="0.35*"/>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="1.2*"/>
                 <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -35,9 +35,15 @@
             <ComboBox  Grid.Row="0" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
                               SelectedValue="{Binding Entity.RebateClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TabIndex="0"    Grid.ColumnSpan="3" Margin="0 0 10 0"          />
+
+
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="减上期返利" Style="{StaticResource TextBlockStyle15}"/>
+            <ComboBox  Grid.Row="1" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding MinusLastPeriodRebateLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+                              SelectedValue="{Binding Entity.MinusLastPeriodRebateType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TabIndex="0"               />
-
-
+            
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="计算字段" Style="{StaticResource TextBlockStyle15}"/>
             <ComboBox  Grid.Row="1" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding TaxAmountTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -78,7 +84,7 @@
                                Style="{StaticResource SearchComboBoxStyle}" IsEnabled="{Binding Entity.RebateClass,Converter={c:SalesRebateRebateClassIsEnabledConverter},ConverterParameter=3}" TabIndex="5">
             </cb:SearchComboBox>
 
-            <TextBlock Grid.Row="2" Grid.Column="4" Text="产品型号" Style="{StaticResource TextBlockStyle15}"/>
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="物料代码" Style="{StaticResource TextBlockStyle15}"/>
             <ComboBox Grid.Row="2" Grid.Column="5"    
                       SelectedValuePath="Id" DisplayMemberPath="SearchText" 
                       Text="{Binding MaterialSearchedItem.SearchText , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -108,7 +114,7 @@
                     <Button Grid.Column="2"  Content="添加" Command="{Binding SalesRebateAmountRangeCreateCommand}" Style="{StaticResource BtnThemeStyle}" Margin="8 0"/>
                     <Button Grid.Column="3"  Content="修改" Command="{Binding SalesRebateAmountRangeModifyCommand}" Style="{StaticResource BtnWarningStyle}"  Margin="8 0"/>
                     <!--<TextBlock Grid.Column="3"  Text="所有数据" Style="{StaticResource TextBlockStyle15}" Width="80"/>-->
-                    <CheckBox IsChecked="{Binding IsHistory}"  Grid.Column="5" Content="显示历史返利数据"  VerticalAlignment="Center" VerticalContentAlignment="Center"
+                    <CheckBox IsChecked="{Binding IsDeleted}"  Grid.Column="5" Content="显示历史返利数据"  VerticalAlignment="Center" VerticalContentAlignment="Center"
                                Command="{Binding SalesRebateAmountRangeHistoryShowCommand}" 
                               CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 </Grid>

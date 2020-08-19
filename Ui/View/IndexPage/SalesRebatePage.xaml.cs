@@ -13,7 +13,7 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new SalesRebateViewModel();
-            new CommonService().GetDataGridColumnHeader(this.DGSalesRebate);
+            new CommonService().GetDataGridColumnHeader(this.DGSalesRebate,1);
         }
     }
 }

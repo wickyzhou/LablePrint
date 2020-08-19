@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Ui.Converter">
+                    xmlns:local="clr-namespace:Ui.Converter"
+                    xmlns:ll="clr-namespace:Ui.Converter.ConverterDictionaryKey">
     <local:PageSizeStatusConverter x:Key="PageSizeStatusConverter"/>
     <local:SelectedStatusConverter x:Key="SelectedStatusConverter"/>
     <local:SelectedBackgroundConverter x:Key="SelectedBackgroundConverter"/>
@@ -12,4 +13,5 @@
     <local:LinShiErJiWuLiuBackgroundConverter x:Key="LinShiErJiWuLiuBackgroundConverter"/>
     <local:LogisticsTypeConverter x:Key="LogisticsTypeConverter"/>
     <local:GoodsTypeConverter x:Key="GoodsTypeConverter"/>
+    <ll:YesOrNoConverter x:Key="YesOrNoConverter"/>
 </ResourceDictionary>

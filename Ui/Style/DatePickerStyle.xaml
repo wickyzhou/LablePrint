@@ -5,7 +5,7 @@
 
     <Style x:Key="DatePickerStyle" TargetType="DatePicker" BasedOn="{x:Null}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="Width" Value="110"/>
+        <Setter Property="MinWidth" Value="110"/>
         <Setter Property="Height" Value="25"/>
         <Setter Property="Padding" Value="5 0 2 0"/>
         <Setter Property="FontSize" Value="13"/>
@@ -32,7 +32,7 @@
                         <ControlTemplate TargetType="DatePickerTextBox" >
                             <TextBox Text="{TemplateBinding Text}" FontFamily="{TemplateBinding FontFamily}"  Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" 
                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderThickness="{TemplateBinding BorderThickness}" 
-                                     IsReadOnly="{TemplateBinding IsReadOnly}" Focusable="{TemplateBinding Focusable}" Cursor="{TemplateBinding Cursor}" />
+                                     IsReadOnly="{TemplateBinding IsReadOnly}" Focusable="{TemplateBinding Focusable}" Cursor="{TemplateBinding Cursor}" MinWidth="{TemplateBinding MinWidth}" />
 
                   
                         </ControlTemplate>

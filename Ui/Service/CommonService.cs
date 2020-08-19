@@ -372,13 +372,11 @@ namespace Ui.Service
                 Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
                 if (!string.IsNullOrEmpty(item.BindingStringFormat))
                     binding.StringFormat = item.BindingStringFormat;
-               
-                dataGridTextColumn.Binding = binding;
 
-                Binding binding1 = new Binding() { Path = new PropertyPath(item.ColumnFieldName) };
-                binding1.Converter = App.Current.Resources["ValueEqualZeroConverter"] as IValueConverter;
-                //dataGridTextColumn.Foreground = new SolidColorBrush((Color)Application.Current.Resources["GenericOrangeColor"]);
-                
+                if (!string.IsNullOrEmpty(item.ConverterName))
+                    binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
+
+                dataGridTextColumn.Binding = binding;
                 dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
             }
         }

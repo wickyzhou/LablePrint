@@ -14,8 +14,8 @@ namespace Ui.Service
 
         public bool Insert(SalesRebateModel salesRebateModel)
         {
-            string sql = @" insert into SJSalesRebate(MaterialId,CaseId,OrgId,RebateClass,RebatePctValue,RebatePctType,TaxAmountType,Guid)
-                            values(@MaterialId,@CaseId,@OrgId,@RebateClass,@RebatePctValue,@RebatePctType,@TaxAmountType,@Guid) ; ";
+            string sql = @" insert into SJSalesRebate(MaterialId,CaseId,OrgId,RebateClass,RebatePctValue,RebatePctType,TaxAmountType,Guid,MinusLastPeriodRebateType)
+                            values(@MaterialId,@CaseId,@OrgId,@RebateClass,@RebatePctValue,@RebatePctType,@TaxAmountType,@Guid,@MinusLastPeriodRebateType) ; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, salesRebateModel) > 0;
@@ -25,7 +25,7 @@ namespace Ui.Service
         public bool Update(SalesRebateModel salesRebateModel)
         {
             string sql = @" update SJSalesRebate 
-	                        set MaterialId=@MaterialId,CaseId=@CaseId,OrgId=@OrgId,RebateClass=@RebateClass,RebatePctValue=@RebatePctValue,
+	                        set CaseId=@CaseId,OrgId=@OrgId,RebateClass=@RebateClass,RebatePctValue=@RebatePctValue,OrgCode=@OrgCode
 	                            RebatePctType=@RebatePctType,TaxAmountType=@TaxAmountType
                             where Id = @Id; ";
             using (var connection = SqlDb.UpdateConnection)
@@ -34,15 +34,24 @@ namespace Ui.Service
             }
         }
 
-        public bool Delete(SalesRebateModel salesRebateModel)
+        public bool BatchDelete(string guids)
         {
-            string sql = @" delete from SJSalesRebate where Id = @Id; delete from SJSalesRebateAmountRange where Guid=@Guid ";
+            string sql = $" update SJSalesRebate set Deleted = 1 where Guid in ({guids});";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Execute(sql, salesRebateModel) > 0;
+                return connection.Execute(sql) > 0;
             }
         }
 
+
+        public bool DiskBatchDelete(string guids)
+        {
+            string sql = $" delete from  SJSalesRebate  where Guid in ({guids}); delete from SJSalesRebateAmountRange where Guid in ({guids}); ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql) > 0;
+            }
+        }
 
         public bool Copy(Guid oldGuid,Guid newGuid)
         {
@@ -56,18 +65,12 @@ namespace Ui.Service
         }
 
 
-        public List<SalesRebateModel> GetSalesRebateLists()
-        {
-            string sql = @" select  * from SJSalesRebateView order by Id desc; ";
-            using (var connection = SqlDb.UpdateConnection)
-            {
-                return connection.Query<SalesRebateModel>(sql).ToList();
-            }
-        }
 
-        public List<SalesRebateModel> GetSalesRebateLists(string filter)
+        public List<SalesRebateModel> GetSalesRebateLists(int userId, bool isDeleted,string filter="")
         {
-            string sql = @" select  * from SJSalesRebateView " + filter +" order by Id desc";
+            string userString = userId == -1 ? "" : " and UserId = @UserId ";
+            string isDeletedString = isDeleted ? "" : " and Deleted = 0 ";
+            string sql = $" select  * from SJSalesRebateView where 1=1 {filter} {userString} {isDeletedString} order by Id desc";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<SalesRebateModel>(sql).ToList();
@@ -94,5 +97,41 @@ namespace Ui.Service
                  connection.ExecuteScalar("SJCalculateSalesRebateAmountProc", dp, null, null, CommandType.StoredProcedure);
             }
         }
+
+
+        public bool LoadBatchParamterToDBTemplate(SalesRebateModel model,Guid guid)
+        {
+            model.Guid = guid;
+            string sql = @" truncate table SJSalesRebateBatchGenerationTemplate;
+                            insert into SJSalesRebateBatchGenerationTemplate(OrgId,RebateClass,RebatePctValue,RebatePctType,TaxAmountType,MinusLastPeriodRebateType,SettleDateBegin,SettleDateEnd,Guid) 
+                            values(@OrgId,@RebateClass,@RebatePctValue,@RebatePctType,@TaxAmountType,@MinusLastPeriodRebateType,@SettleDateBegin,@SettleDateEnd,@Guid);";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, model) > 0;
+            }
+        }
+
+        public bool LoadAmountRangeListsToDBTemplate(IList<SalesRebateAmountRangeModel> lists, Guid guid)
+        {
+            string sql = @" truncate table SJSalesRebateAmountRangeBatchGenerationTemplate ;  insert into SJSalesRebateAmountRangeBatchGenerationTemplate(AmountLower,AmountUpper,SalesRebatePctValue,Guid) values ";
+            foreach (var item in lists)
+            {
+                sql += $" ( {item.AmountLower},{item.AmountUpper},{item.SalesRebatePctValue},'{guid}' ),"; 
+            }
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql.TrimEnd(',')) > 0;
+            }
+        }
+
+        public void BatchGenerationSalesRebateEntry(int userId)
+        {
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                connection.ExecuteScalar("SJBatchGenerationSalesRebateEntryProc", new { UserId= userId }, null, null, CommandType.StoredProcedure);
+            }
+        }
+
+        
     }
 }
