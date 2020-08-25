@@ -25,11 +25,6 @@ namespace Ui.ViewModel
         public SalesRebateCreateAndCopyViewModel()
         {
             _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
-
-            //CaseSearchedItem = ComboBoxSearchService.GetCaseSearchItem(model.CaseId);
-            //MaterialSearchedItem = ComboBoxSearchService.GetMaterialSearchItem(model.MaterialId);
-            //OrganizationSearchedItem = ComboBoxSearchService.GetOrganizationSearchItem(model.OrgId)
-
             InitCommand();
             InitData();
         }
@@ -47,10 +42,7 @@ namespace Ui.ViewModel
                     OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
                     CaseLists = ComboBoxSearchService.GetCaseLists();
                     MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                    CaseSearchedItem = new ComboBoxSearchModel() { Id = Entity.CaseId, SearchText = Entity.CaseName };
-                    MaterialSearchedItem = new ComboBoxSearchModel() { Id = Entity.MaterialId, SearchText = Entity.MaterialName };
-                    OrganizationSearchedItem = new ComboBoxSearchModel() { Id = Entity.OrgId, SearchText = Entity.OrgName };
+                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
                 });
             });
         }
@@ -59,91 +51,61 @@ namespace Ui.ViewModel
         {
             SalesRebateAmountRangeCreateCommand = new DelegateCommand((obj) =>
             {
-                SalesRebateAmountRangeCreateView view = new SalesRebateAmountRangeCreateView();
-                SalesRebateAmountRangeModel inputEntity = new SalesRebateAmountRangeModel() { Guid = Entity.Guid, IsValid = 1, EffectiveDate = DateTime.Now.AddMonths(-1).Date, ExpirationDate = DateTime.Now.Date };
+                double lastMaxValue = SalesRebateAmountRangeLists.Count==0 ? 0 : SalesRebateAmountRangeLists.Max(x => x.AmountUpper);
+                SalesRebateAmountRangeCreateView view = new SalesRebateAmountRangeCreateView(lastMaxValue);
+                SalesRebateAmountRangeModel inputEntity = new SalesRebateAmountRangeModel() { Guid = Entity.Guid };
 
                 (view.DataContext as SalesRebateAmountRangeCreateViewModel).WithParam(inputEntity, (type, outputEntity) =>
                 {
                     view.Close();
                     if (type == 1)
                     {
-                        if (_salesRebateAmountRangeService.Insert(outputEntity))
+                        if (_salesRebateAmountRangeService.RecentSonParameterInsert(outputEntity))
                         {
-                            //SalesRebateAmountRangeLists.Clear();
-                            //_salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                            SalesRebateAmountRangeLists.Add(outputEntity);
-                            IsHistory = false;
+                            SalesRebateAmountRangeLists.Clear();
+                            _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
                         }
                     }
                 });
                 view.ShowDialog();
             });
 
-            SalesRebateAmountRangeModifyCommand = new DelegateCommand((obj) =>
+            SalesRebateAmountRangeRemoveCommand = new DelegateCommand((obj) =>
             {
                 if (SalesRebateAmountRangeSelectedItem == null)
                     return;
 
-                SalesRebateAmountRangeModifyView view = new SalesRebateAmountRangeModifyView();
-                var cloneData = ObjectDeepCopyHelper<SalesRebateAmountRangeModel, SalesRebateAmountRangeModel>.Trans(SalesRebateAmountRangeSelectedItem);
-                (view.DataContext as SalesRebateAmountRangeModifyViewModel).WithParam(cloneData, (type, outputEntity) =>
+                if (_salesRebateAmountRangeService.RecentSonParameterDelete(SalesRebateAmountRangeSelectedItem.Id))
                 {
-                    view.Close();
-                    if (type == 1)
-                    {
-                        if (_salesRebateAmountRangeService.Update(outputEntity))
-                        {
-                            //SalesRebateAmountRangeLists.Clear();
-                            //_salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                            ModelTypeHelper.PropertyMapper(SalesRebateAmountRangeSelectedItem, outputEntity);
-                            IsHistory = false;
-                        }
-                    }
-                });
-                view.ShowDialog();
+                    SalesRebateAmountRangeLists.Clear();
+                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                }
             });
 
-            SalesRebateAmountRangeHistoryShowCommand = new DelegateCommand((obj) =>
+            RebatePctTypeSelectionChangedCommand =  new DelegateCommand((obj) =>
             {
-                bool? isChecked = (obj as CheckBox).IsChecked;
-                SalesRebateAmountRangeLists.Clear();
-                if (isChecked.Value)
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeHistoryLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                else
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                if(Entity.RebatePctType== 2)
+                Entity.RebatePctValue = 0;
             });
         }
 
         public DelegateCommand SalesRebateAmountRangeCreateCommand { get; set; }
-        public DelegateCommand SalesRebateAmountRangeModifyCommand { get; set; }
+        //public DelegateCommand SalesRebateAmountRangeModifyCommand { get; set; }
         public DelegateCommand OrgNameSearchCommand { get; set; }
         public DelegateCommand EnterCommand { get; set; }
         public DelegateCommand MaterialDatabaseSearchCommand { get; set; }
         public DelegateCommand SalesRebateAmountRangeHistoryShowCommand { get; set; }
+        public DelegateCommand SalesRebateAmountRangeRemoveCommand { get; set; }
+        public DelegateCommand RebatePctTypeSelectionChangedCommand { get; set; }
 
 
 
         public override void Save(object obj)
         {
 
-            if (Entity.RebateClass == 0 || Entity.RebatePctType == 0 || Entity.TaxAmountType == 0 || Entity.MinusLastPeriodRebateType == 0)
+            if (Entity.RebatePctType == 0 || Entity.TaxAmountType == 0 || Entity.MinusLastPeriodRebateType == 0)
             {
                 MessageBox.Show("下拉框必须选择");
-                return;
-            }
-            else if (Entity.RebateClass == 5 && Entity.MaterialId == -1)
-            {
-                MessageBox.Show("物料代码 必须键盘【Enter】或者鼠标 选择");
-                return;
-            }
-            else if (Entity.RebateClass == 3 && Entity.CaseId == -1)
-            {
-                MessageBox.Show("案子 必须键盘【Enter】或者鼠标 选择");
-                return;
-            }
-            else if (Entity.OrgId == -1)
-            {
-                MessageBox.Show("客户 必须键盘【Enter】或者鼠标 选择");
                 return;
             }
             else if (Entity.RebatePctType == 1 && (Entity.RebatePctValue <= 0 || Entity.RebatePctValue > 80))
@@ -151,14 +113,13 @@ namespace Ui.ViewModel
                 MessageBox.Show("固定返利类型，必须填写正确的数值");
                 return;
             }
-            else if (Entity.RebatePctType == 2 && SalesRebateAmountRangeLists.Where(m => m.IsValid == 1).Count() == 0)
+            else if (Entity.RebatePctType == 2 && SalesRebateAmountRangeLists.Count() == 0)
             {
                 MessageBox.Show("分段返利类型，必须添加明细");
                 return;
             }
             base.Save(obj);
         }
-
 
 
         // 返利类型

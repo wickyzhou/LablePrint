@@ -22,15 +22,33 @@ namespace Ui.Service
             }
         }
 
+        public bool RecentParameterUpdate(SalesRebateModel salesRebateModel)
+        {
+            string sql = @" update SJSalesRebateRecentParameterMain set RebatePctValue=@RebatePctValue,RebatePctType=@RebatePctType,TaxAmountType=@TaxAmountType,MinusLastPeriodRebateType=@MinusLastPeriodRebateType,ModifyTime=getdate(),UserId=@UserId
+                            where Guid = @Guid; ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, salesRebateModel) > 0;
+            }
+        }
+
         public bool Update(SalesRebateModel salesRebateModel)
         {
             string sql = @" update SJSalesRebate 
-	                        set CaseId=@CaseId,OrgId=@OrgId,RebateClass=@RebateClass,RebatePctValue=@RebatePctValue,OrgCode=@OrgCode
-	                            RebatePctType=@RebatePctType,TaxAmountType=@TaxAmountType
+	                        set RebatePctValue=@RebatePctValue,RebatePctType=@RebatePctType,TaxAmountType=@TaxAmountType,MinusLastPeriodRebateType=@MinusLastPeriodRebateType
                             where Id = @Id; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, salesRebateModel) > 0;
+            }
+        }
+
+        public bool RecentMainParameterDelete(int id,Guid guid)
+        {
+            string sql = $" delete from SJSalesRebateRecentParameterSon where Guid=@Guid; delete from SJSalesRebateRecentParameterMain where Id=@Id; ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, new { Id = id, Guid = guid }) > 0;
             }
         }
 
@@ -46,7 +64,8 @@ namespace Ui.Service
 
         public bool DiskBatchDelete(string guids)
         {
-            string sql = $" delete from  SJSalesRebate  where Guid in ({guids}); delete from SJSalesRebateAmountRange where Guid in ({guids}); ";
+            string sql = $" delete from  SJSalesRebate  where Guid in ({guids}); " +
+                         $" delete from SJSalesRebateAmountRange where Guid in ({guids}); ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql) > 0;
@@ -87,7 +106,7 @@ namespace Ui.Service
         }
 
 
-        public void CalculateSalesRebateAmount(DateTime beginDate,DateTime endDate)
+        public void ReCalculateSalesRebateAmount(DateTime beginDate,DateTime endDate)
         {
             DynamicParameters dp = new DynamicParameters();
             dp.Add("@BeginDate", beginDate, DbType.Date, ParameterDirection.Input);
@@ -99,24 +118,23 @@ namespace Ui.Service
         }
 
 
-        public bool LoadBatchParamterToDBTemplate(SalesRebateModel model,Guid guid)
+        public bool LoadBatchParamterToDBTemplate(SalesRebateModel model,int UserId)
         {
-            model.Guid = guid;
-            string sql = @" truncate table SJSalesRebateBatchGenerationTemplate;
-                            insert into SJSalesRebateBatchGenerationTemplate(OrgId,RebateClass,RebatePctValue,RebatePctType,TaxAmountType,MinusLastPeriodRebateType,SettleDateBegin,SettleDateEnd,Guid) 
-                            values(@OrgId,@RebateClass,@RebatePctValue,@RebatePctType,@TaxAmountType,@MinusLastPeriodRebateType,@SettleDateBegin,@SettleDateEnd,@Guid);";
+            string sql = @" truncate table SJSalesRebateBatchGenerationTemplate;truncate table SJSalesRebateAmountRangeBatchGenerationTemplate ; 
+                            insert into SJSalesRebateBatchGenerationTemplate(OrgId,RebateClass,RebatePctValue,RebatePctType,TaxAmountType,MinusLastPeriodRebateType,SettleDateBegin,SettleDateEnd,UserId) 
+                            values(@OrgId,@RebateClass,@RebatePctValue,@RebatePctType,@TaxAmountType,@MinusLastPeriodRebateType,@SettleDateBegin,@SettleDateEnd,@UserId);";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, model) > 0;
             }
         }
 
-        public bool LoadAmountRangeListsToDBTemplate(IList<SalesRebateAmountRangeModel> lists, Guid guid)
+        public bool LoadAmountRangeListsToDBTemplate(IList<SalesRebateAmountRangeModel> lists)
         {
-            string sql = @" truncate table SJSalesRebateAmountRangeBatchGenerationTemplate ;  insert into SJSalesRebateAmountRangeBatchGenerationTemplate(AmountLower,AmountUpper,SalesRebatePctValue,Guid) values ";
+            string sql = @"  insert into SJSalesRebateAmountRangeBatchGenerationTemplate(AmountLower,AmountUpper,SalesRebatePctValue) values ";
             foreach (var item in lists)
             {
-                sql += $" ( {item.AmountLower},{item.AmountUpper},{item.SalesRebatePctValue},'{guid}' ),"; 
+                sql += $" ( {item.AmountLower},{item.AmountUpper},{item.SalesRebatePctValue} ),"; 
             }
             using (var connection = SqlDb.UpdateConnection)
             {
@@ -124,14 +142,75 @@ namespace Ui.Service
             }
         }
 
-        public void BatchGenerationSalesRebateEntry(int userId)
+        public object BatchGenerationSalesRebateEntry(SalesRebateModel model)
         {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@SettleDateBegin", model.SettleDateBegin, DbType.Date, ParameterDirection.Input);
+            dp.Add("@SettleDateEnd", model.SettleDateEnd, DbType.Date, ParameterDirection.Input);
+            dp.Add("@OrgId", model.OrgId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@RebateClass", model.RebateClass, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@UserId", model.UserId, DbType.Int32, ParameterDirection.Input);
             using (var connection = SqlDb.UpdateConnection)
             {
-                connection.ExecuteScalar("SJBatchGenerationSalesRebateEntryProc", new { UserId= userId }, null, null, CommandType.StoredProcedure);
+              return  connection.ExecuteScalar("SJBatchGenerationSalesRebateEntryProc", dp, null, null, CommandType.StoredProcedure);
             }
         }
 
-        
+        public List<SalesRebateModel> GetSalesRebateOrgRecentParameterLists(SalesRebateModel parameterModel)
+        {
+
+            string sql = $" select  * from SJSalesRebateRecentParameterView where deleted = 0 and  OrgId = @OrgId and RebateClass = @RebateClass order by ModifyTime desc";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<SalesRebateModel>(sql, parameterModel).ToList();
+            }
+        }
+
+        public List<SalesRebateModel> GetSalesRebateOrgRecentParameterLists(string filter = "")
+        {
+
+            string sql = $" select  * from SJSalesRebateRecentParameterView where 1=1 {filter} order by ModifyTime desc";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<SalesRebateModel>(sql).ToList();
+            }
+        }
+
+        public List<SalesRebateModel> GetSalesRebateHistoryParameterLists(bool isDeleted, string filter = "")
+        {
+
+            string deleted = isDeleted ? "" : " and Deleted = 0 ";
+            string sql = $" select  * from SJSalesRebateRecentParameterView where 1=1 {filter}  {deleted} order by ModifyTime desc";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<SalesRebateModel>(sql).ToList();
+            }
+        }
+
+        public object InsertCurrentOrgRebateClassParameter(SalesRebateModel model)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@SettleDateBegin", model.SettleDateBegin, DbType.Date, ParameterDirection.Input);
+            dp.Add("@SettleDateEnd", model.SettleDateEnd, DbType.Date, ParameterDirection.Input);
+            dp.Add("@OrgId", model.OrgId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@RebateClass", model.RebateClass, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@UserId", model.UserId, DbType.Int32, ParameterDirection.Input);
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.ExecuteScalar("SJInsertCurrentOrgRebateClassParameterProc", dp, null, null, CommandType.StoredProcedure);
+            }
+        }
+
+        public bool SalesRebateParameterCopy(int sourceId, int destinationId , Guid sourceGuid) 
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@SourceId", sourceId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@DestinationId", destinationId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@SourceGuid", sourceGuid, DbType.Guid, ParameterDirection.Input);
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute("SJSalesRebateParameterCopyProc", dp, null, null, CommandType.StoredProcedure)>0;
+            }
+        }
     }
 }

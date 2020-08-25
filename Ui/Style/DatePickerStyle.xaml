@@ -13,7 +13,7 @@
         <Setter Property="BorderThickness" Value="0.8"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="IsTodayHighlighted" Value="True"/>
         <Setter Property="Background" Value="AliceBlue"/>

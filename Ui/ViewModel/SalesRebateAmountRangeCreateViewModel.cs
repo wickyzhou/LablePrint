@@ -17,7 +17,7 @@ namespace Ui.ViewModel
 
         public override void Save(object obj)
         {
-            Entity.IsValidName = IsValidSelectedItem.ItemValue;
+     
             if (Entity.AmountUpper < 0 || Entity.AmountLower < 0 || Entity.SalesRebatePctValue <= 0)
             {
                 MessageBox.Show("必须填写上下限、比例值、是否有效");

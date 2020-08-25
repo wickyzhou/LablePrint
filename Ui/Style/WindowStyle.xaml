@@ -105,16 +105,6 @@
         </Border>
     </ControlTemplate>
 
-    <Style x:Key="WindowStyleLevel800*600" TargetType="{x:Type Window}">
-        <Setter Property="Template" Value="{StaticResource tempWindowStyleLevelLast}"/>
-        <Setter Property="AllowsTransparency" Value="True"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="Height" Value="600"/>
-        <Setter Property="Width" Value="800"/>
-    </Style>
 
     <ControlTemplate x:Key="DataWindowTemplate" TargetType="{x:Type Window}">
         <Border>
@@ -149,7 +139,28 @@
     </ControlTemplate>
 
 
+    <Style x:Key="WindowStyleLevel1000*700" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="700"/>
+        <Setter Property="Width" Value="1000"/>
+    </Style>
+    
 
+    <Style x:Key="WindowStyleLevel800*600" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="600"/>
+        <Setter Property="Width" Value="800"/>
+    </Style>
 
     <Style x:Key="WindowStyle700*500" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>

@@ -7,15 +7,15 @@ namespace Model
 {
     public class SalesRebateQueryParameterModel : NotificationObject
     {
-		private string productionModelName;
+		private string orgCode;
 
-		public string ProductionModelName
+		public string OrgCode
 		{
-			get { return productionModelName; }
+			get { return orgCode; }
 			set
 			{
-				productionModelName = value;
-				this.RaisePropertyChanged(nameof(ProductionModelName));
+				orgCode = value;
+				this.RaisePropertyChanged(nameof(OrgCode));
 			}
 		}
 
@@ -40,6 +40,30 @@ namespace Model
 			{
 				orgName = value;
 				this.RaisePropertyChanged(nameof(OrgName));
+			}
+		}
+
+		private string settleDateBegin;
+
+		public string SettleDateBegin
+		{
+			get { return settleDateBegin; }
+			set
+			{
+				settleDateBegin = value;
+				this.RaisePropertyChanged(nameof(SettleDateBegin));
+			}
+		}
+
+		private string settleDateEnd;
+
+		public string SettleDateEnd
+		{
+			get { return settleDateEnd; }
+			set
+			{
+				settleDateEnd = value;
+				this.RaisePropertyChanged(nameof(SettleDateEnd));
 			}
 		}
 

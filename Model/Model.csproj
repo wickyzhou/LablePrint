@@ -100,6 +100,7 @@
     <Compile Include="Model\QuerySchemaEntryModel.cs" />
     <Compile Include="Model\QuerySchemaModel.cs" />
     <Compile Include="Model\QuerySchemaSeqModel.cs" />
+    <Compile Include="Model\SalesRebateBatchParameterModel.cs" />
     <Compile Include="Model\SalesRebateModel.cs" />
     <Compile Include="Model\SalesRebateQueryParameterModel.cs" />
     <Compile Include="Model\SelectedConsignmentBillsModel.cs" />
@@ -141,5 +142,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="K3ApiModel\SalesInvoiceVAT\" />
+  </ItemGroup>
 </Project>

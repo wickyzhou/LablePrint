@@ -9,10 +9,16 @@
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:cmd="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
       mc:Ignorable="d"
+       xmlns:domain="clr-namespace:Ui.ViewModel"
       d:DesignHeight="450" d:DesignWidth="1000"
        xmlns:cb="clr-namespace:Ui.Extension"
       Title="SalesRebatePage" Background="PapayaWhip">
-
+    <i:Interaction.Behaviors>
+        <domain:ValidationExceptionBehavior/>
+    </i:Interaction.Behaviors>
+    <Page.InputBindings>
+        <KeyBinding  Modifiers="Ctrl"  Key="C"  Command="{Binding SalesRebateAmountRangeCreateCommand}" />
+    </Page.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>
@@ -30,7 +36,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.8*"/>
-                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.2*"/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="0.5*"/>
@@ -45,83 +51,134 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock  Grid.Row="0" Grid.Column="0" Text="结算开始日期" Style="{StaticResource TextBlockStyle15}"/>
-                        <DatePicker Grid.Row="0" Grid.Column="1"   Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding BatchParamter.SettleDateBegin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日" />
-                        <TextBlock  Grid.Row="0" Grid.Column="2" Text="结算结束日期" Style="{StaticResource TextBlockStyle15}"/>
-                        <DatePicker Grid.Row="0" Grid.Column="3" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding BatchParamter.SettleDateEnd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                        <DatePicker Grid.Row="0" Grid.Column="1"   Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding BatchParameter.SettleDateBegin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日" Visibility="Hidden" />
+
+                        <TextBox  Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxStyle}" ToolTip="包括本日" TabIndex="0" >
+                            <TextBox.Text>
+                                <Binding Path="BatchParameter.SalesRebateBatchParameter.SettleDateBegin" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" StringFormat="yyyy-MM-dd" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="DateRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        
+
+                        <TextBlock  Grid.Row="1" Grid.Column="0" Text="结算结束日期" Style="{StaticResource TextBlockStyle15}"/>
+                        <DatePicker Grid.Row="1" Grid.Column="1" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding BatchParameter.SettleDateEnd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日" Visibility="Hidden"/>
+
+
+                        <TextBox  Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxStyle}" ToolTip="包括本日" TabIndex="1" >
+                            <TextBox.Text>
+                                <Binding Path="BatchParameter.SalesRebateBatchParameter.SettleDateEnd" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" StringFormat="yyyy-MM-dd" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="DateRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
 
 
 
-                        <TextBlock Grid.Row="1"  Grid.Column="0" Text="客户名称" Style="{StaticResource TextBlockStyle15}"/>
-                        <cb:SearchComboBox Grid.Row="1" Grid.Column="1"  
+                        <TextBlock Grid.Row="2"  Grid.Column="0" Text="客户名称   " Style="{StaticResource TextBlockStyle15}"/>
+                        <cb:SearchComboBox Grid.Row="2" Grid.Column="1"  
                                DataSource="{Binding OrganizationLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                SelectedValuePath="Id" DisplayMemberPath="SearchText" 
                                Text="{Binding OrganizationSearchedItem.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                SelectedItem="{Binding OrganizationSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               SelectedValue="{Binding BatchParamter.OrgId , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               Style="{StaticResource SearchComboBoxStyle}"/>
+                               SelectedValue="{Binding BatchParameter.SalesRebateBatchParameter.OrgId , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Style="{StaticResource SearchComboBoxStyle}" TabIndex="2" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="返利类型" Style="{StaticResource TextBlockStyle15}"/>
-                        <ComboBox  Grid.Row="2" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding BatchParamter.RebateClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="返利类型" Style="{StaticResource TextBlockStyle15}"/>
+                        <ComboBox  Grid.Row="3" Grid.Column="1"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebateClassLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+                          Text="{Binding RebateClassSeletedItem.ItemValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding RebateClassSeletedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding BatchParameter.SalesRebateBatchParameter.RebateClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                           TabIndex="3" />
 
 
 
-                        <TextBlock Grid.Row="1" Grid.Column="2" Text="比例类型" Style="{StaticResource TextBlockStyle15}"/>
-                        <ComboBox  Grid.Row="1" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebatePctTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-              SelectedValue="{Binding BatchParamter.RebatePctType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="2"  />
-                        <TextBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding BatchParamter.RebatePctValue}" IsEnabled="{Binding BatchParamter.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" ToolTip="填写比例数字，例如99%，只需要填【99】"         TabIndex="3" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="比例类型" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate"/>
+                        <ComboBox  Grid.Row="0" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding RebatePctTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
+              SelectedValue="{Binding BatchParameter.SalesRebateBatchParameter.RebatePctType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="4" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding RebatePctTypeSelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedValue}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        
+                        
+                        <!--<TextBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding BatchParameter.RebatePctValue}" IsEnabled="{Binding BatchParameter.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" ToolTip="填写比例数字，例如99%，只需要填【99】"         TabIndex="3" />-->
 
+                        <TextBox  Grid.Row="0" Grid.Column="4" Style="{StaticResource TextBoxStretchStyle}" ToolTip="填写比例数字，例如99%，只需要填【99】" IsEnabled="{Binding BatchParameter.SalesRebateBatchParameter.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" TabIndex="5" >
+                            <TextBox.Text>
+                                <Binding Path="BatchParameter.SalesRebateBatchParameter.RebatePctValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True"/>
+                            </TextBox.Text>
+                        </TextBox>
+                        
+                        
+                        
+                       
                         <TextBlock Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBlockStyle}" Text="%" FontSize="15" HorizontalAlignment="Left"/>
 
-                        <TextBlock Grid.Row="2" Grid.Column="2" Text="计算字段" Style="{StaticResource TextBlockStyle15}"/>
-                        <ComboBox  Grid.Row="2" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding TaxAmountTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="计算字段" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate"/>
+                        <ComboBox  Grid.Row="1" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding TaxAmountTypeLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding BatchParamter.TaxAmountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3"/>
+                              SelectedValue="{Binding BatchParameter.SalesRebateBatchParameter.TaxAmountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3" TabIndex="6" />
 
-                        <TextBlock Grid.Row="3" Grid.Column="2" Text="减上期返利" Style="{StaticResource TextBlockStyle15}"/>
-                        <ComboBox  Grid.Row="3" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding MinusLastPeriodRebateLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="减上期返利" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate"/>
+                        <ComboBox  Grid.Row="2" Grid.Column="3"   Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding MinusLastPeriodRebateLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemSeq" DisplayMemberPath="ItemValue" 
-                              SelectedValue="{Binding BatchParamter.MinusLastPeriodRebateType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               Grid.ColumnSpan="3"/>
+                              SelectedValue="{Binding BatchParameter.SalesRebateBatchParameter.MinusLastPeriodRebateType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Grid.ColumnSpan="3" TabIndex="7" />
 
+                        <Grid Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="5" Margin="40 0 10 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                        <Button Grid.Row="3" Grid.Column="0" Style="{StaticResource BtnWarningStyle}" Content="批量生成明细数据"  Command="{Binding SalesRebateTypedBatchInsertCommand}" Grid.ColumnSpan="2" ToolTip="根据选择的返利类型，将本阶段的数据自动生成到下面列表"/>
-
+                            <Button Grid.Column="0"  Style="{StaticResource BtnInfoStyle}" Content="1.客户参数配置"  Command="{Binding SalesRebateRecentParameterShowCommand}"  ToolTip="最近计算的条目的参数历史记录"/>
+                            <Button Grid.Column="1"  Style="{StaticResource BtnWarningStyle}" Content="2.批量生成数据"  Command="{Binding SalesRebateTypedBatchInsertCommand}"  ToolTip="【结算日期区间】+【客户】+【返利类型】+【上期参数】，将本阶段的数据自动生成到下面列表"/>
+                        </Grid>
                     </Grid>
                 </GroupBox.Content>
             </GroupBox>
 
-            <GroupBox Grid.Column="1" Margin="0 8 0 0"  Padding="0 5" IsEnabled="{Binding BatchParamter.RebatePctType,Converter={c:SalesRebateAmountRangeIsEnabledConverter}}" BorderBrush="Purple" BorderThickness="0 0 0 1">
-                <GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="1" Text="分段返利" Style="{StaticResource TextBlockStyle15}"/>
-                        <Button Grid.Column="2"  Content="添加" Command="{Binding SalesRebateAmountRangeCreateCommand}" Style="{StaticResource BtnThemeStyle}" Margin="8 0"/>
-
-                        <Button Grid.Column="4"  Content="删除" Command="{Binding SalesRebateAmountRangeRemoveCommand}" Style="{StaticResource BtnDangerStyle}"  Margin="8 0"/>
-
-                    </Grid>
-                </GroupBox.Header>
+            <GroupBox Grid.Column="1"   Padding="0 3" IsEnabled="{Binding BatchParameter.SalesRebateBatchParameter.RebatePctType,Converter={c:SalesRebateAmountRangeIsEnabledConverter}}" BorderBrush="Purple" BorderThickness="0 0 0 1">
                 <GroupBox.Content>
-                    <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding SalesRebateAmountRangeLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SalesRebateAmountRangeSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn DataGridColumn.Header="(万元)下限≥" DataGridBoundColumn.Binding="{Binding AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="(万元)上限＜" DataGridBoundColumn.Binding="{Binding AmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="返利比例(%)" DataGridBoundColumn.Binding="{Binding SalesRebatePctValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        </DataGrid.Columns>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                    </DataGrid>
+                            <TextBlock Grid.Column="0" Text="分段返利 ↓" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate" />
+                            <Button Grid.Column="1"  Content="添加" Command="{Binding SalesRebateAmountRangeCreateCommand}"  Style="{StaticResource BtnThemeStyle}" Margin="8 0" ToolTip="快捷键【Ctrl】+【C】,必须先鼠标第一次点击此按钮聚焦" >
+                            </Button>
+                            <Button Grid.Column="2"  Content="删除" Command="{Binding SalesRebateAmountRangeRemoveCommand}" Style="{StaticResource BtnDangerStyle}"  Margin="8 0"/>
+
+                        </Grid>
+                        <DataGrid Grid.Row="1" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding BatchParameter.SalesRebateAmountRangeBatchParameter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SalesRebateAmountRangeSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn DataGridColumn.Header="(万元)下限≥" DataGridBoundColumn.Binding="{Binding AmountLower,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="(万元)上限＜" DataGridBoundColumn.Binding="{Binding AmountUpper,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                                <DataGridTextColumn DataGridColumn.Header="返利比例(%)" DataGridBoundColumn.Binding="{Binding SalesRebatePctValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </Grid>
+         
                 </GroupBox.Content>
             </GroupBox>
 
@@ -133,6 +190,10 @@
 
         <Grid Grid.Row="1" Margin="0 25 0 5">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -141,22 +202,47 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="1.2*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock  Grid.Column="0" Text="客户料号" Style="{StaticResource TextBlockStyle5}"/>
 
-            <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.OrgName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
+            <TextBlock  Grid.Column="1" Text="期末日期" Style="{StaticResource TextBlockStyle15}"/>
+            <TextBox Grid.Column="2" Style="{StaticResource TextBoxStyle}" ToolTip="包括本日" TabIndex="0" >
+                <TextBox.Text>
+                    <Binding Path="QueryParameter.SettleDateBegin" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay"  ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <StaticResource ResourceKey="DateRule" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
 
-            <TextBlock  Grid.Column="2" Text="案子名称" Style="{StaticResource TextBlockStyle5}"/>
+            <TextBlock Grid.Column="3" Text="至" Style="{StaticResource TextBlockStyle}"/>
 
-            <TextBox Grid.Column="3" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.CaseName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
+            <TextBox  Grid.Column="4" Style="{StaticResource TextBoxStyle}" ToolTip="包括本日" TabIndex="1" >
+                <TextBox.Text>
+                    <Binding Path="QueryParameter.SettleDateEnd" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" StringFormat="yyyy-MM-dd" ValidatesOnDataErrors="True" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <StaticResource ResourceKey="DateRule" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            
+            <TextBlock  Grid.Column="5" Text="客户名称" Style="{StaticResource TextBlockStyle5}"/>
 
-            <TextBlock  Grid.Column="4" Text="产品型号" Style="{StaticResource TextBlockStyle5}"/>
+            <TextBox Grid.Column="6" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.OrgName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
 
-            <TextBox Grid.Column="5" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.ProductionModelName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
+            <TextBlock  Grid.Column="7" Text="案子名称" Style="{StaticResource TextBlockStyle5}"/>
+
+            <TextBox Grid.Column="8" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.CaseName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" ToolTip="模糊匹配"/>
+
+            <TextBlock  Grid.Column="9" Text="客户料号" Style="{StaticResource TextBlockStyle5}"/>
+
+            <TextBox Grid.Column="10" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.ProductionModelName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
               ToolTip="模糊匹配"/>
             
-            <Button Grid.Column="6" Style="{StaticResource BtnInfoStyle}" Content="查询" Margin="10 0" IsDefault="True" ToolTip="快捷键【Enter】"  Command="{Binding SalesRebateQueryCommand}"/>
+            <Button Grid.Column="11" Style="{StaticResource BtnInfoStyle}" Content="查询" Margin="10 0"  Command="{Binding SalesRebateQueryCommand}"/>
 
         </Grid>
 
@@ -173,8 +259,8 @@
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="150"/>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="150"/>
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -183,17 +269,17 @@
                     <Button Grid.Column="1" Style="{StaticResource BtnInfoStyle}" Content="复制" Command="{Binding SalesRebateCopyCommand}" Visibility="Hidden"/>
                     
                     <Button Grid.Column="0" Style="{StaticResource BtnWarningStyle}" Content="修改"  Command="{Binding SalesRebateModifyCommand}"/>
-                    <Button Grid.Column="1" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后可点击显示历史查看"/>
+                    <Button Grid.Column="1" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后，可点击【显示历史记录】查看"/>
              
 
                     <CheckBox IsChecked="{Binding IsHistory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="4" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
                                Command="{Binding SalesRebateHistoryShowCommand}" />
-                    <Button Grid.Column="5" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复"/>
+                    <Button Grid.Column="6" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复"/>
                     
 
-                    <Button Grid.Column="7" Style="{StaticResource BtnThemeStyle}" Content="逐行计算返利金额" Margin="10 0"  Command="{Binding SalesRebateAmountCalculateCommand}" Foreground="White" ToolTip="仅计算选择的行数据的返利金额"/>
+                    <!--<Button Grid.Column="8" Style="{StaticResource BtnThemeStyle}" Content="逐行计算返利金额" Margin="10 0"  Command="{Binding SalesRebateAmountCalculateCommand}" Foreground="White" ToolTip="仅计算选择的行数据的返利金额"/>-->
 
-                    <Button Grid.Column="8" Style="{StaticResource BtnThemeStyle}" Content="生成K3专用发票"  Command="{Binding SalesRebateRemoveCommand}"
+                    <Button Grid.Column="9" Style="{StaticResource BtnThemeStyle}" Content="3. 生成K3专用发票"  Command="{Binding SalesRebateRemoveCommand}"
                     ToolTip="选中任意一条客户数据确认无误后，生成K3折扣返利数据"/>
               
                     
@@ -221,7 +307,6 @@
                                     <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"/>
                                     <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
                                 </DataTrigger>
-
                             </Style.Triggers>
 
                         </Style>

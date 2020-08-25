@@ -14,7 +14,6 @@ namespace Ui.ViewModel
 			ExitCommand = new DelegateCommand(Exit);
 		}
 
-
 		public Action<int, T> CallBack { get; set; }
 
 		private T entity;

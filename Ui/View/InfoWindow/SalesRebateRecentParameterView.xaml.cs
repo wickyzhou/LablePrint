@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,14 @@ using Ui.ViewModel;
 namespace Ui.View.InfoWindow
 {
     /// <summary>
-    /// SalesRebateAmountRangeModifyView.xaml 的交互逻辑
+    /// SalesRebateRecentParameterView.xaml 的交互逻辑
     /// </summary>
-    public partial class SalesRebateAmountRangeModifyView : Window
+    public partial class SalesRebateRecentParameterView : Window
     {
-        public SalesRebateAmountRangeModifyView()
+        public SalesRebateRecentParameterView(SalesRebateModel model)
         {
             InitializeComponent();
-            this.DataContext = new SalesRebateAmountRangeModifyViewModel();
+            this.DataContext = new SalesRebateRecentParameterViewModel(model);
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>

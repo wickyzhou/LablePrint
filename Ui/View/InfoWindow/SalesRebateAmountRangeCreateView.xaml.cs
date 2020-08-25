@@ -19,11 +19,14 @@ namespace Ui.View.InfoWindow
     /// </summary>
     public partial class SalesRebateAmountRangeCreateView : Window
     {
-        public SalesRebateAmountRangeCreateView()
+        double _lastMaxValue;
+        public SalesRebateAmountRangeCreateView(double lastMaxValue)
         {
             InitializeComponent();
+            _lastMaxValue = lastMaxValue;
             this.DataContext = new SalesRebateAmountRangeCreateViewModel();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+      
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>
             {
@@ -33,6 +36,11 @@ namespace Ui.View.InfoWindow
                     this.WindowState = WindowState.Normal;
             }));
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as SalesRebateAmountRangeCreateViewModel).Entity.AmountLower = _lastMaxValue;
         }
     }
 }

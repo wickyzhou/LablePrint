@@ -68,11 +68,23 @@ namespace Model
             {
                 taxAmountType = value;
                 this.RaisePropertyChanged(nameof(TaxAmountType));
+                this.RaisePropertyChanged(nameof(IsPassed));
             }
         }
 
 
+        private int minusLastPeriodRebateType;
 
+        public int MinusLastPeriodRebateType
+        {
+            get { return minusLastPeriodRebateType; }
+            set
+            {
+                minusLastPeriodRebateType = value;
+                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateType));
+                this.RaisePropertyChanged(nameof(IsPassed));
+            }
+        }
 
         private int rebatePctType;
 
@@ -83,8 +95,11 @@ namespace Model
             {
                 rebatePctType = value;
                 this.RaisePropertyChanged(nameof(RebatePctType));
+                this.RaisePropertyChanged(nameof(IsPassed));
             }
         }
+
+
 
         private double rebatePctValue;
 
@@ -206,17 +221,6 @@ namespace Model
         }
 
 
-        private int minusLastPeriodRebateType;
-
-        public int MinusLastPeriodRebateType
-        {
-            get { return minusLastPeriodRebateType; }
-            set
-            {
-                minusLastPeriodRebateType = value;
-                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateType));
-            }
-        }
 
 
 
@@ -232,9 +236,9 @@ namespace Model
             }
         }
 
-        private DateTime? settleDateBegin;
+        private DateTime settleDateBegin;
 
-        public DateTime? SettleDateBegin
+        public DateTime SettleDateBegin
         {
             get { return settleDateBegin; }
             set
@@ -244,9 +248,9 @@ namespace Model
             }
         }
 
-        private DateTime? settleDateEnd;
+        private DateTime settleDateEnd;
 
-        public DateTime? SettleDateEnd
+        public DateTime SettleDateEnd
         {
             get { return settleDateEnd; }
             set
@@ -316,6 +320,37 @@ namespace Model
                 this.RaisePropertyChanged(nameof(UserId));
             }
         }
+
+        private DateTime modifyTime;
+
+        public DateTime ModifyTime
+        {
+            get { return modifyTime; }
+            set
+            {
+                modifyTime = value;
+                this.RaisePropertyChanged(nameof(ModifyTime));
+            }
+        }
+
+        private bool isPassed;
+
+        public bool IsPassed
+        {
+            get 
+            {
+                if ( TaxAmountType>0 && minusLastPeriodRebateType>0 && ((RebatePctType==1 && RebatePctValue>0 ) || RebatePctType == 2))
+                    return true;
+                return false;
+            }
+            set
+            {
+               
+            }
+        }
+
+
+        public string UserName { get; set; }
 
 
     }
