@@ -101,9 +101,9 @@ namespace Model
 
 
 
-        private double rebatePctValue;
+        private double? rebatePctValue;
 
-        public double RebatePctValue
+        public double? RebatePctValue
         {
             get { return rebatePctValue; }
             set

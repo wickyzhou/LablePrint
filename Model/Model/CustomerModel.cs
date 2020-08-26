@@ -36,5 +36,10 @@ namespace Model
 
         public string ContactAddress { get; set; }
 
+        public string FNumber { get; set; }
+
+        public string FName { get; set; }
+
+
     }
 }

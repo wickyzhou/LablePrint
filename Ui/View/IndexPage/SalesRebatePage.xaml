@@ -37,11 +37,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.8*"/>
                             <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.2*"/>
-                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="0.8*"/>
+                            <ColumnDefinition Width="0.1*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -118,10 +118,11 @@
                                 <Binding Path="BatchParameter.SalesRebateBatchParameter.RebatePctValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True"/>
                             </TextBox.Text>
                         </TextBox>
-                        
-                        
-                        
-                       
+
+                        <Button  Grid.Row="0" Grid.Column="5"  Style="{StaticResource BtnInfoStyle}" Content="清理通用配置"  
+                                 Command="{Binding SalesRebateParameterClearCommand}"  ToolTip="将复制到通用参数的值清空(比例类型、计算字段、减折扣、分段返利值)" Foreground="Snow" Background="Chocolate"/>
+
+
                         <TextBlock Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBlockStyle}" Text="%" FontSize="15" HorizontalAlignment="Left"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="2" Text="计算字段" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate"/>
@@ -250,42 +251,27 @@
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{StaticResource BtnThemeStyle}" Content="新增" Command="{Binding SalesRebateCreateCommand}" Visibility="Hidden"/>
-                    <Button Grid.Column="1" Style="{StaticResource BtnInfoStyle}" Content="复制" Command="{Binding SalesRebateCopyCommand}" Visibility="Hidden"/>
+
                     
-                    <Button Grid.Column="0" Style="{StaticResource BtnWarningStyle}" Content="修改"  Command="{Binding SalesRebateModifyCommand}"/>
-                    <Button Grid.Column="1" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后，可点击【显示历史记录】查看"/>
+                    <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="复制参数"  Command="{Binding SalesRebateParameterCopyCommand}" ToolTip="只能勾选一行，点击复制参数，将本行的计算参数导入到上面的全局参数配置里面，做默认值生成参数列表"/>
+                    <Button Grid.Column="2" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后，可点击【显示历史记录】查看,一般不用手动删除，如果以相同的参数多次生成数据，则之前的数据会被自动设置为已删除"/>
              
-
-                    <CheckBox IsChecked="{Binding IsHistory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="4" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                    <CheckBox IsChecked="{Binding IsHistory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="3" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
                                Command="{Binding SalesRebateHistoryShowCommand}" />
-                    <Button Grid.Column="6" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复"/>
+                    <Button Grid.Column="5" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复,适用于生成数据的时候参数错误"/>
                     
-
-                    <!--<Button Grid.Column="8" Style="{StaticResource BtnThemeStyle}" Content="逐行计算返利金额" Margin="10 0"  Command="{Binding SalesRebateAmountCalculateCommand}" Foreground="White" ToolTip="仅计算选择的行数据的返利金额"/>-->
-
-                    <Button Grid.Column="9" Style="{StaticResource BtnThemeStyle}" Content="3. 生成K3专用发票"  Command="{Binding SalesRebateRemoveCommand}"
-                    ToolTip="选中任意一条客户数据确认无误后，生成K3折扣返利数据"/>
-              
-                    
-
-
-
+                    <Button Grid.Column="8" Style="{StaticResource BtnThemeStyle}" Content="3. 生成K3专用发票"  Command="{Binding SalesRebateK3ApiInsertCommand}"
+                    ToolTip="选中客户数据确认无误后，生成K3折扣返利数据"/>
               
                 </Grid>
             </GroupBox.Header>
@@ -317,7 +303,7 @@
                             <DataGridColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <CheckBox IsChecked="{Binding IsCheckedAll,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                                        <CheckBox IsChecked="{Binding DataContext.IsCheckedAll,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
                                Command="{Binding DataContext.AllCheckedCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
                         />
                                     </StackPanel>

@@ -43,6 +43,17 @@ namespace Ui.Service
             }
         }
 
+        public bool UpdateK3BillNo(string k3BillNo,DateTime beginDate,DateTime endDate,int orgId,int rebateClass)
+        {
+            string sql = @" update SJSalesRebate 
+	                        set K3BillNo=@K3BillNo
+                            where SettleDateBegin = @SettleDateBegin and SettleDateEnd = @SettleDateEnd and OrgId = @OrgId and RebateClass = @RebateClass ; ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, new { K3BillNo = k3BillNo, SettleDateBegin = beginDate, SettleDateEnd = endDate, OrgId = orgId, RebateClass = rebateClass }) > 0;
+            }
+        }
+
         public bool RecentMainParameterDelete(int id,Guid guid)
         {
             string sql = $" delete from SJSalesRebateRecentParameterSon where Guid=@Guid; delete from SJSalesRebateRecentParameterMain where Id=@Id; ";

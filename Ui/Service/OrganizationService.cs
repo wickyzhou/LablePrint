@@ -18,5 +18,14 @@ namespace Ui.Service
                 return connection.Query<OrganizationModel>(sql).ToList();
             }
         }
+
+        public OrganizationModel GetOrganizationById(int id)
+        {
+            string sql = @"select FItemID as Id,FName as FullName,FShortName as ShortName from t_Organization where FDeleted=0 and FItemID = @FItemID";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<OrganizationModel>(sql,new { FItemID = id}).FirstOrDefault();
+            }
+        }
     }
 }

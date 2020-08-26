@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using K3ApiModel;
 using K3ApiModel.PurchaseRequisition;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,5 +38,24 @@ namespace Ui.Service
                 return connection.Query<BaseNumberNameModel>(sql).ToList();
             }
         }
+
+        public BaseNumberNameModelX GetOrganizationById(int id)
+        {
+            string sql = @"select FNumber,FName from t_Organization where FDeleted=0 and FItemID = @FItemID";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<BaseNumberNameModelX>(sql, new { FItemID = id }).FirstOrDefault();
+            }
+        }
+
+        public BaseNumberNameModelX GetEmployeeByUserName(string userName)
+        {
+            string sql = @" select FNumber,FName from t_Emp where FDeleted=0 and FName = @FName";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<BaseNumberNameModelX>(sql, new { FName = userName }).FirstOrDefault();
+            }
+        }
+
     }
 }

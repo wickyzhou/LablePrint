@@ -85,7 +85,7 @@ namespace Ui.ViewModel
             RebatePctTypeSelectionChangedCommand =  new DelegateCommand((obj) =>
             {
                 if(Entity.RebatePctType== 2)
-                Entity.RebatePctValue = 0;
+                Entity.RebatePctValue = null;
             });
         }
 
@@ -108,7 +108,7 @@ namespace Ui.ViewModel
                 MessageBox.Show("下拉框必须选择");
                 return;
             }
-            else if (Entity.RebatePctType == 1 && (Entity.RebatePctValue <= 0 || Entity.RebatePctValue > 80))
+            else if (Entity.RebatePctType == 1 && (Entity.RebatePctValue.Value <= 0 || Entity.RebatePctValue.Value > 80))
             {
                 MessageBox.Show("固定返利类型，必须填写正确的数值");
                 return;
