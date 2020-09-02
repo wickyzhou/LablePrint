@@ -100,7 +100,7 @@ namespace Ui.Service
         {
             string userString = userId == -1 ? "" : " and UserId = @UserId ";
             string isDeletedString = isDeleted ? "" : " and Deleted = 0 ";
-            string sql = $" select  * from SJSalesRebateView where 1=1 {filter} {userString} {isDeletedString} order by Id desc";
+            string sql = $" select  * from SJSalesRebateView where ComputeRebateAmout > 0  {filter} {userString} {isDeletedString} order by Id desc";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<SalesRebateModel>(sql).ToList();

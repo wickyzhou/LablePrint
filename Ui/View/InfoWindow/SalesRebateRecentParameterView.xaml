@@ -51,7 +51,7 @@
 
                     <TextBlock  Grid.Column="6" Text="客户料号" Style="{StaticResource TextBlockStyle5}" />
 
-                    <TextBox Grid.Column="7" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.ProductionModelName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
+                    <TextBox Grid.Column="7" Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.OrgCode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" 
               ToolTip="模糊匹配" />
 
               

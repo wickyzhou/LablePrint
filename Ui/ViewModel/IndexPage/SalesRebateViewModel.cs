@@ -25,7 +25,7 @@ namespace Ui.ViewModel.IndexPage
         private readonly SalesRebateAmountRangeService _salesRebateAmountRangeService;
         private readonly int _userDataId;
 
-        public SalesRebateViewModel():base("Sales_Invoice_VAT")
+        public SalesRebateViewModel() : base("Sales_Invoice_VAT")
         {
             _salesRebateService = new SalesRebateService();
             _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
@@ -42,7 +42,7 @@ namespace Ui.ViewModel.IndexPage
             RebateClassSeletedItem = new EnumModel();
             BatchParameter = new SalesRebateBatchParameterModel()
             {
-                SalesRebateBatchParameter = new SalesRebateModel() { SettleDateBegin = DateTime.Now.AddMonths(-1).Date, SettleDateEnd = DateTime.Now.Date, Guid = Guid.NewGuid(), OrgCode = "", UserId = User.ID },
+                SalesRebateBatchParameter = new SalesRebateModel() { SettleDateBegin = DateTime.Now.AddMonths(-1).Date, SettleDateEnd = DateTime.Now.Date, Guid = Guid.NewGuid(), OrgCode = "", UserId = User.ID, RebatePctValue = 0, RebatePctType = 1 },
                 SalesRebateAmountRangeBatchParameter = new ObservableCollection<SalesRebateAmountRangeModel>()
             };
 
@@ -82,7 +82,7 @@ namespace Ui.ViewModel.IndexPage
 
             SalesRebateQueryCommand = new DelegateCommand((obj) =>
             {
-                string filter = $" and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <= '{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
+                string filter = $"  and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <= '{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
                 GetNewSalesRebateLists(filter);
             });
 
@@ -173,7 +173,7 @@ namespace Ui.ViewModel.IndexPage
                 MessageBoxResult result = MessageBox.Show("此操作不可恢复，确认删除？", "温馨提示", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
-       
+
                     string guids = "'" + string.Join("','", SalesRebateLists.Where(m => m.IsChecked).Select(x => x.Guid)) + "'";
                     if (_salesRebateService.DiskBatchDelete(guids))
                         GetNewSalesRebateLists();
@@ -195,7 +195,7 @@ namespace Ui.ViewModel.IndexPage
                     foreach (var item in SalesRebateLists)
                         item.IsChecked = false;
                 }
-                
+
             });
 
             MouseLeftClickCommand = new DelegateCommand((obj) =>
@@ -236,20 +236,25 @@ namespace Ui.ViewModel.IndexPage
 
             SalesRebateHistoryShowCommand = new DelegateCommand((obj) =>
             {
-                string filter = $" and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <='{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
+                string filter = $"  and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <='{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
                 GetNewSalesRebateLists(filter);
             });
 
-            SalesRebateTypedBatchInsertCommand = new DelegateCommand((obj) =>
+            RebateAmountBiggerThanZeroCheckCommand = new DelegateCommand((obj) =>
             {
+
+            });
+
+            SalesRebateTypedBatchInsertCommand = new DelegateCommand((obj) =>
+             {
                 //验证界面数据是否都填写，填写无误则将参数导入到数据库模板，后台批插入
-                if (InputVerification())
-                {
-                    MessageBox.Show($"{_salesRebateService.BatchGenerationSalesRebateEntry(BatchParameter.SalesRebateBatchParameter)}");
-                    GetNewSalesRebateLists();
-                }
-                else
-                    MessageBox.Show("界面参数必须全部正确填写");
+                //if (InputVerification())
+                //{
+                MessageBox.Show($"{_salesRebateService.BatchGenerationSalesRebateEntry(BatchParameter.SalesRebateBatchParameter)}");
+                 GetNewSalesRebateLists();
+                //}
+                //else
+                //    MessageBox.Show("界面参数必须全部正确填写");
 
             });
 
@@ -313,8 +318,8 @@ namespace Ui.ViewModel.IndexPage
                     SalesInvoiceVATMainModel main = new SalesInvoiceVATMainModel
                     {
                         FCustID = K3ApiFKService.GetOrganizationById(item.OrgId),
-                        FBillerID = new BaseNumberNameModelX { FNumber = User.UserName, FName = User.UserName } ,
-                        FNote = "结算日期："+ item.SettleDateBegin.Date.ToString("yyyy-MM-dd")+"至" +item.SettleDateEnd.Date.ToString("yyyy-MM-dd")
+                        FBillerID = new BaseNumberNameModelX { FNumber = User.UserName, FName = User.UserName },
+                        FNote = "结算日期：" + item.SettleDateBegin.Date.ToString("yyyy-MM-dd") + "至" + item.SettleDateEnd.Date.ToString("yyyy-MM-dd")
                     };
 
                     var son = new SalesInvoiceVATSonModel
@@ -322,13 +327,13 @@ namespace Ui.ViewModel.IndexPage
                         Fauxprice = item.OrgTotalAmount,
                         Famount = item.OrgTotalAmount * main.FROB,
                         FStdAmount = item.OrgTotalAmount * main.FROB,
-                        FTaxRate = item.OrgTotalAmount * 0.13 ,
+                        FTaxRate = item.OrgTotalAmount * 0.13,
                         FTaxAmount = item.OrgTotalAmount * 0.13 * main.FROB,
                         FStdTaxAmount = item.OrgTotalAmount * 0.13 * main.FROB,
-                        FAllAmount = item.OrgTotalAmount * (1+ 0.13),
+                        FAllAmount = item.OrgTotalAmount * (1 + 0.13),
                         FAuxTaxPrice = item.OrgTotalAmount * (1 + 0.13),
                         FAuxPriceDiscount = item.OrgTotalAmount * (1 + 0.13),
-                        FAmountincludetax   = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
+                        FAmountincludetax = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
                         FStdAmountincludetax = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
                         FRemainAmount = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
                         FRemainAmountFor = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
@@ -345,13 +350,18 @@ namespace Ui.ViewModel.IndexPage
 
                     string postJson = JsonHelper.ObjectToJson(requestModel);
                     K3ApiInsertResponseModel response = K3ApiService.Insert(postJson);
-             
 
-                    // 更新后台数据
-                     _salesRebateService.UpdateK3BillNo(response.Data.BillNo,item.SettleDateBegin,item.SettleDateEnd,item.OrgId,item.RebateClass);
+                    if (response.StatusCode == 200)
+                        // 更新后台数据
+                        _salesRebateService.UpdateK3BillNo(response.Data.BillNo, item.SettleDateBegin, item.SettleDateEnd, item.OrgId, item.RebateClass);
+                    else
+                    {
+                        MessageBox.Show(response.Message);
+                        return;
+                    }
                 }
                 // 重新加载页面
-                 GetNewSalesRebateLists();
+                GetNewSalesRebateLists();
             });
         }
 
@@ -389,6 +399,7 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand SalesRebateK3ApiInsertCommand { get; set; }
         public DelegateCommand SalesRebateParameterCopyCommand { get; set; }
         public DelegateCommand SalesRebateParameterClearCommand { get; set; }
+        public DelegateCommand RebateAmountBiggerThanZeroCheckCommand { get; set; }
 
 
 
@@ -600,12 +611,14 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+
+
         private void GetNewSalesRebateLists(string filter = "")
         {
             IsCheckedAll = false;
             SalesRebateLists.Clear();
             _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory, filter).ForEach(x => SalesRebateLists.Add(x));
-          
+
         }
     }
 }

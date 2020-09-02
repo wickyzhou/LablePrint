@@ -29,7 +29,7 @@ namespace Dal
                                                                 ,CASE WHEN C.ID IS NULL THEN 0 ELSE 1 END Selected
                                                                 ,isnull(B.BatchTotal, 0) BatchTotal,isnull(B.BatchReprintCount, 0) BatchReprintCount,isnull(B.BatchCurrentSeq, 0) BatchCurrentSeq
 																,isnull(M.WorkTotal, 0)  WorkTotal,isnull(M.WorkPrintCount, 0)    WorkPrintCount ,isnull(M.WorkReprintCount, 0)    WorkReprintCount ,M.LastPrintTime
-                                                                ,A.SafeCode,A.SpecificationValue
+                                                                ,A.SafeCode,A.SpecificationValue,A.TwoDimensionCode1,A.TwoDimensionCode2,A.TwoDimensionCode3,A.TwoDimensionCode4
                                                               FROM SJLabelPrintHistory A
                                                            LEFT JOIN SJPrintLogBatchView B ON A.BatchNo = B.BatchNo
                                                            LEFT JOIN SJPrintLogBatchWorkView M on A.BatchNo = m.BatchNo  and A.RowHashValue = m.RowHashValue

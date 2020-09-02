@@ -109,7 +109,20 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Background="HotPink" Margin="2">
-            <TextBlock Text="第3行"/>
+            <GroupBox  Margin="0 8" Padding="0 8">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="多选DataGrid" Margin="20 0"/>
+                        <Button Content="删除" Style="{StaticResource BtnDangerStyle}" Width="100" Click="Button_Click"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <DataGrid x:Name="MultiDataGrid" Style="{StaticResource MultiSelectionDataGridStyle}" MaxWidth="100" HorizontalAlignment="Right" SelectionChanged="MultiDataGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="序号"  Binding="{Binding FName}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*"/>
+                        <DataGridTextColumn Header="名称"  Binding="{Binding FNumber}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="1" Background="Khaki" Margin="2">

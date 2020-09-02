@@ -413,6 +413,79 @@ namespace Model
             }
         }
 
+        private int seq2678;
+
+        public int Seq2678
+        {
+            get { return seq2678; }
+            set
+            {
+                seq2678 = value;
+                this.RaisePropertyChanged(nameof(Seq2678));
+            }
+        }
+
+        private string twoDimensionCode1;
+
+        public string TwoDimensionCode1
+        {
+            get { return twoDimensionCode1; }
+            set
+            {
+                twoDimensionCode1 = value;
+                this.RaisePropertyChanged(nameof(TwoDimensionCode1));
+            }
+        }
+
+        private string twoDimensionCode2;
+
+        public string TwoDimensionCode2
+        {
+            get { return twoDimensionCode2; }
+            set
+            {
+                twoDimensionCode2 = value;
+                this.RaisePropertyChanged(nameof(TwoDimensionCode2));
+            }
+        }
+
+        private string twoDimensionCode3;
+
+        public string TwoDimensionCode3
+        {
+            get { return twoDimensionCode3; }
+            set
+            {
+                twoDimensionCode3 = value;
+                this.RaisePropertyChanged(nameof(TwoDimensionCode3));
+            }
+        }
+
+        private string twoDimensionCode4;
+
+        public string TwoDimensionCode4
+        {
+            get { return twoDimensionCode4; }
+            set
+            {
+                twoDimensionCode4 = value;
+                this.RaisePropertyChanged(nameof(TwoDimensionCode4));
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         //public int UserID { get; set; } // 用户ID

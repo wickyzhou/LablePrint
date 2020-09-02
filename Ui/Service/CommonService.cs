@@ -410,5 +410,29 @@ namespace Ui.Service
             SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
             return dataTable.Rows[1][0];
         }
+
+        public object ImportExcelToDatabaseTableWithSeq(string fileName, string tableName, string connectionName = "")
+        {
+            var filedMapping = GetImportTemplateSJExcelHeaderFieldMappingLists(tableName);
+            DataTable dataTable = new FileHelper().ConvertExcelToDataTableWithSeq(fileName, true, filedMapping);
+            if (connectionName == "SR")
+                SqlHelper.LoadDataTableToDBModelTableSR(dataTable, tableName);
+            else
+                SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+            return dataTable.Rows[1][0];
+        }
+
+        public object ImportExcelToDatabaseTableWithoutSeq(string fileName, string tableName, string connectionName = "")
+        {
+            var filedMapping = GetImportTemplateSJExcelHeaderFieldMappingLists(tableName);
+            DataTable dataTable = new FileHelper().ConvertExcelToDataTableWithoutSeq(fileName, true, filedMapping);
+            
+            if(connectionName == "SR")
+                SqlHelper.LoadDataTableToDBModelTableSR(dataTable, tableName);
+            else
+                SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+
+            return dataTable.Rows[1][0];
+        }
     }
 }

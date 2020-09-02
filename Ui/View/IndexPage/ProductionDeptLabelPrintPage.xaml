@@ -498,6 +498,10 @@
                     <DataGridTextColumn DataGridColumn.Header="次数(行)" DataGridBoundColumn.Binding="{Binding WorkPrintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
                     <DataGridTextColumn DataGridColumn.Header="重打(行)" DataGridBoundColumn.Binding="{Binding WorkReprintCount}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
 
+                    <DataGridTextColumn DataGridColumn.Header="二维码1" DataGridBoundColumn.Binding="{Binding TwoDimensionCode1}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="二维码2" DataGridBoundColumn.Binding="{Binding TwoDimensionCode2}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+                    <DataGridTextColumn DataGridColumn.Header="二维码3" DataGridBoundColumn.Binding="{Binding TwoDimensionCode3}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
+
                 </DataGrid.Columns>
             </DataGrid>
 

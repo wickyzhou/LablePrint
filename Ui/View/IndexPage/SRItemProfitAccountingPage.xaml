@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ui.View.IndexPage"
       mc:Ignorable="d" 
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
               xmlns:cb="clr-namespace:Ui.Extension"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SRItemProfitAccountingPage">
@@ -19,42 +20,72 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="0.4*"/>
-
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="60"/>
-                <ColumnDefinition Width="0.6*"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="0.8*"/>
                 <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="项目名称" Style="{StaticResource TextBlockStyle15}"/>
-            <TextBox Grid.Column="1" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding ItemNameParamter}"/>
-            <Button Grid.Column="2" Style="{StaticResource BtnInfoStyle}" Content="查询" IsDefault="True" ToolTip="快捷键【Enter】"  Command="{Binding ItemProfitAccountingQueryCommand}"/>
-            
+            <TextBlock Grid.Column="0" Text="项目名称" Style="{StaticResource TextBlockStyle5}"/>
+            <TextBox Grid.Column="1" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding ItemNameParameter}"/>
+            <Button Grid.Column="2" Style="{StaticResource BtnInfoStyle}" Content="查询" IsDefault="True" ToolTip="快捷键【Enter】"  Command="{Binding ItemProfitAccountingQueryCommand}" TabIndex="0"/>
+
             <Button Grid.Column="4"  Style="{StaticResource BtnThemeStyle}" 
-                    Content="导入人员支出" Command="{Binding EmployeeCostImportCommand}" HorizontalAlignment="Right"/>
-            
+                    Content="导入人员工资支出" Command="{Binding EmployeeCostImportCommand}" HorizontalAlignment="Right" ToolTip="计算取最新的导入数据"/>
+
             <TextBlock Grid.Column="5" Text="结算月份" Style="{StaticResource TextBlockStyle5}"/>
-            
-            <cb:SearchComboBox  Grid.Column="6"   Style="{StaticResource SearchComboBoxStyle}" 
+
+            <TextBox Grid.Column="6" Style="{StaticResource TextBoxReadonlyStyle}" Text="{Binding SettleMonthSearchedItem.Id}" Padding="5 0 0 0" BorderBrush="NavajoWhite"/>
+
+
+            <Button Grid.Column="7" Style="{StaticResource BtnWarningStyle}" Command="{Binding ItemProfitSettleCommand}" Content="利润结算"/>
+            <!--<Button Grid.Column="8" Style="{StaticResource BtnDangerStyle}" Command="{Binding ItemProfitDeleteCommand}" Content="删除数据" ToolTip="会将输入月份的结算数据删除，需要重新生成"/>-->
+        </Grid>
+        <GroupBox Grid.Row="1" Header="利润总表" Margin="0 8" Padding="0 5">
+            <GroupBox.Content>
+                <DataGrid  x:Name="DGItemProfitAccounting" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding ItemProfitAccountingLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding ItemProfitAccountingSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"   
+                                                       CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}},Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGrid>
+            </GroupBox.Content>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2"  Margin="0 8" Padding="0 5">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="逐月明细" Style="{StaticResource TextBlockStyle30}" Foreground="Purple"/>
+                    <TextBlock Grid.Column="1" Text="结算月份" Style="{StaticResource TextBlockStyle10}"/>
+
+                    <cb:SearchComboBox  Grid.Column="2"   Style="{StaticResource SearchComboBoxStyle}" 
                        DataSource="{Binding SettleMonthLists, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        SelectedValuePath="Id" DisplayMemberPath="SearchText" 
                        Text="{Binding SettleMonthSearchedItem.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 
                        SelectedItem="{Binding SettleMonthSearchedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        SelectedValue="{Binding SettleMonthSearchedItem.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            
-            <Button Grid.Column="7" Style="{StaticResource BtnWarningStyle}" Command="{Binding ItemProfitSettleCommand}" Content="利润结算"/>
-        </Grid>
-        <GroupBox Grid.Row="1" Header="利润总表" Margin="0 8" Padding="0 5">
-            <GroupBox.Content>
-                <DataGrid  x:Name="DGItemProfitAccounting" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding ItemProfitAccountingLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding ItemProfitAccountingSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-            </GroupBox.Content>
-        </GroupBox>
 
-        <GroupBox Grid.Row="2" Header="月份明细" Margin="0 8" Padding="0 5">
+
+                    <Button Grid.Column="3" Style="{StaticResource BtnInfoStyle}" Command="{Binding ItemProfitMonthlyQueryCommand}" Content="按月查询" ToolTip="会将本次明细数据叠加到利润总表"/>
+
+                </Grid>
+            </GroupBox.Header>
             <GroupBox.Content>
                 <DataGrid  x:Name="DGItemProfitAccountingMonthly" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding ItemProfitAccountingMonthlyLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </GroupBox.Content>

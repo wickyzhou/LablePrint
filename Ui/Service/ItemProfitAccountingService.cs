@@ -25,20 +25,20 @@ namespace Ui.Service
         }
 
 
-        public List<ItemProfitAccountingModel> GetItemProfitAccountingLists()
+        public List<ItemProfitAccountingModel> GetItemProfitAccountingLists(string filter = "")
         {
-            string sql = @" select  * from SRItemProfitAccounting; ";
-            using (var connection = SqlDb.UpdateConnection)
+            string sql = $" select  * from SRItemProfitAccountingSummaryView where 1=1 {filter} ; ";
+            using (var connection = SqlDb.UpdateConnectionSR)
             {
                 return connection.Query<ItemProfitAccountingModel>(sql).ToList();
             }
         }
 
 
-        public List<ItemProfitAccountingMonthlyModel> GetItemProfitAccountingMonthlyLists()
+        public List<ItemProfitAccountingMonthlyModel> GetItemProfitAccountingMonthlyLists(string filter = "")
         {
-            string sql = @" select  * from SRItemProfitAccountingMonthly; ";
-            using (var connection = SqlDb.UpdateConnection)
+            string sql = $" select  * from SRItemProfitAccountingMonthly where 1=1  {filter}; ";
+            using (var connection = SqlDb.UpdateConnectionSR)
             {
                 return connection.Query<ItemProfitAccountingMonthlyModel>(sql).ToList();
             }
@@ -53,8 +53,18 @@ namespace Ui.Service
         public void ImportDataTableToDatabaseTableSR(DataTable dataTable,string tableName)
         {
             SqlHelper.ExecuteNonQuerySR(" truncate table "+ tableName,null);
-            SqlHelper.LoadDataTableToDBModelTableSR(dataTable, tableName);
-            
+            SqlHelper.LoadDataTableToDBModelTableSR(dataTable, tableName);     
+        }
+
+        public bool AccountItemProfit(int monthId)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@MonthId", monthId, DbType.Int32, ParameterDirection.Input);
+
+            using (var connection = SqlDb.UpdateConnectionSR)
+            {
+                return connection.Execute("SRItemProfitAccountingProcedure", dp, null, null, CommandType.StoredProcedure)>0;
+            }
         }
     }
 }

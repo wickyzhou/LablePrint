@@ -712,11 +712,156 @@ namespace Common
                         DataRow dr = dataTable.NewRow();
 
                         //空行跳过
-                        if (rowdata == null || rowdata.Cells.Count == 0)
+                        if (rowdata == null || rowdata.Cells.Count == 0 || string.IsNullOrEmpty(rowdata.Cells[0].ToString()))
                             continue;
                         else
                         {
                             for (int j = 0; j < colCount-1 ; j++)
+                            {
+                                dr[j] = j <= rowdata.Cells.Count() ? GetCellValue(rowdata.GetCell(j)) : "";
+                            }
+                            dr[colCount - 1] = i + 1;
+                            dataTable.Rows.Add(dr);
+                        }
+                    }
+                }
+                else
+                {   // 此处没有实现
+
+                }
+                return dataTable;
+            }
+
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message.ToString());
+            }
+        }
+
+        public DataTable ConvertExcelToDataTableWithoutSeq(string fileName, bool firstSheet, List<ImportTemplateExcelHeaderFieldMappingModel> lists)
+        {
+            IWorkbook wb = null;
+            DataTable dataTable = new DataTable();
+            if (!File.Exists(fileName))
+                return null;
+
+            try
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);//FileShare 及时文件打开也可以读取里面的内容
+
+                if (fileName.IndexOf("xlsx") > 0)
+                {
+                    wb = new XSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else if (fileName.IndexOf("xls") > 0)
+                {
+                    wb = new HSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else
+                    return null;
+
+                if (firstSheet)
+                {
+                    // 增加列
+                    ISheet sh = wb.GetSheetAt(0);
+                    if (sh == null) return null;
+                    IRow header = sh.GetRow(0);
+                    if (header == null) return null;
+                    for (int i = 0; i < header.Cells.Count; i++)
+                    {
+                        DataColumn dc = new DataColumn(lists.Where(m => m.ColumnSeq == i + 1).FirstOrDefault().FieldName);
+                        dataTable.Columns.Add(dc);
+                    }
+
+                    int colCount = dataTable.Columns.Count;
+
+                    // 增加行 
+                    for (int i = 1; i <= sh.LastRowNum; i++)
+                    {
+                        IRow rowdata = sh.GetRow(i);
+                        DataRow dr = dataTable.NewRow();
+
+                        //空行跳过
+                        if (rowdata == null || rowdata.Cells.Count == 0 || string.IsNullOrEmpty(rowdata.Cells[0].ToString()))
+                            continue;
+                        else
+                        {
+                            for (int j = 0; j < colCount; j++)
+                            {
+                                dr[j] = j <= rowdata.Cells.Count() ? GetCellValue(rowdata.GetCell(j)) : "";
+                            }
+                            dataTable.Rows.Add(dr);
+                        }
+                    }
+                }
+                else
+                {   // 此处没有实现
+
+                }
+                return dataTable;
+            }
+
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message.ToString());
+            }
+        }
+
+        public DataTable ConvertExcelToDataTableWithSeq(string fileName, bool firstSheet, List<ImportTemplateExcelHeaderFieldMappingModel> lists)
+        {
+            IWorkbook wb = null;
+            DataTable dataTable = new DataTable();
+            if (!File.Exists(fileName))
+                return null;
+
+            try
+            {
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);//FileShare 及时文件打开也可以读取里面的内容
+
+                if (fileName.IndexOf("xlsx") > 0)
+                {
+                    wb = new XSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else if (fileName.IndexOf("xls") > 0)
+                {
+                    wb = new HSSFWorkbook(fs);
+                    fs.Close();
+                }
+                else
+                    return null;
+
+                if (firstSheet)
+                {
+                    // 增加列
+                    ISheet sh = wb.GetSheetAt(0);
+                    if (sh == null) return null;
+                    IRow header = sh.GetRow(0);
+                    if (header == null) return null;
+                    for (int i = 0; i < header.Cells.Count; i++)
+                    {
+                        DataColumn dc = new DataColumn(lists.Where(m => m.ColumnSeq == i + 1).FirstOrDefault().FieldName);
+                        dataTable.Columns.Add(dc);
+                    }
+                    dataTable.Columns.Add(new DataColumn("Seq"));
+                    int colCount = dataTable.Columns.Count;
+
+                    // 增加行 
+                    for (int i = 1; i <= sh.LastRowNum; i++)
+                    {
+                        IRow rowdata = sh.GetRow(i);
+                        DataRow dr = dataTable.NewRow();
+
+                        //空行跳过
+                        if (rowdata == null || rowdata.Cells.Count == 0 || string.IsNullOrEmpty(rowdata.Cells[0].ToString()))
+                            continue;
+                        else
+                        {
+                            for (int j = 0; j < colCount - 1; j++)
                             {
                                 dr[j] = j <= rowdata.Cells.Count() ? GetCellValue(rowdata.GetCell(j)) : "";
                             }

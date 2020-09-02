@@ -60,9 +60,9 @@
                                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </TextBlock>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
+                        <!--<Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="Yellow"/>
-                        </Trigger>
+                        </Trigger>-->
                         <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="true">
                             <Setter Property="Foreground" Value="WhiteSmoke"/>
                         </DataTrigger>
@@ -260,6 +260,40 @@
         </Setter>
     </Style>
 
+    <Style TargetType="DataGrid" x:Key="MultiSelectionDataGridStyle">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Extended"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="26"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                            <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                        </Trigger>
+                        
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style TargetType="DataGrid" x:Key="ImportExcelDataGridStyle">
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>

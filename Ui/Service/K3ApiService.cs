@@ -14,11 +14,11 @@ namespace Ui.Service
         //松井正式库授权码：cc7c2a733c0a29eca5d9f62f5d4f225a8668d638842116d6
         //松润测试库： 3bfc737f19b0432dd0efba5a3c35a815d0600147724683d0
         //红玲测试： 9c1f17bc02ee5aa4972414559c39c835eebd86aa2f3e7391
-        private static readonly string authCode = "d179f673dda1188267877536c7712d28dc6914c66d438264";
+        private static readonly string authCode = "cc7c2a733c0a29eca5d9f62f5d4f225a8668d638842116d6";
         private  readonly string _entity;
         public  K3ApiService(string entity)
         {
-            _entity = entity;
+            _entity = entity ;
             Token = GetToken();
         }
 

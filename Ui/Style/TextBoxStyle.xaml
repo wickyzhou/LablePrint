@@ -45,7 +45,7 @@
         <Setter  Property="Background" Value="LightGray"/>
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="MinWidth" Value="60"/>
         <!--<Setter Property="MaxWidth" Value="250"/>-->
         <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"/>
     </Style>

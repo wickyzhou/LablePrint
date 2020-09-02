@@ -1,6 +1,7 @@
 ﻿using K3ApiModel;
 using K3ApiModel.PurchaseRequisition;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using Ui.MVVM.View;
@@ -19,6 +20,14 @@ namespace Ui.View.IndexPage
             InitializeComponent();
             this.DataContext = new AdminPageViewModel();
             new CommonService().GetDataGridColumnHeader(this.DGActionOperationLog,1);
+            this.MultiDataGrid.ItemsSource = new List<BaseNumberNameModelX>() 
+            { 
+                new BaseNumberNameModelX { FName = "111", FNumber = "aaa" }, 
+                new BaseNumberNameModelX { FName = "222", FNumber = "bbb" }, 
+                new BaseNumberNameModelX { FName = "333", FNumber = "ccc" }, 
+                new BaseNumberNameModelX { FName = "444", FNumber = "ddd" }, 
+                new BaseNumberNameModelX { FName = "555", FNumber = "eee" }
+            };
         }
 
 
@@ -78,6 +87,21 @@ namespace Ui.View.IndexPage
             };
             //PurchaseRequisitionApiModel model = new PurchaseRequisitionApiModel() {Data = new PurchaseRequisitionDataModel() {Page1= new PurchaseRequisitionMainModel[] { main } ,Page2= new PurchaseRequisitionSonModel[] { son } } }; 
             //this.RtbJson.AppendText(JsonHelper.ObjectToJson(model));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (BaseNumberNameModelX item in this.MultiDataGrid.SelectedItems)
+            {
+                MessageBox.Show($"{item.FName} \t {item.FNumber}");
+            }  
+        }
+
+        private void MultiDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender == null)
+                return;
+            MessageBox.Show($"{((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FName} \t {((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FNumber}");
         }
     }
 }

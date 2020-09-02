@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using static System.Drawing.Printing.PrinterSettings;
 
 namespace Common
@@ -86,6 +87,20 @@ namespace Common
                         btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
 
+                    if(list.Contains("Seq2678"))
+                        btFormat.SetNamedSubStringValue("Seq2678", "000001");
+                    
+                    if (list.Contains("TwoDimensionCode1"))
+                        btFormat.SetNamedSubStringValue("TwoDimensionCode1", model.TwoDimensionCode1);
+
+                    if (list.Contains("TwoDimensionCode2"))
+                        btFormat.SetNamedSubStringValue("TwoDimensionCode2", model.TwoDimensionCode2);
+
+                    if (list.Contains("TwoDimensionCode3"))
+                        btFormat.SetNamedSubStringValue("TwoDimensionCode3", model.TwoDimensionCode3);
+
+                    if (list.Contains("TwoDimensionCode4"))
+                        btFormat.SetNamedSubStringValue("TwoDimensionCode4", model.TwoDimensionCode4);
 
                     if (list.Contains("ProductionDate"))
                         btFormat.SetNamedSubStringValue("ProductionDate", model.ProductionDate.ToString("yyyy-MM-dd"));
@@ -125,8 +140,9 @@ namespace Common
                         btFormat.SetNamedSubStringValue("DangerousComment", model.DangerousComment);
 
                     /* var s= 结果是0 可能是成功的意思 */
-                    //var s = btFormat.PrintOut(false, false);
-
+                    var s = btFormat.PrintOut(false, false);
+                    if (s != 0)
+                        MessageBox.Show("打印结果不正常，打开模板手动打印取消警告窗口");
                     currentPrintBeginValue += model.PrintCount;
                 }
 
