@@ -21,5 +21,7 @@ namespace K3ApiModel.ICStockBill29
 
         public BaseNumberNameModel FSManagerID { get; set; }
 
+        public string Note { get; set; }
+
     }
 }

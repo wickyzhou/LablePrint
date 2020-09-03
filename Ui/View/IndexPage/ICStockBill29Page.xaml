@@ -58,10 +58,10 @@
                             <DataGridTextColumn DataGridColumn.Header="验证结果" DataGridBoundColumn.Binding="{Binding IsPassed,Converter={c:ValidationResultValueConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" />
                             
                             <DataGridTextColumn DataGridColumn.Header="Xls行号" DataGridBoundColumn.Binding="{Binding Seq}" Width="70" HeaderStyle="{StaticResource DGColumnHeader}" />
-                            <DataGridTextColumn DataGridColumn.Header="产品代码" DataGridBoundColumn.Binding="{Binding MaterialFNumber}" Width="180" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding MaterialFName}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="仓库代码" DataGridBoundColumn.Binding="{Binding StockFNumber}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="发货仓库" DataGridBoundColumn.Binding="{Binding StockFName}" Width="180" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="产品代码" DataGridBoundColumn.Binding="{Binding MaterialFNumber}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding MaterialFName}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="仓库代码" DataGridBoundColumn.Binding="{Binding StockFNumber}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="发货仓库" DataGridBoundColumn.Binding="{Binding StockFName}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="领料部门" DataGridBoundColumn.Binding="{Binding DeptFNumber}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="部门名称" DataGridBoundColumn.Binding="{Binding DeptFName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             
@@ -69,6 +69,11 @@
                             <DataGridTextColumn DataGridColumn.Header="原始单据号" DataGridBoundColumn.Binding="{Binding BillNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="库存批号" DataGridBoundColumn.Binding="{Binding BatchNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="仓位名称" DataGridBoundColumn.Binding="{Binding StockPlaceFName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="品牌" DataGridBoundColumn.Binding="{Binding BrandName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="案子" DataGridBoundColumn.Binding="{Binding CaseName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="备注" DataGridBoundColumn.Binding="{Binding Note}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="领料人Id" DataGridBoundColumn.Binding="{Binding FFManagerFNumber}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="领料人" DataGridBoundColumn.Binding="{Binding FFManagerName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

@@ -73,8 +73,10 @@ namespace Ui.ViewModel.IndexPage
                             FDate = DateTime.Now.Date.ToShortDateString(),
                             FDeptID = new BaseNumberNameModel() { FNumber = first.DeptFNumber, FName = first.DeptFName },
                             FBillerID = new BaseNumberNameModel() { FNumber = "何科威", FName = "何科威" },
-                            FFManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },
+                            // FFManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },  领料人
+                            FFManagerID = new BaseNumberNameModel() { FNumber = first.FFManagerFNumber, FName = first.FFManagerName },
                             FSManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },
+                            Note = first.Note
                         };
 
                         var sons = new List<MiscellaneousDeliverySonModel>();
@@ -90,9 +92,9 @@ namespace Ui.ViewModel.IndexPage
                                 FQty = entry.Quantity,
                                 FScanQty = entry.Quantity,
                                 Fauxqty = entry.Quantity,
-                                FEntrySelfB0947 = "无",
-                                FEntrySelfB0948 = "无",
-                                FBatchNo = entry.BatchNo
+                                FEntrySelfB0947 = entry.BrandName,//"品牌",
+                                FEntrySelfB0948 = entry.CaseName,//"案子",
+                                FBatchNo = entry.BatchNo,
                             };
                             sons.Add(son);
                         }

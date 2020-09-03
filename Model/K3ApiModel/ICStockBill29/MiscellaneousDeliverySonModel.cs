@@ -29,5 +29,9 @@ namespace K3ApiModel.ICStockBill29
 
         public string FBatchNo { get; set; }
 
+        public string BrandName { get; set; }
+
+        public string CaseName { get; set; }
+
     }
 }

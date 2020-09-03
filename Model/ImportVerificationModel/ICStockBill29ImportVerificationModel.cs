@@ -33,5 +33,12 @@ namespace ImportVerificationModel
         public string StockPlaceFNumber { get; set; }
         public string StockPlaceFName { get; set; }
 
+        public string FFManagerFNumber { get; set; }
+        public string FFManagerName { get; set; }
+
+        public string BrandName { get; set; }
+        public string CaseName { get; set; }
+        public string Note { get; set; }
+
     }
 }
