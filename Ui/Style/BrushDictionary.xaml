@@ -5,11 +5,27 @@
     <Brush x:Key="GenericOrangeBrush">#f9a124</Brush>
     <Brush x:Key="GenericRedBrush">#d34943</Brush>
     <Brush x:Key="GenericBlueBrush">#43a9c7</Brush>
-    <Brush x:Key="GenericBackgroundCheckedBrush">#11998E</Brush>
-    <Brush x:Key="GenericForegroundCheckedBrush">snow</Brush>
     
+    <Brush x:Key="GenericBackgroundCheckedBrush">#11998E</Brush>
+    <Brush x:Key="GenericBackgroundCheckedLightBrush">#B6DAD6</Brush>
+
+    <Brush x:Key="GenericForegroundCheckedBrush">snow</Brush>
+    <Brush x:Key="GenericForegroundCheckedLightBrush">white</Brush>
+
     <Brush x:Key="GenericBackgroundUnCheckedBrush">transparent</Brush>
+    
+    
     <Brush x:Key="GenericForegroundUnCheckedBrush">black</Brush>
+    <Brush x:Key="GenericForegroundUnCheckedLightBrush">#555</Brush>
+
+    <Brush x:Key="GenericForegroundGridBrush">lightblue</Brush>
+
+
 
     <Brush x:Key="GenericMouseOverBrush">LightYellow</Brush>
+    <Brush x:Key="GenericMouseOverLightBrush">#FFFAF2</Brush>
+
+    <Brush x:Key="GenericBackgroundMainSonBrush">AliceBlue</Brush>
+
+
 </ResourceDictionary>

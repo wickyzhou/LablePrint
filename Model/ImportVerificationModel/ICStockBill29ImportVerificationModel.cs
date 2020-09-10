@@ -38,7 +38,7 @@ namespace ImportVerificationModel
 
         public string BrandName { get; set; }
         public string CaseName { get; set; }
-        public string Note { get; set; }
+        public string FNote { get; set; }
 
     }
 }

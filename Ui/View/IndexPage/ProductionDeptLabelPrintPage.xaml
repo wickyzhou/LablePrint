@@ -411,7 +411,7 @@
         <Grid  Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
-                <ColumnDefinition  Width="260"/>
+                <ColumnDefinition  Width="0"/>
             </Grid.ColumnDefinitions>
 
             <DataGrid Name="MainDataGrid"  AutoGenerateColumns="False" CellStyle="{StaticResource  DGCellStyle1}" 
@@ -429,6 +429,11 @@
                             </Trigger>
                             <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged}" Value="true">
                                 <Setter Property="DataGridRow.Background" Value="Green"></Setter>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding IsPassed,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                                <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                                <Setter Property="DataGridRow.Background" Value="{StaticResource GenericRedBrush}"></Setter>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -487,7 +492,7 @@
                     <DataGridTextColumn DataGridColumn.Header="生产任务清单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" Visibility="Hidden" HeaderStyle="{StaticResource DGColumnHeader}" />
 
                     <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />
-                    <DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />
+                    <!--<DataGridTextColumn DataGridColumn.Header="自增ID" DataGridBoundColumn.Binding="{Binding ID}" HeaderStyle="{StaticResource DGColumnHeader}" />-->
                     <DataGridTextColumn DataGridColumn.Header="任务单号" DataGridBoundColumn.Binding="{Binding WorkNo}" HeaderStyle="{StaticResource DGColumnHeader}" />
                     <DataGridTextColumn DataGridColumn.Header="最后生成时间" DataGridBoundColumn.Binding="{Binding ModifyTime,StringFormat=yyyy-MM-dd HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" />
                     <DataGridTextColumn DataGridColumn.Header="张数(批)" DataGridBoundColumn.Binding="{Binding BatchTotal}" HeaderStyle="{StaticResource DGColumnHeader}"  Width="60"/>
@@ -506,7 +511,7 @@
             </DataGrid>
 
 
-            <ScrollViewer Grid.Column="1" Background="#e8e8e8" Name="scrollViewer" Margin="1 0" >
+            <ScrollViewer Grid.Column="1" Background="#e8e8e8" Name="scrollViewer" Margin="1 0" Visibility="Hidden" >
                 <StackPanel x:Name="spSchema">
 
                     <GroupBox Header=" 示例纸张规格 " Padding="5" BorderBrush="Green" BorderThickness="1">

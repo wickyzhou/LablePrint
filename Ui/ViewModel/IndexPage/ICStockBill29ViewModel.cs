@@ -51,9 +51,9 @@ namespace Ui.ViewModel.IndexPage
                 }
                 opd.Dispose();
             });
+
             ICStockBill29InsertK3Command = new DelegateCommand((obj) =>
             {   
-
 
                 if (CheckedICStockBill29VerificationLists.Count == 0)
                     MessageBox.Show("请先导入Excel模板数据");
@@ -61,10 +61,10 @@ namespace Ui.ViewModel.IndexPage
                     MessageBox.Show("必须全部数据验证成功才允许导入，请修改Excel数据");
                 else
                 {   
-                    var depts = CheckedICStockBill29VerificationLists.GroupBy(m => m.DeptFNumber);
-                    foreach (var item in depts)
+                    var billnos = CheckedICStockBill29VerificationLists.GroupBy(m => m.BillNo);
+                    foreach (var item in billnos)
                     {
-                        var data = CheckedICStockBill29VerificationLists.Where(m=>m.DeptFNumber==item.Key);
+                        var data = CheckedICStockBill29VerificationLists.Where(m=>m.BillNo == item.Key);
                         var first = data.First();
                         var main = new MiscellaneousDeliveryMainModel()
                         {
@@ -75,8 +75,7 @@ namespace Ui.ViewModel.IndexPage
                             FBillerID = new BaseNumberNameModel() { FNumber = "何科威", FName = "何科威" },
                             // FFManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },  领料人
                             FFManagerID = new BaseNumberNameModel() { FNumber = first.FFManagerFNumber, FName = first.FFManagerName },
-                            FSManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },
-                            Note = first.Note
+                            FSManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" }
                         };
 
                         var sons = new List<MiscellaneousDeliverySonModel>();
@@ -95,6 +94,7 @@ namespace Ui.ViewModel.IndexPage
                                 FEntrySelfB0947 = entry.BrandName,//"品牌",
                                 FEntrySelfB0948 = entry.CaseName,//"案子",
                                 FBatchNo = entry.BatchNo,
+                                FNote = entry.FNote
                             };
                             sons.Add(son);
                         }

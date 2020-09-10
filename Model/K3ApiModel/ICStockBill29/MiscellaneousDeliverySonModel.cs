@@ -33,5 +33,6 @@ namespace K3ApiModel.ICStockBill29
 
         public string CaseName { get; set; }
 
+        public string FNote { get; set; }
     }
 }

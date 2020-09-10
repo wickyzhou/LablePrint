@@ -22,8 +22,9 @@
     <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
     <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
 
-    <Color x:Key="ControlLightColor">White</Color>
-    <Color x:Key="ControlMediumColor">#FF7381F9</Color>
+    <Color x:Key="ControlLightColor">white</Color>
+    <!--<Color x:Key="ControlMediumColor">#FF7381F9</Color>-->
+    <Color x:Key="ControlMediumColor">NavajoWhite</Color>
     <Color x:Key="ControlDarkColor">#FF211AA9</Color>
 
     <Color x:Key="ControlMouseOverColor">#FF3843C4</Color>

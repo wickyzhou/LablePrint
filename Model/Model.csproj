@@ -55,9 +55,11 @@
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATMainModel.cs" />
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATSonModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
+    <Compile Include="Model\BatchTypeModel.cs" />
     <Compile Include="Model\CaseModel.cs" />
     <Compile Include="Model\ComboBoxSearchModel.cs" />
     <Compile Include="Model\ImportTemplateExcelHeaderFieldMappingModel.cs" />
+    <Compile Include="Model\InventoryBatchNoModel.cs" />
     <Compile Include="Model\ItemProfitAccountingModel.cs" />
     <Compile Include="Model\ItemProfitAccountingMonthlyModel.cs" />
     <Compile Include="Model\MaterialModel.cs" />
@@ -124,6 +126,8 @@
     <Compile Include="Model\PageOwnerModel.cs" />
     <Compile Include="Model\ViewModelBase11.cs" />
     <Compile Include="Model\OilSampleEntryModel.cs" />
+    <Compile Include="Model\WarehouseMaterialTransferAndSafeInventoryParameterModel.cs" />
+    <Compile Include="Model\WarehouseTransferToWorkshopModel.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

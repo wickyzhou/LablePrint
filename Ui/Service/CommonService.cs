@@ -434,5 +434,15 @@ namespace Ui.Service
 
             return dataTable.Rows[1][0];
         }
+
+        public List<BatchTypeModel> GetBatchTypeLists()
+        {
+            string sql = @" select * from SJBatchTypeName ;";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<BatchTypeModel>(sql).ToList();
+            }
+        }
+
     }
 }

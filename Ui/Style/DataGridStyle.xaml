@@ -5,6 +5,46 @@
                     xmlns:l="clr-namespace:Ui.View.IndexPage"
                      xmlns:c="clr-namespace:Ui.Converter">
 
+
+
+    <Style  x:Key="DGColumnHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+
+    <Style  x:Key="DGColumnHeader1" TargetType="DataGridColumnHeader">
+        <Setter Property="Height" Value="26"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background" Value="{StaticResource GenericBackgroundMainSonBrush}"/>
+        <!--<Setter Property="BorderThickness" Value="0 0 0 1"/>
+        <Setter Property="BorderBrush" Value="LightBlue"/>-->
+    </Style>
+
+    <Style x:Key="DGRowHeader" TargetType="DataGridRowHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background" Value="LightCoral"/>
+    </Style>
+    
     <Style  x:Key="DGRowStyle" Style.TargetType="{x:Type DataGridRow}" >
         <Setter Setter.Property="Control.Height" Setter.Value="28" />
         <Setter Setter.Property="Control.VerticalAlignment" Setter.Value="Center" />
@@ -19,6 +59,7 @@
                 <Setter Property="Foreground" Value="Snow"/>
                 <Setter Property="FontSize" Value="13"/>
             </Trigger>
+
         </Style.Triggers>
     </Style>
 
@@ -145,7 +186,25 @@
         </Setter>
     </Style>
 
-    
+    <Style x:Key="CellSelectionDataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="8 1 0 1" FontFamily="微软雅黑"   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                            <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="SingleSelectionDataGridCellStyle" TargetType="DataGridCell">
         <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
@@ -162,7 +221,31 @@
         </Setter>
     </Style>
 
-
+    <Style x:Key="RowDetailsTemplateMainDataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border x:Name="border">
+                        <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
+                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                            
+                        </ContentPresenter>
+                        </TextBlock>
+                    </Border>
+   
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericBackgroundMainSonBrush}" TargetName="border"/>
+                            <Setter Property="DataGridRow.Foreground" Value="Chocolate"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="DataGrid" x:Key="DGStyle">
         <!--<Setter Property="IsReadOnly" Value="True"/>-->
@@ -172,13 +255,14 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="Background" Value="#e8e8e8"/>
         <Setter Property="BorderThickness" Value="0 0 0 3"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="RowStyle" Value="{StaticResource DGRowStyle}"/>
         <Setter Property="CellStyle" Value="{StaticResource DGCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
         <Setter Property="BorderBrush">
             <Setter.Value>
                 <LinearGradientBrush>
@@ -198,12 +282,14 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource DGCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+
     </Style>
 
     <Style TargetType="DataGrid" x:Key="MultiCheckBoxDataGridStyle">
@@ -213,12 +299,13 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource MultiDeletedCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
     </Style>
 
     <Style TargetType="DataGrid" x:Key="SingleSelectionDataGridStyle">
@@ -228,12 +315,13 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -267,12 +355,14 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Extended"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -301,12 +391,13 @@
         <Setter Property="SelectionUnit" Value="FullRow"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="LightBlue"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
         <Setter Property="BorderBrush" Value="Purple"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource ImportExcelDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -332,31 +423,93 @@
         </Setter>
     </Style>
 
-    <Style  x:Key="DGColumnHeader" TargetType="DataGridColumnHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="Height" Value="28"/>
-        <Setter Property="Foreground" Value="#fff"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Background">
+    <Style TargetType="DataGrid" x:Key="CellSelectionDataGridStyle">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="Cell"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource CellSelectionDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
-                    <GradientStop Color="#11998e" Offset="0.0" />
-                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
-                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
-                    <GradientStop Color="#11998e" Offset="1" />
-                </LinearGradientBrush>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="26"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="DataGridRow.Foreground" Value="Red"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
             </Setter.Value>
         </Setter>
-
     </Style>
 
-    <Style x:Key="DGRowHeader" TargetType="DataGridRowHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Height" Value="28"/>
-        <Setter Property="Width" Value="30"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Background" Value="LightCoral"/>
+
+    <Style TargetType="DataGrid" x:Key="RowDetailsTemplateMainDataGridStyle">
+        <Setter Property="RowHeight" Value="30"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="CellStyle" Value="{StaticResource RowDetailsTemplateMainDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
     </Style>
+
+    <Style TargetType="DataGrid" x:Key="RowDetailsTemplateSonDataGridStyle">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader1}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="24"/>
+                    <Setter Property="Background" Value="{StaticResource GenericBackgroundMainSonBrush}"/>
+                    <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverLightBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedLightBrush}"></Setter>
+                            <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedLightBrush}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
 
 </ResourceDictionary>

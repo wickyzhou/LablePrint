@@ -12,7 +12,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0"
-                  BorderThickness="1"
+                  BorderThickness="0"
                   CornerRadius="2,2,0,0">
                             <Border.BorderBrush>
                                 <LinearGradientBrush StartPoint="0,0"
@@ -42,18 +42,21 @@
                                 </LinearGradientBrush>
                             </Border.Background>
 
-                            <ContentPresenter Margin="4"
+                            <ContentPresenter Margin="10 8 10 5"
                               ContentSource="Header"
                               RecognizesAccessKey="True" />
                         </Border>
-
-                        <Border Grid.Row="1"
+                        
+    
+                            <ContentPresenter Grid.Row="1" Margin="0 1"/>
+    
+                        <!--<Border Grid.Row="1"
                   BorderThickness="1,0,1,1"
                   CornerRadius="0,0,2,2">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="{StaticResource BorderMediumColor}" />
                             </Border.BorderBrush>
-                            <Border.Background>
+                            --><!--<Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1"
                                    MappingMode="RelativeToBoundingBox"
                                    StartPoint="0.5,0">
@@ -62,13 +65,61 @@
                                     <GradientStop Color="{StaticResource ContentAreaColorDark}"
                               Offset="1" />
                                 </LinearGradientBrush>
-                            </Border.Background>
+                            </Border.Background>--><!--
                             <ContentPresenter Margin="4" />
-                        </Border>
+                        </Border>-->
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
+
+    <Style TargetType="GroupBox" x:Key="GroupBoxStyle1">
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Grid.Row="0"
+                  BorderThickness="1"
+                  CornerRadius="2,2,0,0">
+                        <Border.BorderBrush>
+                            <LinearGradientBrush StartPoint="0,0"
+                                   EndPoint="0,1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStopCollection>
+                                        <GradientStop Color="{StaticResource BorderLightColor}"
+                                  Offset="0.0" />
+                                        <GradientStop Color="{StaticResource BorderDarkColor}"
+                                  Offset="1.0" />
+                                    </GradientStopCollection>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </Border.BorderBrush>
+
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                   EndPoint="0,1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStopCollection>
+                                        <GradientStop Color="{StaticResource ControlLightColor}"
+                                  Offset="0.0" />
+                                        <GradientStop Color="{StaticResource ControlMediumColor}"
+                                  Offset="1.0" />
+                                    </GradientStopCollection>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <ContentPresenter Margin="4"
+                              ContentSource="{Binding Title}"
+                              RecognizesAccessKey="True" />
+
+                    </Border>
+
+                </DataTemplate>
+            </Setter.Value>
+    
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

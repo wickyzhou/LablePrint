@@ -272,6 +272,8 @@ namespace Ui.View.IndexPage
             var itemsSource = this.MainDataGrid.ItemsSource;
             foreach (LabelPrintHistoryModel entry in itemsSource)
             {
+                if (!entry.IsPassed)
+                    continue;
                 entry.IsChecked = true;
             }
         }
@@ -307,7 +309,7 @@ namespace Ui.View.IndexPage
         }
 
         private void BtnAddData_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             List<int> ids = new List<int>();
             //遍历checkbox获取对应的数据ID，批量插入x打印表
             var itemsSource = this.MainDataGrid.ItemsSource;
@@ -669,8 +671,11 @@ namespace Ui.View.IndexPage
         }
 
         private void DataGridRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
+        {   
+           
             var model = (sender as DataGridRow).Item as LabelPrintHistoryModel;
+            if (!model.IsPassed)
+                return;
             model.IsChecked = !model.IsChecked;
             model.Selected ^= 1;
         }

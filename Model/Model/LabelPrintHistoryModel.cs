@@ -196,5 +196,7 @@ namespace Model
             }
         }
 
+        public bool IsPassed { get; set; }
+
     }
 }
