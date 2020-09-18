@@ -49,6 +49,8 @@
     <Compile Include="K3ApiModel\ICStockBill1\PurchaseReceiptSonModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliveryMainModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliverySonModel.cs" />
+    <Compile Include="K3ApiModel\ICStockBill41\TransferMainModel.cs" />
+    <Compile Include="K3ApiModel\ICStockBill41\TransferSonModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillDataRequestMode.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillRequestMode.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiCheckBillResponseModel.cs" />

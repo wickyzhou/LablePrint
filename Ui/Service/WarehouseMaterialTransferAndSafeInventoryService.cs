@@ -21,6 +21,24 @@ namespace Ui.Service
             }
         }
 
+        public bool UpdateK3Bill(int id, string transferedBillNo,double qty)
+        {
+            string sql = @" update SJWarehouseTransferToWorkshop set TransferedBillNo = @TransferedBillNo, TransferTime = getdate(),QtyTransfered = isnull(QtyTransfered,0) + @QtyTransfered where Id =@Id ; ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, new { Id = id, TransferedBillNo = transferedBillNo, QtyTransfered = qty }) > 0;
+            }
+        }
+
+        public bool DeleteTransferBillNo(int id)
+        {
+            string sql = @" update SJWarehouseTransferToWorkshop set TransferedBillNo = null, TransferTime = null,QtyTransfered = null,FBatchNoAndActualQty = null where Id =@Id ; ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute(sql, new { Id = id}) > 0;
+            }
+        }
+
 
         public List<InventoryBatchNoModel> GetInventoryBatchNoLists(int materialId)
         {
@@ -34,7 +52,7 @@ namespace Ui.Service
 
         public List<WarehouseTransferToWorkshopModel> GetWarehouseTransferToWorkshopLists(string filter = "")
         {
-            string sql = $" select * from SJWarehouseTransferToWorkshop where   CreateTime <GETDATE() {filter};  ";
+            string sql = $" select * from SJWarehouseTransferToWorkshop where   1 = 1 {filter};  ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<WarehouseTransferToWorkshopModel>(sql).ToList();

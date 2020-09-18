@@ -18,7 +18,7 @@ namespace Ui.ViewModel.IndexPage
     public class ICStockBill29ViewModel : K3ApiBaseViewModel
     {
         private ICStockService _stockService;
-        public ICStockBill29ViewModel() : base("Miscellaneous_Delivery")
+        public ICStockBill29ViewModel()
         {
             _stockService = new ICStockService();
             InitData();

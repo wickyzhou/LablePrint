@@ -22,6 +22,10 @@ namespace Model
         public string Spec { get; set; }
 
         public int FStockID { get; set; }
+        public string FStockName { get; set; }
+        public string FStockNumber { get; set; }
+
+
         public double FQtyMust { get; set; }
         public double WorkshopInventory { get; set; }
 
@@ -31,8 +35,21 @@ namespace Model
         public DateTime FPlanCommitDateBegin { get; set; }
         public DateTime FPlanCommitDateEnd { get; set; }
         public DateTime CreateTime { get; set; }
-        public DateTime? TransferTime { get; set; }
+
         public bool Deleted { get; set; }
+
+        private DateTime? transferTime;
+
+        public DateTime? TransferTime
+        {
+            get { return transferTime; }
+            set
+            {
+                transferTime = value;
+                this.RaisePropertyChanged(nameof(TransferTime));
+            }
+        }
+
 
 
         private string fBatchNoAndActualQty;
@@ -46,9 +63,10 @@ namespace Model
                 this.RaisePropertyChanged(nameof(FBatchNoAndActualQty));
             }
         }
-        private double qtyTransfered;
 
-        public double QtyTransfered
+        private double? qtyTransfered;
+
+        public double? QtyTransfered
         {
             get { return qtyTransfered; }
             set

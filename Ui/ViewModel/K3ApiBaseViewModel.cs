@@ -9,10 +9,10 @@ namespace Ui.ViewModel
 {
     public class K3ApiBaseViewModel:BaseViewModel
     {
-        public K3ApiBaseViewModel(string entity)
+        public K3ApiBaseViewModel()
         {
             K3ApiFKService = new K3ApiFKService();
-            K3ApiService = new K3ApiService(entity);
+            K3ApiService = new K3ApiService();
         }
         
         public K3ApiFKService K3ApiFKService { get; set; }

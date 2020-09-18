@@ -27,7 +27,7 @@ namespace Ui.ViewModel.IndexPage
         private IList<PurchaseRequisitionFKModel> _purchaseRequisitionICItemLists;
         private IList<BaseNumberNameModel> _employeeLists;
         private IList<BaseNumberNameModel> _measureUnitLists;
-        public MaterialPlanInventoryViewModel() : base("Purchase_Requisition")
+        public MaterialPlanInventoryViewModel() //: base("Purchase_Requisition")
         {
             _materialPlanInventoryService = new MaterialPlanInventoryService();
             // _commonService = new CommonService();

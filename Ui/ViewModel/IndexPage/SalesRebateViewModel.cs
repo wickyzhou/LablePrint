@@ -25,7 +25,7 @@ namespace Ui.ViewModel.IndexPage
         private readonly SalesRebateAmountRangeService _salesRebateAmountRangeService;
         private readonly int _userDataId;
 
-        public SalesRebateViewModel() : base("Sales_Invoice_VAT")
+        public SalesRebateViewModel() //: base("Sales_Invoice_VAT")
         {
             _salesRebateService = new SalesRebateService();
             _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
@@ -349,7 +349,7 @@ namespace Ui.ViewModel.IndexPage
                     };
 
                     string postJson = JsonHelper.ObjectToJson(requestModel);
-                    K3ApiInsertResponseModel response = K3ApiService.Insert(postJson);
+                    K3ApiInsertResponseModel response = K3ApiService.Insert("Sales_Invoice_VAT", postJson);
 
                     if (response.StatusCode == 200)
                         // 更新后台数据

@@ -502,11 +502,12 @@
                     <DataGridTextColumn DataGridColumn.Header="特殊要求" DataGridBoundColumn.Binding="{Binding SpecialRequest}" HeaderStyle="{StaticResource DGColumnHeader}" />
 
                     <DataGridTextColumn DataGridColumn.Header="二维码" DataGridBoundColumn.Binding="{Binding TwoDimensionCode}" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                    <DataGridTextColumn DataGridColumn.Header="最近打印" DataGridBoundColumn.Binding="{Binding SampleOilPrintTime,StringFormat=dd-HH:mm:ss}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
+                    <DataGridTextColumn DataGridColumn.Header="已打张数" DataGridBoundColumn.Binding="{Binding SampleOilPrintedCount}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
                     <DataGridTextColumn DataGridColumn.Header="样油张数" DataGridBoundColumn.Binding="{Binding SampleOilPrintCount}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
                     <DataGridTextColumn DataGridColumn.Header="样油区域" DataGridBoundColumn.Binding="{Binding SampleOilPrintArea}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
-                    <DataGridTextColumn DataGridColumn.Header="最近打印" DataGridBoundColumn.Binding="{Binding SampleOilPrintTime}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
-                    <DataGridTextColumn DataGridColumn.Header="已打张数" DataGridBoundColumn.Binding="{Binding SampleOilPrintedCount}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
-                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding SampleOilPrintProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
+                    <DataGridTextColumn DataGridColumn.Header="样油名称" DataGridBoundColumn.Binding="{Binding SampleOilPrintProductionName}" HeaderStyle="{StaticResource DGColumnHeader}" Width="80" Foreground="Chocolate"/>
                     <!--<DataGridTextColumn DataGridColumn.Header="生产任务清单ID" DataGridBoundColumn.Binding="{Binding ProductiveTaskListID}" Visibility="Hidden" HeaderStyle="{StaticResource DGColumnHeader}" />-->
 
                     <DataGridTextColumn DataGridColumn.Header="案子名称" DataGridBoundColumn.Binding="{Binding CaseName}" HeaderStyle="{StaticResource DGColumnHeader}" />

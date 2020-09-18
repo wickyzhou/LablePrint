@@ -69,13 +69,15 @@
                                 </Grid.ColumnDefinitions>
                                 <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="选择目录" Style="{StaticResource BtnSuccessStyle}" Command="{Binding DirectorySelectCommand}"  ToolTip="选择文件导出的固定目录" HorizontalAlignment="Right"  />
                                 <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"   Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30" HorizontalAlignment="Stretch" Margin="5 0"/>
-                                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ListsExportCommand}"  ToolTip="导出数据到选定目录" Margin="15 5 20 5" />
+                                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="分类导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ListsExportCommand}"  ToolTip="导出界面数据到选定目录" Margin="15 5 20 5" />
                             </Grid>
 
                         </Grid>
 
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+
                                 <ColumnDefinition Width="80"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -87,12 +89,15 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="0.1*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="产品类别" Style="{StaticResource TextBlockStyle5}"/>
 
-                            <TextBox Grid.Column="1" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding QueryParameter.BatchTypeCode ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="清除调拨" Style="{StaticResource BtnDangerStyle}" Command="{Binding TransferClearCommand}"  ToolTip="在K3里面将调拨单删除，然后执行此操作重新调拨，保证数据一致性" HorizontalAlignment="Center" Width="100" />
                             
-                            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock  Grid.Column="1" Text="开工日期" Style="{StaticResource TextBlockStyle10}"/>
+                            <TextBlock Grid.Column="1" Text="产品类别" Style="{StaticResource TextBlockStyle5}"/>
+
+                            <TextBox Grid.Column="2" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding QueryParameter.BatchTypeCode ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            
+                            <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock  Grid.Column="1" Text="生成日期" Style="{StaticResource TextBlockStyle10}"/>
                                 <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding QueryParameter.BeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
 
                                 <TextBlock  Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
@@ -101,14 +106,14 @@
                             </StackPanel>
                             
 
-                            <CheckBox Grid.Column="5"  Content="应发数量大于0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            <CheckBox Grid.Column="6"  Content="应发数量大于0" VerticalAlignment="Center" HorizontalAlignment="Center"
                                       IsChecked="{Binding QueryParameter.IsTransfering ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Grid.Column="6"  Content="已调拨" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            <CheckBox Grid.Column="7"  Content="已调拨" VerticalAlignment="Center" HorizontalAlignment="Center"
                                          IsChecked="{Binding QueryParameter.IsTransfered ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Grid.Column="7"  Content="历史记录" VerticalAlignment="Center" HorizontalAlignment="Center"    
+                            <CheckBox Grid.Column="8"  Content="历史记录" VerticalAlignment="Center" HorizontalAlignment="Center"    
                                       IsChecked="{Binding QueryParameter.IsDeleted ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       />
-                            <Button Grid.Column="8" Content="查询" Style="{StaticResource BtnInfoStyle}"  Command="{Binding QueryCommand}"/>
+                            <Button Grid.Column="9" Content="查询" Style="{StaticResource BtnInfoStyle}"  Command="{Binding QueryCommand}"/>
                         </Grid>
                         
                         <DataGrid Grid.Row="3" ItemsSource="{Binding WarehouseTransferToWorkshopLists}" SelectedItem="{Binding WarehouseTransferToWorkshopSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="MainDataGrid" Style="{StaticResource RowDetailsTemplateMainDataGridStyle}">
@@ -120,24 +125,28 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </i:Interaction.Triggers>
 
                             <DataGrid.Columns>
+                                <DataGridTextColumn DataGridColumn.Header="生成时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" Width="150" />
+
                                 <DataGridTextColumn DataGridColumn.Header="产品类别" DataGridBoundColumn.Binding="{Binding BatchTypeCode}" Width="60" />
                                 <DataGridTextColumn DataGridColumn.Header="类别名称" DataGridBoundColumn.Binding="{Binding BatchTypeName}" Width="100" />
-                                <DataGridTextColumn DataGridColumn.Header="物料代码" DataGridBoundColumn.Binding="{Binding FNumber}" Width="*" />
+                                <DataGridTextColumn DataGridColumn.Header="物料代码" DataGridBoundColumn.Binding="{Binding FNumber}" Width="150" />
                                 <DataGridTextColumn DataGridColumn.Header="物料名称" DataGridBoundColumn.Binding="{Binding FItemName}" Width="120"  />
-                                <DataGridTextColumn DataGridColumn.Header="物料规格" DataGridBoundColumn.Binding="{Binding MaterialSpec,StringFormat=\{0\}kg}" Width="80"  />
-                                <DataGridTextColumn DataGridColumn.Header="需求数量(Kg)" DataGridBoundColumn.Binding="{Binding FQtyMust}" Width="*" />
+                                <DataGridTextColumn DataGridColumn.Header="物料规格(Kg)" DataGridBoundColumn.Binding="{Binding Spec}" Width="100"  />
+                                <DataGridTextColumn DataGridColumn.Header="需求数量(Kg)" DataGridBoundColumn.Binding="{Binding FQtyMust}" Width="100" />
                                 <DataGridTextColumn DataGridColumn.Header="车间今日余额数" DataGridBoundColumn.Binding="{Binding WorkshopInventory,StringFormat=\{0:N2\}}" Width="120"  />
                                 <DataGridTextColumn DataGridColumn.Header="应发数量" DataGridBoundColumn.Binding="{Binding QtyTransfering,StringFormat=\{0:N2\}}" Width="100"  />
-                                <DataGridTextColumn DataGridColumn.Header="调拨批号及重量(Kg)" DataGridBoundColumn.Binding="{Binding FBatchNoAndActualQty,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="1.5*" />
+                                <DataGridTextColumn DataGridColumn.Header="调拨批号及重量(Kg)" DataGridBoundColumn.Binding="{Binding FBatchNoAndActualQty,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                                <DataGridTextColumn DataGridColumn.Header="调拨总量(Kg)" DataGridBoundColumn.Binding="{Binding QtyTransfered,StringFormat=\{0:N2\}}" Width="100"  />
+
                                 <DataGridTextColumn DataGridColumn.Header="调拨单号" DataGridBoundColumn.Binding="{Binding TransferedBillNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
-                                <DataGridTextColumn DataGridColumn.Header="调拨时间" DataGridBoundColumn.Binding="{Binding TransferTime,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"  />
+                                <DataGridTextColumn DataGridColumn.Header="调拨日期" DataGridBoundColumn.Binding="{Binding TransferTime,StringFormat=yyyy-MM-dd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100"  />
                             </DataGrid.Columns>
 
                             <DataGrid.RowDetailsTemplate>
                                 <DataTemplate>
                                     <!--<Border  BorderThickness="0 0 0 2" Background="{StaticResource GenericBackgroundMainSonBrush}" x:Name="SubDataGrid" HorizontalAlignment="Stretch" Height="auto">-->
                                     <!--<Viewbox HorizontalAlignment="Stretch">-->
-                                    <Grid MinHeight="80">
+                                    <Grid MinHeight="100">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="*"/>
@@ -145,26 +154,22 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                         </Grid.ColumnDefinitions>
 
 
-                                        <Grid Grid.Column="0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-                                            <Button Grid.Row="1" Content="发料" Command="{Binding DataContext.BatchNoQtySaveCommand,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Style="{StaticResource BtnSuccessStyle}" />
-                                            <Button Grid.Row="2" Content="调拨" Command="{Binding BatchNoQtyK3InsertCommand}" Style="{StaticResource BtnWarningStyle}" />
-                                        </Grid>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+ 
+                                            <Button Content="发料" Command="{Binding DataContext.BatchNoQtySaveCommand,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Style="{StaticResource BtnSuccessStyle}" />
+                                            
+                                            <Button  Content="调拨" Command="{Binding DataContext.BatchNoQtyK3InsertCommand,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Style="{StaticResource BtnWarningStyle}" Margin="0 20 0 0" />
+                                        </StackPanel>
 
                                         <DataGrid Grid.Column="1" ItemsSource="{Binding DataContext.InventoryLists,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
                                                       Style="{StaticResource RowDetailsTemplateSonDataGridStyle}">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn DataGridColumn.Header="仓库Id" DataGridBoundColumn.Binding="{Binding StockId}" Width="150"  />
+                                                <DataGridTextColumn DataGridColumn.Header="仓库代码" DataGridBoundColumn.Binding="{Binding StockNumber}" Width="150"  />
                                                 <DataGridTextColumn DataGridColumn.Header="仓库名称" DataGridBoundColumn.Binding="{Binding StockName}" Width="150"  />
                                                 <DataGridTextColumn DataGridColumn.Header="库存批号" DataGridBoundColumn.Binding="{Binding BatchNo}" Width="150"  />
                                                 <DataGridTextColumn DataGridColumn.Header="库存重量(Kg)" DataGridBoundColumn.Binding="{Binding TotalWeight}" Width="150"  />
-                                                <DataGridTextColumn DataGridColumn.Header="调拨重量" DataGridBoundColumn.Binding="{Binding TransferWeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="150"  />
+                                                <DataGridTextColumn DataGridColumn.Header="调拨重量(Kg)" DataGridBoundColumn.Binding="{Binding TransferWeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="150"  />
                                             </DataGrid.Columns>
                                         </DataGrid>
 

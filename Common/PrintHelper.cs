@@ -87,6 +87,8 @@ namespace Common
                         btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
                         btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
+                    if (list.Contains("RowQuantity"))
+                        btFormat.SetNamedSubStringValue("RowQuantity", Convert.ToString(model.RowQuantity).TrimEnd('0').TrimEnd('.'));
 
                     if (list.Contains("SampleOilPrintArea"))
                         btFormat.SetNamedSubStringValue("SampleOilPrintArea", model.SampleOilPrintArea);
@@ -271,6 +273,11 @@ namespace Common
                         btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
 
+                    if (list.Contains("RowQuantity"))
+                        btFormat.SetNamedSubStringValue("RowQuantity", model.RowQuantity.ToString().TrimEnd('0').TrimEnd('.'));
+
+                    if (list.Contains("SampleOilPrintProductionName"))
+                        btFormat.SetNamedSubStringValue("SampleOilPrintProductionName", model.SampleOilPrintProductionName);
                     if (list.Contains("SampleOilPrintArea"))
                         btFormat.SetNamedSubStringValue("SampleOilPrintArea", model.SampleOilPrintArea);
                     if (list.Contains("Seq2678"))
@@ -355,7 +362,6 @@ namespace Common
                 }
             }
         }
-
 
         // 获取打印机名称
         public static List<string> GetComputerPrinter()

@@ -523,6 +523,17 @@ namespace Model
             }
         }
 
+        private double rowQuantity;
+
+        public double RowQuantity
+        {
+            get { return rowQuantity; }
+            set
+            {
+                rowQuantity = value;
+                this.RaisePropertyChanged(nameof(RowQuantity));
+            }
+        }
 
 
 

@@ -16,15 +16,17 @@ namespace Model
 
         public int StockId { get; set; }
 
+        public string StockNumber { get; set; }
+
         public string StockName { get; set; }
 
         public string BatchNo { get; set; }
 
-        public float TotalWeight { get; set; }
+        public double TotalWeight { get; set; }
 
-        private int? transferWeight;
+        private double? transferWeight;
 
-        public int? TransferWeight
+        public double? TransferWeight
         {
             get { return transferWeight; }
             set
