@@ -10,10 +10,10 @@ namespace Ui.ViewModel
     {
         public CRMApiBaseViewModel()
         {
-            CRMService = new CRMService();
+            CRMService = new CRMApiService();
         }
 
-        public CRMService CRMService { get; set; }
+        public CRMApiService CRMService { get; set; }
 
        
     }
