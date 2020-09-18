@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ui.View.IndexPage"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1200"
+      d:DesignHeight="450" d:DesignWidth="1000"
             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="WarehouseMaterialTransferAndSafeInventory">
 
@@ -23,19 +23,31 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
+                            <RowDefinition Height="8"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
+                        <Grid Grid.Row="0" Background="NavajoWhite">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="计划开工日期开始" Style="{StaticResource TextBlockStyle5}"/>
+
+
+                            <StackPanel Orientation="Horizontal" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock   Text="任务单计划开工日期" Style="{StaticResource TextBlockStyle10}"/>
+                                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding DateParamter.ParamBeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+
+                                <TextBlock  Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
+
+                                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding DateParamter.ParamEndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                            </StackPanel>
+                            
+                            
+                            <!--<TextBlock Grid.Column="0" Text="计划开工日期开始" Style="{StaticResource TextBlockStyle5}"/>
                             <DatePicker Name="DP1" Grid.Column="1" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontSize="14" 
                             VerticalContentAlignment="Center" Width="120" 
                               SelectedDate="{Binding QueryParameter.BeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"    Style="{StaticResource DatePickerStyle}"/>
@@ -43,14 +55,31 @@
                             <TextBlock Grid.Column="2" Text="计划开工日期结束" Style="{StaticResource TextBlockStyle5}"/>
                             <DatePicker   Grid.Column="3" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontSize="14" 
                             VerticalContentAlignment="Center" Width="120"
-                              SelectedDate="{Binding QueryParameter.EndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"    Style="{StaticResource DatePickerStyle}"/>
+                              SelectedDate="{Binding QueryParameter.EndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"    Style="{StaticResource DatePickerStyle}"/>-->
 
-                            <Button Grid.Column="4" Content="获取未发料数据" Style="{StaticResource BtnWarningStyle}" Command="{Binding NewDataGenerateCommand}" ToolTip="未处理完生成的数据之前，不需要再次执行，比较耗时"/>
+                            <Button Grid.Column="2" Content="获取未发料数据" Style="{StaticResource BtnWarningStyle}" Command="{Binding NewDataGenerateCommand}" ToolTip="未处理完生成的数据之前，不需要再次执行，比较耗时"/>
+
+                            <!--<Button Grid.Column="5" Content="导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding NewDataGenerateCommand}" ToolTip="把查询结果分类导出到Excel"/>-->
+
+                            <Grid Grid.Column="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="选择目录" Style="{StaticResource BtnSuccessStyle}" Command="{Binding DirectorySelectCommand}"  ToolTip="选择文件导出的固定目录" HorizontalAlignment="Right"  />
+                                <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"   Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30" HorizontalAlignment="Stretch" Margin="5 0"/>
+                                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ListsExportCommand}"  ToolTip="导出数据到选定目录" Margin="15 5 20 5" />
+                            </Grid>
+
                         </Grid>
 
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="80"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -59,17 +88,30 @@
                                 <ColumnDefinition Width="0.1*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="产品类别" Style="{StaticResource TextBlockStyle5}"/>
+
                             <TextBox Grid.Column="1" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding QueryParameter.BatchTypeCode ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Grid.Column="2"  Content="应发数量大于0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            
+                            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock  Grid.Column="1" Text="开工日期" Style="{StaticResource TextBlockStyle10}"/>
+                                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding QueryParameter.BeginDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+
+                                <TextBlock  Text="一" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
+
+                                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding QueryParameter.EndDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                            </StackPanel>
+                            
+
+                            <CheckBox Grid.Column="5"  Content="应发数量大于0" VerticalAlignment="Center" HorizontalAlignment="Center"
                                       IsChecked="{Binding QueryParameter.IsTransfering ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Grid.Column="3"  Content="已调拨" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            <CheckBox Grid.Column="6"  Content="已调拨" VerticalAlignment="Center" HorizontalAlignment="Center"
                                          IsChecked="{Binding QueryParameter.IsTransfered ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            <CheckBox Grid.Column="4"  Content="历史记录" VerticalAlignment="Center" HorizontalAlignment="Center"    
+                            <CheckBox Grid.Column="7"  Content="历史记录" VerticalAlignment="Center" HorizontalAlignment="Center"    
                                       IsChecked="{Binding QueryParameter.IsDeleted ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       />
-                            <Button Grid.Column="5" Content="查询" Style="{StaticResource BtnInfoStyle}"  Command="{Binding QueryCommand}"/>
+                            <Button Grid.Column="8" Content="查询" Style="{StaticResource BtnInfoStyle}"  Command="{Binding QueryCommand}"/>
                         </Grid>
-                        <DataGrid Grid.Row="2" ItemsSource="{Binding WarehouseTransferToWorkshopLists}" SelectedItem="{Binding WarehouseTransferToWorkshopSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="MainDataGrid" Style="{StaticResource RowDetailsTemplateMainDataGridStyle}">
+                        
+                        <DataGrid Grid.Row="3" ItemsSource="{Binding WarehouseTransferToWorkshopLists}" SelectedItem="{Binding WarehouseTransferToWorkshopSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="MainDataGrid" Style="{StaticResource RowDetailsTemplateMainDataGridStyle}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="RowDetailsVisibilityChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"

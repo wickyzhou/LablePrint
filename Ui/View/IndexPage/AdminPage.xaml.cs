@@ -1,4 +1,6 @@
-﻿using K3ApiModel;
+﻿using Common;
+using CRMApiModel.Response;
+using K3ApiModel;
 using K3ApiModel.PurchaseRequisition;
 using System;
 using System.Collections.Generic;
@@ -102,6 +104,63 @@ namespace Ui.View.IndexPage
             if (sender == null)
                 return;
             MessageBox.Show($"{((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FName} \t {((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FNumber}");
+        }
+
+        private void JsonToModel_Click(object sender, RoutedEventArgs e)
+        {
+            string json = @"{
+  ""code"": 200,
+  ""msg"": ""OK"",
+  ""ext"": [],
+  ""result"": {
+    ""apiKey"": ""opportunity"",
+    ""custom"": false,
+    ""label"": ""销售机会"",
+    ""disabled"": true,
+    ""createable"": true,
+    ""deletable"": true,
+    ""updateable"": true,
+    ""queryable"": true,
+    ""feedEnabled"": true,
+  ""fields"":[ {
+        ""apiKey"": ""id"",
+        ""label"": ""id"",
+        ""type"": ""id"",
+        ""itemType"": ""Long"",
+        ""defaultValue"": null,
+        ""enabled"": true,
+        ""required"": false,
+        ""createable"": false,
+        ""updateable"": false,
+        ""sortable"": true,
+        ""minLength"": 0,
+        ""maxLength"": 20,
+        ""dependentPropertyName"": null,
+        ""referTo"": {},
+        ""joinTo"": {},
+        ""selectitem"": [],
+        ""checkitem"": []
+      }],
+     ""entityTypes"": [
+      {
+        ""id"": 1417431,
+        ""label"": ""前期开发项目"",
+        ""apiKey"": ""defaultBusiType_1"",
+        ""disabled"": false,
+        ""default"": true,
+        ""description"": """"
+      },
+      {
+        ""id"": 1417873,
+        ""label"": ""模厂项目"",
+        ""apiKey"": ""defaultBusiType_2"",
+        ""disabled"": false,
+        ""default"": false,
+        ""description"": """"
+      }
+        ]
+  }}";
+           var sss= JsonHelper.DeserializeObject<EntityDescriptionResponseModel>(json);
         }
     }
 }

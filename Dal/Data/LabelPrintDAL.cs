@@ -17,24 +17,8 @@ namespace Dal
         /// </summary>
         public List<LabelPrintHistoryModel> GetLabelPrintHistoryDataByDate(DateTime date, int userId)
         {
-            //A.ID=C.LabelPrintHistoryID
 
-            //DataTable data = SqlHelper.ExecuteDataTableProcedure(@"SJGetPrintData"
-            //                , new SqlParameter[] { new SqlParameter("@ProductionDate", date), new SqlParameter("@UserID", userId) });
-
-            DataTable data = SqlHelper.ExecuteDataTable(@"SELECT A.ModifyTime,A.ID,A.ProductiveTaskListID,A.WorkNo,A.BatchNo,A.ProductionModel,A.ProductionName,A.ProductionDate,A.ExpirationDate,A.ExpirationMonth
-                                                                ,A.OrgID,A.Label,A.OrgCode,A.OrgBillNo,A.Package
-                                                                ,A.RoughWeight,A.NetWeight,A.CheckNo,A.PrintCount,A.TwoDimensionCode,A.SpecialRequest,A.BucketCount,A.CaseName,A.RowHashValue,A.Seq
-                                                                ,CAST(CASE WHEN C.ID IS NULL  THEN 0 ELSE 1 END AS BIT) IsChecked
-                                                                ,CASE WHEN C.ID IS NULL THEN 0 ELSE 1 END Selected
-                                                                ,isnull(B.BatchTotal, 0) BatchTotal,isnull(B.BatchReprintCount, 0) BatchReprintCount,isnull(B.BatchCurrentSeq, 0) BatchCurrentSeq
-																,isnull(M.WorkTotal, 0)  WorkTotal,isnull(M.WorkPrintCount, 0)    WorkPrintCount ,isnull(M.WorkReprintCount, 0)    WorkReprintCount ,M.LastPrintTime
-                                                                ,A.SafeCode,A.SpecificationValue,A.TwoDimensionCode1,A.TwoDimensionCode2,A.TwoDimensionCode3,A.TwoDimensionCode4,A.IsPassed
-                                                              FROM SJLabelPrintHistory A
-                                                           LEFT JOIN SJPrintLogBatchView B ON A.BatchNo = B.BatchNo
-                                                           LEFT JOIN SJPrintLogBatchWorkView M on A.BatchNo = m.BatchNo  and A.RowHashValue = m.RowHashValue
-                                                           LEFT JOIN(SELECT* FROM SJLabelPrintResult WHERE UserID= @UserID AND PrintStatus = '未打印') C ON A.ProductiveTaskListID = C.ProductiveTaskListID
-                                                           WHERE A.ProductionDate = @ProductionDate "
+            DataTable data = SqlHelper.ExecuteDataTableProcedure(@"SJGetLabelPrintHistoryDataByDateUser"
                            , new SqlParameter[] { new SqlParameter("@ProductionDate", date), new SqlParameter("@UserID", userId) });
 
             return SqlHelper.DataTableToModelList<LabelPrintHistoryModel>(data);
@@ -57,16 +41,26 @@ namespace Dal
             return SqlHelper.ExecuteNonQueryProcedure("SJAddUserCurrentPrintData", new SqlParameter[] { new SqlParameter("@IDS", ids), new SqlParameter("@UserID", userID), new SqlParameter("@ProductionDate", productionDate) });
         }
 
-        // 打印完成后记录日志
+        // 普通标签打印完成后记录日志
         public int ModifyHistoryAndCurrentData(string currentIDS, string printTime)
         {
             //string sql = " UPDATE SJLabelPrintHistory SET SelectCount+=1,SelectTotalCount+=BucketCount,PrintTime=@PrintTime WHERE ID IN(" + historyIDS + ");"
 
-            string sql = " INSERT INTO SJLabelPrintLog(RowHashValue,PrintBucket,PrintTime,PrintUserID,BatchNo,IsReprint,LabelPrintResultID) SELECT RowHashValue,PrintCount,@PrintTime,UserID,BatchNo,case when len(seq)>0 then 1 else 0 end,ID  FROM SJLabelPrintResult WHERE ID IN(" + currentIDS + ");"
+            string sql = " INSERT INTO SJLabelPrintLog(RowHashValue,PrintBucket,PrintTime,PrintUserID,BatchNo,IsReprint,LabelPrintResultID) " +
+                "   SELECT RowHashValue,PrintCount,@PrintTime,UserID,BatchNo,case when len(seq)>0 then 1 else 0 end,ID  FROM SJLabelPrintResult WHERE ID IN(" + currentIDS + ");"
                         + " UPDATE SJLabelPrintResult SET PrintStatus='已打印' WHERE ID IN(" + currentIDS + ")";
             return SqlHelper.ExecuteNonQuery(sql, new SqlParameter[] { new SqlParameter("@PrintTime", printTime) });
         }
 
+        // 样油标签打印完成后记录日志
+        public int ModifyHistoryAndCurrentDataSampleOil(string currentIDS, string printTime)
+        {
+            //string sql = " UPDATE SJLabelPrintHistory SET SelectCount+=1,SelectTotalCount+=BucketCount,PrintTime=@PrintTime WHERE ID IN(" + historyIDS + ");"
+
+            string sql = " INSERT INTO SJSampleOilPrintLog(RowHashValue,PrintBucket,PrintTime,PrintUserID,BatchNo,LabelPrintResultID) " +
+                "   SELECT RowHashValue,SampleOilPrintCount,@PrintTime,UserID,BatchNo,ID  FROM SJLabelPrintResult WHERE ID IN(" + currentIDS + ");";
+            return SqlHelper.ExecuteNonQuery(sql, new SqlParameter[] { new SqlParameter("@PrintTime", printTime) });
+        }
 
         /// 获取未打印的历史记录ID，避免多次添加
         public List<int> GetNotPrintedUniqueKey(int userID,DateTime date)

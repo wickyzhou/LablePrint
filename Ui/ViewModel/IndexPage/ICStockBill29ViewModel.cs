@@ -30,7 +30,10 @@ namespace Ui.ViewModel.IndexPage
             Task.Factory.StartNew(() =>
             {
                 CheckedICStockBill29VerificationLists = new ObservableCollection<ICStockBill29ImportVerificationModel>();
+                CheckedICStockBill1VerificationLists = new ObservableCollection<ICStockBill1ImportVerificationModel>();
+
                 K3InsertResponseData = new K3ApiInsertDataMultiResponseModel();
+                K3InsertResponseData1 = new K3ApiInsertDataMultiResponseModel();
             });
         }
 
@@ -48,6 +51,22 @@ namespace Ui.ViewModel.IndexPage
                     // 数据验证后加载验证模型列表到表格
                     CheckedICStockBill29VerificationLists.Clear();
                     _stockService.GetICStockBill29ImportVerificationLists().ForEach(x => CheckedICStockBill29VerificationLists.Add(x));
+                }
+                opd.Dispose();
+            });
+
+            ICStockBill1ImportCommand = new DelegateCommand((obj) =>
+            {
+                System.Windows.Forms.OpenFileDialog opd = new System.Windows.Forms.OpenFileDialog();
+                opd.Title = "选择文件";
+                opd.Filter = "EXCEL文件|*.xls*";
+                if (opd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    CommonService.ImportExcelToDatabaseTable(opd.FileName, "SJICStockBill1ExcelTemplate");
+                    ImportFileFullName1 = opd.FileName;
+                    // 数据验证后加载验证模型列表到表格
+                    CheckedICStockBill1VerificationLists.Clear();
+                    _stockService.GetICStockBill1ImportVerificationLists().ForEach(x => CheckedICStockBill1VerificationLists.Add(x));
                 }
                 opd.Dispose();
             });
@@ -124,10 +143,25 @@ namespace Ui.ViewModel.IndexPage
                     MessageBox.Show($"导入成功");
                 }
             });
+
+            ICStockBill1InsertK3Command = new DelegateCommand((obj) =>
+            {
+                if (CheckedICStockBill1VerificationLists.Count == 0)
+                    MessageBox.Show("请先导入Excel模板数据");
+                else if (CheckedICStockBill1VerificationLists.Where(m => !m.IsPassed).Count() > 0)
+                    MessageBox.Show("必须全部数据验证成功才允许导入，请修改Excel数据");
+                else
+                {
+                  
+                }
+            });
         }
 
         public DelegateCommand ICStockBill29ImportCommand { get; set; }
+        public DelegateCommand ICStockBill1ImportCommand { get; set; }
+
         public DelegateCommand ICStockBill29InsertK3Command { get; set; }
+        public DelegateCommand ICStockBill1InsertK3Command { get; set; }
 
         private string importFileFullName;
 
@@ -138,6 +172,18 @@ namespace Ui.ViewModel.IndexPage
             {
                 importFileFullName = value;
                 this.RaisePropertyChanged(nameof(ImportFileFullName));
+            }
+        }
+
+        private string importFileFullName1;
+
+        public string ImportFileFullName1
+        {
+            get { return importFileFullName1; }
+            set
+            {
+                importFileFullName1 = value;
+                this.RaisePropertyChanged(nameof(ImportFileFullName1));
             }
         }
 
@@ -153,6 +199,18 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        private ObservableCollection<ICStockBill1ImportVerificationModel> checkedICStockBill1VerificationLists;
+
+        public ObservableCollection<ICStockBill1ImportVerificationModel> CheckedICStockBill1VerificationLists
+        {
+            get { return checkedICStockBill1VerificationLists; }
+            set
+            {
+                checkedICStockBill1VerificationLists = value;
+                this.RaisePropertyChanged(nameof(CheckedICStockBill1VerificationLists));
+            }
+        }
+
         private K3ApiInsertDataMultiResponseModel k3InsertResponseData;
 
         public K3ApiInsertDataMultiResponseModel K3InsertResponseData
@@ -162,6 +220,19 @@ namespace Ui.ViewModel.IndexPage
             {
                 k3InsertResponseData = value;
                 this.RaisePropertyChanged(nameof(K3InsertResponseData));
+            }
+        }
+
+
+        private K3ApiInsertDataMultiResponseModel k3InsertResponseData1;
+
+        public K3ApiInsertDataMultiResponseModel K3InsertResponseData1
+        {
+            get { return k3InsertResponseData1; }
+            set
+            {
+                k3InsertResponseData1 = value;
+                this.RaisePropertyChanged(nameof(K3InsertResponseData1));
             }
         }
 

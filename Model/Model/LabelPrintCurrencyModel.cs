@@ -473,11 +473,55 @@ namespace Model
             }
         }
 
+        private int sampleOilPrintCount;
+
+        public int SampleOilPrintCount
+        {
+            get { return sampleOilPrintCount; }
+            set
+            {
+                sampleOilPrintCount = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintCount));
+            }
+        }
+
+        private string sampleOilPrintArea;
+
+        public string SampleOilPrintArea
+        {
+            get { return sampleOilPrintArea; }
+            set
+            {
+                sampleOilPrintArea = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintArea));
+            }
+        }
+
+        private bool isSampleOilPrint;
+
+        public bool IsSampleOilPrint
+        {
+            get { return isSampleOilPrint; }
+            set
+            {
+                isSampleOilPrint = value;
+                this.RaisePropertyChanged(nameof(IsSampleOilPrint));
+            }
+        }
 
 
 
+        private string sampleOilPrintProductionName;
 
-
+        public string SampleOilPrintProductionName
+        {
+            get { return sampleOilPrintProductionName; }
+            set
+            {
+                sampleOilPrintProductionName = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintProductionName));
+            }
+        }
 
 
 

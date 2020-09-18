@@ -53,13 +53,6 @@ namespace Ui.View.IndexPage
         public ProductionDeptLabelPrintPage()
         {
             InitializeComponent();
-
-        
-            //schemaList = new QuerySchemaCurrentStatusService().GetUserSchemaList(user.ID, this.DP1.SelectedDate.Value);
-            //pageSizeList = new QuerySchemaCurrentStatusService().GetUserPageSizeList(user.ID, this.DP1.SelectedDate.Value);
-            //this.scrollViewer.DataContext = schemaList;
-            //this.spSchema.DataContext = pageSizeList;
-            //this.MainDataGrid.LoadingRow += (send, e) => { e.Row.Header = e.Row.GetIndex() + 1; };
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -103,8 +96,8 @@ namespace Ui.View.IndexPage
             });
 
             SetQuerySchemaBtn(user.ID);
-      
-                
+
+
 
             //GetDataFromDatabase(date);
             globalSchemaId = 0;
@@ -128,6 +121,7 @@ namespace Ui.View.IndexPage
             this.tbOrgID.Text = string.Empty;
             this.tbProductionModel.Text = string.Empty;
             this.tbSafeCode.Text = string.Empty;
+            this.cbSampleOil.IsChecked = false;
         }
 
         private void DP1_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -250,22 +244,43 @@ namespace Ui.View.IndexPage
 
         }
 
+        private void BtnOilPrint_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.CbPrintTemplate.Text.Length == 0 || this.CbPrinterName.Text.Length == 0 || this.DP1.SelectedDate == null)
+            {
+                MessageBox.Show("请选择日期、模板以及Tender打印机");
+                return;
+            }
+
+            /* 获取打印数据和配置 */
+            var data = new LabelPrintDAL().GetPrintResultRecord(this.DP1.SelectedDate.Value, user.ID, "未打印").OrderBy(m => m.PrintOrder).ToList();
+            var config = new PrintSchemaParameterModel
+            {
+                UserId = user.ID,
+                SchemaId = globalSchemaId,
+                TemplateFullName = this.CbPrintTemplate.Text,
+                TemplateFileName = Path.GetFileName(this.CbPrintTemplate.Text),
+                Orientation = this.CbOrientation.Text,
+                PrinterName = this.CbPrinterName.Text,
+                FolderPath = this.tbFolderPath.Text
+            };
+            string r = new PrintHelper().PrintLabelSampleOil(config, data);
+            if (string.IsNullOrEmpty(r))
+            {
+                RefreshDataGrid();
+                MessageBox.Show("打印成功");
+            }
+            else
+            {
+                MessageBox.Show(r);
+            }
+        }
+
         public List<LabelPrintHistoryModel> GetDataFromDatabase(DateTime date)
         {
             return new LabelPrintService().GetAllLabelPrintHistoryDataByDate(date, user.ID);
-            //if (this.BtnQuery == null)
-            //{
-            //    return;
-            //}
-            //if (lists.Count() == 0)
-            //{
-            //    HistoryRecords = new ObservableCollection<LabelPrintHistoryModel>(new List<LabelPrintHistoryModel> {
-            //        new LabelPrintHistoryModel { ProductionModel = $"请先审核 {date.ToString("yyyy-MM-dd")}",Label=" 生产任务清单" }
-            //    });
-            //    return;
-            //}
-            //HistoryRecords = new ObservableCollection<LabelPrintHistoryModel>(lists);
         }
+
 
         private void CheckAll_Checked(object sender, RoutedEventArgs e)
         {
@@ -298,7 +313,8 @@ namespace Ui.View.IndexPage
                     BatchNo=this.tbBatchNo.Text.ToUpper(),
                     SafeCode= this.tbSafeCode.Text.ToUpper(),
                     SpecificationValueBegin = decimal.TryParse(this.tbNetWeightBegin.Text, out decimal result) ? result: 0,
-                    SpecificationValueEnd= decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99
+                    SpecificationValueEnd= decimal.TryParse(this.tbNetWeightEnd.Text, out decimal r) ? r : (decimal)999999.99,
+                    SampleOilIsChecked = this.cbSampleOil.IsChecked.Value
                 }
             });
             if (expression != null)
@@ -309,7 +325,7 @@ namespace Ui.View.IndexPage
         }
 
         private void BtnAddData_Click(object sender, RoutedEventArgs e)
-        {   
+        {
             List<int> ids = new List<int>();
             //遍历checkbox获取对应的数据ID，批量插入x打印表
             var itemsSource = this.MainDataGrid.ItemsSource;
@@ -328,6 +344,9 @@ namespace Ui.View.IndexPage
             {
                 MessageBox.Show(r);
                 lists = GetDataFromDatabase(this.DP1.SelectedDate.Value);
+                var filterData = GetFilteredItemSource();
+                this.MainDataGrid.ItemsSource = filterData;
+                this.TbSum.Text = filterData.Count().ToString();
             }
             else
             {
@@ -378,7 +397,7 @@ namespace Ui.View.IndexPage
             {
                 Owner = System.Windows.Window.GetWindow(this)
             };
-            window.RefreshEvent += () => {SetQuerySchemaBtn(user.ID); };
+            window.RefreshEvent += () => { SetQuerySchemaBtn(user.ID); };
             window.ShowDialog();
 
         }
@@ -440,9 +459,9 @@ namespace Ui.View.IndexPage
             {
                 this.spSchema.Children.Clear();
                 string pageSize = string.Empty;
-             
+
                 foreach (QuerySchemaModel item in model)
-                {   
+                {
                     // 同一个页面
                     if (pageSize.Equals(item.SchemaPageSize))
                     {
@@ -458,9 +477,9 @@ namespace Ui.View.IndexPage
                     {
                         pageSize = item.SchemaPageSize;
                         GroupBox groupBox = new GroupBox();
-                        groupBox.Header = " "+item.SchemaPageSize+" ";
+                        groupBox.Header = " " + item.SchemaPageSize + " ";
                         groupBox.Margin = new Thickness { Bottom = 15 };
-                        groupBox.Padding = new Thickness { Bottom=3,Top=3,Left=3,Right=3};
+                        groupBox.Padding = new Thickness { Bottom = 3, Top = 3, Left = 3, Right = 3 };
                         groupBox.BorderThickness = new Thickness { Bottom = 2, Top = 2, Left = 2, Right = 2 };
 
                         Binding color = new Binding("PageSizeStatus");
@@ -474,7 +493,7 @@ namespace Ui.View.IndexPage
                         wrapPanel.Children.Add(btn);
                         groupBox.Content = wrapPanel;
                         this.spSchema.Children.Add(groupBox);
-                        if (this.spSchema.FindName(item.SchemaPageSize)==null)
+                        if (this.spSchema.FindName(item.SchemaPageSize) == null)
                         {
                             this.spSchema.RegisterName(item.SchemaPageSize, wrapPanel);
                         }
@@ -559,7 +578,7 @@ namespace Ui.View.IndexPage
             }
         }
 
-        private void DoubleClick(int schemaId, string schemaName, string templateFullName,string pageSize)
+        private void DoubleClick(int schemaId, string schemaName, string templateFullName, string pageSize)
         {
             MessageBoxResult result = MessageBox.Show($"生成【 {schemaName} 】 全部数据到待打印记录 \r\n 生产日期：【 {this.DP1.SelectedDate.Value} 】", "温馨提示", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
@@ -569,7 +588,7 @@ namespace Ui.View.IndexPage
                 btn.Foreground = System.Windows.Media.Brushes.Red;
                 #endregion
 
-                if (!string.IsNullOrEmpty(currentPageSize) && currentPageSize!= pageSize)
+                if (!string.IsNullOrEmpty(currentPageSize) && currentPageSize != pageSize)
                 {
                     MessageBox.Show($" 当前方案纸张【 {pageSize} 】和之前的不一样，请确认打印纸张 ");
                     currentPageSize = pageSize;
@@ -617,8 +636,8 @@ namespace Ui.View.IndexPage
                     }
                     RefreshDataGrid();
                     MessageBox.Show(message);
-                    
-                   
+
+
                 }
                 else
                 {
@@ -671,8 +690,8 @@ namespace Ui.View.IndexPage
         }
 
         private void DataGridRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {   
-           
+        {
+
             var model = (sender as DataGridRow).Item as LabelPrintHistoryModel;
             if (!model.IsPassed)
                 return;
@@ -737,8 +756,11 @@ namespace Ui.View.IndexPage
 
         public static Expression<Func<LabelPrintHistoryModel, bool>> CreateLambda(LabelPrintHistoryModel entryModel)
         {
-
-            Expression<Func<LabelPrintHistoryModel, bool>> condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue <= entryModel.SpecificationValueEnd;
+            Expression<Func<LabelPrintHistoryModel, bool>> condition;
+            if (entryModel.SampleOilIsChecked)
+                condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue <= entryModel.SpecificationValueEnd && s.SampleOilPrintCount > 0;
+            else
+                 condition = s => s.SpecificationValue >= entryModel.SpecificationValueBegin && s.SpecificationValue <= entryModel.SpecificationValueEnd;
             //var parameter = Expression.Parameter(typeof(T), "p");//创建参数i
             //var constant = Expression.Constant(filterCondition.value);//创建常数
             //MemberExpression member = Expression.PropertyOrField(parameter, filterCondition.column);        
@@ -762,12 +784,6 @@ namespace Ui.View.IndexPage
             if (!string.IsNullOrEmpty(entryModel.SafeCode))
                 condition = AndCondition("SafeCode", entryModel.SafeCode, condition);
 
-            //if (!string.IsNullOrEmpty(entryModel.BatchNo))
-            //{
-            //    ParameterExpression p1 = Expression.Parameter(typeof(T), "p");
-            //    MethodCallExpression m1 = GetMethodExpression("Contains", "BatchNo", entryModel.BatchNo, p1);
-            //    condition = condition == null ? Expression.Lambda<Func<T, bool>>(m1, p1) : condition.And(Expression.Lambda<Func<T, bool>>(m1, p1));
-            //}
             return condition;
         }
 
@@ -775,9 +791,7 @@ namespace Ui.View.IndexPage
         private static Expression<Func<T, bool>> AndCondition<T>(string name, string value, Expression<Func<T, bool>> condition = null)
         {
 
-
             ParameterExpression p1 = Expression.Parameter(typeof(T), "p");
-
             GetMethodNameAndValue(value, out string methodName, out string methodValue);
             MethodCallExpression m1 = GetMethodExpression(methodName, name, methodValue, p1);
             return condition == null ? Expression.Lambda<Func<T, bool>>(m1, p1) : condition.And(Expression.Lambda<Func<T, bool>>(m1, p1));
@@ -806,12 +820,9 @@ namespace Ui.View.IndexPage
 
 
 
-        /// <summary>
-        /// 生成类似于p=>p.values.Contains("xxx");的lambda表达式
-        /// parameterExpression标识p，propertyName表示values，propertyValue表示"xxx",methodName表示Contains
-        /// 仅处理p的属性类型为string这种情况
         private static MethodCallExpression GetMethodExpression(string methodName, string propertyName, string propertyValue, ParameterExpression parameterExpression)
         {
+            var ss = typeof(int).GetMethods();
             var propertyExpression = Expression.Property(parameterExpression, propertyName);
             MethodInfo method = typeof(string).GetMethod(methodName, new[] { typeof(string) });
             var someValue = Expression.Constant(propertyValue, typeof(string));

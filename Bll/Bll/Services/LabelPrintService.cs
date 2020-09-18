@@ -38,6 +38,7 @@ namespace Bll.Services
             return dal.GetLabelPrintHistoryDataByDate(date, userId).ToList();
         }
 
+
         // 按日期获取当前打印数据
         public IEnumerable<LabelPrintCurrencyModel> GetCurrencyPrintingDataByDate(DateTime date)
         {

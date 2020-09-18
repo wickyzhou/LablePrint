@@ -198,5 +198,16 @@ namespace Model
 
         public bool IsPassed { get; set; }
 
+        public int SampleOilPrintCount { get; set; }
+
+        public string SampleOilPrintArea { get; set; }
+
+        public DateTime? SampleOilPrintTime { get; set; }
+
+        public int SampleOilPrintedCount { get; set; }
+
+        public bool SampleOilIsChecked { get; set; }
+
+        public string SampleOilPrintProductionName { get; set; }
     }
 }

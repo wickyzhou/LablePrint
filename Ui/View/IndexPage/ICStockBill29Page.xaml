@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ui.View.IndexPage"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1000"
+      d:DesignHeight="800" d:DesignWidth="1000"
       xmlns:c="clr-namespace:Ui.Converter"
       xmlns:p="clr-namespace:Model;assembly=Model"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -13,12 +13,12 @@
       Title="ICStockBill29Page">
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="1"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         
-        <GroupBox Grid.Column="0" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
+        <GroupBox Grid.Row="0" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
             <GroupBox.Content>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -74,6 +74,63 @@
                             <DataGridTextColumn DataGridColumn.Header="备注" DataGridBoundColumn.Binding="{Binding Note}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="领料人Id" DataGridBoundColumn.Binding="{Binding FFManagerFNumber}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="领料人" DataGridBoundColumn.Binding="{Binding FFManagerName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox.Content>
+
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Margin="0 15 0 0" Padding="2 8" Header="收料通知单下推外购入库">
+            <GroupBox.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  导入外购入库单模板  " Command="{Binding ICStockBill1ImportCommand}" Style="{StaticResource BtnSuccessStyle}" Margin="3 0"/>
+                        <TextBox Grid.Column="1" Text="{Binding ImportFileFullName1,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}"   Width="auto"  />
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="1.8*" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  生成K3外购入库单  " Command="{Binding ICStockBill1InsertK3Command}" Style="{StaticResource BtnWarningStyle}"  Margin="3,5" ToolTip="生成成功后，单据就在K3里面了,需要修改删除的话得进K3" />
+                        <TextBlock Grid.Column="1" Style="{StaticResource TextBlockStyle5}" Text="单号：" />
+                        <TextBox Grid.Column="2" Text="{Binding K3InsertResponseData1.BillNo,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
+                                 Style="{StaticResource TextBoxStyle}" ToolTip="审核改单据号"  />
+                        <TextBlock Grid.Column="3" Style="{StaticResource TextBlockStyle5}" Text="Id：" />
+                        <TextBox Grid.Column="4" Text="{Binding K3InsertResponseData1.BillInterID,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
+                                 Style="{StaticResource TextBoxStyle}" />
+                    </Grid>
+
+                    <DataGrid Grid.Row="2" Style="{StaticResource ImportExcelDataGridStyle}" ItemsSource="{Binding CheckedICStockBill1VerificationLists}" >
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn DataGridColumn.Header="验证结果" DataGridBoundColumn.Binding="{Binding IsPassed,Converter={c:ValidationResultValueConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" />
+
+                            <DataGridTextColumn DataGridColumn.Header="Xls行号" DataGridBoundColumn.Binding="{Binding Seq}" Width="70" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="物料Id" DataGridBoundColumn.Binding="{Binding MaterialId}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="物料代码" DataGridBoundColumn.Binding="{Binding MaterialFNumber}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="物料名称" DataGridBoundColumn.Binding="{Binding MaterialFName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="收料仓库Id" DataGridBoundColumn.Binding="{Binding StockId}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="收料仓库代码" DataGridBoundColumn.Binding="{Binding StockFNumber}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="收料仓库名称" DataGridBoundColumn.Binding="{Binding StockFName}" Width="1.5*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="批号" DataGridBoundColumn.Binding="{Binding BatchNo}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="实收数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="导入时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=yyyy-MM-dd HH:mm:ss}" Width="150" HeaderStyle="{StaticResource DGColumnHeader}"/>
+
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

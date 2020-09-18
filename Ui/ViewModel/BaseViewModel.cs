@@ -12,6 +12,7 @@ namespace Ui.ViewModel
 {
     public class BaseViewModel : NotificationObject
     {
+        public MainMenuModel Menu { get; set; } = MemoryCache.Default["PageCache"] as MainMenuModel;
 
         public UserModel User { get; set; } = (MemoryCache.Default["UserCache"] as UserCacheModel).User ;
 

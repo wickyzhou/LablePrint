@@ -31,8 +31,22 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescEntityTypesModel.cs" />
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescFieldsModel.cs" />
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescReferToModel.cs" />
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescResponseModel.cs" />
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescResultModel.cs" />
+    <Compile Include="CRMApiModel\EntityDescription\EntityDescSelectitemModel.cs" />
+    <Compile Include="CRMApiModel\QueryXoqlModel\OpportunityAccountQueryXoqlModel.cs" />
+    <Compile Include="CRMApiModel\QueryXoqlModel\SROpportunityQueryXoqlModel.cs" />
+    <Compile Include="CRMApiModel\Response\QueryXoqlDataResponseModel.cs" />
+    <Compile Include="CRMApiModel\Response\QueryXoqlResponseModel.cs" />
+    <Compile Include="CRMApiModel\Response\TokenResponseModel.cs" />
+    <Compile Include="ImportVerificationModel\ICStockBill1ImportVerificationModel.cs" />
     <Compile Include="ImportVerificationModel\ICStockBill29ImportVerificationModel.cs" />
     <Compile Include="K3ApiModel\BaseNumberNameModelX.cs" />
+    <Compile Include="K3ApiModel\ICStockBill1\PurchaseReceiptMainModel.cs" />
+    <Compile Include="K3ApiModel\ICStockBill1\PurchaseReceiptSonModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliveryMainModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliverySonModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillDataRequestMode.cs" />
@@ -149,5 +163,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CRMApiModel\Request\" />
+  </ItemGroup>
 </Project>
