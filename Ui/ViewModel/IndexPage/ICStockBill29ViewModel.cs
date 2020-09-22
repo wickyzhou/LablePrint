@@ -90,11 +90,11 @@ namespace Ui.ViewModel.IndexPage
                             Fuse = "研发领料",
                             FHeadSelfB0939 = first.BillNo,
                             FDate = DateTime.Now.Date.ToShortDateString(),
-                            FDeptID = new BaseNumberNameModel() { FNumber = first.DeptFNumber, FName = first.DeptFName },
-                            FBillerID = new BaseNumberNameModel() { FNumber = "何科威", FName = "何科威" },
+                            FDeptID = new BaseNumberNameModelX() { FNumber = first.DeptFNumber, FName = first.DeptFName },
+                            FBillerID = new BaseNumberNameModelX() { FNumber = "何科威", FName = "何科威" },
                             // FFManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" },  领料人
-                            FFManagerID = new BaseNumberNameModel() { FNumber = first.FFManagerFNumber, FName = first.FFManagerName },
-                            FSManagerID = new BaseNumberNameModel() { FNumber = "1033", FName = "付志刚" }
+                            FFManagerID = new BaseNumberNameModelX() { FNumber = first.FFManagerFNumber, FName = first.FFManagerName },
+                            FSManagerID = new BaseNumberNameModelX() { FNumber = "1033", FName = "付志刚" }
                         };
 
                         var sons = new List<MiscellaneousDeliverySonModel>();
@@ -102,11 +102,11 @@ namespace Ui.ViewModel.IndexPage
                         {
                             var son = new MiscellaneousDeliverySonModel()
                             {
-                                FItemID = new BaseNumberNameModel() { FNumber = entry.MaterialFNumber, FName = entry.MaterialFName },
-                                FUnitID = new BaseNumberNameModel() { FNumber = "kg", FName = "kg" },
-                                FDCStockID1 = new BaseNumberNameModel() { FNumber = entry.StockFNumber, FName = entry.StockFName },
-                                FDCSPID = new BaseNumberNameModel() { FNumber = entry.StockPlaceFNumber, FName = entry.StockPlaceFName },
-                                FPlanMode = new BaseNumberNameModel() { FNumber = "MTS", FName = "MTS计划模式" },
+                                FItemID = new BaseNumberNameModelX() { FNumber = entry.MaterialFNumber, FName = entry.MaterialFName },
+                                FUnitID = new BaseNumberNameModelX() { FNumber = "kg", FName = "kg" },
+                                FDCStockID1 = new BaseNumberNameModelX() { FNumber = entry.StockFNumber, FName = entry.StockFName },
+                                FDCSPID = new BaseNumberNameModelX() { FNumber = entry.StockPlaceFNumber, FName = entry.StockPlaceFName },
+                                FPlanMode = new BaseNumberNameModelX() { FNumber = "MTS", FName = "MTS计划模式" },
                                 FQty = entry.Quantity,
                                 FScanQty = entry.Quantity,
                                 Fauxqty = entry.Quantity,

@@ -25,8 +25,8 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new SRItemProfitAccountingViewModel();
-            new CommonService().GetDataGridColumnHeader(this.DGItemProfitAccounting, 0);
-            new CommonService().GetDataGridColumnHeader(this.DGItemProfitAccountingMonthly, 0);
+            new CommonService().GetDataGridColumnHeaderDefault(this.DGItemProfitAccounting, 0);
+            new CommonService().GetDataGridColumnHeaderDefault(this.DGItemProfitAccountingMonthly, 0);
         }
     }
 }

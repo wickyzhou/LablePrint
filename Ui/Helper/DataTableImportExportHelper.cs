@@ -18,6 +18,12 @@ namespace Ui.Helper
         int currencyBatchSeq = 1;
         int previousBatchBeginIndex = 0;
 
+        /// <summary>
+        /// 将datatable导出到excel，适用于直接用sql查询来导出数据
+        /// </summary>
+        /// <param name="dataTable">查询数据集中的表</param>
+        /// <param name="filePath">导出目录</param>
+        /// <param name="fileName">导出文件</param>
         public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName)
         {
             string fullName = Path.Combine(filePath, $"{fileName}{DateTime.Now:yyyy-MM-dd}.xls");
@@ -66,6 +72,15 @@ namespace Ui.Helper
             fs.Close();
         }
 
+        /// <summary>
+        /// 将list按照选定的列分别导出到不同的sheet
+        /// </summary>
+        /// <param name="dataTable">list转化过来的</param>
+        /// <param name="filePath">导出文件目录</param>
+        /// <param name="fileName">导出文件名称</param>
+        /// <param name="checkBoxValue">勾选的值</param>
+        /// <param name="groupId">没用到。。。</param>
+        /// <param name="orderedName">选择的多列的唯一值，相当于groupby选择列作为sheet的名称</param>
         public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName, int checkBoxValue, int groupId,List<string> orderedName)
         {
             string fullName = Path.Combine(filePath, $"{fileName}{DateTime.Now:yyyy-MM-dd}.xls");
@@ -137,6 +152,61 @@ namespace Ui.Helper
         }
 
 
+        /// <summary>
+        /// 将界面绑定的Lists数据导出Excel
+        /// </summary>
+        /// <typeparam name="T">List的类型</typeparam>
+        /// <param name="lists">数据Lists</param>
+        /// <param name="filePath">导出目录</param>
+        /// <param name="fileName">导出文件名</param>
+        /// <param name="selectedColumns">自定义导出列</param>
+        public void ExportDataTableToExcel<T>(List<T> lists, string filePath, string fileName,List<string> selectedColumns)
+        {
+            string fullName = Path.Combine(filePath, $"{fileName}{DateTime.Now:yyyy-MM-dd}.xls");
+
+            //如果存在此文件则添加1
+            if (File.Exists(fullName))
+                fullName = fullName.Replace(".xls", DateTime.Now.ToString("--HH-mm-ss") + ".xls");
+
+            IWorkbook wb = new HSSFWorkbook();
+            ISheet sheet = wb.CreateSheet(fileName);
+            sheet.ForceFormulaRecalculation = true;
+
+            IRow row0 = sheet.CreateRow(0);
+            row0.Height = (short)20 * 20;
+
+            ////表头
+            //for (int i = 0; i < dataTable.Columns.Count; i++)
+            //{
+            //    row0.CreateCell(i).SetCellValue(dataTable.Columns[i].ColumnName);
+            //}
+
+            ////数据
+            //for (int j = 0; j < dataTable.Rows.Count; j++)
+            //{
+            //    IRow row1 = sheet.CreateRow(j + 1);
+            //    row1.Height = (short)15 * 20;
+            //    for (int z = 0; z < dataTable.Columns.Count; z++)
+            //    {
+            //        var s = dataTable.Columns[z].DataType;
+            //        if (s.Name == "Int16" || s.Name == "Int32" || s.Name == "Int64" || s.Name == "Float" || s.Name == "Double" || s.Name == "Decimal")
+            //        {
+            //            var x = dataTable.Rows[j][z];
+            //            object value = x.GetType().Name == "DBNull" ? 0 : x;
+            //            row1.CreateCell(z).SetCellValue(Convert.ToDouble(value));
+            //        }
+
+            //        else if (s.Name == "DateTime")
+            //            row1.CreateCell(z).SetCellValue(Convert.ToDateTime(dataTable.Rows[j][z]).ToString("yyyy-MM-dd HH:mm:ss"));
+            //        else
+            //            row1.CreateCell(z).SetCellValue(Convert.ToString(dataTable.Rows[j][z]));
+            //    }
+            //}
+
+            FileStream fs = new FileStream(fullName, FileMode.Create);//新建才不会报错
+            wb.Write(fs);//会自动关闭流文件  //fs.Flush();
+            fs.Close();
+        }
         private int CreateNewSheet(IWorkbook wb,DataTable dataTable,List<string> orderedName, int rowIndex)
         {
             string sheetName = GetSheetName(dataTable,currencyBatchSeq, orderedName);

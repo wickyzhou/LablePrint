@@ -21,6 +21,7 @@ namespace Ui.Service
             }
         }
 
+
         public IEnumerable<ComboBoxSearchModel> GetCaseLists()
         {
             string sql = @" select  * from SJCaseComboBoxSearchView ; ";

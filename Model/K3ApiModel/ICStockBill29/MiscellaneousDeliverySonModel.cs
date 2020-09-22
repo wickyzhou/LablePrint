@@ -7,15 +7,15 @@ namespace K3ApiModel.ICStockBill29
 {
     public class MiscellaneousDeliverySonModel
     {
-        public BaseNumberNameModel FItemID { get; set; }
+        public BaseNumberNameModelX FItemID { get; set; }
 
-        public BaseNumberNameModel FUnitID { get; set; }
+        public BaseNumberNameModelX FUnitID { get; set; }
 
-        public BaseNumberNameModel FDCStockID1 { get; set; }
+        public BaseNumberNameModelX FDCStockID1 { get; set; }
 
-        public BaseNumberNameModel FDCSPID { get; set; }
+        public BaseNumberNameModelX FDCSPID { get; set; }
 
-        public BaseNumberNameModel FPlanMode { get; set; }
+        public BaseNumberNameModelX FPlanMode { get; set; }
 
         public double FQty { get; set; }
 

@@ -6,6 +6,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -208,6 +209,7 @@ namespace Ui.ViewModel.IndexPage
 
             ListsExportCommand = new DelegateCommand((obj) =>
             {
+                var s = obj as DataTable;
                 CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ListsExportCommand", ActionDesc = "导出发料安全库存", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
                 //HostConfig.HostValue = "";
                 //AddAsync(null);

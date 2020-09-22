@@ -5,6 +5,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using Ui.Admin.View;
+using Ui.Command;
 
 namespace Ui.ViewModel.IndexPage
 {
@@ -20,7 +23,20 @@ namespace Ui.ViewModel.IndexPage
             //Lists.Add(new ZiDongShengChengLieModel { Text = "自定义值4" });
             //Lists.Add(new ZiDongShengChengLieModel { Text = "自定义值5" });
             //Lists.Add(new ZiDongShengChengLieModel { Text = "自定义值6" });
-            DataInit();
+            DataInit(); 
+            InitCommand();
+        }
+
+
+        public DelegateCommand DataGridDefaultConfigCommand { get; set; }
+
+        private void InitCommand()
+        {
+            DataGridDefaultConfigCommand = new DelegateCommand((obj) =>
+            {
+                DataGridManagementWinodw window = new DataGridManagementWinodw();
+                window.ShowDialog();
+            });
         }
 
         private void DataInit()

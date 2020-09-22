@@ -9,17 +9,17 @@ namespace K3ApiModel.ICStockBill29
     {
         public string Fuse { get; set; }
 
-        public BaseNumberNameModel FDeptID { get; set; }
+        public BaseNumberNameModelX FDeptID { get; set; }
 
         public string FHeadSelfB0939 { get; set; }
 
         public string FDate { get; set; }
 
-        public BaseNumberNameModel FBillerID { get; set; }
+        public BaseNumberNameModelX FBillerID { get; set; }
 
-        public BaseNumberNameModel FFManagerID { get; set; }
+        public BaseNumberNameModelX FFManagerID { get; set; }
 
-        public BaseNumberNameModel FSManagerID { get; set; }
+        public BaseNumberNameModelX FSManagerID { get; set; }
 
 
 

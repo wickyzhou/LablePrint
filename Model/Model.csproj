@@ -74,6 +74,7 @@
     <Compile Include="Model\BatchTypeModel.cs" />
     <Compile Include="Model\CaseModel.cs" />
     <Compile Include="Model\ComboBoxSearchModel.cs" />
+    <Compile Include="Model\DataGridColumnHeaderUserCustomModel.cs" />
     <Compile Include="Model\ImportTemplateExcelHeaderFieldMappingModel.cs" />
     <Compile Include="Model\InventoryBatchNoModel.cs" />
     <Compile Include="Model\ItemProfitAccountingModel.cs" />

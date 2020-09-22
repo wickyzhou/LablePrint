@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -162,11 +163,98 @@ namespace Ui.Service
             }
         }
 
-        public bool BarTenderOilSampleEntryMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data,int printTotalNum,List<BarTenderTemplateModel> barTenderTemplates)
+        public bool BarTenderOilSampleEntryMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data, int printTotalNum, List<BarTenderTemplateModel> barTenderTemplates)
         {
             string printerName = config.PrinterName;
 
-            string templateName = barTenderTemplates.FirstOrDefault(m=>m.TemplatePerPage== printTotalNum && m.TemplateTotalPage==4).TemplateFullName;
+            string templateName = barTenderTemplates.FirstOrDefault(m => m.TemplatePerPage == printTotalNum && m.TemplateTotalPage == 4).TemplateFullName;
+            List<OilSampleFlowPrintLogModel> logs = new List<OilSampleFlowPrintLogModel>();
+            BarTender.Application btApp = new BarTender.Application();
+            try
+            {
+                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
+                btFormat.PrintSetup.Printer = printerName;
+                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
+                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
+                var list = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
+                btFormat.PrintSetup.NumberSerializedLabels = 1;
+                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                int z = 0;
+                for (int i = 0; i < data.Count; i++)
+                {
+                    var entry = data[i];
+                    string batchNo = new OilSampleService().GetOilSampleEntryBatchNo(entry.Id);
+                    if (string.IsNullOrEmpty(batchNo))
+                    {
+                        var seq = new CommonService().GetCurrentDateNextSerialNumber(entry.ProductionDate, "OilSamplePrintBatchNo");
+                        batchNo = entry.ProductionDate.ToString("yyMMdd") + seq.ToString().PadLeft(3, '0');
+                    }
+                    entry.BatchNo = batchNo;
+                    logs.Add(new OilSampleFlowPrintLogModel
+                    {
+                        FormsonId = entry.Id,
+                        FormmainId = entry.FormmainId,
+                        EntryId = entry.EntryId,
+                        PrintCount = entry.CurrencyPrintCount,
+                        PrintedCount = entry.PrintedCount + entry.CurrencyPrintCount,
+                        BatchNo = entry.BatchNo,
+                        TypeId = config.TemplateTypeId,
+                        TypeDesc = config.TemplateTypeName
+                    });
+
+                    for (int j = 0; j < entry.CurrencyPrintCount; j++)
+                    {
+                        z++;
+                        if (entry.PrintedCount + entry.CurrencyPrintCount >= entry.PrintTotalCount && j == entry.CurrencyPrintCount - 1 && entry.TotalWeight % entry.WeightPerBucket != 0)
+                            entry.WeightPerBucket = (float)Math.Round(entry.TotalWeight % entry.WeightPerBucket, 2);
+                        switch (z)
+                        {
+                            case 1: SetTemplateNamedSubStringValueToPart1(btFormat, list, entry); break;
+                            case 2: SetTemplateNamedSubStringValueToPart2(btFormat, list, entry); break;
+                            case 3: SetTemplateNamedSubStringValueToPart3(btFormat, list, entry); break;
+                            case 4: SetTemplateNamedSubStringValueToPart4(btFormat, list, entry); break;
+                            default: break;
+                        }
+                    }
+                }
+
+                var s = btFormat.PrintOut(false, false);
+
+                // 写日志
+                foreach (var item in logs)
+                {
+                    var result = new OilSampleService().InsertOilSampleFlowLog2(item);
+                    if (!result)
+                        return false;
+                }
+
+
+                btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (btApp != null)
+                {
+                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                }
+            }
+
+        }
+
+
+
+        public bool BarTenderMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data, int printTotalNum, List<BarTenderTemplateModel> barTenderTemplates)
+        {
+            string printerName = config.PrinterName;
+
+            string templateName = barTenderTemplates.FirstOrDefault(m => m.TemplatePerPage == printTotalNum && m.TemplateTotalPage == 4).TemplateFullName;
             List<OilSampleFlowPrintLogModel> logs = new List<OilSampleFlowPrintLogModel>();
             BarTender.Application btApp = new BarTender.Application();
             try
@@ -335,6 +423,20 @@ namespace Ui.Service
             return true;
         }
 
+        private void SetTemplateNamedSubStringValueToPart<T>(BarTender.Format btFormat, List<string> list, T entry)
+        {
+            var t = entry.GetType();
+            foreach (PropertyInfo item in t.GetProperties())
+            {
+                var name = item.Name; // 属性名称
+                if (list.Contains(name))
+                {
+                    btFormat.SetNamedSubStringValue(name, Convert.ToString(item.GetValue(entry, null)));
+                }
+                // var value = item.GetValue(entry, null); // 属性值
+                // var type = value?.GetType() ?? typeof(object);//获得属性的类型
+            }
+        }
 
     }
 }

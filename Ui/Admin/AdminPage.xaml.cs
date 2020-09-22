@@ -21,7 +21,7 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new AdminPageViewModel();
-            new CommonService().GetDataGridColumnHeader(this.DGActionOperationLog,1);
+            new CommonService().GetDataGridColumnHeaderDefault(this.DGActionOperationLog,1);
             this.MultiDataGrid.ItemsSource = new List<BaseNumberNameModelX>() 
             { 
                 new BaseNumberNameModelX { FName = "111", FNumber = "aaa" }, 
@@ -103,7 +103,9 @@ namespace Ui.View.IndexPage
         {
             if (sender == null)
                 return;
-            MessageBox.Show($"{((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FName} \t {((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FNumber}");
+            var ss = sender as DataGrid;
+            var ss1 = ss.CurrentItem;
+            //MessageBox.Show($"{((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FName} \t {((sender as DataGrid).CurrentItem as BaseNumberNameModelX).FNumber}");
         }
 
         private void JsonToModel_Click(object sender, RoutedEventArgs e)

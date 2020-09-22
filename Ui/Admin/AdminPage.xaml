@@ -132,7 +132,21 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="2" Background="LavenderBlush" Margin="2">
-
+            <GroupBox  Margin="0 8" Padding="0 8" Header="新开管理窗体">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" Content="DataGrid配置" Style="{StaticResource BtnThemeStyle}" Command="{Binding DataGridDefaultConfigCommand}"/>
+                </Grid>
+            </GroupBox>
         </Grid>
 
     </Grid>

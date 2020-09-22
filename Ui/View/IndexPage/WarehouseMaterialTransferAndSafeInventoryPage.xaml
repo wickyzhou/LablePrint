@@ -69,7 +69,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Button  Grid.Column="0"  FrameworkElement.Height="30"   ContentControl.Content="选择目录" Style="{StaticResource BtnSuccessStyle}" Command="{Binding DirectorySelectCommand}"  ToolTip="选择文件导出的固定目录" HorizontalAlignment="Right"  />
                                 <TextBox Grid.Column="1" Style="{StaticResource TextBoxReadonlyStyle}"   Text="{Binding HostConfig.HostValue}"  Padding="10 0 0 0" Height="30" HorizontalAlignment="Stretch" Margin="5 0"/>
-                                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="分类导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ListsExportCommand}"  ToolTip="导出界面数据到选定目录" Margin="15 5 20 5" />
+                                <Button  Grid.Column="2"  FrameworkElement.Height="30"   ContentControl.Content="分类导出数据" Style="{StaticResource BtnThemeStyle}" Command="{Binding ListsExportCommand}"  ToolTip="导出界面数据到选定目录" Margin="15 5 20 5" CommandParameter="{Binding WarehouseTransferToWorkshopLists}" />
                             </Grid>
 
                         </Grid>
