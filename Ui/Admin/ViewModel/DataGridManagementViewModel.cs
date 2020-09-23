@@ -1,10 +1,9 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
+using QueryParameterModel;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Ui.Admin.View;
 using Ui.Command;
 using Ui.Helper;
@@ -29,7 +28,7 @@ namespace Ui.Admin.ViewModel
         {
             Task.Factory.StartNew(() =>
             {
-                QueryParameter = new DataGridColumnHeaderModel();
+                QueryParameter = new DataGridColumnHeaderQueryParameterModel();
                 DataGridLists = new ObservableCollection<DataGridColumnHeaderModel>();
                 UIExecute.RunAsync(() =>
                 {
@@ -44,7 +43,10 @@ namespace Ui.Admin.ViewModel
 
             SaveCommand = new DelegateCommand((obj) =>
             {
-                var ss = DataGridSelectedItem;
+                CommonService.LoadIEnumerableToDatabase(DataGridLists, "SJDataGridColumnHeaderTemplate");
+                // 修改后台数据
+                if (_service.BatchUpdate())
+                    QueryCommand.Execute(null);
             });
 
             NewCommand = new DelegateCommand((obj) =>
@@ -68,34 +70,45 @@ namespace Ui.Admin.ViewModel
 
             MoveUpCommand = new DelegateCommand((obj) =>
             {
-                
+                var cloneData = ObjectDeepCopyHelper<DataGridColumnHeaderModel, DataGridColumnHeaderModel>.Trans(DataGridSelectedItem);
+
+                int index = DataGridLists.IndexOf(DataGridSelectedItem);
+                if (index == 0)
+                    return;
+
+                int upOrder = DataGridLists.ElementAt(index - 1).ColumnOrder;
+                int currentOrder = DataGridSelectedItem.ColumnOrder;
+                cloneData.ColumnOrder = upOrder;
+                DataGridLists.ElementAt(index - 1).ColumnOrder = currentOrder;
+
+                DataGridLists.RemoveAt(index);
+                index -- ;
+                DataGridLists.Insert(index, cloneData);
+                DataGridSelectedItem = cloneData;
             });
 
             MoveDownCommand = new DelegateCommand((obj) =>
             {
+                var cloneData = ObjectDeepCopyHelper<DataGridColumnHeaderModel, DataGridColumnHeaderModel>.Trans(DataGridSelectedItem);
+                int index = DataGridLists.IndexOf(DataGridSelectedItem);
+                if (index == DataGridLists.Count - 1)
+                    return;
 
+                int downOrder = DataGridLists.ElementAt(index + 1).ColumnOrder;
+                int currentOrder = DataGridSelectedItem.ColumnOrder;
+                cloneData.ColumnOrder = downOrder;
+                DataGridLists.ElementAt(index + 1).ColumnOrder = currentOrder;
+
+                DataGridLists.RemoveAt(index);
+                index ++;
+                DataGridLists.Insert(index, cloneData);
+                DataGridSelectedItem = cloneData;
             });
 
             QueryCommand = new DelegateCommand((obj) =>
             {
-                StringBuilder stringBuilder = new StringBuilder();
-
-                if (!string.IsNullOrEmpty(QueryParameter.DataGridName))
-                    stringBuilder.Append($" and DataGridName like '%{QueryParameter.DataGridName}%'");
-
-                if (!string.IsNullOrEmpty(QueryParameter.TableName))
-                    stringBuilder.Append($" and TableName like '%{QueryParameter.TableName}%'");
-
-                if (!string.IsNullOrEmpty(QueryParameter.ColumnFieldName))
-                    stringBuilder.Append($" and ColumnFieldName like '%{QueryParameter.ColumnFieldName}%'");
-
-                if (!string.IsNullOrEmpty(QueryParameter.ColumnHeaderName))
-                    stringBuilder.Append($" and ColumnHeaderName like '%{QueryParameter.ColumnHeaderName}%'");
-
                 DataGridLists.Clear();
-
-                _service.GetDataGridLists(stringBuilder.ToString()).ForEach(x=> DataGridLists.Add(x));
-
+                _service.GetDataGridLists(CommonService.GetSqlWhereString(QueryParameter)).ForEach(x=> DataGridLists.Add(x));
             });
         }
 
@@ -106,9 +119,9 @@ namespace Ui.Admin.ViewModel
         public DelegateCommand NewCommand { get; set; }
 
 
-        private DataGridColumnHeaderModel queryParameter;
+        private DataGridColumnHeaderQueryParameterModel queryParameter;
 
-        public DataGridColumnHeaderModel QueryParameter
+        public DataGridColumnHeaderQueryParameterModel QueryParameter
         {
             get { return queryParameter; }
             set

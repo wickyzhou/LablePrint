@@ -7,9 +7,14 @@ namespace Model
 {
     public class DataGridColumnHeaderModel : NotificationObject
     {
+
+
+
         public int Id { get; set; }
         public DateTime CreateTime { get; set; }
+        public DateTime ModifyTime { get; set; } = DateTime.Now;
 
+        public long TimeTicks { get; set; } = DateTime.Now.Millisecond;
 
         private string dataGridCode;
 

@@ -68,6 +68,25 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Button" x:Key="JianTouButton" BasedOn="{x:Null}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontFamily" Value="{StaticResource JianTouIconfont}"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="back" Background="{TemplateBinding Background}"  BorderThickness="0" >
+                        <ContentPresenter ContentSource="{Binding Source}" VerticalAlignment="Center" 
+                                          HorizontalAlignment="Center"  Margin="{TemplateBinding Margin}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style TargetType="Button" x:Key="SubIconButton1" BasedOn="{x:Null}">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FontFamily" Value="{StaticResource Iconfont}"/>

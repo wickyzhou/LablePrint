@@ -145,6 +145,7 @@
     <Compile Include="Model\OilSampleEntryModel.cs" />
     <Compile Include="Model\WarehouseMaterialTransferAndSafeInventoryParameterModel.cs" />
     <Compile Include="Model\WarehouseTransferToWorkshopModel.cs" />
+    <Compile Include="QueryParameterModel\DataGridColumnHeaderQueryParameterModel.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

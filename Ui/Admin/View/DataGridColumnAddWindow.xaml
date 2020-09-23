@@ -9,9 +9,9 @@
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.1*"/>
-            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="0.2*"/>
         </Grid.ColumnDefinitions>

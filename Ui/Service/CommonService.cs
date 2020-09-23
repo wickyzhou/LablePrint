@@ -5,10 +5,12 @@ using Microsoft.ReportingServices.DataProcessing;
 using Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Ui.Helper;
 using Ui.MVVM.Common;
 
 namespace Ui.Service
@@ -304,15 +307,15 @@ namespace Ui.Service
 
         public Task WriteActionLogAsync(ActionOperationLogModel model)
         {
-           return Task.Factory.StartNew(() =>
-            {
-                //Thread.Sleep(20000);
-                string sql = @" insert into SJActionOperationLog(MainMenuId,UserId,ActionName,ActionDesc,PKId,HostName) values(@MainMenuId,@UserId,@ActionName,@ActionDesc,@PKId,@HostName) ;";
-                using (var connection = SqlDb.UpdateConnection)
-                {
-                    connection.Execute(sql, model);
-                }
-            });
+            return Task.Factory.StartNew(() =>
+             {
+                 //Thread.Sleep(20000);
+                 string sql = @" insert into SJActionOperationLog(MainMenuId,UserId,ActionName,ActionDesc,PKId,HostName) values(@MainMenuId,@UserId,@ActionName,@ActionDesc,@PKId,@HostName) ;";
+                 using (var connection = SqlDb.UpdateConnection)
+                 {
+                     connection.Execute(sql, model);
+                 }
+             });
         }
 
 
@@ -331,14 +334,14 @@ namespace Ui.Service
 
         #region 自动生成表头数据
 
-        public void GetUserCustomDataGridColumn(int userId,DataGrid dataGrid, int beginColumn = 0)
+        public void GetUserCustomDataGridColumn(int userId, DataGrid dataGrid, int beginColumn = 0)
         {
             bool r = false;
             string sql = @" select 1 from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId ;";
 
             using (var connection = SqlDb.UpdateConnection)
             {
-                r = connection.Execute(sql, new { DataGridName = dataGrid.Name, UserId = userId })>0;
+                r = connection.Execute(sql, new { DataGridName = dataGrid.Name, UserId = userId }) > 0;
             }
 
             if (r)
@@ -402,7 +405,7 @@ namespace Ui.Service
         /// </summary>
         /// <param name="dataGrid">表格</param>
         /// <param name="beginColumn">开始列</param>
-        public void GetDataGridColumnHeaderCustom(int userId , DataGrid dataGrid, int beginColumn = 0)
+        public void GetDataGridColumnHeaderCustom(int userId, DataGrid dataGrid, int beginColumn = 0)
         {
 
             List<DataGridColumnHeaderUserCustomModel> headers;
@@ -411,7 +414,7 @@ namespace Ui.Service
 
             using (var connection = SqlDb.UpdateConnection)
             {
-                headers = connection.Query<DataGridColumnHeaderUserCustomModel>(sql, new { DataGridName = dataGrid.Name,UserId = userId }).ToList();
+                headers = connection.Query<DataGridColumnHeaderUserCustomModel>(sql, new { DataGridName = dataGrid.Name, UserId = userId }).ToList();
             }
 
             DataGridTextColumnInitCustom(dataGrid, headers, beginColumn);
@@ -427,7 +430,7 @@ namespace Ui.Service
                 dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
                 dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
 
-                Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged ,Mode = BindingMode.TwoWay};
+                Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
                 if (!string.IsNullOrEmpty(item.BindingStringFormat))
                     binding.StringFormat = item.BindingStringFormat;
 
@@ -525,5 +528,49 @@ namespace Ui.Service
             }
         }
 
+        public string GetSqlWhereString<T>(T queryParameter)
+        {
+            StringBuilder sb = new StringBuilder();
+            var t = queryParameter.GetType();
+            foreach (PropertyInfo item in t.GetProperties())
+            {
+                var name = item.Name; // 属性名称
+                var value = item.GetValue(queryParameter, null); // 属性值
+                var type = value?.GetType() ?? typeof(object);//获得属性的类型
+                if (type == typeof(string))
+                {
+                    if (!string.IsNullOrEmpty(value.ToString()))
+                        sb.Append($" and {name} like '%{value}%' ");
+                }
+                else if (type == typeof(int) || type == typeof(double) )
+                {
+                    if (value != null)
+                    {
+                        if (name.EndsWith("Begin"))
+                            sb.Append($" and {name.Replace("Begin", "")} >= {value} ");
+                        else if (name.EndsWith("End"))
+                            sb.Append($" and {name.Replace("End", "")} <= {value} ");
+                        else
+                            sb.Append($" and {name} = {value} ");
+                    }
+                }
+                else if (type == typeof(DateTime))
+                {
+                    if (name.EndsWith("Begin"))
+                        sb.Append($" and {name.Replace("Begin", "")} >= '{value}' ");
+                    else if (name.EndsWith("End"))
+                        sb.Append($" and {name.Replace("End", "")} <= '{value}' ");
+                    else
+                        sb.Append($" and {name} = '{value}' ");
+                }
+            }
+            return sb.ToString();
+        }
+
+        public void LoadIEnumerableToDatabase<T>(IEnumerable<T> lists,string tableName)
+        {
+            DataTable dataTable = TypeConvertHelper.ConvertIEnumerableToDataTable(lists,DateTime.Now.Ticks);
+            SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+        }
     }
 }

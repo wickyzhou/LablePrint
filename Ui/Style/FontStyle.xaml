@@ -11,4 +11,6 @@
 
     <FontFamily x:Key="QueryIconfont">/Resource/QueryIcon/#iconfont</FontFamily>
 
-</ResourceDictionary>
+    <FontFamily x:Key="JianTouIconfont">/Resource/JianTou/#iconfont</FontFamily>
+
+</ResourceDictionary> 

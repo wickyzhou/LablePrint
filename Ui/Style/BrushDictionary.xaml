@@ -16,7 +16,7 @@
     
     
     <Brush x:Key="GenericForegroundUnCheckedBrush">black</Brush>
-    <Brush x:Key="GenericForegroundUnCheckedLightBrush">#555</Brush>
+    <Brush x:Key="GenericForegroundUnCheckedLightBrush">#aaa</Brush>
 
     <Brush x:Key="GenericForegroundGridBrush">lightblue</Brush>
 

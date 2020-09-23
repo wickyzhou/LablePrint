@@ -212,10 +212,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridCell">
-                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
+                    <Border x:Name="border">
+                        <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
                                                        TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
                                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    </TextBlock>
+                        </TextBlock>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -322,10 +331,11 @@
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
         <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="RowHeight" Value="26"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Height" Value="26"/>
+                    <Setter Property="Height" Value="{Binding Path=RowHeight}"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
@@ -336,6 +346,12 @@
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
                             <Setter Property="DataGridRow.Background" Value="{StaticResource GenericRedBrush}"></Setter>
                         </DataTrigger>
+
+                        <DataTrigger Binding="{Binding ColumnVisibility,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
+                            <!--<Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedLightBrush}"></Setter>-->
+                        </DataTrigger>
+                        
 
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
