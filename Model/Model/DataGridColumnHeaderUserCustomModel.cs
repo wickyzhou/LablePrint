@@ -11,6 +11,10 @@ namespace Model
 
         public int UserId { get; set; }
 
+        public DateTime ModifyTime { get; set; }
+
+        public DateTime CreateTime { get; set; }
+
         private string dataGridName;
 
         public string DataGridName
@@ -63,31 +67,17 @@ namespace Model
         }
 
 
-        private bool isVisible;
+        private bool columnVisibility;
 
-        public bool IsVisible
+        public bool ColumnVisibility
         {
-            get { return isVisible; }
+            get { return columnVisibility; }
             set
             {
-                isVisible = value;
-                this.RaisePropertyChanged(nameof(IsVisible));
+                columnVisibility = value;
+                this.RaisePropertyChanged(nameof(ColumnVisibility));
             }
         }
-
-
-        private bool isDownLoad;
-
-        public bool IsDownLoad
-        {
-            get { return isDownLoad; }
-            set
-            {
-                isDownLoad = value;
-                this.RaisePropertyChanged(nameof(IsDownLoad));
-            }
-        }
-
 
         private char? columnWidthUnitType;
 
@@ -140,5 +130,18 @@ namespace Model
             }
         }
 
+
+
+        private bool isDownLoad;
+
+        public bool IsDownLoad
+        {
+            get { return isDownLoad; }
+            set
+            {
+                isDownLoad = value;
+                this.RaisePropertyChanged(nameof(IsDownLoad));
+            }
+        }
     }
 }

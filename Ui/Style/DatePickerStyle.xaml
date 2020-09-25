@@ -32,7 +32,7 @@
                         <ControlTemplate TargetType="DatePickerTextBox" >
                             <TextBox Text="{TemplateBinding Text}" FontFamily="{TemplateBinding FontFamily}"  Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" 
                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderThickness="{TemplateBinding BorderThickness}" 
-                                     IsReadOnly="{TemplateBinding IsReadOnly}" Focusable="{TemplateBinding Focusable}" Cursor="{TemplateBinding Cursor}" MinWidth="{TemplateBinding MinWidth}" />
+                                     IsReadOnly="{TemplateBinding IsReadOnly}" Focusable="{TemplateBinding Focusable}" Cursor="{TemplateBinding Cursor}" MinWidth="{TemplateBinding MinWidth}" Width="{TemplateBinding Width}" />
 
                   
                         </ControlTemplate>

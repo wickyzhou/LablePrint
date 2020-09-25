@@ -35,7 +35,6 @@ namespace Ui.ViewModel
         }
 
         public DataTableImportExportHelper ExportHelper { get; set; } = new DataTableImportExportHelper();
-
-
+        
     }
 }

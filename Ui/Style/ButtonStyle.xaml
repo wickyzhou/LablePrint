@@ -86,7 +86,71 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+
+    <Style TargetType="Button" x:Key="DataGridColumnChangeButton" BasedOn="{x:Null}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontFamily" Value="{StaticResource JianTouIconfont}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Foreground" Value="NavajoWhite"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0 0.7 0 0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="back" Background="Transparent"  BorderThickness="0" >
+                        <ContentPresenter ContentSource="{Binding Source}" VerticalAlignment="Center" 
+                                          HorizontalAlignment="Center"  Margin="{TemplateBinding Margin}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="OrangeRed"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsColumnVisibility}" Value="false">
+                            <Setter Property="Background" Value="Blue" TargetName="back"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button" x:Key="DataGridColumnButton" BasedOn="{x:Null}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <!--<Setter Property="FontFamily" Value="{StaticResource JianTouIconfont}"/>-->
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Foreground" Value="Red"/> <!--NavajoWhite-->
+        <Setter Property="Background" Value="Yellow"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="0 0.7 0 0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="back" Background="{TemplateBinding Background}"  BorderThickness="0">
+                        <ContentPresenter ContentSource="{Binding Source}" VerticalAlignment="Center" 
+                                          HorizontalAlignment="Center"  Margin="{TemplateBinding Margin}"/>
+                    </Border>
+                    
+                    <ControlTemplate.Triggers>
+
+                        <DataTrigger Binding="{Binding IsColumnVisibility}" Value="false">
+                            <Setter Property="Background" Value="Red" TargetName="back"  />
+                            <Setter Property="Foreground" Value="NavajoWhite"  />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsColumnVisibility}" Value="true">
+                            <Setter Property="Background" Value="NavajoWhite"  TargetName="back" />
+                            <Setter Property="Foreground" Value="Red"  />
+                        </DataTrigger>
+                        <!--<Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Red" TargetName="back"/>
+                        </Trigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="Button" x:Key="SubIconButton1" BasedOn="{x:Null}">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FontFamily" Value="{StaticResource Iconfont}"/>

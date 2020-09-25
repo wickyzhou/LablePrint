@@ -8,9 +8,8 @@ namespace Model
     public class DataGridColumnHeaderModel : NotificationObject
     {
 
-
-
         public int Id { get; set; }
+
         public DateTime CreateTime { get; set; }
         public DateTime ModifyTime { get; set; } = DateTime.Now;
 

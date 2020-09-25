@@ -88,7 +88,7 @@ namespace Common
                         btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
                     if (list.Contains("RowQuantity"))
-                        btFormat.SetNamedSubStringValue("RowQuantity", Convert.ToString(model.RowQuantity).TrimEnd('0').TrimEnd('.'));
+                        btFormat.SetNamedSubStringValue("RowQuantity", Convert.ToString(model.RowQuantity));
 
                     if (list.Contains("SampleOilPrintArea"))
                         btFormat.SetNamedSubStringValue("SampleOilPrintArea", model.SampleOilPrintArea);
@@ -272,9 +272,9 @@ namespace Common
                         btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
                         btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
                     }
-
+                    //.TrimEnd('0').TrimEnd('.')
                     if (list.Contains("RowQuantity"))
-                        btFormat.SetNamedSubStringValue("RowQuantity", model.RowQuantity.ToString().TrimEnd('0').TrimEnd('.'));
+                        btFormat.SetNamedSubStringValue("RowQuantity", model.RowQuantity.ToString());
 
                     if (list.Contains("SampleOilPrintProductionName"))
                         btFormat.SetNamedSubStringValue("SampleOilPrintProductionName", model.SampleOilPrintProductionName);
@@ -401,8 +401,6 @@ namespace Common
             PageSettings settings = new PageSettings(new PrinterSettings { PrinterName = printerName });
             return settings.PrinterSettings.PaperSizes;
         }
-
-
 
         // 获取barTender字段
         public static List<string> GetTendarFieldName(string nameValues, Regex rg)

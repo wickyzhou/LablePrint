@@ -21,7 +21,7 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new AdminPageViewModel();
-            new CommonService().GetDataGridColumnHeaderDefault(this.DGActionOperationLog,1);
+            //new CommonService().GetDataGridColumnHeaderDefault(this.DGActionOperationLog,1);
             this.MultiDataGrid.ItemsSource = new List<BaseNumberNameModelX>() 
             { 
                 new BaseNumberNameModelX { FName = "111", FNumber = "aaa" }, 

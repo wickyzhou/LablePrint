@@ -36,9 +36,9 @@
                     
                 <TextBlock Text="生产日期" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockStyle15}" />
 
-                <DatePicker Grid.Row="0" Grid.Column="1" Width="120" Style="{StaticResource DatePickerStyle}"
+                <DatePicker Grid.Row="0" Grid.Column="1"  Style="{StaticResource DatePickerStyle}"
                             HorizontalAlignment="Stretch"
-                            SelectedDate="{Binding QueryParameter.ProductionDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            SelectedDate="{Binding QueryParameter.ProductionDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd}"/>
 
                 <TextBlock Text="客户编号" Grid.Row="0" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
                 <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding QueryParameter.OrgId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
@@ -48,17 +48,29 @@
                 
                 <TextBlock Text="生产型号" Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
                 <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding QueryParameter.ProductionModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
-                
-                <TextBlock Text="标签型号" Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockStyle15}" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding QueryParameter.Label,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
-                
-                <TextBlock Text="安全标签" Grid.Row="2" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
-                <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding QueryParameter.SafeCode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
 
-                <Button Command="{Binding QueryCommand}" Visibility="Hidden" IsDefault="True"/>
+                <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="0.8*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="标签型号"  Style="{StaticResource TextBlockStyle15}" />
+                    <TextBox Grid.Column="1" Text="{Binding QueryParameter.Label,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
+
+                    <TextBlock Text="安全标签" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
+                    <TextBox  Grid.Column="3" Text="{Binding QueryParameter.SafeCode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
+
+                    <Button  Grid.Column="4"  Command="{Binding QueryCommand}" Style="{StaticResource BtnInfoStyle}" IsDefault="True" Content="查询" Width="120"  HorizontalAlignment="Right" />
+                </Grid>
+          
 
             </Grid>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" >
+
+         
 
                 <Button Command="{Binding PrintCommand}" Width="60" Height="60" FontSize="22"
                  Style="{StaticResource BtnPrintStyle}"  >
@@ -68,7 +80,7 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-
+            
 
             <GroupBox Grid.Column="2"  Margin="8"  Padding="10" BorderBrush="MediumSeaGreen">
                 <GroupBox.Header>
@@ -125,12 +137,22 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
 
         <GroupBox Grid.Row="1">
             <GroupBox.Header>
-                <Button Content="表格配置" Style="{StaticResource BtnWarningStyle}" Width="100" Margin="0 5"
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="详细配置" Style="{StaticResource BtnWarningStyle}" Width="100" Margin="0 5"
                   Command="{Binding DataGridManageCommand}" CommandParameter="{Binding ElementName=DGPrintA4}" />
+                    
+                    <Button Content="保存界面" Style="{StaticResource BtnSuccessStyle}" Width="100" Margin="30 5"
+                  Command="{Binding DataGridSaveCommand}"/>
+
+                    <Button Content="变色" Style="{StaticResource DataGridColumnButton}" Width="100" Margin="30 5"
+                  Command="{Binding DataGridColorChangeCommand}"/>
+
+                    <TextBlock Text="{Binding IsColumnVisibility}" Width="200" Background="AliceBlue"/>
+                </StackPanel>
+            
             </GroupBox.Header>
             <GroupBox.Content>
-                <DataGrid x:Name="DGPrintA4" Style="{StaticResource MultiCheckBoxDataGridStyle}" ItemsSource="{Binding PrintHistoryLists}">
-                
+                <DataGrid x:Name="DGPrintA4" Style="{StaticResource MultiCheckBoxDataGridStyle}" ItemsSource="{Binding PrintHistoryLists}" ColumnHeaderStyle="{StaticResource DGColumnHeaderCommandStyle}" HorizontalScrollBarVisibility="Visible">
                 </DataGrid>
             </GroupBox.Content>
         </GroupBox>

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Model;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Ui.MVVM.Common;
@@ -17,6 +18,31 @@ namespace Ui.Service
                 return connection.Query<DataGridColumnHeaderModel>(sql).ToList();
             }
         }
+
+        public List<DataGridColumnHeaderUserCustomModel> GetUserDataGridColumnLists(string datagridName,int userId)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@DatagridName", datagridName, DbType.String, ParameterDirection.Input);
+            dp.Add("@UserId", userId, DbType.Int32, ParameterDirection.Input);
+
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<DataGridColumnHeaderUserCustomModel>("SJGetUserDataGridColumnHeaderConfiguration", dp,null,true,null,CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public bool SyncUserDataGridColumnConfiguration(string datagridName, int userId)
+        {
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@DatagridName", datagridName, DbType.String, ParameterDirection.Input);
+            dp.Add("@UserId", userId, DbType.Int32, ParameterDirection.Input);
+
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Execute("SJSyncUserDataGridColumnHeaderConfiguration", dp, null, null, CommandType.StoredProcedure)>0;
+            }
+        }
+
 
         public bool Insert(DataGridColumnHeaderModel model)
         {

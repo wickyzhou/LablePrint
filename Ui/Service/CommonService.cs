@@ -334,57 +334,14 @@ namespace Ui.Service
 
         #region 自动生成表头数据
 
-        public void GetUserCustomDataGridColumn(int userId, DataGrid dataGrid, int beginColumn = 0)
+        public void GetUserDataGridColumn(int userId, DataGrid dataGrid, int beginColumn = 0)
         {
-            bool r = false;
-            string sql = @" select 1 from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId ;";
-
-            using (var connection = SqlDb.UpdateConnection)
-            {
-                r = connection.Execute(sql, new { DataGridName = dataGrid.Name, UserId = userId }) > 0;
-            }
-
-            if (r)
-                GetDataGridColumnHeaderCustom(userId, dataGrid, beginColumn);
-            else
-                GetDataGridColumnHeaderDefault(dataGrid, beginColumn);
-        }
-
-
-
-        /// <summary>
-        /// 获取默认表格配置
-        /// </summary>
-        /// <param name="dataGrid">表格</param>
-        /// <param name="beginColumn">开始列</param>
-        public void GetDataGridColumnHeaderDefault(DataGrid dataGrid, int beginColumn = 0)
-        {
-
-            List<DataGridColumnHeaderModel> headers;
-
-            string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName  and ColumnVisibility=1 order by ColumnOrder desc ;";
-
-            using (var connection = SqlDb.UpdateConnection)
-            {
-                headers = connection.Query<DataGridColumnHeaderModel>(sql, new { DataGridName = dataGrid.Name }).ToList();
-            }
-
-            DataGridTextColumnInit(dataGrid, headers, beginColumn);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataGrid">界面的控件DataGrid</param>
-        /// <param name="headers">数据列对应的表头名称</param>
-        /// <param name="beginColumn">从第几列开始，动态生成，可以设置【数据列】相对【模板列】前后位置</param>
-        private void DataGridTextColumnInit(DataGrid dataGrid, IList<DataGridColumnHeaderModel> headers, int beginColumn)
-        {
+            var headers = new DataGridManagementService().GetUserDataGridColumnLists(dataGrid.Name, userId);
             foreach (var item in headers)
             {
                 DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
                 dataGridTextColumn.Header = item.ColumnHeaderName;
-                dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
+                //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
                 dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
 
                 Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
@@ -396,56 +353,114 @@ namespace Ui.Service
 
                 dataGridTextColumn.Binding = binding;
                 dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-            }
-        }
+                //bool r = false;
+                //string sql = @" select 1 from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId ;";
 
+                //using (var connection = SqlDb.UpdateConnection)
+                //{
+                //    r = connection.Execute(sql, new { DataGridName = dataGrid.Name, UserId = userId }) > 0;
+                //}
 
-        /// <summary>
-        /// 获取用户自定义表格配置
-        /// </summary>
-        /// <param name="dataGrid">表格</param>
-        /// <param name="beginColumn">开始列</param>
-        public void GetDataGridColumnHeaderCustom(int userId, DataGrid dataGrid, int beginColumn = 0)
-        {
-
-            List<DataGridColumnHeaderUserCustomModel> headers;
-
-            string sql = @" select * from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId order by   ColumnOrder desc ;";
-
-            using (var connection = SqlDb.UpdateConnection)
-            {
-                headers = connection.Query<DataGridColumnHeaderUserCustomModel>(sql, new { DataGridName = dataGrid.Name, UserId = userId }).ToList();
+                //if (r)
+                //    GetDataGridColumnHeaderCustom(userId, dataGrid, beginColumn);
+                //else
+                //    GetDataGridColumnHeaderDefault(dataGrid, beginColumn);
             }
 
-            DataGridTextColumnInitCustom(dataGrid, headers, beginColumn);
         }
 
+        ///// <summary>
+        ///// 获取默认表格配置
+        ///// </summary>
+        ///// <param name="dataGrid">表格</param>
+        ///// <param name="beginColumn">开始列</param>
+        //public void GetDataGridColumnHeaderDefault(DataGrid dataGrid, int beginColumn = 0)
+        //{
 
-        private void DataGridTextColumnInitCustom(DataGrid dataGrid, IList<DataGridColumnHeaderUserCustomModel> headers, int beginColumn)
-        {
-            foreach (var item in headers)
-            {
-                DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
-                dataGridTextColumn.Header = item.ColumnHeaderName;
-                dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
-                dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
+        //    List<DataGridColumnHeaderModel> headers;
 
-                Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
-                if (!string.IsNullOrEmpty(item.BindingStringFormat))
-                    binding.StringFormat = item.BindingStringFormat;
+        //    string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName  and ColumnVisibility=1 order by ColumnOrder desc ;";
 
-                if (!string.IsNullOrEmpty(item.ConverterName))
-                    binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
+        //    using (var connection = SqlDb.UpdateConnection)
+        //    {
+        //        headers = connection.Query<DataGridColumnHeaderModel>(sql, new { DataGridName = dataGrid.Name }).ToList();
+        //    }
 
-                dataGridTextColumn.Binding = binding;
-                dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-            }
-        }
+        //    DataGridTextColumnInit(dataGrid, headers, beginColumn);
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="dataGrid">界面的控件DataGrid</param>
+        ///// <param name="headers">数据列对应的表头名称</param>
+        ///// <param name="beginColumn">从第几列开始，动态生成，可以设置【数据列】相对【模板列】前后位置</param>
+        //private void DataGridTextColumnInit(DataGrid dataGrid, IList<DataGridColumnHeaderModel> headers, int beginColumn)
+        //{
+        //    foreach (var item in headers)
+        //    {
+        //        DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
+        //        dataGridTextColumn.Header = item.ColumnHeaderName;
+        //        //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
+        //        dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
+
+        //        Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
+        //        if (!string.IsNullOrEmpty(item.BindingStringFormat))
+        //            binding.StringFormat = item.BindingStringFormat;
+
+        //        if (!string.IsNullOrEmpty(item.ConverterName))
+        //            binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
+
+        //        dataGridTextColumn.Binding = binding;
+        //        dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
+        //    }
+        //}
+
+
+        ///// <summary>
+        ///// 获取用户自定义表格配置
+        ///// </summary>
+        ///// <param name="dataGrid">表格</param>
+        ///// <param name="beginColumn">开始列</param>
+        //public void GetDataGridColumnHeaderCustom(int userId, DataGrid dataGrid, int beginColumn = 0)
+        //{
+
+        //    List<DataGridColumnHeaderUserCustomModel> headers;
+
+        //    string sql = @" select * from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId order by   ColumnOrder desc ;";
+
+        //    using (var connection = SqlDb.UpdateConnection)
+        //    {
+        //        headers = connection.Query<DataGridColumnHeaderUserCustomModel>(sql, new { DataGridName = dataGrid.Name, UserId = userId }).ToList();
+        //    }
+
+        //    DataGridTextColumnInitCustom(dataGrid, headers, beginColumn);
+        //}
+
+
+        //private void DataGridTextColumnInitCustom(DataGrid dataGrid, IList<DataGridColumnHeaderUserCustomModel> headers, int beginColumn)
+        //{
+        //    foreach (var item in headers)
+        //    {
+        //        DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
+        //        dataGridTextColumn.Header = item.ColumnHeaderName;
+        //        //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
+        //        dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
+
+        //        Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
+        //        if (!string.IsNullOrEmpty(item.BindingStringFormat))
+        //            binding.StringFormat = item.BindingStringFormat;
+
+        //        if (!string.IsNullOrEmpty(item.ConverterName))
+        //            binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
+
+        //        dataGridTextColumn.Binding = binding;
+        //        dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
+        //    }
+        //}
 
 
         #endregion
-
-
 
         public IEnumerable<ExportViewTypedColumnModel> GetExportViewTypedColumnUniqueValue(int groupId, int checkBoxValue, string orderedFieldName)
         {

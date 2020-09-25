@@ -1,5 +1,6 @@
 ﻿using Model;
 using QueryParameterModel;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -155,12 +156,6 @@ namespace Ui.Admin.ViewModel
                 this.RaisePropertyChanged(nameof(DataGridSelectedItem));
             }
         }
-
-
-
-
-
-
 
     }
 }

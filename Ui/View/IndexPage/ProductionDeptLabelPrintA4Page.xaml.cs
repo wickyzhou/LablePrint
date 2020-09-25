@@ -15,7 +15,7 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new ProductionDeptLabelPrintA4ViewModel();
-            new CommonService().GetUserCustomDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGPrintA4,0);
+            new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGPrintA4,0);
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,8 +27,8 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new SRItemProfitAccountingViewModel();
-            new CommonService().GetDataGridColumnHeaderDefault(this.DGItemProfitAccounting, 0);
-            new CommonService().GetDataGridColumnHeaderDefault(this.DGItemProfitAccountingMonthly, 0);
+            new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGItemProfitAccounting, 0);
+            new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGItemProfitAccountingMonthly, 0);
         }
     }
 }

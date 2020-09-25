@@ -5,10 +5,39 @@
                     xmlns:l="clr-namespace:Ui.View.IndexPage"
                      xmlns:c="clr-namespace:Ui.Converter">
 
-
+    <!--下拉按钮-->
+    <Style TargetType="ToggleButton" x:Key="ComboxStyleBtn">
+        <Setter Property="Height" Value="26"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border x:Name="Back" Background="LightSeaGreen" BorderThickness="0" BorderBrush="Transparent">
+                        <Path Name="PathFill" Fill="White" Width="11" Height="9" StrokeThickness="0" Data="M5,0 L10,10 L0,10 z" RenderTransformOrigin="0.5,0.5" Stretch="Fill">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="180"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PathFill" Property="Fill" Value="red"/>
+                            <Setter TargetName="Back" Property="Background" Value="LightSeaGreen"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <!--<Setter TargetName="Back" Property="BorderBrush" Value="#59CA4F"></Setter>-->
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style  x:Key="DGColumnHeader" TargetType="DataGridColumnHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="Height" Value="28"/>
         <Setter Property="Foreground" Value="#fff"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
@@ -22,9 +51,181 @@
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
-
     </Style>
 
+
+    <Style  x:Key="DGColumnHeaderCommandStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="DataGridColumnHeader">
+                    <Border x:Name="back" BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                        <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
+                        </StackPanel>
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="ceshi1"/>
+                                <MenuItem Header="ceshi2"/>
+                                <MenuItem Header="ceshi3"/>
+                                <MenuItem Header="Visible"  IsChecked="{Binding Visibility}"  
+                                          Command="{Binding DataContext.DataGridColumnHideCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGridColumnHeader}}}" />
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsColumnVisibility}" Value="true">
+                            <Setter Property="Background" Value="Chocolate"  TargetName="back" />
+                        </DataTrigger>
+                        
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" Value="white" TargetName="back"/>
+                        </Trigger>
+                    </DataTemplate.Triggers>
+     
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style  x:Key="DGColumnHeaderCommand0Style" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                        <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
+                            <Button x:Name="btn" Grid.Column="1" Content="点我"   Style="{StaticResource DataGridColumnButton}" Command="{Binding DataContext.DataGridColumnHideCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridColumnHeader}}}" />
+                        </StackPanel>
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="ceshi1"/>
+                                <MenuItem Header="ceshi2"/>
+                                <MenuItem Header="ceshi3"/>
+                                <MenuItem Header="Visible" IsCheckable="True" IsChecked="{Binding DataContent.IsColumnVisibility}" Command="{Binding ToggleVisibility}"/>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                    </Border>
+
+                    <!--&#xe6a7;-->
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style  x:Key="DGColumnHeaderCommand1Style" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                        <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
+                            <Button Grid.Column="1" Content="&#xe6a7;"   Style="{StaticResource DataGridColumnButton}" Command="{Binding DataContext.DataGridColumnHideCommand1,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridColumnHeader}}}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style  x:Key="DGColumnHeaderCommand2Style" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                        <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
+                            <Button Grid.Column="1" Content="&#xe6a7;"   Style="{StaticResource DataGridColumnButton}" Command="{Binding DataContext.DataGridColumnHideCommand2,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridColumnHeader}}}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style  x:Key="DGColumnHeaderCommand3Style" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Foreground" Value="#fff"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                        <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
+                            <Button Grid.Column="1" Content="&#xe6a7;"   Style="{StaticResource DataGridColumnButton}" Command="{Binding DataContext.DataGridColumnHideCommand3,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridColumnHeader}}}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style  x:Key="DGColumnHeader1" TargetType="DataGridColumnHeader">
         <Setter Property="Height" Value="26"/>
@@ -32,8 +233,6 @@
         <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Background" Value="{StaticResource GenericBackgroundMainSonBrush}"/>
-        <!--<Setter Property="BorderThickness" Value="0 0 0 1"/>
-        <Setter Property="BorderBrush" Value="LightBlue"/>-->
     </Style>
 
     <Style x:Key="DGRowHeader" TargetType="DataGridRowHeader">
@@ -57,7 +256,7 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="ForestGreen"/>
                 <Setter Property="Foreground" Value="Snow"/>
-                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="FontSize" Value="12.5"/>
             </Trigger>
 
         </Style.Triggers>
@@ -302,6 +501,7 @@
     </Style>
 
     <Style TargetType="DataGrid" x:Key="MultiCheckBoxDataGridStyle">
+        <Setter Property="RowHeight" Value="26"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
