@@ -52,7 +52,7 @@ namespace Ui.Admin.ViewModel
 
             NewCommand = new DelegateCommand((obj) =>
             {
-                DataGridColumnHeaderModel inputEntity = DataGridSelectedItem == null? new DataGridColumnHeaderModel {MainMenuId = Menu.ID } : ObjectDeepCopyHelper<DataGridColumnHeaderModel,DataGridColumnHeaderModel>.Trans(DataGridSelectedItem); 
+                DataGridColumnHeaderModel inputEntity = DataGridSelectedItem == null? new DataGridColumnHeaderModel {MainMenuId = Menu.ID, ColumnOrder=1000,ColumnWidth = 150 } : ObjectDeepCopyHelper<DataGridColumnHeaderModel,DataGridColumnHeaderModel>.Trans(DataGridSelectedItem); 
 
                 DataGridColumnAddWindow view = new DataGridColumnAddWindow();
 
@@ -67,7 +67,6 @@ namespace Ui.Admin.ViewModel
                 });
                 view.ShowDialog();
             });
-
 
             MoveUpCommand = new DelegateCommand((obj) =>
             {

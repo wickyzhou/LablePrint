@@ -1,24 +1,18 @@
 ﻿using Common;
-using Dal;
 using Dapper;
-using Microsoft.ReportingServices.DataProcessing;
 using Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 using Ui.Helper;
 using Ui.MVVM.Common;
 
@@ -116,7 +110,7 @@ namespace Ui.Service
         #region BarTender报表
         public BarTenderPrintConfigModel GetBarTenderPrintConfig(int userId, int typeId, string hostName)
         {
-            string sql = @"select * from SJBarTenderPrintConfig where TemplateTypeId=@TemplateTypeId and HostName=@HostName and UserId=@UserId ";
+            string sql = @" select * from SJBarTenderPrintConfig where TemplateTypeId=@TemplateTypeId and HostName=@HostName and UserId=@UserId ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<BarTenderPrintConfigModel>(sql, new { UserId = userId, TemplateTypeId = typeId, HostName = hostName }).FirstOrDefault();
@@ -148,10 +142,19 @@ namespace Ui.Service
             string sql = @"select * from SJBarTenderPrintConfig where TemplateTypeId=@TemplateTypeId and HostName=@HostName and UserId=@UserId ";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<BarTenderPrintConfigModelXX, BarTenderTemplateModel, BarTenderPrintConfigModelXX>(sql, (c, t) => { c.ExpressTemplateSelectedItem = t; return c; }
+                return connection.Query<BarTenderPrintConfigModelXX, BarTenderTemplateModel, BarTenderPrintConfigModelXX>(sql, (c, t) => { c.TemplateSelectedItem = t; return c; }
               , new { UserId = userId, TemplateTypeId = typeId, HostName = hostName }, splitOn: "TemplatePerPage"
               ).FirstOrDefault();
             }
+        }
+
+        public int SaveBarTenderPrintConfigXX(BarTenderPrintConfigModelXX model)
+        {
+            if (model.Id==0)
+                return InsertBarTenderPrintConfigXX(model);
+             UpdateBarTenderPrintConfigXX(model);
+            return model.Id;
+
         }
 
         public int InsertBarTenderPrintConfigXX(BarTenderPrintConfigModelXX model)
@@ -162,14 +165,16 @@ namespace Ui.Service
             dp.Add("@TemplateTypeId", model.TemplateTypeId, DbType.Int32, ParameterDirection.Input);
             dp.Add("@TemplateTypeName", model.TemplateTypeName, DbType.String, ParameterDirection.Input);
             dp.Add("@PrinterName", model.PrinterName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplatePerPage", model.ExpressTemplateSelectedItem.TemplatePerPage, DbType.Int32, ParameterDirection.Input);
-            dp.Add("@TemplateFullName", model.ExpressTemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateFileName", model.ExpressTemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateFolderPath", model.ExpressTemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateTotalPage", model.ExpressTemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplatePerPage", model.TemplateSelectedItem.TemplatePerPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplateFullName", model.TemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateFileName", model.TemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateFolderPath", model.TemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateTotalPage", model.TemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplateDisplayName", model.TemplateSelectedItem.TemplateDisplayName, DbType.String, ParameterDirection.Input);
 
-            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath,TemplateTotalPage)
-                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath,@TemplateTotalPage);select SCOPE_IDENTITY() as Id;";
+            string sql = @" insert into SJBarTenderPrintConfig(UserId,HostName,TemplateTypeId,TemplateTypeName,TemplateFullName,TemplateFileName,TemplatePerPage,PrinterName,TemplateFolderPath,TemplateTotalPage,TemplateDisplayName)
+                            values(@UserId,@HostName,@TemplateTypeId,@TemplateTypeName,@TemplateFullName,@TemplateFileName,@TemplatePerPage,@PrinterName,@TemplateFolderPath,@TemplateTotalPage,@TemplateDisplayName); 
+                            select SCOPE_IDENTITY() as Id;";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return Convert.ToInt32(connection.ExecuteScalar(sql, dp));
@@ -179,21 +184,52 @@ namespace Ui.Service
         public bool UpdateBarTenderPrintConfigXX(BarTenderPrintConfigModelXX model)
         {
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("@Id", model.Id, DbType.Int32, ParameterDirection.Input);
             dp.Add("@PrinterName", model.PrinterName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplatePerPage", model.ExpressTemplateSelectedItem.TemplatePerPage, DbType.Int32, ParameterDirection.Input);
-            dp.Add("@TemplateFullName", model.ExpressTemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateFileName", model.ExpressTemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateFolderPath", model.ExpressTemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
-            dp.Add("@TemplateTotalPage", model.ExpressTemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplatePerPage", model.TemplateSelectedItem.TemplatePerPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplateFullName", model.TemplateSelectedItem.TemplateFullName, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateFileName", model.TemplateSelectedItem.TemplateFileName, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateFolderPath", model.TemplateSelectedItem.TemplateFolderPath, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateTotalPage", model.TemplateSelectedItem.TemplateTotalPage, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@TemplateDisplayName", model.TemplateSelectedItem.TemplateDisplayName, DbType.String, ParameterDirection.Input);
+            dp.Add("@HostName", model.HostName, DbType.String, ParameterDirection.Input);
+            dp.Add("@TemplateTypeId", model.TemplateTypeId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@UserId", model.UserId, DbType.Int32, ParameterDirection.Input);
 
             string sql = @" update SJBarTenderPrintConfig set PrinterName=@PrinterName
-                            ,TemplateFullName=@TemplateFullName,TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage,TemplateFolderPath=@TemplateFolderPath,TemplateTotalPage=@TemplateTotalPage where Id=@Id; ";
+                                ,TemplateFullName=@TemplateFullName,TemplateFileName=@TemplateFileName,TemplatePerPage=@TemplatePerPage
+                                ,TemplateFolderPath=@TemplateFolderPath,TemplateTotalPage=@TemplateTotalPage,TemplateDisplayName=@TemplateDisplayName,ModifyTime =getdate()
+                            where UserId=@UserId and	HostName =@HostName and 	TemplateTypeId = @TemplateTypeId ; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, dp) > 0;
             }
         }
+
+
+
+
+        public List<BarTenderTemplateModel> GetTenderPrintTemplates(string folderPath)
+        {
+            List<BarTenderTemplateModel> lists = new List<BarTenderTemplateModel>();
+            if (Directory.Exists(folderPath))
+            {
+                foreach (var item in Directory.GetFiles(folderPath, "*.btw"))
+                {
+                    var s = Path.GetFileName(item).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (s.Count() == 2 && int.TryParse(s[0], out int p))
+                    {
+
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = p, TemplatePerPage = int.Parse(s[1].Substring(0, 1)), TemplateFileName = Path.GetFileName(s[1]), TemplateFullName = item, TemplateFolderPath = folderPath });
+                    }
+                    else
+                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = 1, TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
+                }
+            }
+            return lists;
+        }
+
+
+
 
         #endregion
 
@@ -247,25 +283,6 @@ namespace Ui.Service
         }
         #endregion
 
-        public List<BarTenderTemplateModel> GetTenderPrintTemplates(string folderPath)
-        {
-            List<BarTenderTemplateModel> lists = new List<BarTenderTemplateModel>();
-            if (Directory.Exists(folderPath))
-            {
-                foreach (var item in Directory.GetFiles(folderPath, "*.btw"))
-                {
-                    var s = Path.GetFileName(item).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (s.Count() == 2 && int.TryParse(s[0], out int p))
-                    {
-
-                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = p, TemplatePerPage = int.Parse(s[1].Substring(0, 1)), TemplateFileName = Path.GetFileName(s[1]), TemplateFullName = item, TemplateFolderPath = folderPath });
-                    }
-                    else
-                        lists.Add(new BarTenderTemplateModel { TemplateTotalPage = 1, TemplatePerPage = 1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath });
-                }
-            }
-            return lists;
-        }
 
         public int GetCurrentDateNextSerialNumber(DateTime settleDate, string colName)
         {
@@ -336,9 +353,11 @@ namespace Ui.Service
 
         public void GetUserDataGridColumn(int userId, DataGrid dataGrid, int beginColumn = 0)
         {
-            var headers = new DataGridManagementService().GetUserDataGridColumnLists(dataGrid.Name, userId);
-            foreach (var item in headers)
+            var headers = new DataGridManagementService().GetUserDataGridColumnLists(dataGrid.Name, userId, true);
+            int frozenColumnCount = 0;
+            for (int i = 0; i < headers.Count; i++)
             {
+                var item = headers[i];
                 DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
                 dataGridTextColumn.Header = item.ColumnHeaderName;
                 //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
@@ -352,113 +371,12 @@ namespace Ui.Service
                     binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
 
                 dataGridTextColumn.Binding = binding;
-                dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-                //bool r = false;
-                //string sql = @" select 1 from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId ;";
-
-                //using (var connection = SqlDb.UpdateConnection)
-                //{
-                //    r = connection.Execute(sql, new { DataGridName = dataGrid.Name, UserId = userId }) > 0;
-                //}
-
-                //if (r)
-                //    GetDataGridColumnHeaderCustom(userId, dataGrid, beginColumn);
-                //else
-                //    GetDataGridColumnHeaderDefault(dataGrid, beginColumn);
+                dataGrid.Columns.Add(dataGridTextColumn);
+                if (item.IsFrozenColumn)
+                    frozenColumnCount = i + beginColumn;
             }
-
+            dataGrid.FrozenColumnCount = frozenColumnCount;
         }
-
-        ///// <summary>
-        ///// 获取默认表格配置
-        ///// </summary>
-        ///// <param name="dataGrid">表格</param>
-        ///// <param name="beginColumn">开始列</param>
-        //public void GetDataGridColumnHeaderDefault(DataGrid dataGrid, int beginColumn = 0)
-        //{
-
-        //    List<DataGridColumnHeaderModel> headers;
-
-        //    string sql = @" select * from SJDataGridColumnHeader where DataGridName=@DataGridName  and ColumnVisibility=1 order by ColumnOrder desc ;";
-
-        //    using (var connection = SqlDb.UpdateConnection)
-        //    {
-        //        headers = connection.Query<DataGridColumnHeaderModel>(sql, new { DataGridName = dataGrid.Name }).ToList();
-        //    }
-
-        //    DataGridTextColumnInit(dataGrid, headers, beginColumn);
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="dataGrid">界面的控件DataGrid</param>
-        ///// <param name="headers">数据列对应的表头名称</param>
-        ///// <param name="beginColumn">从第几列开始，动态生成，可以设置【数据列】相对【模板列】前后位置</param>
-        //private void DataGridTextColumnInit(DataGrid dataGrid, IList<DataGridColumnHeaderModel> headers, int beginColumn)
-        //{
-        //    foreach (var item in headers)
-        //    {
-        //        DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
-        //        dataGridTextColumn.Header = item.ColumnHeaderName;
-        //        //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
-        //        dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
-
-        //        Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
-        //        if (!string.IsNullOrEmpty(item.BindingStringFormat))
-        //            binding.StringFormat = item.BindingStringFormat;
-
-        //        if (!string.IsNullOrEmpty(item.ConverterName))
-        //            binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
-
-        //        dataGridTextColumn.Binding = binding;
-        //        dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// 获取用户自定义表格配置
-        ///// </summary>
-        ///// <param name="dataGrid">表格</param>
-        ///// <param name="beginColumn">开始列</param>
-        //public void GetDataGridColumnHeaderCustom(int userId, DataGrid dataGrid, int beginColumn = 0)
-        //{
-
-        //    List<DataGridColumnHeaderUserCustomModel> headers;
-
-        //    string sql = @" select * from SJDataGridUserCustom where DataGridName=@DataGridName  and UserId = @UserId order by   ColumnOrder desc ;";
-
-        //    using (var connection = SqlDb.UpdateConnection)
-        //    {
-        //        headers = connection.Query<DataGridColumnHeaderUserCustomModel>(sql, new { DataGridName = dataGrid.Name, UserId = userId }).ToList();
-        //    }
-
-        //    DataGridTextColumnInitCustom(dataGrid, headers, beginColumn);
-        //}
-
-
-        //private void DataGridTextColumnInitCustom(DataGrid dataGrid, IList<DataGridColumnHeaderUserCustomModel> headers, int beginColumn)
-        //{
-        //    foreach (var item in headers)
-        //    {
-        //        DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
-        //        dataGridTextColumn.Header = item.ColumnHeaderName;
-        //        //dataGridTextColumn.HeaderStyle = (Style)Application.Current.Resources["DGColumnHeader"];
-        //        dataGridTextColumn.Width = item.ColumnWidthUnitType == '*' ? new DataGridLength(item.ColumnWidth, DataGridLengthUnitType.Star) : new DataGridLength(item.ColumnWidth);
-
-        //        Binding binding = new Binding() { Path = new PropertyPath(item.ColumnFieldName), UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Mode = BindingMode.TwoWay };
-        //        if (!string.IsNullOrEmpty(item.BindingStringFormat))
-        //            binding.StringFormat = item.BindingStringFormat;
-
-        //        if (!string.IsNullOrEmpty(item.ConverterName))
-        //            binding.Converter = Application.Current.Resources[item.ConverterName] as IValueConverter;
-
-        //        dataGridTextColumn.Binding = binding;
-        //        dataGrid.Columns.Insert(beginColumn, dataGridTextColumn);
-        //    }
-        //}
-
 
         #endregion
 
@@ -557,7 +475,7 @@ namespace Ui.Service
                     if (!string.IsNullOrEmpty(value.ToString()))
                         sb.Append($" and {name} like '%{value}%' ");
                 }
-                else if (type == typeof(int) || type == typeof(double) )
+                else if (type == typeof(short) || type == typeof(int) || type == typeof(long) || type == typeof(decimal) || type == typeof(double) || type == typeof(float))
                 {
                     if (value != null)
                     {
@@ -582,10 +500,59 @@ namespace Ui.Service
             return sb.ToString();
         }
 
-        public void LoadIEnumerableToDatabase<T>(IEnumerable<T> lists,string tableName)
+        public string GetQueryParameterValueString<T>(T queryParameter)
         {
-            DataTable dataTable = TypeConvertHelper.ConvertIEnumerableToDataTable(lists,DateTime.Now.Ticks);
+            StringBuilder sb = new StringBuilder();
+            var t = queryParameter.GetType();
+            foreach (PropertyInfo item in t.GetProperties())
+            {
+                var name = item.Name; // 属性名称
+                var value = item.GetValue(queryParameter, null); // 属性值
+                var type = value?.GetType() ?? typeof(object);//获得属性的类型
+                if (value != null)
+                {
+                    if (type == typeof(DateTime))
+                        sb.Append($"_{Convert.ToDateTime(value).Date:yyyy-MM-dd}");
+                    else
+                        sb.Append($"_{Convert.ToString(value)}");
+                }
+            }
+            return sb.ToString();
+        }
+
+        public void LoadIEnumerableToDatabase<T>(IEnumerable<T> lists, string tableName)
+        {
+            DataTable dataTable = TypeConvertHelper.ConvertIEnumerableToDataTable(lists, DateTime.Now.Ticks);
             SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
         }
+
+        public void ExecuteSqlAsync(string sql)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                DynamicParameters dp = new DynamicParameters();
+                dp.Add("@Sql", sql, DbType.String, ParameterDirection.Input);
+                using (var connection = SqlDb.UpdateConnection)
+                {
+                    connection.ExecuteScalar("SJExecSqlReturnExceptionMessage", dp, null, null, System.Data.CommandType.StoredProcedure);
+                }
+            }
+            );
+        }
+
+        public object ExecuteSqlAsyncReturns(string sql)
+        {
+            return Task.Factory.StartNew(() =>
+             {
+                 DynamicParameters dp = new DynamicParameters();
+                 dp.Add("@Sql", sql, DbType.String, ParameterDirection.Input);
+                 using (var connection = SqlDb.UpdateConnection)
+                 {
+                     connection.ExecuteScalar("SJExecSqlReturnExceptionMessage", dp, null, null, System.Data.CommandType.StoredProcedure);
+                 }
+             }
+             );
+        }
+
     }
 }

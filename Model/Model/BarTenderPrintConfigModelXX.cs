@@ -7,7 +7,17 @@ namespace Model
 {
     public class BarTenderPrintConfigModelXX:NotificationObject
     {
-        public int Id { get; set; }
+        private int id;
+
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                this.RaisePropertyChanged(nameof(Id));
+            }
+        }
 
         public int UserId { get; set; }
 
@@ -19,19 +29,29 @@ namespace Model
 
         public string PrinterName { get; set; }
 
-        private BarTenderTemplateModel expressTemplateSelectedItem;
+        private BarTenderTemplateModel templateSelectedItem;
 
-        public BarTenderTemplateModel ExpressTemplateSelectedItem
+        public BarTenderTemplateModel TemplateSelectedItem
         {
-            get { return expressTemplateSelectedItem; }
+            get { return templateSelectedItem; }
             set
             {
-                expressTemplateSelectedItem = value;
-                this.RaisePropertyChanged(nameof(ExpressTemplateSelectedItem));
+                templateSelectedItem = value;
+                this.RaisePropertyChanged(nameof(TemplateSelectedItem));
             }
         }
 
-        public int TemplateTotalPage { get; set; }
+        private DateTime? modifyTime;
+
+        public DateTime? ModifyTime
+        {
+            get { return modifyTime; }
+            set
+            {
+                modifyTime = value;
+                this.RaisePropertyChanged(nameof(ModifyTime));
+            }
+        }
 
     }
 }

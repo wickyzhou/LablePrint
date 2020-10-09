@@ -1,4 +1,5 @@
 ﻿
+using BarTender;
 using Dal;
 using Model;
 using System;
@@ -416,6 +417,15 @@ namespace Common
                 }
             }
             return list;
+        }
+
+        public static void VerifyPrintConfiguration(BarTenderPrintConfigModelXX config)
+        {
+            if (string.IsNullOrEmpty(config.PrinterName) || config.TemplateSelectedItem == null)
+            {
+                MessageBox.Show("请选择模板和打印机");
+                return;
+            }
         }
 
 

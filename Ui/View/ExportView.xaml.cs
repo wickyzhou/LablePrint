@@ -25,9 +25,10 @@ namespace Ui.View
     {
 
         private RoutedCommand cmdClear = new RoutedCommand("Clear", typeof(ExportView));
-
-        public ExportView()
+        private readonly int _dataGridTypeId;
+        public ExportView(int dataGridTypeId)
         {
+            _dataGridTypeId = dataGridTypeId;
             InitializeComponent();
             this.DataContext = new ExportViewModel();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -38,7 +39,7 @@ namespace Ui.View
 
         public void InitializeExportViewTypedColumnGrid()
         {
-            var xx = new CommonService().GetExportViewTypedColumnWithCheckBox(1);
+            var xx = new CommonService().GetExportViewTypedColumnWithCheckBox(_dataGridTypeId);
 
             for (int i = 0; i < xx.Count() + 2; i++)
             {

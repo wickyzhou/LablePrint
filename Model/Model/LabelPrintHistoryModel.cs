@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 
@@ -36,39 +37,200 @@ namespace Model
 
         public string ProductionModel { get; set; }  //产品型号
 
-        public string ProductionName { get; set; }    //产品名称
-            
-        public DateTime? ProductionDate { get; set; } //生产日期
-
-        public DateTime? ExpirationDate { get; set; } //有效期至
-
-        public string ExpirationMonth { get; set; }  //有效月份
-
         public string OrgID { get; set; }  //客户编号
 
-        public string Label { get; set; }  //标签型号
 
-        public string OrgCode { get; set; }    //客户料号
+        private string productionName;
 
-        public string OrgBillNo { get; set; }    //客户订单号
+        public string ProductionName
+        {
+            get { return productionName; }
+            set
+            {
+                productionName = value;
+                this.RaisePropertyChanged(nameof(ProductionName));
+            }
+        }
 
-        public string Package { get; set; }   //包装桶
+        private DateTime? productionDate;
 
-        public string RoughWeight { get; set; }    //毛重
+        public DateTime? ProductionDate
+        {
+            get { return productionDate; }
+            set
+            {
+                productionDate = value;
+                this.RaisePropertyChanged(nameof(ProductionDate));
+            }
+        }
 
-        public string NetWeight { get; set; }  //净重
+        private DateTime? expirationDate;
 
-        public string CheckNo { get; set; }    //检验号
+        public DateTime? ExpirationDate
+        {
+            get { return expirationDate; }
+            set
+            {
+                expirationDate = value;
+                this.RaisePropertyChanged(nameof(ExpirationDate));
+            }
+        }
 
-        public string SpecialRequest { get; set; }   //备注
+        private string expirationMonth;
 
-        public string CaseName { get; set; } //案子名称
+        public string ExpirationMonth
+        {
+            get { return expirationMonth; }
+            set
+            {
+                expirationMonth = value;
+                this.RaisePropertyChanged(nameof(ExpirationMonth));
+            }
+        }
 
-        public DateTime? ModifyTime { get; set; }    //修改日期
+        private string label;
 
-        public string TwoDimensionCode { get; set; }   //二维码
+        public string Label
+        {
+            get { return label; }
+            set
+            {
+                label = value;
+                this.RaisePropertyChanged(nameof(Label));
+            }
+        }
 
-        //public int PrintCount { get; set; }    //打印张数
+
+        private string orgCode;
+
+        public string OrgCode
+        {
+            get { return orgCode; }
+            set
+            {
+                orgCode = value;
+                this.RaisePropertyChanged(nameof(OrgCode));
+            }
+        }
+
+
+        private string orgBillNo;
+
+        public string OrgBillNo
+        {
+            get { return orgBillNo; }
+            set
+            {
+                orgBillNo = value;
+                this.RaisePropertyChanged(nameof(OrgBillNo));
+            }
+        }
+
+
+        private string package;
+
+        public string Package
+        {
+            get { return package; }
+            set
+            {
+                package = value;
+                this.RaisePropertyChanged(nameof(Package));
+            }
+        }
+
+
+        private string roughWeight;
+
+        public string RoughWeight
+        {
+            get { return roughWeight; }
+            set
+            {
+                roughWeight = value;
+                this.RaisePropertyChanged(nameof(RoughWeight));
+            }
+        }
+
+
+        private string netWeight;
+
+        public string NetWeight
+        {
+            get { return netWeight; }
+            set
+            {
+                netWeight = value;
+                this.RaisePropertyChanged(nameof(NetWeight));
+            }
+        }
+
+
+        private string checkNo;
+
+        public string CheckNo
+        {
+            get { return checkNo; }
+            set
+            {
+                checkNo = value;
+                this.RaisePropertyChanged(nameof(CheckNo));
+            }
+        }
+
+
+        private string specialRequest;
+
+        public string SpecialRequest
+        {
+            get { return specialRequest; }
+            set
+            {
+                specialRequest = value;
+                this.RaisePropertyChanged(nameof(SpecialRequest));
+            }
+        }
+
+
+        private string caseName;
+
+        public string CaseName
+        {
+            get { return caseName; }
+            set
+            {
+                caseName = value;
+                this.RaisePropertyChanged(nameof(CaseName));
+            }
+        }
+
+
+        private DateTime? modifyTime;
+
+        public DateTime? ModifyTime
+        {
+            get { return modifyTime; }
+            set
+            {
+                modifyTime = value;
+                this.RaisePropertyChanged(nameof(ModifyTime));
+            }
+        }
+
+
+        private string twoDimensionCode;
+
+        public string TwoDimensionCode
+        {
+            get { return twoDimensionCode; }
+            set
+            {
+                twoDimensionCode = value;
+                this.RaisePropertyChanged(nameof(TwoDimensionCode));
+            }
+        }
+
+
         private int printCount;
 
         public int PrintCount
@@ -81,11 +243,21 @@ namespace Model
             }
         }
 
+        private int printedCount;
+
+        public int PrintedCount
+        {
+            get { return printedCount; }
+            set
+            {
+                printedCount = value;
+                this.RaisePropertyChanged(nameof(PrintedCount));
+            }
+        }
 
 
-        public int BucketCount { get; set; } // 桶数
+        public int BucketCount { get; set; } 
 
-        //public int Selected { get; set; } //选中
         private int selected;
 
         public int Selected
@@ -98,10 +270,8 @@ namespace Model
             }
         }
 
-
-
-        //public string Seq { get; set; } // 重打序号
         private string seq;
+
         public string Seq
         {
             get { return seq; }
@@ -112,28 +282,147 @@ namespace Model
             }
         }
 
+        private int batchTotal;
 
-        public int BatchTotal { get; set; } // 批次打印总数
+        public int BatchTotal
+        {
+            get { return batchTotal; }
+            set
+            {
+                batchTotal = value;
+                this.RaisePropertyChanged(nameof(BatchTotal));
+            }
+        }
 
-        public int BatchReprintCount { get; set; } // 批次重打数量
 
-        public int BatchCurrentSeq { get; set; } // 批次当前序号
+        private int batchReprintCount;
 
-        public int WorkTotal { get; set; } // 工单打印总数
+        public int BatchReprintCount
+        {
+            get { return batchReprintCount; }
+            set
+            {
+                batchReprintCount = value;
+                this.RaisePropertyChanged(nameof(BatchReprintCount));
+            }
+        }
 
-        public int WorkPrintCount { get; set; } // 工单打印次数
+        private int batchCurrentSeq;
 
-        public int WorkReprintCount { get; set; } // 工单重打数量
+        public int BatchCurrentSeq
+        {
+            get { return batchCurrentSeq; }
+            set
+            {
+                batchCurrentSeq = value;
+                this.RaisePropertyChanged(nameof(BatchCurrentSeq));
+            }
+        }
 
-        public DateTime? LastPrintTime { get; set; } //最后打印时间
 
-        public string SafeCode { get; set; } // 安全编号
+        private int workTotal;
 
-        public decimal SpecificationValue { get; set; } // 规格用来做查询条件
+        public int WorkTotal
+        {
+            get { return workTotal; }
+            set
+            {
+                workTotal = value;
+                this.RaisePropertyChanged(nameof(WorkTotal));
+            }
+        }
 
-        public decimal SpecificationValueBegin { get; set; } // 获取方案明细值规格开始值
 
-        public decimal SpecificationValueEnd { get; set; } // 获取方案明细值规格结束值
+        private int workPrintCount;
+
+        public int WorkPrintCount
+        {
+            get { return workPrintCount; }
+            set
+            {
+                workPrintCount = value;
+                this.RaisePropertyChanged(nameof(WorkPrintCount));
+            }
+        }
+
+
+        private int workReprintCount;
+
+        public int WorkReprintCount
+        {
+            get { return workReprintCount; }
+            set
+            {
+                workReprintCount = value;
+                this.RaisePropertyChanged(nameof(WorkReprintCount));
+            }
+        }
+
+
+        private DateTime? lastPrintTime;
+
+        public DateTime? LastPrintTime
+        {
+            get { return lastPrintTime; }
+            set
+            {
+                lastPrintTime = value;
+                this.RaisePropertyChanged(nameof(LastPrintTime));
+            }
+        }
+
+
+        private string safeCode;
+
+        public string SafeCode
+        {
+            get { return safeCode; }
+            set
+            {
+                safeCode = value;
+                this.RaisePropertyChanged(nameof(SafeCode));
+            }
+        }
+
+
+        private decimal specificationValue;
+
+        public decimal SpecificationValue
+        {
+            get { return specificationValue; }
+            set
+            {
+                specificationValue = value;
+                this.RaisePropertyChanged(nameof(SpecificationValue));
+            }
+        }
+
+
+        private decimal specificationValueBegin;
+
+        public decimal SpecificationValueBegin
+        {
+            get { return specificationValueBegin; }
+            set
+            {
+                specificationValueBegin = value;
+                this.RaisePropertyChanged(nameof(SpecificationValueBegin));
+            }
+        }
+
+
+        private decimal specificationValueEnd;
+
+        public decimal SpecificationValueEnd
+        {
+            get { return specificationValueEnd; }
+            set
+            {
+                specificationValueEnd = value;
+                this.RaisePropertyChanged(nameof(SpecificationValueEnd));
+            }
+        }
+
 
 
         private int seq2678;
@@ -196,18 +485,107 @@ namespace Model
             }
         }
 
-        public bool IsPassed { get; set; }
+        private bool isPassed;
 
-        public int SampleOilPrintCount { get; set; }
+        public bool IsPassed
+        {
+            get { return isPassed; }
+            set
+            {
+                isPassed = value;
+                this.RaisePropertyChanged(nameof(IsPassed));
+            }
+        }
 
-        public string SampleOilPrintArea { get; set; }
+        private int sampleOilPrintCount;
 
-        public DateTime? SampleOilPrintTime { get; set; }
+        public int SampleOilPrintCount
+        {
+            get { return sampleOilPrintCount; }
+            set
+            {
+                sampleOilPrintCount = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintCount));
+            }
+        }
 
-        public int SampleOilPrintedCount { get; set; }
+        private string sampleOilPrintArea;
 
-        public bool SampleOilIsChecked { get; set; }
+        public string SampleOilPrintArea
+        {
+            get { return sampleOilPrintArea; }
+            set
+            {
+                sampleOilPrintArea = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintArea));
+            }
+        }
 
-        public string SampleOilPrintProductionName { get; set; }
+
+        private DateTime? sampleOilPrintTime;
+
+        public DateTime? SampleOilPrintTime
+        {
+            get { return sampleOilPrintTime; }
+            set
+            {
+                sampleOilPrintTime = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintTime));
+            }
+        }
+
+
+        private int sampleOilPrintedCount;
+
+        public int SampleOilPrintedCount
+        {
+            get { return sampleOilPrintedCount; }
+            set
+            {
+                sampleOilPrintedCount = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintedCount));
+            }
+        }
+
+
+
+
+        private bool sampleOilIsChecked;
+
+        public bool SampleOilIsChecked
+        {
+            get { return sampleOilIsChecked; }
+            set
+            {
+                sampleOilIsChecked = value;
+                this.RaisePropertyChanged(nameof(SampleOilIsChecked));
+            }
+        }
+
+        private string sampleOilPrintProductionName;
+
+        public string SampleOilPrintProductionName
+        {
+            get { return sampleOilPrintProductionName; }
+            set
+            {
+                sampleOilPrintProductionName = value;
+                this.RaisePropertyChanged(nameof(SampleOilPrintProductionName));
+            }
+        }
+
+
+        private double rowQuantity;
+
+        public double RowQuantity
+        {
+            get { return rowQuantity; }
+            set
+            {
+                rowQuantity = value;
+                this.RaisePropertyChanged(nameof(RowQuantity));
+            }
+        }
+
     }
 }

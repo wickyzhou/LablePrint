@@ -13,7 +13,7 @@ using Ui.Service;
 
 namespace Ui.Helper
 {
-    public class DataTableImportExportHelper
+    public  class DataTableImportExportHelper
     {
         int currencyBatchSeq = 1;
         int previousBatchBeginIndex = 0;
@@ -26,7 +26,7 @@ namespace Ui.Helper
         /// <param name="fileName">导出文件</param>
         public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName)
         {
-            string fullName = Path.Combine(filePath, $"{fileName}{DateTime.Now:yyyy-MM-dd}.xls");
+            string fullName = Path.Combine(filePath, $"{fileName}___{DateTime.Now:yyyyMMddHHmmssfffffff}.xls");
 
             //如果存在此文件则添加1
             if (File.Exists(fullName))

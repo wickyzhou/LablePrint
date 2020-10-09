@@ -11,7 +11,7 @@
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="180"/>
+            <RowDefinition Height="150"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -33,7 +33,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                    
+
                 <TextBlock Text="生产日期" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockStyle15}" />
 
                 <DatePicker Grid.Row="0" Grid.Column="1"  Style="{StaticResource DatePickerStyle}"
@@ -42,10 +42,10 @@
 
                 <TextBlock Text="客户编号" Grid.Row="0" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
                 <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding QueryParameter.OrgId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
-                
+
                 <TextBlock Text="生产批号" Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockStyle15}" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding QueryParameter.BatchNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
-                
+
                 <TextBlock Text="生产型号" Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBlockStyle15}" />
                 <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding QueryParameter.ProductionModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStretchStyle}"/>
 
@@ -65,14 +65,16 @@
 
                     <Button  Grid.Column="4"  Command="{Binding QueryCommand}" Style="{StaticResource BtnInfoStyle}" IsDefault="True" Content="查询" Width="120"  HorizontalAlignment="Right" />
                 </Grid>
-          
+
 
             </Grid>
+
             <StackPanel Grid.Column="1" VerticalAlignment="Center" >
 
-         
 
-                <Button Command="{Binding PrintCommand}" Width="60" Height="60" FontSize="22"
+
+                <Button Command="{Binding PrintBaseCommand}" CommandParameter="{Binding ElementName=DGPrintA4}"
+                        Width="60" Height="60" FontSize="22"
                  Style="{StaticResource BtnPrintStyle}"  >
                     <StackPanel Orientation="Horizontal" Width="60" Margin="5 0">
                         <TextBlock Text="&#xE6BB;" FontSize="16" FontFamily="{StaticResource Iconfont}" />
@@ -80,9 +82,8 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-            
 
-            <GroupBox Grid.Column="2"  Margin="8"  Padding="10" BorderBrush="MediumSeaGreen">
+            <GroupBox Grid.Column="2"  Margin="5"  Padding="5" BorderBrush="MediumSeaGreen">
                 <GroupBox.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -90,8 +91,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock  Grid.Column="1" Text="打印参数" Style="{StaticResource TextBlockStyle15}"/>
-                        <Button  Grid.Column="2" Content="保存配置" Style="{StaticResource BtnSuccessStyle}" VerticalAlignment="Center" Margin="10 0 0 0"  ToolTip="保存打印配置参数，下次开启时就自动带出此次配置" Height="30" Command="{Binding OilSamplePrintConfigSaveCommand}"/>
+                        <TextBlock  Grid.Column="1" Text="A4纸打印参数" Style="{StaticResource TextBlockStyle15}"/>
+                        <Button  Grid.Column="2" Content="保存配置" Style="{StaticResource BtnSuccessStyle}" VerticalAlignment="Center" Margin="10 0 0 0"  ToolTip="保存打印配置参数，下次开启时就自动带出此次配置" Height="30" Command="{Binding PrintConfigurationSaveBaseCommand}"/>
                     </Grid>
                 </GroupBox.Header>
                 <GroupBox.Content>
@@ -107,8 +108,10 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock  Grid.Column="0" Text="打印机名" Style="{StaticResource TextBlockStyle15}" />
-                            <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}" 
-                              Text="{Binding OilSamplePrintConfig.PrinterName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ComputerPrinters}"/>
+                            
+                            <ComboBox  Grid.Row="0" Grid.Column="2" 
+                                       Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding ComputerPrinters,UpdateSourceTrigger=PropertyChanged}"
+                                       Text="{Binding PrintConfiguration.PrinterName}"/>
                         </Grid>
 
                         <Grid Grid.Row="1">
@@ -116,44 +119,53 @@
                                 <ColumnDefinition Width="80"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button  Grid.Column="0" Content="选择模板" Style="{StaticResource BtnWarningStyle}" ToolTip="点击选择模板所在文件夹" 
-                                Command="{Binding OilSampleTemplateSelectCommand}" />
+                            <Button  Grid.Column="0" Content="模板目录" Style="{StaticResource BtnWarningStyle}" ToolTip="点击选择模板所在文件夹" 
+                                Command="{Binding TamplateSelectBaseCommand}" />
 
-                            <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}" 
-                              Text="{Binding OilSamplePrintConfig.TemplateFileName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding OilSampleTemplates}"  SelectedValuePath="TemplatePerPage" DisplayMemberPath="TemplateFileName" SelectedItem="{Binding OilSampleTemplateSelectedItem}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding TemplateSelectionChangedCommand}"
-CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedItem}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
+                            <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}"
+                                 ItemsSource="{Binding PirntTemplates,UpdateSourceTrigger=PropertyChanged}"  
+                                 SelectedValuePath="TemplateFullName" 
+                                 DisplayMemberPath="TemplateDisplayName" 
+                                 SelectedItem="{Binding PrintConfiguration.TemplateSelectedItem,UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </Grid>
-
                     </Grid>
                 </GroupBox.Content>
             </GroupBox>
         </Grid>
 
-        <GroupBox Grid.Row="1">
-            <GroupBox.Header>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="详细配置" Style="{StaticResource BtnWarningStyle}" Width="100" Margin="0 5"
-                  Command="{Binding DataGridManageCommand}" CommandParameter="{Binding ElementName=DGPrintA4}" />
-                    
-                    <Button Content="保存界面" Style="{StaticResource BtnSuccessStyle}" Width="100" Margin="30 5"
-                  Command="{Binding DataGridSaveCommand}"/>
-
-                    <Button Content="变色" Style="{StaticResource DataGridColumnButton}" Width="100" Margin="30 5"
-                  Command="{Binding DataGridColorChangeCommand}"/>
-
-                    <TextBlock Text="{Binding IsColumnVisibility}" Width="200" Background="AliceBlue"/>
-                </StackPanel>
-            
-            </GroupBox.Header>
+        <GroupBox Grid.Row="1" Margin="0 5 0 0" BorderThickness="0">
             <GroupBox.Content>
-                <DataGrid x:Name="DGPrintA4" Style="{StaticResource MultiCheckBoxDataGridStyle}" ItemsSource="{Binding PrintHistoryLists}" ColumnHeaderStyle="{StaticResource DGColumnHeaderCommandStyle}" HorizontalScrollBarVisibility="Visible">
-                </DataGrid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Background>
+                            <LinearGradientBrush  EndPoint="0,0" StartPoint="1,0" Opacity="0.1" >
+                                <GradientStop Color="#11998e" Offset="0.0" />
+                                <GradientStop Color="#1FB888" Offset="1" />
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+                        <Button Content="详细配置" Style="{StaticResource BtnWarningStyle}" Width="100" Margin="10 5 0 5"
+                  Command="{Binding DataGridManageCommand}" CommandParameter="{Binding ElementName=DGPrintA4}" ToolTip="表格格式更加详细的配置" />
+
+                        <Button Content="保存格式" Style="{StaticResource BtnSuccessStyle}" Width="100" Margin="30 5"
+                  Command="{Binding DataGridSaveCommand}" CommandParameter="{Binding ElementName=DGPrintA4}" ToolTip="下次加载会以当前表格格式"/>
+
+                        <Button  Grid.Column="0"   ContentControl.Content="选择目录" Style="{StaticResource BtnWarningStyle}" Command="{Binding DirectorySelectBaseCommand}"  ToolTip="选择文件导出的固定目录" HorizontalAlignment="Right"  />
+
+                        <TextBox Style="{StaticResource TextBoxReadonlyStyle}" Width="250" Text="{Binding HostConfig.HostValue,UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Button Content="导出" Style="{StaticResource BtnThemeStyle}" Width="100" Command="{Binding ExportBaseCommand}"  ToolTip="导出界面数据到指定目录"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" x:Name="DGPrintA4" Style="{StaticResource MultiSelectionDataGridStyle}" ItemsSource="{Binding PrintHistoryLists}"     ColumnHeaderStyle="{StaticResource DGColumnHeaderCommandStyle}" Width="auto">
+
+                    </DataGrid>
+                </Grid>
+
             </GroupBox.Content>
         </GroupBox>
 

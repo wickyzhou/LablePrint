@@ -280,10 +280,10 @@ namespace Ui.ViewModel.IndexPage
 
                 //验证打印机和模板路径是否存在
 
-                if (!File.Exists(ExpressPrintConfig.ExpressTemplateSelectedItem.TemplateFullName))
+                if (!File.Exists(ExpressPrintConfig.TemplateSelectedItem.TemplateFullName))
                 {
                     MessageBox.Show(" 模板路径不存在，请手动选择模板目录 \r\n");
-                    ExpressPrintConfig.ExpressTemplateSelectedItem = null;
+                    ExpressPrintConfig.TemplateSelectedItem = null;
                     return;
                 }
 
@@ -294,7 +294,7 @@ namespace Ui.ViewModel.IndexPage
                     return;
                 }
 
-                ExpressTemplates = _commonService.GetTenderPrintTemplates(ExpressPrintConfig.ExpressTemplateSelectedItem.TemplateFolderPath);
+                ExpressTemplates = _commonService.GetTenderPrintTemplates(ExpressPrintConfig.TemplateSelectedItem.TemplateFolderPath);
             }
             else
             {
@@ -333,7 +333,6 @@ namespace Ui.ViewModel.IndexPage
                 OilSampleTemplateSelectedItem.TemplateFileName = OilSamplePrintConfig.TemplateFileName;
                 OilSampleTemplateSelectedItem.TemplateFullName = OilSamplePrintConfig.TemplateFullName;
                 OilSampleTemplateSelectedItem.TemplateFolderPath = OilSamplePrintConfig.TemplateFolderPath;
-
             }
             else
             {
@@ -452,7 +451,6 @@ namespace Ui.ViewModel.IndexPage
                     ExpressPrintConfig.Id = r;
                     MessageBox.Show("保存成功");
                 }
-
                 else
                     MessageBox.Show("保存失败,请联系管理员");
             }
@@ -528,7 +526,7 @@ namespace Ui.ViewModel.IndexPage
             if (OilSampleFlowSelectedItem == null)
                 return;
 
-            if (string.IsNullOrEmpty(ExpressPrintConfig.PrinterName) || ExpressPrintConfig.ExpressTemplateSelectedItem == null)
+            if (string.IsNullOrEmpty(ExpressPrintConfig.PrinterName) || ExpressPrintConfig.TemplateSelectedItem == null)
             {
                 MessageBox.Show("请选择模板和打印机");
                 return;
@@ -618,6 +616,7 @@ namespace Ui.ViewModel.IndexPage
         }
 
         public ObservableCollection<PageSizeModel> OilSamplePaperNames { get; set; }
+
         public ObservableCollection<PageSizeModel> ExpressPaperNames { get; set; }
 
         public List<string> ComputerPrinters { get; set; }
@@ -659,10 +658,6 @@ namespace Ui.ViewModel.IndexPage
                 this.RaisePropertyChanged(nameof(OilSampleEntrySelectedItems));
             }
         }
-
-
-
-
 
         private List<BarTenderTemplateModel> oilSampleTemplates;
 

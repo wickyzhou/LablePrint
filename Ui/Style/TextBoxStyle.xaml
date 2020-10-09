@@ -35,13 +35,13 @@
     </Style>
 
     <Style TargetType="TextBox" x:Key="TextBoxReadonlyStyle" BasedOn="{x:Null}">
+        <Setter Property="Padding" Value="5 0 0 0"/>
         <Setter Property="Margin" Value="2 0"/>
         <Setter Property="Height" Value="26"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="11.5"/>
         <Setter Property="Foreground" Value="Purple"/>
-        <Setter Property="Padding" Value="0 0 0 0"/>
         <Setter  Property="Background" Value="LightGray"/>
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

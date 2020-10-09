@@ -55,6 +55,7 @@
 
 
     <Style  x:Key="DGColumnHeaderCommandStyle" TargetType="DataGridColumnHeader">
+        <!--<Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Column.Header}"/>-->
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="Height" Value="28"/>
         <Setter Property="Foreground" Value="#fff"/>
@@ -72,11 +73,11 @@
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate DataType="DataGridColumnHeader">
-                    <Border x:Name="back" BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
+                    <Border  x:Name="back" BorderBrush="NavajoWhite" BorderThickness="0 0 0.8 0" Padding="5 0">
                         <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="{Binding}" Style="{StaticResource TextBlockStyle5}" />
                         </StackPanel>
-                        <Border.ContextMenu>
+                        <!--<Border.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="ceshi1"/>
                                 <MenuItem Header="ceshi2"/>
@@ -84,21 +85,25 @@
                                 <MenuItem Header="Visible"  IsChecked="{Binding Visibility}"  
                                           Command="{Binding DataContext.DataGridColumnHideCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGridColumnHeader}}}" />
                             </ContextMenu>
-                        </Border.ContextMenu>
+                        </Border.ContextMenu>-->
                     </Border>
                     <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsColumnVisibility}" Value="true">
+                        <!--<DataTrigger Binding="{Binding IsColumnVisibility}" Value="true">
                             <Setter Property="Background" Value="Chocolate"  TargetName="back" />
-                        </DataTrigger>
-                        
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" Value="white" TargetName="back"/>
-                        </Trigger>
+                        </DataTrigger>-->
                     </DataTemplate.Triggers>
      
                 </DataTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="LightSeaGreen"/>
+                <Setter Property="Foreground" Value="NavajoWhite"/>
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="0 0 0 3"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style  x:Key="DGColumnHeaderCommand0Style" TargetType="DataGridColumnHeader">
@@ -290,6 +295,28 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="MoveDataGridCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
+                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--<Style.Triggers>
+            <Trigger Property="IsSelected" Value="False">
+                <Setter Property="Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
+            </Trigger>
+        </Style.Triggers>-->
+    </Style>
+    
+
     <Style x:Key="DGCellStyle1" TargetType="DataGridCell">
         <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -357,7 +384,7 @@
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding Deleted,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
-                            <Setter Property="DataGridRow.Foreground" Value="LightGray"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"/>
                         </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -549,7 +576,6 @@
 
                         <DataTrigger Binding="{Binding ColumnVisibility,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
-                            <!--<Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedLightBrush}"></Setter>-->
                         </DataTrigger>
                         
 
@@ -564,6 +590,43 @@
         </Setter>
     </Style>
 
+    <Style TargetType="DataGrid" x:Key="MoveRowDataGridStyle">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource MoveDataGridCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="RowHeight" Value="26"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="{Binding Path=RowHeight}"/>
+                    <Style.Triggers>
+
+                        <DataTrigger Binding="{Binding ColumnVisibility,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
+                        </DataTrigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                            <Setter Property="Background" Value="NavajoWhite"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style TargetType="DataGrid" x:Key="MultiSelectionDataGridStyle">
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
@@ -578,7 +641,6 @@
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CellStyle" Value="{StaticResource SingleSelectionDataGridCellStyle}"/>
         <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
-
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
@@ -588,7 +650,9 @@
                             <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
                         </Trigger>
-
+                        <DataTrigger Binding="{Binding IsPassed,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
+                        </DataTrigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
                             <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>

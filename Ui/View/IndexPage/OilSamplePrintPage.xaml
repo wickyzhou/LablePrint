@@ -262,7 +262,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <Button  Grid.Column="0" Content="选择模板" Style="{StaticResource BtnWarningStyle}" ToolTip="点击选择模板所在文件夹" 
                                 Command="{Binding ExpressTemplateSelectCommand}" />
                             <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}" 
-                              Text="{Binding ExpressPrintConfig.ExpressTemplateSelectedItem.TemplateFileName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ExpressTemplates}"  SelectedValuePath="TemplatePerPage" DisplayMemberPath="TemplateFileName" SelectedItem="{Binding ExpressPrintConfig.ExpressTemplateSelectedItem}">
+                              Text="{Binding ExpressPrintConfig.TemplateSelectedItem.TemplateFileName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ExpressTemplates}"  SelectedValuePath="TemplatePerPage" DisplayMemberPath="TemplateFileName" SelectedItem="{Binding ExpressPrintConfig.TemplateSelectedItem}">
                                 <!--<i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding TemplateSelectionChangedCommand}"

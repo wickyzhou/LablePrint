@@ -31,7 +31,6 @@ namespace Ui.ViewModel
         private int userDataId;
         public ConsignmentShippingViewModel()
         {
-      
             _shippingService = new ShippingBillService();
             _consignmentService = new ConsignmentBillService();
             _commonService = new CommonService();
@@ -123,7 +122,7 @@ namespace Ui.ViewModel
             {
                 if (Directory.Exists(HostConfig.HostValue))
                 {
-                    ExportView view = new ExportView();
+                    ExportView view = new ExportView(1);
                     (view.DataContext as ExportViewModel).Export(1, (type, outputEntity, checkBoxValue, orderedColumns) =>
                     {
                         view.Close();

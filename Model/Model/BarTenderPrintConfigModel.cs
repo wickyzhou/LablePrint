@@ -80,6 +80,16 @@ namespace Model
             }
         }
 
+        private string templateDisplayName;
 
+        public string TemplateDisplayName
+        {
+            get { return templateDisplayName; }
+            set
+            {
+                templateDisplayName = value;
+                this.RaisePropertyChanged(nameof(TemplateDisplayName));
+            }
+        }
     }
 }

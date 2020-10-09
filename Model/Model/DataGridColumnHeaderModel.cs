@@ -101,9 +101,9 @@ namespace Model
         }
 
 
-        private int columnWidth;
+        private double columnWidth;
 
-        public int ColumnWidth
+        public double ColumnWidth
         {
             get { return columnWidth; }
             set
@@ -174,6 +174,16 @@ namespace Model
             }
         }
 
+        private bool isFrozenColumn;
 
+        public bool IsFrozenColumn
+        {
+            get { return isFrozenColumn; }
+            set
+            {
+                isFrozenColumn = value;
+                this.RaisePropertyChanged(nameof(IsFrozenColumn));
+            }
+        }
     }
 }

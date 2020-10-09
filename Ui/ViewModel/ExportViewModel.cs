@@ -40,7 +40,8 @@ namespace Ui.ViewModel
                 //MessageBox.Show($"{CheckBoxSelectedValue} \t {string.Join(",",CheckBoxColumns)}");
             });
 
-            var firstColumn = new CommonService().GetExportViewTypedColumnWithCheckBox(1).Where(m => m.IsChecked).FirstOrDefault().TypedColumnName;
+            var typedColumnModel = new CommonService().GetExportViewTypedColumnWithCheckBox(1).Where(m => m.IsChecked).FirstOrDefault();
+            var firstColumn = typedColumnModel==null?"": typedColumnModel.TypedColumnName;
             CheckBoxColumns = new List<string>() { firstColumn };
         }
         public DelegateCommand SaveCommand { get; set; }

@@ -69,6 +69,7 @@
                 <DataGridTextColumn Header="表头名称" Binding="{Binding ColumnHeaderName}" Width="100"/>
                 <DataGridTextColumn Header="字段顺序" Binding="{Binding ColumnOrder}" Width="70"/>
                 <DataGridTextColumn Header="是否可见" Binding="{Binding ColumnVisibility}" Width="70"/>
+                <DataGridTextColumn Header="是否冻结列" Binding="{Binding IsFrozenColumn}" Width="80"/>
                 <DataGridTextColumn Header="列宽类型" Binding="{Binding ColumnWidthUnitType}" Width="70"/>
                 <DataGridTextColumn Header="列宽" Binding="{Binding ColumnWidth}" Width="80"/>
                 <DataGridTextColumn Header="字符格式" Binding="{Binding BindingStringFormat}" Width="100"/>

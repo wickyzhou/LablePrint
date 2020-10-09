@@ -27,5 +27,6 @@
 
     <Brush x:Key="GenericBackgroundMainSonBrush">AliceBlue</Brush>
 
+    <Brush x:Key="GenericLessColorThanDefault">#ccc</Brush>
 
 </ResourceDictionary>
