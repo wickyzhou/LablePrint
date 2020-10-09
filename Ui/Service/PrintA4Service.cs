@@ -15,7 +15,7 @@ namespace Ui.Service
     {
         public List<LabelPrintHistoryModel>  GetHistoryLists(string filter = "")
         {
-            string sql = $" select a.*,b.LastPrintTime,b.PrintedCount from SJLabelPrintHistory a left join (select RowHashValue,sum(PrintBucket) PrintedCount,MAX(PrintTime) LastPrintTime from SJLabelPrintA4Log group  by  RowHashValue) b on a.RowHashValue = b.RowHashValue  where 1=1  {filter}";
+            string sql = $" select * from SJLabelPrintHistoryView  where 1=1  {filter}";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<LabelPrintHistoryModel>(sql).ToList();
@@ -33,7 +33,7 @@ namespace Ui.Service
             }
 
             string fields = stringBuilder.ToString().Substring(1);
-            string sql = $"  select {fields} from SJLabelPrintHistory  where 1=1 {filter} ";
+            string sql = $"  select {fields} from SJLabelPrintHistoryView  where 1=1 {filter} ";
 
             return SqlHelper.ExecuteDataTable(sql,null);
         }

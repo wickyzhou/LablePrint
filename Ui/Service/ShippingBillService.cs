@@ -13,13 +13,13 @@ namespace Ui.Service
 {
     public class ShippingBillService
     {
-        public IList<ShippingBillModel> GetAllShippingBills(int userDataId)
+        public IList<ShippingBillModel> GetAllShippingBills(int userDataId,GeneralParameterModel generalParameter)
         {
             string sql ;
             if (userDataId==-1)
-                sql = @"select *, (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a order by Id desc ";
+                sql = $"select *, (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a where BillDate between '{generalParameter.ParamBeginDate}' and  '{generalParameter.ParamEndDate}' order by Id desc ";
             else
-                sql = @"select * , (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a where UserId=@UserDataId order by Id desc ";
+                sql = $"select * , (select UserName from SJUser  where Id= a.UserId) UserName from SJShippingBill a where BillDate between '{generalParameter.ParamBeginDate}' and  '{generalParameter.ParamEndDate}' and UserId=@UserDataId order by Id desc ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<ShippingBillModel>(sql,new { UserDataId=userDataId }).ToList();
@@ -273,35 +273,35 @@ namespace Ui.Service
 
 
 
-        public DataTable GetShippingBillExprotDataTable1(int userDataId)
+        public DataTable GetShippingBillExprotDataTable1(int userDataId, GeneralParameterModel generalParameter)
         {
             string sql;
             if (userDataId == -1)
-                sql = @" select * from SJShippingBillExportView1 order by 系统单号;";
+                sql = $" select * from SJShippingBillExportView1 where 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}' order by 系统单号;";
             else
-                sql = @"select * from SJShippingBillExportView1 where UserId=@UserId  order by 系统单号";
+                sql = $"select * from SJShippingBillExportView1 where UserId=@UserId and 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}' order by 系统单号";
 
             return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
         }
 
-        public DataTable GetShippingBillExprotDataTable2(int userDataId)
+        public DataTable GetShippingBillExprotDataTable2(int userDataId, GeneralParameterModel generalParameter)
         {
             string sql;
             if (userDataId == -1)
-                sql = @" select * from SJShippingBillExportView2 order by 系统单号,明细序号;";
+                sql = $" select * from SJShippingBillExportView2 where 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}' order by 系统单号,明细序号;";
             else
-                sql = @" select * from SJShippingBillExportView2 where UserId=@UserId  order by 系统单号,明细序号";
+                sql = $" select * from SJShippingBillExportView2 where UserId=@UserId and 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}'  order by 系统单号,明细序号";
 
             return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
         }
 
-        public DataTable GetShippingBillExprotDataTable3(int userDataId,string orderedColumns)
+        public DataTable GetShippingBillExprotDataTable3(int userDataId,string orderedColumns,GeneralParameterModel generalParameter)
         {
             string sql;
             if (userDataId == -1)
-                sql = @" select dense_rank()over( order by " + orderedColumns + @") 组号 ,* from SJShippingBillExportView1 ; ";
+                sql = $" select dense_rank()over( order by " + orderedColumns + $") 组号 ,* from SJShippingBillExportView1 where 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}' ; ";
             else
-                sql = @" select dense_rank()over( order by " + orderedColumns + @") 组号 ,* from SJShippingBillExportView1 where UserId=@UserId ;";
+                sql = $" select dense_rank()over( order by " + orderedColumns + $") 组号 ,* from SJShippingBillExportView1 where UserId=@UserId and 托运日期 between '{generalParameter.ParamBeginDate}' and '{generalParameter.ParamEndDate}' ;";
 
             return SqlHelper.ExecuteDataTable(sql, new SqlParameter[] { new SqlParameter("@UserId", userDataId) });
         }

@@ -102,6 +102,11 @@ namespace Ui.ViewModel
 
         private void InitCommand()
         {
+            ShippingQueryCommand = new DelegateCommand((obj) =>
+            {
+                GetShippingBills();
+            });
+
             DirectorySelectCommand = new DelegateCommand((obj) =>
             {
                 // 导出目录选择
@@ -131,19 +136,19 @@ namespace Ui.ViewModel
                             DataTable datatable = new DataTable();
                             if (outputEntity == 1)
                             {
-                                datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId);
+                                datatable = _shippingService.GetShippingBillExprotDataTable1(userDataId,GeneralParameter);
                                 new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
                                 MessageBox.Show("导出成功");
                             }
                             else if (outputEntity == 2)
                             {
-                                datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId);
+                                datatable = _shippingService.GetShippingBillExprotDataTable2(userDataId, GeneralParameter);
                                 new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption);
                                 MessageBox.Show("导出成功");
                             }
                             else if (outputEntity == 3)
                             {
-                                datatable = _shippingService.GetShippingBillExprotDataTable3(userDataId, string.Join(",", orderedColumns));
+                                datatable = _shippingService.GetShippingBillExprotDataTable3(userDataId, string.Join(",", orderedColumns), GeneralParameter);
                                 new Helper.DataTableImportExportHelper().ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption, checkBoxValue, 1, orderedColumns);
                                 MessageBox.Show("导出成功");
                             }
@@ -326,6 +331,7 @@ namespace Ui.ViewModel
 
         public void DataInit()
         {
+            GeneralParameter = new GeneralParameterModel { ParamBeginDate = DateTime.Now.AddDays(1 - DateTime.Now.Day).AddMonths(-1), ParamEndDate = DateTime.Now.Date };
             Task.Factory.StartNew(() =>
             {
                 UIExecute.RunAsync(GetShippingBills);
@@ -693,6 +699,19 @@ namespace Ui.ViewModel
         }
 
 
+        private GeneralParameterModel generalParameter;
+
+        public GeneralParameterModel GeneralParameter
+        {
+            get { return generalParameter; }
+            set
+            {
+                generalParameter = value;
+                this.RaisePropertyChanged(nameof(GeneralParameter));
+            }
+        }
+
+
 
         #region 明细
         private ObservableCollection<ConsignmentBillEntryModel> consignmentBillEntries;
@@ -786,6 +805,7 @@ namespace Ui.ViewModel
         public DelegateCommand ConsignmentBillEntrySelectionChangedCommand { get; set; }
         public DelegateCommand ShippingBillCreateCommand { get; set; }
         public DelegateCommand DirectorySelectCommand { get; set; }
+        public DelegateCommand ShippingQueryCommand { get; set; }
 
 
         #endregion
@@ -801,7 +821,7 @@ namespace Ui.ViewModel
         public void GetShippingBills()
         {
             ShippingBills.Clear();
-            _shippingService.GetAllShippingBills(userDataId).ToList().ForEach(x => ShippingBills.Add(x));
+            _shippingService.GetAllShippingBills(userDataId,GeneralParameter).ToList().ForEach(x => ShippingBills.Add(x));
         }
 
         private void GetAllShippingBillEntriesById(int id)

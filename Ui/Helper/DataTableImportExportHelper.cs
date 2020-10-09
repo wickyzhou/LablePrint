@@ -56,14 +56,22 @@ namespace Ui.Helper
                     if (s.Name == "Int16" || s.Name == "Int32" || s.Name == "Int64" || s.Name == "Float" || s.Name == "Double" || s.Name == "Decimal")
                     {
                         var x = dataTable.Rows[j][z];
-                        object value = x.GetType().Name == "DBNull" ? 0 : x;
+                        object value = x.GetType().Name == "DBNull" ? null : x;
                         row1.CreateCell(z).SetCellValue(Convert.ToDouble(value));
                     }
-
                     else if (s.Name == "DateTime")
-                        row1.CreateCell(z).SetCellValue(Convert.ToDateTime(dataTable.Rows[j][z]).ToString("yyyy-MM-dd HH:mm:ss"));
+                    {
+                        var x = dataTable.Rows[j][z];
+                        object value = x.GetType().Name == "DBNull" ? null : x;
+                        row1.CreateCell(z).SetCellValue(Convert.ToString(value));
+                    }
                     else
-                        row1.CreateCell(z).SetCellValue(Convert.ToString(dataTable.Rows[j][z]));
+                    {
+                        var x = dataTable.Rows[j][z];
+                        object value = x.GetType().Name == "DBNull" ? "" : x;
+                        row1.CreateCell(z).SetCellValue(Convert.ToString(value));
+                    }
+                    
                 }
             }
 
@@ -194,14 +202,21 @@ namespace Ui.Helper
                     if (s.Name == "Int16" || s.Name == "Int32" || s.Name == "Int64" || s.Name == "Float" || s.Name == "Double" || s.Name == "Decimal")
                     {
                         var x = dataTable.Rows[rowIndex][z];
-                        object value = x.GetType().Name == "DBNull" ? 0 : x;
+                        object value = x.GetType().Name == "DBNull" ? null : x;
                         row1.CreateCell(z).SetCellValue(Convert.ToDouble(value));
                     }
-
                     else if (s.Name == "DateTime")
-                        row1.CreateCell(z).SetCellValue(Convert.ToDateTime(dataTable.Rows[rowIndex][z]).ToString("yyyy-MM-dd HH:mm:ss"));
+                    {
+                        var x = dataTable.Rows[j][z];
+                        object value = x.GetType().Name == "DBNull" ? null : x;
+                        row1.CreateCell(z).SetCellValue(Convert.ToString(value));
+                    }
                     else
-                        row1.CreateCell(z).SetCellValue(Convert.ToString(dataTable.Rows[rowIndex][z]));
+                    {
+                        var x = dataTable.Rows[j][z];
+                        object value = x.GetType().Name == "DBNull" ? "" : x;
+                        row1.CreateCell(z).SetCellValue(Convert.ToString(value));
+                    }
                 }
                 rowIndex++;
             }
@@ -215,7 +230,15 @@ namespace Ui.Helper
             DataRow[] row = dataTable.Select($"组号 ={batchSeq}");
             foreach (var item in columns)
             {
-                sheetName += ","+row[0][item].ToString();
+                if (DateTime.TryParse(row[0][item].ToString(), out DateTime date))
+                {
+                    sheetName += "," + date.Date.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    sheetName += "," + row[0][item].ToString();
+                }
+                
             }
             return string.IsNullOrEmpty(sheetName.Substring(1))?"空": sheetName.Substring(1);
         }
