@@ -71,6 +71,22 @@ namespace Ui.Helper
             return lists;
         }
 
+
+        // 获取目录中模板选择模型
+        public static List<BarTenderTemplateModel> GetTenderPrintTemplates(string folderPath)
+        {
+            List<BarTenderTemplateModel> lists = new List<BarTenderTemplateModel>();
+            if (Directory.Exists(folderPath))
+            {
+                foreach (var item in Directory.GetFiles(folderPath, "*.btw"))
+                {
+                    lists.Add( new BarTenderTemplateModel { TemplatePerPage =1, TemplateTotalPage=1, TemplateFileName = Path.GetFileName(item), TemplateFullName = item, TemplateFolderPath = folderPath, TemplateDisplayName = Path.GetFileName(item).Replace(".btw", "") });
+                }
+            }
+            return lists;
+        }
+
+
         // 获取打印机名称
         public static List<string> GetComputerPrinters()
         {

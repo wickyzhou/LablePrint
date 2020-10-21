@@ -31,12 +31,13 @@ namespace Ui.ViewModel.IndexPage
             InitData();
         }
 
+        public DelegateCommand DataGridSaveCommand { get; set; }
         public DelegateCommand PrintCommand { get; set; }
         public DelegateCommand QueryCommand { get; set; }
         public DelegateCommand DataGridManageCommand { get; set; }
         public DelegateCommand DataGridColumnHideCommand { get; set; }
         public DelegateCommand DataGridColorChangeCommand { get; set; }
-        public DelegateCommand DataGridSaveCommand { get; set; }
+       
 
 
         private void InitCommand()
@@ -61,7 +62,7 @@ namespace Ui.ViewModel.IndexPage
 
             });
 
-            TamplateSelectBaseCommand = new DelegateCommand((obj) =>
+            TemplateSelectBaseCommand = new DelegateCommand((obj) =>
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)

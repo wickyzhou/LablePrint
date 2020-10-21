@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Ui.Helper
 {
@@ -49,6 +50,35 @@ namespace Ui.Helper
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// 将数字格式的时间戳转换为日期格式
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
+        public static DateTime? ConvertTimeStampToDateTime(string timeStamp)
+        {
+            if (string.IsNullOrEmpty(timeStamp) || timeStamp.Equals("0"))
+                return null;
+
+            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            long lTime = long.Parse(Regex.Replace(timeStamp, @"\s", "") + "0000");
+            TimeSpan toNow = new TimeSpan(lTime);
+            return dtStart.Add(toNow);
+        }
+
+        /// <summary>
+        /// 将日期转换为N为小数的时间戳
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="scale"></param>
+        /// <returns></returns>
+        public static string ConvertDateTimeToTimeStamp(DateTime time, int scale = 0)
+        {
+            TimeSpan cha = (time - TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)));
+            double t = (double)cha.TotalSeconds;
+            return ((long)(Math.Round(t, scale) * Math.Pow(10, scale))).ToString();
         }
 
     }

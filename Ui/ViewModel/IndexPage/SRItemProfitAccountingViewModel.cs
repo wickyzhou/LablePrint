@@ -1,20 +1,19 @@
-﻿using Common;
-using Dal;
+﻿using CRMApiModel.QueryXoqlModel;
 using Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Ui.Command;
+using Ui.Helper;
 using Ui.Service;
 
 namespace Ui.ViewModel.IndexPage
 {
-    public class SRItemProfitAccountingViewModel : BaseViewModel
+    public class SRItemProfitAccountingViewModel : CRMApiBaseViewModel
     {
         private ItemProfitAccountingService _itemProfitAccountingService;
 
@@ -37,23 +36,72 @@ namespace Ui.ViewModel.IndexPage
                 UIExecute.RunAsync(() =>
                 {
                     SettleMonthLists = _itemProfitAccountingService.GetSettleMonthLists();
-                    _itemProfitAccountingService.GetItemProfitAccountingLists().ForEach(x => ItemProfitAccountingLists.Add(x));
-                    //_itemProfitAccountingService.GetItemProfitAccountingMonthlyLists().ForEach(x => ItemProfitAccountingMonthlyLists.Add(x));
+                    ItemProfitAccountingQueryCommand.Execute(null);
                 });
             });
         }
 
         private void InitCommand()
         {
+            CRMUserSyncCommand = new DelegateCommand((obj) =>
+            {
+                var r = CRMService.GetQueryXoqlData<SRUserQueryXoqlModel>(@"select  id Id,name Name,dimDepart DeptId  from user ;");
+                if (r.code == 200)
+                {
+                    SqlHelper.ExecuteNonQuerySR(" truncate table SRUserXoqlTable ;", null);
+                    SqlHelper.LoadIEnumerableToDBModelTableSR(r.data.records, "SRUserXoqlTable");
+                }
+            });
 
+            CRMItemSyncCommand = new DelegateCommand((obj) =>
+            {
+                List<SROpportunityQueryXoqlDbModel> lists = new List<SROpportunityQueryXoqlDbModel>();
+                var ss2 = CRMService.GetQueryXoqlData<SROpportunityQueryXoqlModel>(@" select customItem177__c  ItemCode,opportunityName  ItemName
+                            ,ownerId XiangMuJingLi,dbcVarchar6 ShiChangZhiChi,customItem172__c YeWuZhiChi,
+                            customItem175__c JiShuZhiChi,customItem182__c PinZhiZhiChi,customItem173__c ChanPinJingLi,customItem180__c JiFuZhiChi,customItem181__c SeCaiZhiChi,createdAt BeginDate
+                        from opportunity  where  dimDepart=1047572968276306 ");
+                if (ss2.code == 200)
+                {
+                    SROpportunityQueryXoqlModel[] rr = ss2.data.records;
+                    foreach (var item in rr)
+                    {
+                        SROpportunityQueryXoqlDbModel model = new SROpportunityQueryXoqlDbModel
+                        {
+                            Id = item.Id,
+                            BeginDate = TypeConvertHelper.ConvertTimeStampToDateTime(item.BeginDate),
+                            EndDate = TypeConvertHelper.ConvertTimeStampToDateTime(item.EndDate),
+                            ItemCode = item.ItemCode,
+                            ItemName = item.ItemName,
+                            HouDuanZhiChi = item.HouDuanZhiChi,
+                            JiFuZhiChi = item.JiFuZhiChi,
+                            PinZhiZhiChi = item.PinZhiZhiChi,
+                            SeCaiZhiChi = item.SeCaiZhiChi,
+                            ShiChangZhiChi = item.ShiChangZhiChi,
+                            XiangMuJingLi = item.XiangMuJingLi,
+                            YeWuZhiChi = item.YeWuZhiChi==null? "": string.Join(",",item.YeWuZhiChi),
+                            ChanPinJingLi = item.ChanPinJingLi == null? "" :string.Join(",", item.ChanPinJingLi),
+                            JiShuZhiChi = item.JiShuZhiChi == null ?"":string.Join(",", item.JiShuZhiChi),
+                        };
+
+                        lists.Add(model);
+                    }
+                    SqlHelper.ExecuteNonQuerySR(" truncate table SROpportunityXoqlTable ;", null);
+                    SqlHelper.LoadIEnumerableToDBModelTableSR(lists, "SROpportunityXoqlTable");
+                }
+                else
+                {
+                    MessageBox.Show($"{ss2.code} \r\n{ss2.msg}");
+                }
+            });
 
             EmployeeCostImportCommand = new DelegateCommand((obj) =>
             {
                 //文件选择窗口
-                System.Windows.Forms.OpenFileDialog opd = new System.Windows.Forms.OpenFileDialog();
-                opd.Title = "选择文件";
-                //第一个参数是名称，随意取，第二个是模式匹配， 多个也是用“|”分割
-                opd.Filter = "EXCEL文件|*.xls*";
+                System.Windows.Forms.OpenFileDialog opd = new System.Windows.Forms.OpenFileDialog
+                {
+                    Title = "选择文件",
+                    Filter = "EXCEL文件|*.xls*"  //第一个参数是名称，随意取，第二个是模式匹配， 多个也是用“|”分割
+                };
 
                 if (opd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -80,14 +128,15 @@ namespace Ui.ViewModel.IndexPage
 
                 // 计算最终的结果
                 _itemProfitAccountingService.AccountItemProfit(SettleMonthSearchedItem.Id);
-                ItemProfitAccountingLists.Clear();
-                _itemProfitAccountingService.GetItemProfitAccountingLists($" and ItemName like '%{ItemNameParameter}%' ").ForEach(x => ItemProfitAccountingLists.Add(x));
+                ItemProfitAccountingQueryCommand.Execute(null);
             });
 
             ItemProfitAccountingQueryCommand = new DelegateCommand((obj) =>
             {
                 ItemProfitAccountingLists.Clear();
                 _itemProfitAccountingService.GetItemProfitAccountingLists($" and ItemName like '%{ItemNameParameter}%' ").ForEach(x => ItemProfitAccountingLists.Add(x));
+                ListsSum = ItemProfitAccountingLists.Sum(x=>x.Profit);
+                ListsCount = ItemProfitAccountingLists.Count();
             });
 
             ItemProfitDeleteCommand = new DelegateCommand((obj) =>
@@ -113,7 +162,6 @@ namespace Ui.ViewModel.IndexPage
                     return;
                 ItemProfitAccountingMonthlyLists.Clear();
                 _itemProfitAccountingService.GetItemProfitAccountingMonthlyLists($" and ItemCode = {ItemProfitAccountingSelectedItem.ItemCode} ").ForEach(x => ItemProfitAccountingMonthlyLists.Add(x));
-
             });
         }
 
@@ -123,6 +171,8 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand ItemProfitDeleteCommand { get; set; }
         public DelegateCommand ItemProfitMonthlyQueryCommand { get; set; }
         public DelegateCommand SelectionChangedCommand { get; set; }
+        public DelegateCommand CRMItemSyncCommand { get; set; }
+        public DelegateCommand CRMUserSyncCommand { get; set; }
 
 
 
@@ -187,6 +237,32 @@ namespace Ui.ViewModel.IndexPage
                 this.RaisePropertyChanged(nameof(ItemNameParameter));
             }
         }
+
+        private int listsCount;
+
+        public int ListsCount
+        {
+            get { return listsCount; }
+            set
+            {
+                listsCount = value;
+                this.RaisePropertyChanged(nameof(ListsCount));
+            }
+        }
+
+        private double? listsSum;
+
+        public double? ListsSum
+        {
+            get { return listsSum; }
+            set
+            {
+                listsSum = value;
+                this.RaisePropertyChanged(nameof(ListsSum));
+            }
+        }
+
+
 
     }
 }

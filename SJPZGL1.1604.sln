@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui", "Ui\Ui.csproj", "{FED6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{BF24549D-B9FF-476B-9F1A-31C4A5CAFA1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{7B432FA3-F873-414A-A376-EEF68DD2B618}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{BF24549D-B9FF-476B-9F1A-31C4A5CAFA1C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BF24549D-B9FF-476B-9F1A-31C4A5CAFA1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{BF24549D-B9FF-476B-9F1A-31C4A5CAFA1C}.Release|x86.Build.0 = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Debug|x86.Build.0 = Debug|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|x86.ActiveCfg = Release|Any CPU
+		{7B432FA3-F873-414A-A376-EEF68DD2B618}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

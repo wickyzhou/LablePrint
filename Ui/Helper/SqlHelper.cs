@@ -126,6 +126,8 @@ namespace Ui.Helper
             return num;
         }
 
+
+
         public static int ExecuteNonQuerySR(string sql, params SqlParameter[] paras)
         {
             int num;
@@ -142,6 +144,25 @@ namespace Ui.Helper
             }
             return num;
         }
+
+        public static int ExecuteNonQueryOa(string sql, params SqlParameter[] paras)
+        {
+            int num;
+            using (SqlConnection connection = new SqlConnection(connStrOa))
+            {
+                connection.Open();
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = sql;
+                    if (paras != null)
+                        command.Parameters.AddRange(paras);
+                    num = command.ExecuteNonQuery();
+                }
+            }
+            return num;
+        }
+
+
 
         public static int ExecuteNonQueryProcedure(string procedureName, params SqlParameter[] paras)
         {
@@ -290,9 +311,9 @@ namespace Ui.Helper
             return list;
         }
 
-        public static void LoadArrayToDBModelTable<T>(T[] source, string modeltable)
+        public static void LoadIEnumerableToDBModelTable<T>(IEnumerable<T> source, string modeltable)
         {
-            DataTable dt = ConvertArrayToDataTable<T>(source);
+            DataTable dt = ConvertIEnumerableToDataTable(source);
             if (dt.Rows.Count > 0)
             {
                 using (SqlBulkCopy bkc = new SqlBulkCopy(connStr))
@@ -307,6 +328,25 @@ namespace Ui.Helper
                 }
             }
         }
+
+        public static void LoadIEnumerableToDBModelTableSR<T>(IEnumerable<T> source, string modeltable)
+        {
+            DataTable dt = ConvertIEnumerableToDataTable(source);
+            if (dt.Rows.Count > 0)
+            {
+                using (SqlBulkCopy bkc = new SqlBulkCopy(connStrSR))
+                {
+                    bkc.DestinationTableName = modeltable;
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        string fieldName = dt.Columns[i].ColumnName;
+                        bkc.ColumnMappings.Add(fieldName, fieldName);
+                    }
+                    bkc.WriteToServer(dt);
+                }
+            }
+        }
+
 
         private static DataTable ConvertArrayToDataTable<T>(T[] source)
         {

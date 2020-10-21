@@ -16,7 +16,7 @@ namespace Ui.Service
     {
         public int UserId { get; set; }
 
-        public PrintService( int userId)
+        public PrintService(int userId)
         {
             UserId = userId;
         }
@@ -461,31 +461,6 @@ namespace Ui.Service
             }
         }
 
-        //private void BarTenderGenericPrint<T>(BarTender.Application btApp, string printerName, string templateName, T entry, int printCount = 0)
-        //{
-        //    BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
-        //    try
-        //    {
-        //        btFormat.PrintSetup.Printer = printerName;
-        //        btFormat.PrintSetup.NumberSerializedLabels = 1;
-        //        btFormat.PrintSetup.IdenticalCopiesOfLabel = printCount > 0 ? printCount : GetPrintCountAndWriteLog(entry);
-        //        string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
-        //        Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
-        //        var fieldLists = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
-        //        SetTemplateNamedSubStringValueToPart(btFormat, fieldLists, entry);
-        //        var s1 = btFormat.PrintOut(false, false);
-        //        btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-        //        if (s1 != 0)
-        //        {
-        //            throw new Exception("打印结果不正常，打开模板手动打印取消警告窗口");
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-        //    }
-
-        //}
 
         public string BarTenderPrintA4<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config, int totalPages)
         {
@@ -496,9 +471,9 @@ namespace Ui.Service
             int remainCount = totalPages % templateTotalPage; // 最后一个模板张数
 
             string templateName = config.TemplateSelectedItem.TemplateFullName; //通用模板名称
-            string newtemplateName = remainCount==0 ? Path.Combine(config.TemplateSelectedItem.TemplateFolderPath, $"1{config.TemplateSelectedItem.TemplateFileName.Substring(1)}")
-                :Path.Combine(config.TemplateSelectedItem.TemplateFolderPath, $"{remainCount}{config.TemplateSelectedItem.TemplateFileName.Substring(1)}") ; // 最后一个模板名称
-         
+            string newtemplateName = remainCount == 0 ? Path.Combine(config.TemplateSelectedItem.TemplateFolderPath, $"1{config.TemplateSelectedItem.TemplateFileName.Substring(1)}")
+                : Path.Combine(config.TemplateSelectedItem.TemplateFolderPath, $"{remainCount}{config.TemplateSelectedItem.TemplateFileName.Substring(1)}"); // 最后一个模板名称
+
             BarTender.Application btApp = new BarTender.Application();
             try
             {
@@ -514,10 +489,11 @@ namespace Ui.Service
                 var fieldLists = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
 
                 // 剩余部分模板
+                BarTender.Format btFormat1 = null;
                 List<string> fieldLists1 = new List<string>();
-                BarTender.Format btFormat1 = btApp.Formats.Open(newtemplateName, false, "");
-                if (remainCount>0)
+                if (remainCount > 0)
                 {
+                    btFormat1 = btApp.Formats.Open(newtemplateName, false, "");
                     btFormat1.PrintSetup.Printer = printerName;
                     btFormat1.PrintSetup.NumberSerializedLabels = 1;
                     btFormat1.PrintSetup.IdenticalCopiesOfLabel = 1;
@@ -526,23 +502,23 @@ namespace Ui.Service
                     fieldLists1 = GetTendarFieldName(nameValues1.Replace(Environment.NewLine, ""), rg1);
                 }
 
+
                 //对各个部分赋值
                 int beginPartId = 0;
 
-                StringBuilder logStrings = new StringBuilder();
+                //StringBuilder logStrings = new StringBuilder();
                 foreach (var entry in lists)
                 {
- 
+
                     //某行记录的打印张数,直接写日志
                     int printCount = GetPrintCountAndWriteLog(entry);
-             
 
                     // 如果本次打印张数超过一张A4纸上
                     while (printCount + beginPartId >= templateTotalPage)
                     {
                         for (int z = beginPartId; z < templateTotalPage; z++)
                         {
-                            SetTemplateNamedSubStringValueToPartN<T>(btFormat, fieldLists, entry, z);
+                            SetTemplateNamedSubStringValueToPartN(btFormat, fieldLists, entry, z);
                         }
 
                         printCount = printCount + beginPartId - templateTotalPage;
@@ -554,11 +530,6 @@ namespace Ui.Service
                             btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
                             return "打印结果不正常，打开模板手动打印取消警告窗口";
                         }
-                        else
-                        { 
-                            //写打印日志
-                        }
-
                     }
 
                     //单条记录完全打印最后新开一张A4打印的数据(先部分赋值，和剩下行记录数据一起打印)
@@ -566,7 +537,7 @@ namespace Ui.Service
                     {
                         for (int z = beginPartId; z < printCount + beginPartId; z++)
                         {
-                            if (pages == 1 && initPages>1)
+                            if (pages == 1 && remainCount > 0) //最后一页把值赋到第二个模板上
                                 SetTemplateNamedSubStringValueToPartN(btFormat1, fieldLists1, entry, z);
                             else
                                 SetTemplateNamedSubStringValueToPartN(btFormat, fieldLists, entry, z);
@@ -578,11 +549,10 @@ namespace Ui.Service
                 // 如果是最后一张A4的打印情况下， 新开模板赋值打印
                 if (pages == 1)
                 {
-                    if (initPages == 1)
+                    if (remainCount == 0)
                     {
                         var s111 = btFormat.PrintOut(false, false);
                         btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                        btFormat1.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
                         if (s111 != 0)
                         {
                             btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
@@ -591,22 +561,20 @@ namespace Ui.Service
                     }
                     else
                     {
-                        if (remainCount > 0)
+                        var s222 = btFormat1.PrintOut(false, false);
+                        btFormat1.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        if (s222 != 0)
                         {
-                            var s222 = btFormat1.PrintOut(false, false);
-                            btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                            btFormat1.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                            if (s222 != 0)
-                            {
-                                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                                return "打印结果不正常，打开模板手动打印取消警告窗口";
-                            }
+                            btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                            return "打印结果不正常，打开模板手动打印取消警告窗口";
                         }
+
                     }
                 }
                 #endregion
                 // 写日志 
-                new CommonService().ExecuteSqlAsyncReturns(logStrings.ToString()); 
+                //new CommonService().ExecuteSqlAsyncReturns(logStrings.ToString());
                 return "打印成功";
             }
             catch (Exception ex)
@@ -623,11 +591,55 @@ namespace Ui.Service
             }
         }
 
+   
+        public string BarTenderPrintLS<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config)
+        {
+            string printerName = config.PrinterName; // 打印机名称
+            string templateName = config.TemplateSelectedItem.TemplateFullName; //通用模板名称
+            BarTender.Application btApp = new BarTender.Application();
+            try
+            {
+                // StringBuilder stringBuilder = new StringBuilder();
+                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
+                btFormat.PrintSetup.Printer = printerName;
+                btFormat.PrintSetup.NumberSerializedLabels = 1;
+                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
+                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
+                var fieldLists = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
+
+                foreach (var entry in lists)
+                {
+                    SetTemplateNamedSubStringValueToPart(btFormat, fieldLists, entry);
+                    var s1 = btFormat.PrintOut(false, false);
+                    if (s1 != 0)
+                    {
+                        btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        return "打印结果不正常，打开模板手动打印取消警告窗口";
+                    }
+                    else
+                        WriteRowHashValueLog(entry);
+                }
+                return "打印成功";
+            }
+            catch (Exception ex)
+            {
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (btApp != null)
+                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+            }
+        }
+
+
         private int GetPrintCountAndWriteLog<T>(T item)
         {
             int printCount = 0;
             string batchNo = string.Empty;
-            Byte[] rowHashValue = new byte[16] ;
+            Byte[] rowHashValue = new byte[16];
 
             foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
             {
@@ -636,7 +648,7 @@ namespace Ui.Service
                     printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
                 else if (name == "BatchNo")
                     batchNo = Convert.ToString(propertyInfo.GetValue(item, null));
-                else if(name == "RowHashValue")
+                else if (name == "RowHashValue")
                     rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
             }
             SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintA4Log(PrintBucket,PrintUserID,RowHashValue,BatchNo,PrintTime) values(@PrintBucket,@PrintUserID,@RowHashValue,@BatchNo,@PrintTime) ",
@@ -645,12 +657,26 @@ namespace Ui.Service
             return printCount;
         }
 
-
-        public void PrintTest<T>(string printerName, string templateName, T entry, int count)
+       
+        private void WriteRowHashValueLog<T>(T item)
         {
-            //BarTender.Application btApp = new BarTender.Application();
-            //BarTenderGenericPrint(btApp, printerName, templateName, count);
-            //btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+            int printCount = 1;
+            Byte[] rowHashValue = new byte[16];
+
+            foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
+            {
+                var name = propertyInfo.Name; // 属性名称
+                if (name == "PrintCount")
+                    printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
+                else if (name == "RowHashValue")
+                    rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
+            }
+            SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintRowHashValueLog(RowHashValue,BucketCount,UserId,PrintTime) values(@RowHashValue,@BucketCount,@UserId,@PrintTime) ",
+                new SqlParameter[] { new SqlParameter("@BucketCount", printCount), 
+                    new SqlParameter("@UserId", UserId),
+                    new SqlParameter("@RowHashValue", rowHashValue),
+                    new SqlParameter("@PrintTime", DateTime.Now) });
         }
+
     }
 }

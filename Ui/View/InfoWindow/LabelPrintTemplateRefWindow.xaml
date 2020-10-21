@@ -11,13 +11,13 @@
             <RowDefinition Height="60"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="Transparent" Margin="0 12 2 10">
+        <Grid Grid.Row="0"  Margin="0 12 2 10">
             <ComboBox  Name="CbTableName"  Width="150"  Height="26"  Margin="10 2 0 0"  MaxWidth="300"
                    HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center"  Style="{StaticResource ComboBoxStyle}"
                      SelectionChanged="CbTableName_SelectionChanged"   />
         </Grid>
 
-        <Grid  Grid.Row="1" MinHeight="350" MaxHeight="360" >
+        <Grid  Grid.Row="1" >
             <DataGrid x:Name="DG1" Style="{StaticResource DGStyle}" SelectionChanged="DG1_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn DataGridColumn.Header="系统ID" DataGridBoundColumn.Binding="{Binding ID}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />

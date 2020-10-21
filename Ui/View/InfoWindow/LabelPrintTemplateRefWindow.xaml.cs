@@ -46,8 +46,14 @@ namespace Ui.View
 
         private void CbTableName_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            RefModels = new ObservableCollection<PrintTemplateRefModel>(RefModelss.Where(m => m.ModuleName == this.CbTableName.Text));
-            this.DG1.ItemsSource = RefModels;
+            if (this.IsLoaded && e.AddedItems.Count > 0)
+            {
+                string  name = Convert.ToString( e.AddedItems[0]);
+                RefModels = new ObservableCollection<PrintTemplateRefModel>(RefModelss.Where(m => m.ModuleName == name));
+                this.DG1.ItemsSource = RefModels;
+            }
+
+           
         }
 
         private void DG1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

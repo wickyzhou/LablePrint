@@ -11,7 +11,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -38,12 +38,15 @@
     <Compile Include="CRMApiModel\EntityDescription\EntityDescResultModel.cs" />
     <Compile Include="CRMApiModel\EntityDescription\EntityDescSelectitemModel.cs" />
     <Compile Include="CRMApiModel\QueryXoqlModel\OpportunityAccountQueryXoqlModel.cs" />
+    <Compile Include="CRMApiModel\QueryXoqlModel\SROpportunityQueryXoqlDbModel.cs" />
     <Compile Include="CRMApiModel\QueryXoqlModel\SROpportunityQueryXoqlModel.cs" />
+    <Compile Include="CRMApiModel\QueryXoqlModel\SRUserQueryXoqlModel.cs" />
     <Compile Include="CRMApiModel\Response\QueryXoqlDataResponseModel.cs" />
     <Compile Include="CRMApiModel\Response\QueryXoqlResponseModel.cs" />
     <Compile Include="CRMApiModel\Response\TokenResponseModel.cs" />
     <Compile Include="ImportVerificationModel\ICStockBill1ImportVerificationModel.cs" />
     <Compile Include="ImportVerificationModel\ICStockBill29ImportVerificationModel.cs" />
+    <Compile Include="K3ApiModel\BaseIdNameX.cs" />
     <Compile Include="K3ApiModel\BaseNumberNameModelX.cs" />
     <Compile Include="K3ApiModel\ICStockBill1\PurchaseReceiptMainModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill1\PurchaseReceiptSonModel.cs" />
@@ -51,8 +54,11 @@
     <Compile Include="K3ApiModel\ICStockBill29\MiscellaneousDeliverySonModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill41\TransferMainModel.cs" />
     <Compile Include="K3ApiModel\ICStockBill41\TransferSonModel.cs" />
+    <Compile Include="K3ApiModel\Organization\CustomerUpdateFStatusModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillDataRequestMode.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiCheckBillRequestMode.cs" />
+    <Compile Include="K3ApiModel\Request\K3ApiUpdateDataRequestModel.cs" />
+    <Compile Include="K3ApiModel\Request\K3ApiUpdateRequestModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiCheckBillResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertDataMultiResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertDataResponseModel.cs" />
@@ -68,6 +74,8 @@
     <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionMainModel.cs" />
     <Compile Include="K3ApiModel\PurchaseRequisition\PurchaseRequisitionSonModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiTokenResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiUpdateDataResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiUpdateResponseModel.cs" />
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATMainModel.cs" />
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATSonModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
@@ -79,6 +87,7 @@
     <Compile Include="Model\InventoryBatchNoModel.cs" />
     <Compile Include="Model\ItemProfitAccountingModel.cs" />
     <Compile Include="Model\ItemProfitAccountingMonthlyModel.cs" />
+    <Compile Include="Model\LabelPrintLSModel.cs" />
     <Compile Include="Model\MaterialModel.cs" />
     <Compile Include="Model\OaItemCostModel.cs" />
     <Compile Include="Model\ProductionModel.cs" />

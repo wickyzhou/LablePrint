@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CRMApiModel.QueryXoqlModel
 {
-    public class SROpportunityQueryXoqlModel
+   public class SROpportunityQueryXoqlDbModel
     {
         public int Id { get; set; }
 
@@ -19,21 +19,20 @@ namespace CRMApiModel.QueryXoqlModel
 
         public string SeCaiZhiChi { get; set; }
 
-        public List<string> YeWuZhiChi { get; set; }
+        public string YeWuZhiChi { get; set; }
 
         public string JiFuZhiChi { get; set; }
 
-        public List<string> ChanPinJingLi { get; set; }
+        public string ChanPinJingLi { get; set; }
 
-        public List<string> JiShuZhiChi { get; set; }
+        public string JiShuZhiChi { get; set; }
 
         public string PinZhiZhiChi { get; set; }
 
         public string HouDuanZhiChi { get; set; }
 
-        public string BeginDate { get; set; }
+        public DateTime? BeginDate { get; set; }
 
-        public string EndDate { get; set; }
-
+        public DateTime? EndDate { get; set; }
     }
 }

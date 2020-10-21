@@ -12,5 +12,12 @@ namespace Model
         public string ShortName { get; set; }
 
         public string FullName { get; set; }
+
+        public string FName { get; set; }
+
+        public string FNumber { get; set; }
+
+        public int FStatus { get; set; }
+
     }
 }

@@ -56,7 +56,11 @@ namespace Ui.ViewModel
 
         public DelegateCommand DirectorySelectBaseCommand { get; set; }
 
+        public DelegateCommand DataGridManageBaseCommand { get; set; }
+
+        public DelegateCommand DataGridSaveBaseCommand { get; set; }
         
+        public DelegateCommand QueryBaseCommand { get; set; }
 
         public int UserDataId { get; set; }
 
@@ -68,7 +72,7 @@ namespace Ui.ViewModel
 
         public DelegateCommand PrintBaseCommand { get; set; }
 
-        public DelegateCommand TamplateSelectBaseCommand { get; set; }
+        public DelegateCommand TemplateSelectBaseCommand { get; set; }
 
         public DelegateCommand PrintConfigurationSaveBaseCommand { get; set; }
 

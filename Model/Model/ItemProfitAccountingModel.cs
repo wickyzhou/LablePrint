@@ -11,9 +11,13 @@ namespace Model
 
         public string ItemName { get; set; }
 
-        public double Profit { get; set; }
+        public double? Profit { get; set; }
 
-        public int RecentMonth { get; set; }
+        public int? RecentMonth { get; set; }
+
+        public DateTime? BeginDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
 
     }
 }
