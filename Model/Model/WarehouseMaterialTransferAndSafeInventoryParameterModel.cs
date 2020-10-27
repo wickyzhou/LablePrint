@@ -7,27 +7,27 @@ namespace Model
 {
     public class WarehouseMaterialTransferAndSafeInventoryParameterModel:NotificationObject
     {
-		private DateTime beginDate;
+		private DateTime productionDateBegin;
 
-		public DateTime BeginDate
+		public DateTime ProductionDateBegin
 		{
-			get { return beginDate; }
+			get { return productionDateBegin; }
 			set
 			{
-				beginDate = value;
-				this.RaisePropertyChanged(nameof(BeginDate));
+				productionDateBegin = value;
+				this.RaisePropertyChanged(nameof(ProductionDateBegin));
 			}
 		}
 
-		private DateTime endDate		;
+		private DateTime productionDateEnd;
 
-		public DateTime EndDate
+		public DateTime ProductionDateEndDate
 		{
-			get { return endDate; }
+			get { return productionDateEnd; }
 			set
 			{
-				endDate = value;
-				this.RaisePropertyChanged(nameof(EndDate));
+				productionDateEnd = value;
+				this.RaisePropertyChanged(nameof(ProductionDateEndDate));
 			}
 		}
 

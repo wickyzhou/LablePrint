@@ -5,6 +5,7 @@ using K3ApiModel.Request;
 using K3ApiModel.Response;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using Ui.Helper;
 using Ui.Service;
 

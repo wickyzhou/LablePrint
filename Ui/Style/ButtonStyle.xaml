@@ -395,7 +395,7 @@
     <Style x:Key="BtnInfoStyle" TargetType="Button">
         <Setter Property="MaxWidth" Value="120"/>
         <Setter Property="Margin" Value="8 0"/>
-        <Setter Property="MinWidth" Value="60"/>
+        <Setter Property="MinWidth" Value="80"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Width" Value="auto"/>
         <Setter Property="Padding" Value="8 0"/>

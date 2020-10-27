@@ -70,7 +70,7 @@ namespace Ui.ViewModel.IndexPage
                 // 导出数据
                 if (Directory.Exists(HostConfig.HostValue))
                 {
-                    ExportHelper.ExportDataTableToExcel(_service.GetProfitLoss(GeneralParameter.ParamBeginDate,GeneralParameter.ParamEndDate), HostConfig.HostValue, $"盘盈盘亏");
+                    ExportHelper.ExportDataTableToExcel(_service.GetProfitLoss(GeneralParameter.ParamBeginDate.Value,GeneralParameter.ParamEndDate.Value), HostConfig.HostValue, $"盘盈盘亏");
                     MessageBox.Show("导出成功");
                 }
                 else

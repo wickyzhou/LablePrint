@@ -7,13 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Ui.Command;
 using Ui.Service;
+using Ui.View;
 
 namespace Ui.ViewModel.IndexPage
 {
@@ -28,73 +31,188 @@ namespace Ui.ViewModel.IndexPage
             InitCommand();
         }
 
-        public DelegateCommand BatchNoQtySaveCommand { get; set; }
+
         public DelegateCommand BatchNoQtyK3InsertCommand { get; set; }
         public DelegateCommand NewDataGenerateCommand { get; set; }
-        public DelegateCommand QueryCommand { get; set; }
+
+
+
+
+
+        public DelegateCommand MaterialRequestGenerateCommand { get; set; }
+        public DelegateCommand WorkshopInventoryRefreshCommand { get; set; }
+        public DelegateCommand DeliverCommand { get; set; }
+        public DelegateCommand DeliveryDeleteCommand { get; set; }
+        public DelegateCommand TransferDeleteCommand { get; set; }
         public DelegateCommand SelectionChangedCommand { get; set; }
-        public DelegateCommand DirectorySelectCommand { get; set; }
-        public DelegateCommand ListsExportCommand { get; set; }
-        public DelegateCommand TransferClearCommand { get; set; }
-
-
 
 
         private void InitCommand()
         {
-            NewDataGenerateCommand = new DelegateCommand((obj) =>
+            DirectorySelectBaseCommand = new DelegateCommand((obj) =>
             {
-                var result = _service.GenerationNewData(DateParamter.ParamBeginDate, DateParamter.ParamEndDate);
-                if (result == null)
+                // 导出目录选择
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    InventoryLists.Clear();
-                    _service.GetWarehouseTransferToWorkshopLists(" and Deleted = 0  and QtyTransfering > 0 ").ForEach(x => WarehouseTransferToWorkshopLists.Add(x));
+                    HostConfig.HostValue = fbd.SelectedPath;
+                    var result = CommonService.SaveHostConfig(HostConfig);
+                    if (result)
+                    {
+                        HostConfig = CommonService.GetHostConfig(Menu.ID, HostName, User.ID);
+                    }
                 }
-                else
-                    MessageBox.Show(result.ToString());
             });
 
-            BatchNoQtySaveCommand = new DelegateCommand((obj) =>
+            ExportBaseCommand = new DelegateCommand((obj) =>
             {
-                if (WarehouseTransferToWorkshopSelectedItem.TransferedBillNo.Length > 0)
+                if (Directory.Exists(HostConfig.HostValue))
                 {
-                    MessageBox.Show("已调拨不能执行【发料】操作");
+                    ExportView view = new ExportView(Menu.ID,3);// Menu.ID-SJExportViewTypedColumn中的ViewGroupId; 3 - 第几个radioButton被默认选中从1开始
+                    //Export((type - 导出1 取消0, outputEntity 界面选中的radiobuttion 同上, checkBoxValue 选择分类导出的情况下，选择的类别和, orderedColumns 选择分类导出的情况下，选择类别的顺序列表) 
+                    (view.DataContext as ExportViewModel).Export((type, outputEntity, checkBoxValue, orderedColumns) =>
+                    {
+                        view.Close();
+                        if (type == 1)
+                        {
+                            DataTable datatable = _service.GetSJBatchBomRequestDeliveryExportData(GeneralParameter.ParamBeginDate.Value,string.Join(",", orderedColumns));
+                            if (datatable.Rows.Count > 0)
+                            {
+                                ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(GeneralParameter)
+                                    , outputEntity, orderedColumns,true,"$$$发料单",true);
+                                MessageBox.Show("导出成功");
+                            }
+                            else
+                                MessageBox.Show("没有可导出的数据");
+                           
+                        }
+                    });
+                    view.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("目录不存在，请先选择导出的目录");
+                    DirectorySelectBaseCommand.Execute(null);
+                }
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportBaseCommand", ActionDesc = HostConfig.TypeDesciption + HostConfig.TypeId.ToString(), UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+            });
+
+            MaterialRequestGenerateCommand = new DelegateCommand((obj) =>
+            {
+                _service.SplitBatchBomRequest(GeneralParameter.ParamBeginDate.Value);
+                QueryBaseCommand.Execute(null);
+            });
+
+            WorkshopInventoryRefreshCommand = new DelegateCommand((obj) =>
+            {
+                BatchBomRequestSummaryLists.Clear();
+                _service.RefreshWorkshopInventoryQty(CommonService.GetSqlWhereString(Filter));
+                QueryBaseCommand.Execute(null);
+            });
+
+            QueryBaseCommand = new DelegateCommand((obj) =>
+            {
+                BatchBomRequestSummaryLists.Clear();
+                _service.GetBatchBomRequestDetailSummaryLists(CommonService.GetSqlWhereString(Filter)).ForEach(x=> BatchBomRequestSummaryLists.Add(x));
+            });
+
+            DeliverCommand = new DelegateCommand((obj) =>
+            {
+                if (InventorySelectedItem != null && InventorySelectedItem.TransferingWeight > 0 && InventorySelectedItem.TransferingWeight <= InventorySelectedItem.TotalWeight&& BatchBomRequestSummarySelectedItem != null)
+                {
+                    if (_service.InsertDeliverTransfer(InventorySelectedItem))
+                    {
+                        DeliverTransferLists.Clear();
+                        _service.GetDeliverTransferLists(InventorySelectedItem.MaterialId, InventorySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
+                        BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x=>x.TransferingWeight).Value;
+                    }
+                        
+                }
+                else
+                    MessageBox.Show("发料数量必须大于0且小于总重量");
+            });
+
+            DeliveryDeleteCommand = new DelegateCommand((obj) =>
+            {
+                if (BatchBomRequestSummarySelectedItem == null)
+                {
+                    MessageBox.Show("先选择主表行数据");
+                    return;
+                }
+                  
+                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+                if (selectedLists.Count == 1)
+                {   
+                    var model = selectedLists.First();
+                    if (string.IsNullOrEmpty(model.TransferedBillNo))
+                    {
+                        if (_service.DeleteDeliverTransfer(model.Id))
+                        {
+                            DeliverTransferLists.Clear();
+                            _service.GetDeliverTransferLists(model.MaterialId, model.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
+                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                        }
+                    }
+                    else
+                        MessageBox.Show("已经调拨数据，需要用【删除调拨】功能");
+               
+                }
+                else
+                    MessageBox.Show("每次必须选中且删除一行记录");
+            });
+
+            TransferDeleteCommand = new DelegateCommand((obj) =>
+            {
+                if (BatchBomRequestSummarySelectedItem == null)
+                {
+                    MessageBox.Show("先选择主表行数据");
                     return;
                 }
 
-                StringBuilder stringBuilder = new StringBuilder();
-                foreach (var item in InventoryLists)
+                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+                if (selectedLists.Count == 1)
                 {
-                    if (item.TransferWeight != null && item.TransferWeight.Value > 0)
-                        stringBuilder.Append($", {item.BatchNo}({item.TransferWeight.Value})");
+                    var model = selectedLists.First();
+                    if (!_service.ExistsK3Bill(model.TransferedBillNo))
+                    {
+                        if (_service.DeleteDeliverTransfer(model.TransferedBillNo))
+                        {
+                            DeliverTransferLists.Clear();
+                            _service.GetDeliverTransferLists(model.MaterialId, model.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
+                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                            BatchBomRequestSummarySelectedItem.QtyTransfered = DeliverTransferLists.Where(x => !string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                        }
+                    }
+                    else
+                        MessageBox.Show("请先将选择的调拨单号，在K3里面删除");
                 }
-                if (stringBuilder.Length > 0)
-                {
-                    string s = stringBuilder.ToString().Substring(2);
-                    if (_service.Update(WarehouseTransferToWorkshopSelectedItem.Id, s))
-                        WarehouseTransferToWorkshopSelectedItem.FBatchNoAndActualQty = s;
-                }
-
+                else
+                    MessageBox.Show("每次必须选中且删除一行记录");
 
             });
 
             SelectionChangedCommand = new DelegateCommand((obj) =>
             {
-                if (WarehouseTransferToWorkshopSelectedItem == null)
+                if (BatchBomRequestSummarySelectedItem == null)
                     return;
                 InventoryLists.Clear();
-                _service.GetInventoryBatchNoLists(WarehouseTransferToWorkshopSelectedItem.FItemId).ForEach(x => InventoryLists.Add(x));
+                _service.GetGetMaterialTimelyInventoryLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => InventoryLists.Add(x));
+                DeliverTransferLists.Clear();
+                _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
             });
 
             BatchNoQtyK3InsertCommand = new DelegateCommand((obj) =>
             {
-                if (WarehouseTransferToWorkshopSelectedItem.FBatchNoAndActualQty.Length < 3)
+                if (BatchBomRequestSummarySelectedItem == null)
                 {
-                    MessageBox.Show("请先执行【发料】操作");
+                    MessageBox.Show("先选择主表行数据");
                     return;
                 }
 
-                if (WarehouseTransferToWorkshopSelectedItem.TransferedBillNo.Length > 0)
+                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+
+                if (selectedLists.Where(x=>!string.IsNullOrEmpty(x.TransferedBillNo)).Count()>0)
                 {
                     MessageBox.Show("不能重复调拨");
                     return;
@@ -111,32 +229,24 @@ namespace Ui.ViewModel.IndexPage
                 };
 
                 List<TransferSonModel> sons = new List<TransferSonModel>();
-                double totalQty = 0;
-                foreach (InventoryBatchNoModel item in InventoryLists)
+          
+                foreach (MaterialTimelyInventoryModel item in selectedLists)
                 {
-                    if (item.TransferWeight == null || item.TransferWeight.Value <= 0)
-                        continue;
-
                     sons.Add(new TransferSonModel
                     {
-                        FItemID = new BaseNumberNameModelX { FNumber = WarehouseTransferToWorkshopSelectedItem.FNumber, FName = WarehouseTransferToWorkshopSelectedItem.FItemName },// K3ApiFKService.GetMaterialById
+                        FItemID = new BaseNumberNameModelX { FNumber = BatchBomRequestSummarySelectedItem.MaterialNumber, FName = BatchBomRequestSummarySelectedItem.MaterialName },// K3ApiFKService.GetMaterialById
                         FChkPassItem = new BaseNumberNameModelX { FNumber = "Y", FName = "是" },
                         FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
-                        FDCStockID1 = K3ApiFKService.GetStockById(WarehouseTransferToWorkshopSelectedItem.FStockID),
+                        FDCStockID1 = K3ApiFKService.GetStockById(BatchBomRequestSummarySelectedItem.StockId),
                         FSCStockID1 = new BaseNumberNameModelX { FNumber = item.StockNumber, FName = item.StockName },
                         FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
-                        FAuxQty = item.TransferWeight.Value,
-                        FQty = item.TransferWeight.Value,
+                        FAuxQty = item.TransferingWeight.Value,
+                        FQty = item.TransferingWeight.Value,
                         FBatchNo = item.BatchNo,
                     });
-                    totalQty += item.TransferWeight.Value;
                 }
 
-                if (totalQty == 0)
-                {
-                    MessageBox.Show("调拨明细重量均为0，无法调拨");
-                    return;
-                }
+
                 var requestModel = new K3ApiInsertRequestModel<TransferMainModel, TransferSonModel>()
                 {
                     Data = new K3ApiInsertDataRequestModel<TransferMainModel, TransferSonModel>()
@@ -150,149 +260,105 @@ namespace Ui.ViewModel.IndexPage
                 K3ApiInsertResponseModel response = K3ApiService.Insert("Transfer", postJson);
                 if (response.StatusCode == 200)
                 {
-                    if (_service.UpdateK3Bill(WarehouseTransferToWorkshopSelectedItem.Id, response.Data.BillNo, totalQty))
+                    double totalQty = selectedLists.Sum(x => x.TransferingWeight).Value;
+                    string ids = string.Join(",", selectedLists.Select(x=>x.Id));
+                    if (_service.UpdateBillNo(ids, totalQty,response.Data.BillNo))
                     {
-                        WarehouseTransferToWorkshopSelectedItem.TransferedBillNo = response.Data.BillNo;
-                        WarehouseTransferToWorkshopSelectedItem.QtyTransfered = totalQty;
-                        WarehouseTransferToWorkshopSelectedItem.TransferTime = DateTime.Now;
+                        DeliverTransferLists.Clear();
+                        _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
+                        BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                        BatchBomRequestSummarySelectedItem.QtyTransfered = DeliverTransferLists.Where(x => !string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
                     }
                 }
                 else
-                {
                     MessageBox.Show($"{response.Message}");
-                    return;
-                }
-            });
-
-
-
-            QueryCommand = new DelegateCommand((obj) =>
-            {
-                StringBuilder filters = new StringBuilder($" and CreateTime >= '{QueryParameter.BeginDate.Date}' and CreateTime <= '{QueryParameter.EndDate.AddDays(1).Date}' ");
-                string typeName = QueryParameter.BatchTypeCode.Replace("，", ",");
-                if (typeName.IndexOf(",") > 0)
-                {
-                    string orfield = string.Empty;
-                    foreach (var item in typeName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        orfield += $"or BatchTypeCode like '%{item}%' ";
-                    }
-                    orfield = orfield.Length > 2 ? orfield.Substring(2) : " 1 = 1 ";
-                    filters.Append($" and ( {orfield}  )");
-                }
-                else
-                    filters.Append($" and BatchTypeCode like '%{typeName}%' ");
-
-                filters.Append(QueryParameter.IsTransfering ? " and QtyTransfering > 0 " : "");
-                filters.Append(QueryParameter.IsTransfered ? " and QtyTransfered > 0 " : "");
-                filters.Append(QueryParameter.IsDeleted ? "" : " and Deleted = 0 ");
-
-                WarehouseTransferToWorkshopLists.Clear();
-                _service.GetWarehouseTransferToWorkshopLists(filters.ToString()).ForEach(x => WarehouseTransferToWorkshopLists.Add(x));
-            });
-
-            DirectorySelectCommand = new DelegateCommand((obj) =>
-            {
-                // 导出目录选择
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    HostConfig.HostValue = fbd.SelectedPath;
-                    var result = CommonService.SaveHostConfig(HostConfig);
-                    if (result)
-                    {
-                        HostConfig = CommonService.GetHostConfig(6, HostName, User.ID);
-                    }
-                }
-            });
-
-            ListsExportCommand = new DelegateCommand((obj) =>
-            {
-                var s = obj as DataTable;
-                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ListsExportCommand", ActionDesc = "导出发料安全库存", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
-                //HostConfig.HostValue = "";
-                //AddAsync(null);
-                //DateParamter.ParamEndDate = new DateTime (2020, 8, 8);
-            });
-
-
-            TransferClearCommand = new DelegateCommand((obj) =>
-            {
-                if (WarehouseTransferToWorkshopSelectedItem == null)
-                    return;
-
-                if (_service.DeleteTransferBillNo(WarehouseTransferToWorkshopSelectedItem.Id))
-                {
-                    WarehouseTransferToWorkshopSelectedItem.QtyTransfered = null;
-                    WarehouseTransferToWorkshopSelectedItem.TransferedBillNo = null;
-                    WarehouseTransferToWorkshopSelectedItem.TransferTime = null;
-                    WarehouseTransferToWorkshopSelectedItem.FBatchNoAndActualQty = null;
-                }
-            });
-        }
-
-
-        public Task AddAsync(ActionOperationLogModel model)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    Thread.Sleep(1000);
-                    HostConfig.HostValue += i.ToString();
-                }
 
             });
         }
-
-        public void Add(ActionOperationLogModel model)
-        {
-            Task.Factory.StartNew(() =>
-           {
-               for (int i = 0; i < 10; i++)
-               {
-                   Thread.Sleep(1000);
-                   HostConfig.HostValue += i.ToString();
-               }
-
-           });
-        }
-
-
-
 
         private void InitData()
         {
-            DateParamter = new GeneralParameterModel { ParamBeginDate = DateTime.Now.AddDays(-3).Date, ParamEndDate = DateTime.Now.AddDays(1).Date };
+            GeneralParameter = new GeneralParameterModel { ParamBeginDate = DateTime.Now.Date };// ProductionDate;
 
-            QueryParameter = new WarehouseMaterialTransferAndSafeInventoryParameterModel()
+            Filter = new BatchBomRequestQueryParameterModel
             {
-                BeginDate = DateTime.Now.AddDays(-7).Date,
-                EndDate = DateTime.Now.AddDays(1).Date,
-                IsTransfering = true,
-                BatchTypeName = "",
-                IsDeleted = false,
-                IsTransfered = false,
-                BatchTypeCode = ""
+                ProductionDateBegin = DateTime.Now.Date,
+                ProductionDateEnd = DateTime.Now.Date
             };
-            WarehouseTransferToWorkshopLists = new ObservableCollection<WarehouseTransferToWorkshopModel>();
-            InventoryLists = new ObservableCollection<InventoryBatchNoModel>();
 
+            InventoryLists = new ObservableCollection<MaterialTimelyInventoryModel>();
+            BatchBomRequestSummaryLists = new ObservableCollection<BatchBomRequestSummaryModel>();
+            DeliverTransferLists = new ObservableCollection<MaterialTimelyInventoryModel>();
             Task.Factory.StartNew(() =>
             {
                 UIExecute.RunAsync(() =>
                 {
-                    HostConfig = CommonService.GetHostConfig(6, HostName, User.ID) ?? new HostConfigModel() { TypeId = 6, Host = HostName, UserId = User.ID, TypeDesciption = "发料安全库存" };
+                    HostConfig = CommonService.GetHostConfig(Menu.ID, HostName, User.ID) ?? new HostConfigModel() { TypeId = Menu.ID, Host = HostName, UserId = User.ID, TypeDesciption = Menu.TB2Text };
+                    QueryBaseCommand.Execute(null);
+                    
                 });
             });
         }
 
 
+        private GeneralParameterModel generalParameter;
 
-        private ObservableCollection<InventoryBatchNoModel> inventoryLists;
+        public GeneralParameterModel GeneralParameter
+        {
+            get { return generalParameter; }
+            set
+            {
+                generalParameter = value;
+                this.RaisePropertyChanged(nameof(GeneralParameter));
+            }
+        }
 
-        public ObservableCollection<InventoryBatchNoModel> InventoryLists
+
+
+
+
+        private BatchBomRequestQueryParameterModel queryParameter;
+
+        public BatchBomRequestQueryParameterModel Filter
+        {
+            get { return queryParameter; }
+            set
+            {
+                queryParameter = value;
+                this.RaisePropertyChanged(nameof(Filter));
+            }
+        }
+
+
+        private ObservableCollection<BatchBomRequestSummaryModel> batchBomRequestSummaryLists;
+
+        public ObservableCollection<BatchBomRequestSummaryModel> BatchBomRequestSummaryLists
+        {
+            get { return batchBomRequestSummaryLists; }
+            set
+            {
+                batchBomRequestSummaryLists = value;
+                this.RaisePropertyChanged(nameof(BatchBomRequestSummaryLists));
+            }
+        }
+
+        private BatchBomRequestSummaryModel batchBomRequestSummarySelectedItem;
+
+        public BatchBomRequestSummaryModel BatchBomRequestSummarySelectedItem
+        {
+            get { return batchBomRequestSummarySelectedItem; }
+            set
+            {
+                batchBomRequestSummarySelectedItem = value;
+                this.RaisePropertyChanged(nameof(BatchBomRequestSummarySelectedItem));
+            }
+        }
+
+
+
+        private ObservableCollection<MaterialTimelyInventoryModel> inventoryLists;
+
+        public ObservableCollection<MaterialTimelyInventoryModel> InventoryLists
         {
             get { return inventoryLists; }
             set
@@ -302,51 +368,27 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-        private ObservableCollection<WarehouseTransferToWorkshopModel> warehouseTransferToWorkshopLists;
+        private MaterialTimelyInventoryModel inventorySelectedItem;
 
-        public ObservableCollection<WarehouseTransferToWorkshopModel> WarehouseTransferToWorkshopLists
+        public MaterialTimelyInventoryModel InventorySelectedItem
         {
-            get { return warehouseTransferToWorkshopLists; }
+            get { return inventorySelectedItem; }
             set
             {
-                warehouseTransferToWorkshopLists = value;
-                this.RaisePropertyChanged(nameof(WarehouseTransferToWorkshopLists));
+                inventorySelectedItem = value;
+                this.RaisePropertyChanged(nameof(InventorySelectedItem));
             }
         }
 
-        private WarehouseTransferToWorkshopModel warehouseTransferToWorkshopSelectedItem;
+        private ObservableCollection<MaterialTimelyInventoryModel> deliverTransferLists;
 
-        public WarehouseTransferToWorkshopModel WarehouseTransferToWorkshopSelectedItem
+        public ObservableCollection<MaterialTimelyInventoryModel> DeliverTransferLists
         {
-            get { return warehouseTransferToWorkshopSelectedItem; }
+            get { return deliverTransferLists; }
             set
             {
-                warehouseTransferToWorkshopSelectedItem = value;
-                this.RaisePropertyChanged(nameof(WarehouseTransferToWorkshopSelectedItem));
-            }
-        }
-
-        private WarehouseMaterialTransferAndSafeInventoryParameterModel parameterModel;
-
-        public WarehouseMaterialTransferAndSafeInventoryParameterModel QueryParameter
-        {
-            get { return parameterModel; }
-            set
-            {
-                parameterModel = value;
-                this.RaisePropertyChanged(nameof(QueryParameter));
-            }
-        }
-
-        private GeneralParameterModel dateParamter;
-
-        public GeneralParameterModel DateParamter
-        {
-            get { return dateParamter; }
-            set
-            {
-                dateParamter = value;
-                this.RaisePropertyChanged(nameof(DateParamter));
+                deliverTransferLists = value;
+                this.RaisePropertyChanged(nameof(DeliverTransferLists));
             }
         }
 

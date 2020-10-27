@@ -11,21 +11,28 @@ namespace Ui.ViewModel
 {
     public class ExportViewModel : NotificationObject
     {
-        public ExportViewModel()
+        public ExportViewModel(int viewGroupId,int defaultRadio)
         {
+
+            DynamicVisibility = defaultRadio == 3 ? Visibility.Visible : Visibility.Hidden;
+            Entity = defaultRadio;
+
             SaveCommand = new DelegateCommand(Save);
             ExitCommand = new DelegateCommand(Exit);
             DynamicGrid1ShowCommand = new DelegateCommand((obj) =>
             {
                     DynamicVisibility = Visibility.Hidden;
+                    Entity = 1;
             });
             DynamicGrid2ShowCommand = new DelegateCommand((obj) =>
             {
                     DynamicVisibility = Visibility.Hidden;
+                Entity = 2;
             });
             DynamicGrid3ShowCommand = new DelegateCommand((obj) =>
             {
                     DynamicVisibility = Visibility.Visible;
+                Entity = 3;
             });
 
             CheckBoxSelectCommand = new DelegateCommand((x)=> 
@@ -40,9 +47,11 @@ namespace Ui.ViewModel
                 //MessageBox.Show($"{CheckBoxSelectedValue} \t {string.Join(",",CheckBoxColumns)}");
             });
 
-            var typedColumnModel = new CommonService().GetExportViewTypedColumnWithCheckBox(1).Where(m => m.IsChecked).FirstOrDefault();
+            var typedColumnModel = new CommonService().GetExportViewTypedColumnWithCheckBox(viewGroupId).Where(m => m.IsChecked).FirstOrDefault();
             var firstColumn = typedColumnModel==null?"": typedColumnModel.TypedColumnName;
             CheckBoxColumns = new List<string>() { firstColumn };
+
+
         }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand ExitCommand { get; set; }
@@ -55,7 +64,7 @@ namespace Ui.ViewModel
         public List<string> CheckBoxColumns { get; set; } 
 
 
-        private int  checkBoxSelectedValue=1;
+        private int  checkBoxSelectedValue = 1;
 
         public int CheckBoxSelectedValue
         {
@@ -69,11 +78,12 @@ namespace Ui.ViewModel
 
 
 
-        private Visibility  dynamicVisibility = Visibility.Hidden;
+        private Visibility  dynamicVisibility;
 
         public Visibility DynamicVisibility
         {
-            get { return dynamicVisibility; }
+            get { 
+                return dynamicVisibility; }
             set
             {
                 dynamicVisibility = value;
@@ -97,6 +107,12 @@ namespace Ui.ViewModel
             CallBack?.Invoke(0, 0,0,null);
         }
 
+        /// <summary>
+        /// 第一个参数：保存或者取消，默认都是传1； 
+        /// 第二个参数：选中的是哪个radiobutton， 
+        /// 第三个参数：基于选中分类导出的基础上， 选择的是哪几个导出类别
+        /// 第四个参数：选择类别时选中选择框的顺序
+        /// </summary>
         public Action<int, int, int,List<string>> CallBack { get; set; }
 
         private int entity ;
@@ -111,9 +127,8 @@ namespace Ui.ViewModel
             }
         }
 
-        public void Export(int entity, Action<int, int,int, List<string>> callBack)
+        public void Export( Action<int, int,int, List<string>> callBack)
         {   
-            Entity = entity;
             CallBack = callBack;
         }
     }

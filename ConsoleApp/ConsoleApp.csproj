@@ -61,8 +61,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{BF24549D-B9FF-476B-9F1A-31C4A5CAFA1C}</Project>
+      <Project>{bf24549d-b9ff-476b-9f1a-31c4a5cafa1c}</Project>
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
@@ -70,16 +77,9 @@
       <Name>Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ui\Ui.csproj">
-      <Project>{FED6F97D-83D3-41FB-B569-A1A00D072939}</Project>
+      <Project>{fed6f97d-83d3-41fb-b569-a1a00d072939}</Project>
       <Name>Ui</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

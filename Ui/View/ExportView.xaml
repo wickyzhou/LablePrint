@@ -35,16 +35,8 @@
                          Command="{Binding DynamicGrid3ShowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsChecked}"
                          >分类汇总</RadioButton>
         </Grid>
-        
+
         <Grid Grid.Row="2" Name="DynamicExportParamterGrid" Visibility="{Binding DynamicVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="0 5 0 0">
-            <!--<Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="1" Content="物流类型" Margin="5" VerticalContentAlignment="Center" IsChecked="True" FontSize="11" FontFamily="微软雅黑" Command="{Binding MyCommand}"/>
-            <CheckBox Grid.Column="2" Content="用户" Margin="5" VerticalContentAlignment="Center"  FontSize="11" FontFamily="微软雅黑"/>-->
         </Grid>
         
         <Grid Grid.Row="3">

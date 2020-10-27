@@ -7,9 +7,9 @@ namespace Model
 {
     public class GeneralParameterModel:NotificationObject
     {
-		private DateTime paramBeginDate;
+		private DateTime? paramBeginDate;
 
-		public DateTime ParamBeginDate
+		public DateTime? ParamBeginDate
 		{
 			get { return paramBeginDate; }
 			set
@@ -19,9 +19,9 @@ namespace Model
 			}
 		}
 
-		private DateTime paramEndDate;
+		private DateTime? paramEndDate;
 
-		public DateTime ParamEndDate
+		public DateTime? ParamEndDate
 		{
 			get { return paramEndDate; }
 			set
@@ -31,9 +31,9 @@ namespace Model
 			}
 		}
 
-		private int paramInt1;
+		private int? paramInt1;
 
-		public int ParamInt1
+		public int? ParamInt1
 		{
 			get { return paramInt1; }
 			set
@@ -43,33 +43,34 @@ namespace Model
 			}
 		}
 
-		private int paramInt2;
+		private int? paramInt2;
 
-		public int ParamInt2
+		public int? ParamInt2
 		{
 			get { return paramInt2; }
 			set
 			{
-				paramInt1 = value;
+				paramInt2 = value;
 				this.RaisePropertyChanged(nameof(ParamInt2));
 			}
 		}
 
-		private int paramInt3;
+		private int? paramInt3;
 
-		public int ParamInt3
+		public int? ParamInt3
 		{
 			get { return paramInt3; }
 			set
 			{
-				paramInt1 = value;
+				paramInt3 = value;
 				this.RaisePropertyChanged(nameof(ParamInt3));
 			}
 		}
 
-		private double paramDouble1;
 
-		public double ParamDouble1
+		private double? paramDouble1;
+
+		public double? ParamDouble1
 		{
 			get { return paramDouble1; }
 			set
@@ -79,9 +80,9 @@ namespace Model
 			}
 		}
 
-		private double paramDouble2;
+		private double? paramDouble2;
 
-		public double ParamDouble2
+		public double? ParamDouble2
 		{
 			get { return paramDouble2; }
 			set
@@ -91,22 +92,23 @@ namespace Model
 			}
 		}
 
-		private double paramDouble3;
+		private double? paramDouble3;
 
-		public double ParamDouble3
+		public double? ParamDouble3
 		{
 			get { return paramDouble3; }
 			set
 			{
-				paramDouble1 = value;
+				paramDouble3 = value;
 				this.RaisePropertyChanged(nameof(ParamDouble3));
 			}
 		}
 
 
-		private DateTime paramDateTime1;	
 
-		public DateTime ParamDateTime1	
+		private DateTime? paramDateTime1;	
+
+		public DateTime? ParamDateTime1	
 		{
 			get { return paramDateTime1; }
 			set
@@ -116,9 +118,9 @@ namespace Model
 			}
 		}
 
-		private DateTime paramDateTime2;
+		private DateTime? paramDateTime2;
 
-		public DateTime ParamDateTime2
+		public DateTime? ParamDateTime2
 		{
 			get { return paramDateTime2; }
 			set
@@ -128,9 +130,9 @@ namespace Model
 			}
 		}
 
-		private DateTime paramDateTime3;
+		private DateTime? paramDateTime3;
 
-		public DateTime ParamDateTime3
+		public DateTime? ParamDateTime3
 		{
 			get { return paramDateTime3; }
 			set

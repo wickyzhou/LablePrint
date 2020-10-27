@@ -127,8 +127,8 @@ namespace Ui.ViewModel
             {
                 if (Directory.Exists(HostConfig.HostValue))
                 {
-                    ExportView view = new ExportView(1);
-                    (view.DataContext as ExportViewModel).Export(1, (type, outputEntity, checkBoxValue, orderedColumns) =>
+                    ExportView view = new ExportView(1,1);
+                    (view.DataContext as ExportViewModel).Export( (type, outputEntity, checkBoxValue, orderedColumns) =>
                     {
                         view.Close();
                         if (type == 1)

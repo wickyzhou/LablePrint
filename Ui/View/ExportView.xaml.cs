@@ -26,11 +26,11 @@ namespace Ui.View
 
         private RoutedCommand cmdClear = new RoutedCommand("Clear", typeof(ExportView));
         private readonly int _dataGridTypeId;
-        public ExportView(int dataGridTypeId)
+        public ExportView(int dataGridTypeId, int defaultRadio)
         {
             _dataGridTypeId = dataGridTypeId;
             InitializeComponent();
-            this.DataContext = new ExportViewModel();
+            this.DataContext = new ExportViewModel(_dataGridTypeId, defaultRadio);
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };

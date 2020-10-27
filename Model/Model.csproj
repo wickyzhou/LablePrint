@@ -21,7 +21,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -79,12 +79,16 @@
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATMainModel.cs" />
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATSonModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
+    <Compile Include="Model\BatchBomRequestDeliveryExportModel.cs" />
+    <Compile Include="Model\BatchBomRequestDetailModel.cs" />
+    <Compile Include="Model\BatchBomRequestSummaryModel.cs" />
+    <Compile Include="Model\BatchBomRequestQueryParameterModel.cs" />
     <Compile Include="Model\BatchTypeModel.cs" />
     <Compile Include="Model\CaseModel.cs" />
     <Compile Include="Model\ComboBoxSearchModel.cs" />
     <Compile Include="Model\DataGridColumnHeaderUserCustomModel.cs" />
     <Compile Include="Model\ImportTemplateExcelHeaderFieldMappingModel.cs" />
-    <Compile Include="Model\InventoryBatchNoModel.cs" />
+    <Compile Include="Model\MaterialTimelyInventoryModel.cs" />
     <Compile Include="Model\ItemProfitAccountingModel.cs" />
     <Compile Include="Model\ItemProfitAccountingMonthlyModel.cs" />
     <Compile Include="Model\LabelPrintLSModel.cs" />
