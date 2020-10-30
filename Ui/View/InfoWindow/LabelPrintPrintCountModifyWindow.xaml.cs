@@ -33,7 +33,7 @@ namespace Ui.View
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             this.Loaded += Window_Loaded;
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)

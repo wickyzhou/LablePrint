@@ -80,10 +80,13 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBlock  Grid.Column="0"   Style="{StaticResource TextBlockStyle15}" Text="样油明细"/>
-                        <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="打印选择项" Command="{Binding OilSampleEntryMergePrintCommand}" Margin="5 0"/>
+                        <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="打印选择项" Command="{Binding OilSampleEntryMergePrintCommand}" Margin="5 0" Height="30"/>
                         <Button Grid.Column="2" Style="{StaticResource BtnThemeStyle}" Content="顺序打印" Command="{Binding OilSampleEntryOrderPrintCommand}" Margin="20 0" Height="30" Width="80"/>
+
+                        <Button Grid.Column="3" Style="{StaticResource BtnInfoStyle}" Content="A4打印(新)" Command="{Binding A4PrintCommand}" Margin="50 0" Height="30" Width="80" Visibility="Collapsed"/>
                         
                         <!--<TextBlock Grid.Column="2" Text="{Binding PrintTotalNum,StringFormat=合计：\{0\}}" Style="{StaticResource TextBlockStyle5}"/>-->
                     </Grid>
@@ -192,23 +195,6 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             <DataGridTextColumn DataGridColumn.Header="已打印总数" DataGridBoundColumn.Binding="{Binding PrintedCount}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" Foreground="Chocolate"/>
                             <DataGridTextColumn DataGridColumn.Header="本次张数" DataGridBoundColumn.Binding="{Binding PrintCount}" Width="60" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="打印时间" DataGridBoundColumn.Binding="{Binding CreateTime,StringFormat=dd-HH:mm:ss}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <!--<DataGridTemplateColumn Width="80"   HeaderStyle="{StaticResource DGColumnHeader}">
-                                <DataGridColumn.HeaderTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock Text="操作"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridColumn.HeaderTemplate>
-
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button Command="{Binding OilSampleFlowLogUpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Content="修改" Margin="5 0" Width="60" Style="{StaticResource BtnWarningStyle}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox.Content>
@@ -219,10 +205,11 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15"/>
-                <RowDefinition Height="220"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="220"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="180"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
 
             <GroupBox Grid.Row="1" Background="LightYellow" Margin="20"  Padding="10" BorderBrush="MediumSeaGreen" >
@@ -263,12 +250,6 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 Command="{Binding ExpressTemplateSelectCommand}" />
                             <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}" 
                               Text="{Binding ExpressPrintConfig.TemplateSelectedItem.TemplateFileName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ExpressTemplates}"  SelectedValuePath="TemplatePerPage" DisplayMemberPath="TemplateFileName" SelectedItem="{Binding ExpressPrintConfig.TemplateSelectedItem}">
-                                <!--<i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding TemplateSelectionChangedCommand}"
-CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}},Path=SelectedItem}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
                             </ComboBox>
                         </Grid>
 
@@ -327,24 +308,57 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </ComboBox>
                         </Grid>
 
-                        <!--<Grid  Grid.Row="2" Background="AliceBlue">
+  
+                    </Grid>
+                </GroupBox.Content>
+            </GroupBox>
+
+            <GroupBox Grid.Row="5"  Margin="5"  Padding="5" BorderBrush="MediumSeaGreen" Visibility="Collapsed">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock  Grid.Column="1" Text="A4纸打印参数(新未使用)" Style="{StaticResource TextBlockStyle15}"/>
+                        <Button  Grid.Column="2" Content="保存配置" Style="{StaticResource BtnSuccessStyle}" VerticalAlignment="Center" Margin="10 0 0 0"  ToolTip="保存打印配置参数，下次开启时就自动带出此次配置" Height="30" Command="{Binding PrintConfigurationSaveBaseCommand}"/>
+                    </Grid>
+                </GroupBox.Header>
+                <GroupBox.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="Demo3" Grid.Row="0" Grid.Column="0" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage3BackgroundConverter} }" 
-                                           TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                            <TextBlock Text="Demo1" Grid.Row="0" Grid.Column="1" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage1BackgroundConverter}}" 
-                                           TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                            <TextBlock Text="Demo4" Grid.Row="1" Grid.Column="0" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage4BackgroundConverter} }" 
-                                           TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                            <TextBlock Text="Demo2" Grid.Row="1" Grid.Column="1" Background="{Binding OilSampleTemplateSelectedItem.TemplatePerPage,Converter={c:OilSampleTemplatePage2BackgroundConverter} }" 
-                                           TextAlignment="Center" Foreground="Snow" Padding="8"/>
-                        </Grid>-->
+                            <TextBlock  Grid.Column="0" Text="打印机名" Style="{StaticResource TextBlockStyle15}" />
+
+                            <ComboBox  Grid.Row="0" Grid.Column="2" 
+                                       Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding ComputerPrinters,UpdateSourceTrigger=PropertyChanged}"
+                                       Text="{Binding PrintConfiguration.PrinterName}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button  Grid.Column="0" Content="模板目录" Style="{StaticResource BtnWarningStyle}" ToolTip="点击选择模板所在文件夹" 
+                                Command="{Binding TemplateSelectBaseCommand}" />
+
+                            <ComboBox  Grid.Row="0" Grid.Column="2"  Grid.ColumnSpan="5"  Style="{StaticResource ComboBoxStyleAuto}"
+                                 ItemsSource="{Binding PirntTemplates,UpdateSourceTrigger=PropertyChanged}"  
+                                 SelectedValuePath="TemplateFullName" 
+                                 DisplayMemberPath="TemplateDisplayName" 
+                                 SelectedItem="{Binding PrintConfiguration.TemplateSelectedItem,UpdateSourceTrigger=PropertyChanged}">
+                            </ComboBox>
+                        </Grid>
                     </Grid>
                 </GroupBox.Content>
             </GroupBox>

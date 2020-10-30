@@ -32,7 +32,7 @@ namespace Ui.Admin.View
                 else if (WindowState == WindowState.Maximized)
                     this.WindowState = WindowState.Normal;
             }));
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
         }
     }
 }

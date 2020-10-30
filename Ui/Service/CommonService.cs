@@ -32,6 +32,7 @@ namespace Ui.Service
         public IList<EnumModel> GetEnumLists(int groupSeq)
         {
             string sql = @"select * from SJEnumTable where GroupSeq=@GroupSeq";
+            //System.Threading.Thread.Sleep(3000);
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<EnumModel>(sql, new { GroupSeq = groupSeq }).ToList();
@@ -552,6 +553,15 @@ namespace Ui.Service
                  }
              }
              );
+        }
+
+        public List<DeliveryStockModel> GetDeliveryStock()
+        {
+            string sql = @" select * from SJDeliveryStock ;";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<DeliveryStockModel>(sql).ToList();
+            }
         }
 
     }

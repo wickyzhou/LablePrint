@@ -1,27 +1,20 @@
-﻿using Common;
-using Model;
-using System;
+﻿using Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.Caching;
-using System.Text;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Ui.Command;
+using Ui.Helper;
 using Ui.Service;
 using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel.IndexPage
 {
-    public class OilSamplePrintViewModel : NotificationObject
+    public class OilSamplePrintViewModel : BaseViewModel
     {
         private static readonly OilSampleService _oilSampleService = new OilSampleService();
-        private static readonly CommonService _commonService = new CommonService();
-        private static readonly UserModel _user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
-        private static readonly string _hostName = Dns.GetHostName();
 
         public OilSamplePrintViewModel()
         {
@@ -64,22 +57,93 @@ namespace Ui.ViewModel.IndexPage
             OilSampleEntryOrderPrintCommand = new DelegateCommand(OrderPrintOilSampleEntry);
             DealingFlowShowCommand = new DelegateCommand(ShowDealingFlow);
             DealedFlowShowCommand = new DelegateCommand(ShowDealedFlow);
+
+            A4PrintCommand = new DelegateCommand((obj) =>
+            {
+                int printCount = 0;
+                int previousCounts = 0;
+          
+                string msg = PrintHelper.VerifyPrintConfiguration(PrintConfiguration);
+                if (string.IsNullOrEmpty(msg))
+                {
+                    if (OilSampleEntries.Count > 0)
+                    {
+                        int templatePerPage = PrintConfiguration.TemplateSelectedItem.TemplatePerPage;
+                        var data = new ObservableCollection<OilSampleEntryModel>();
+                        foreach (var item in OilSampleEntries)
+                        {
+                            if (item.CurrencyPrintCount > 0)
+                            {
+
+                                printCount += item.CurrencyPrintCount;
+
+                                if (printCount >= templatePerPage)
+                                {
+                                    item.CurrencyPrintCount = templatePerPage - previousCounts;
+                                    printCount = templatePerPage;
+                                    data.Add(item);
+                                    break;
+                                }
+                                else
+                                {
+                                    previousCounts += item.CurrencyPrintCount;
+                                    data.Add(item);
+                                }
+                            }
+                        }
+                        if (printCount == 0 || printCount > templatePerPage)
+                        {
+                            MessageBox.Show("本流程明细已经全部打印完毕");
+                            return;
+                        }
+                        //string result = new PrintService().BarTenderPrintA4(OilSampleEntries, PrintConfiguration, printCount);
+                        //if (string.IsNullOrEmpty(result))
+                        //{
+                        //    // 重新加载明细
+                        //    OilSampleEntries.Clear();
+                        //    OilSampleFlowLogs.Clear();
+                        //    _oilSampleService.GetOilSampleEntries(OilSampleFlowSelectedItem.Id).ToList().ForEach(x => OilSampleEntries.Add(x));
+                        //    _oilSampleService.GetOilSampleFlowLog().ToList().ForEach(x => OilSampleFlowLogs.Add(x));
+                        //}
+                        //else 
+                        //    MessageBox.Show(result);
+                    }
+                    else
+                        MessageBox.Show("先选择行数据，【CTRL】或【SHFIT】 多选行");
+                }
+                else
+                    MessageBox.Show(msg);
+            });
+
+            PrintConfigurationSaveBaseCommand = new DelegateCommand((obj) =>
+            {
+                string msg = PrintHelper.VerifyPrintConfiguration(PrintConfiguration);
+                if (string.IsNullOrEmpty(msg))
+                {
+                    int id = CommonService.SaveBarTenderPrintConfigXX(PrintConfiguration);
+                    if (id > 0)
+                    {
+                        PrintConfiguration.Id = id;
+                        MessageBox.Show("保存成功");
+                    }
+
+                    else
+                        MessageBox.Show("保存失败,请联系管理员");
+                }
+                else
+                    MessageBox.Show(msg);
+
+            });
+
+            TemplateSelectBaseCommand = new DelegateCommand((obj) =>
+            {
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    PirntTemplates = PrintHelper.GetTenderPrintA4Templates(fbd.SelectedPath);
+                }
+            });
         }
-
-
-
-        private void ShowDealedFlow(object obj)
-        {
-            OilSampleFlows.Clear();
-            _oilSampleService.GetOilSampleDealedFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
-        }
-
-        private void ShowDealingFlow(object obj)
-        {
-            OilSampleFlows.Clear();
-            _oilSampleService.GetOilSampleFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
-        }
-
 
         private void OrderPrintOilSampleEntry(object obj)
         {
@@ -101,7 +165,7 @@ namespace Ui.ViewModel.IndexPage
 
                     if (printCount >= 4)
                     {
-                        item.CurrencyPrintCount =  4 - previousCounts;
+                        item.CurrencyPrintCount = 4 - previousCounts;
                         printCount = 4;
                         data.Add(item);
                         break;
@@ -118,7 +182,7 @@ namespace Ui.ViewModel.IndexPage
                 MessageBox.Show("本流程明细已经全部打印完毕");
                 return;
             }
-                
+
 
             var r = new PrintService().BarTenderOilSampleEntryMergePrint(OilSamplePrintConfig, data, printCount, OilSampleTemplates);
             if (r)
@@ -134,6 +198,21 @@ namespace Ui.ViewModel.IndexPage
                 MessageBox.Show("打印过程出错，请联系管理员 ");
 
         }
+
+
+        private void ShowDealedFlow(object obj)
+        {
+            OilSampleFlows.Clear();
+            _oilSampleService.GetOilSampleDealedFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
+        }
+
+        private void ShowDealingFlow(object obj)
+        {
+            OilSampleFlows.Clear();
+            _oilSampleService.GetOilSampleFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
+        }
+
+
 
 
         private void MergePrintOilSampleEntry(object obj)
@@ -222,7 +301,7 @@ namespace Ui.ViewModel.IndexPage
             if (OilSampleEntrySelectedItem != null)
             {
                 OilSampleEntryModifyView edit = new OilSampleEntryModifyView();
-                var cloneData = TransExpV2<OilSampleEntryModel, OilSampleEntryModel>.Trans(OilSampleEntrySelectedItem);
+                var cloneData = ObjectDeepCopyHelper<OilSampleEntryModel, OilSampleEntryModel>.Trans(OilSampleEntrySelectedItem);
                 (edit.DataContext as OilSampleEntryModifyViewModel).WithParam(cloneData, (type, entry) =>
                 {
                     edit.Close();
@@ -246,7 +325,7 @@ namespace Ui.ViewModel.IndexPage
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                ExpressTemplates = _commonService.GetTenderPrintTemplates(fbd.SelectedPath);
+                ExpressTemplates = CommonService.GetTenderPrintTemplates(fbd.SelectedPath);
             }
         }
 
@@ -256,7 +335,7 @@ namespace Ui.ViewModel.IndexPage
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                OilSampleTemplates = _commonService.GetTenderPrintTemplates(fbd.SelectedPath);
+                OilSampleTemplates = CommonService.GetTenderPrintTemplates(fbd.SelectedPath);
             }
         }
 
@@ -264,7 +343,7 @@ namespace Ui.ViewModel.IndexPage
         {
             _oilSampleService.GetOilSampleFlow().ToList().ForEach(x => OilSampleFlows.Add(x));
             _oilSampleService.GetOilSampleFlowLog().ToList().ForEach(x => OilSampleFlowLogs.Add(x));
-            ComputerPrinters = _commonService.GetComputerPrinters();
+            ComputerPrinters = CommonService.GetComputerPrinters();
 
             GetOilSamplePrintConfig();
             GetExpressPrintConfig();
@@ -272,7 +351,7 @@ namespace Ui.ViewModel.IndexPage
 
         private void GetExpressPrintConfig()
         {
-            ExpressPrintConfig = _commonService.GetBarTenderPrintConfigXX(_user.ID, 3, _hostName);
+            ExpressPrintConfig = CommonService.GetBarTenderPrintConfigXX(User.ID, 3, HostName);
 
             if (ExpressPrintConfig != null)
             {
@@ -294,7 +373,7 @@ namespace Ui.ViewModel.IndexPage
                     return;
                 }
 
-                ExpressTemplates = _commonService.GetTenderPrintTemplates(ExpressPrintConfig.TemplateSelectedItem.TemplateFolderPath);
+                ExpressTemplates = CommonService.GetTenderPrintTemplates(ExpressPrintConfig.TemplateSelectedItem.TemplateFolderPath);
             }
             else
             {
@@ -307,10 +386,10 @@ namespace Ui.ViewModel.IndexPage
         {
             OilSampleTemplateSelectedItem = new BarTenderTemplateModel();
 
-            OilSamplePrintConfig = _commonService.GetBarTenderPrintConfig(_user.ID, 2, _hostName);
+            OilSamplePrintConfig = CommonService.GetBarTenderPrintConfig(User.ID, 2, HostName);
             if (OilSamplePrintConfig != null)
             {
-                OilSampleTemplates = _commonService.GetTenderPrintTemplates(OilSamplePrintConfig.TemplateFolderPath);
+                OilSampleTemplates = CommonService.GetTenderPrintTemplates(OilSamplePrintConfig.TemplateFolderPath);
 
                 //验证打印机和模板路径是否存在
                 if (!File.Exists(OilSamplePrintConfig.TemplateFullName))
@@ -369,8 +448,7 @@ namespace Ui.ViewModel.IndexPage
                     return;
                 }
                 OilSampleFlowLogModifyView edit = new OilSampleFlowLogModifyView();
-                //  var previousPrintedCount = OilSampleFlowLogSelectedItem.PrintedCount;
-                var cloneData = TransExpV2<OilSampleFlowPrintLogModel, OilSampleFlowPrintLogModel>.Trans(OilSampleFlowLogSelectedItem);
+                var cloneData = ObjectDeepCopyHelper<OilSampleFlowPrintLogModel, OilSampleFlowPrintLogModel>.Trans(OilSampleFlowLogSelectedItem);
                 (edit.DataContext as OilSampleFlowLogModifyViewModel).WithParam(cloneData, (type, entry) =>
                 {
                     edit.Close();
@@ -395,7 +473,7 @@ namespace Ui.ViewModel.IndexPage
 
         private void SaveOilSamplePrintConfig(object obj)
         {
-            var m = _commonService.GetBarTenderPrintConfig(_user.ID, 2, _hostName);
+            var m = CommonService.GetBarTenderPrintConfig(User.ID, 2, HostName);
             if (m == null)
             {
                 if (OilSampleTemplateSelectedItem == null || string.IsNullOrEmpty(OilSamplePrintConfig.PrinterName))
@@ -403,16 +481,16 @@ namespace Ui.ViewModel.IndexPage
                     MessageBox.Show("请选择打印机和模板");
                     return;
                 }
-                OilSamplePrintConfig.UserId = _user.ID;
+                OilSamplePrintConfig.UserId = User.ID;
                 OilSamplePrintConfig.TemplateTypeId = 2;
                 OilSamplePrintConfig.TemplateTypeName = "松润样油明细打印";
-                OilSamplePrintConfig.HostName = _hostName;
+                OilSamplePrintConfig.HostName = HostName;
                 OilSamplePrintConfig.TemplatePerPage = OilSampleTemplateSelectedItem.TemplatePerPage;
                 OilSamplePrintConfig.TemplateFileName = OilSampleTemplateSelectedItem.TemplateFileName;
                 OilSamplePrintConfig.TemplateFullName = OilSampleTemplateSelectedItem.TemplateFullName;
                 OilSamplePrintConfig.TemplateFolderPath = OilSampleTemplateSelectedItem.TemplateFolderPath;
                 OilSamplePrintConfig.TemplateTotalPage = OilSampleTemplateSelectedItem.TemplateTotalPage;
-                var r = _commonService.InsertBarTenderPrintConfig(OilSamplePrintConfig);
+                var r = CommonService.InsertBarTenderPrintConfig(OilSamplePrintConfig);
                 if (r > 0)
                 {
                     OilSamplePrintConfig.Id = r;
@@ -424,7 +502,7 @@ namespace Ui.ViewModel.IndexPage
             }
             else
             {
-                var r = _commonService.UpdateBarTenderPrintConfig(OilSamplePrintConfig);
+                var r = CommonService.UpdateBarTenderPrintConfig(OilSamplePrintConfig);
                 if (r)
                     MessageBox.Show("保存成功");
                 else
@@ -438,14 +516,14 @@ namespace Ui.ViewModel.IndexPage
 
             //var ss = ExpressPrintConfig;
 
-            var m = _commonService.GetBarTenderPrintConfigXX(_user.ID, 3, _hostName);
+            var m = CommonService.GetBarTenderPrintConfigXX(User.ID, 3, HostName);
             if (m == null)
             {
-                ExpressPrintConfig.UserId = _user.ID;
+                ExpressPrintConfig.UserId = User.ID;
                 ExpressPrintConfig.TemplateTypeId = 3;
                 ExpressPrintConfig.TemplateTypeName = "松润样油快递单打印";
-                ExpressPrintConfig.HostName = _hostName;
-                var r = _commonService.InsertBarTenderPrintConfigXX(ExpressPrintConfig);
+                ExpressPrintConfig.HostName = HostName;
+                var r = CommonService.InsertBarTenderPrintConfigXX(ExpressPrintConfig);
                 if (r > 0)
                 {
                     ExpressPrintConfig.Id = r;
@@ -456,7 +534,7 @@ namespace Ui.ViewModel.IndexPage
             }
             else
             {
-                var r = _commonService.UpdateBarTenderPrintConfigXX(ExpressPrintConfig);
+                var r = CommonService.UpdateBarTenderPrintConfigXX(ExpressPrintConfig);
                 if (r)
                     MessageBox.Show("保存成功");
                 else
@@ -589,6 +667,7 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand DealingFlowShowCommand { get; set; }
         public DelegateCommand DealedFlowShowCommand { get; set; }
         public DelegateCommand OilSampleEntryOrderPrintCommand { get; set; }
+        public DelegateCommand A4PrintCommand { get; set; }
 
 
         private ObservableCollection<OilSampleFlowModel> oilSampleFlows;
@@ -619,7 +698,7 @@ namespace Ui.ViewModel.IndexPage
 
         public ObservableCollection<PageSizeModel> ExpressPaperNames { get; set; }
 
-        public List<string> ComputerPrinters { get; set; }
+        //public List<string> ComputerPrinters { get; set; }
 
         private ObservableCollection<OilSampleFlowPrintLogModel> oilSampleFlowLogs;
 

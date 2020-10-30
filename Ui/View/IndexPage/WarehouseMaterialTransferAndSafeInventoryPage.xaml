@@ -51,6 +51,8 @@
                     <TextBox Style="{StaticResource TextBoxReadonlyStyle}" Width="250" Text="{Binding HostConfig.HostValue,UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Button Content="导出" Style="{StaticResource BtnThemeStyle}" Width="100" Command="{Binding ExportBaseCommand}"  ToolTip="导出过滤数据到指定目录"/>
+
+                    <Button Style="{StaticResource BtnSuccessStyle}" Content="生成K3调拨单" Command="{Binding BatchNoQtyK3InsertCommand}" CommandParameter="{Binding ElementName=DGDeliverTransfer}" Margin="100 0 0 0" />
                 </StackPanel>
             </Grid>
 
@@ -105,7 +107,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="生产日期" Binding="{Binding ProductionDate,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd}" Width="100" />
                                     <DataGridTextColumn Header="类型名称" Binding="{Binding BatchTypeName,UpdateSourceTrigger=PropertyChanged}" Width="80" />
-                                    <DataGridTextColumn Header="仓库代码" Binding="{Binding StockId,UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                                    <!--<DataGridTextColumn Header="仓库代码" Binding="{Binding StockId,UpdateSourceTrigger=PropertyChanged}" Width="80" />-->
                         <DataGridTextColumn Header="仓库名称" Binding="{Binding StockName,UpdateSourceTrigger=PropertyChanged}" Width="120" />
                                     
                         <DataGridTextColumn Header="批次物料需求明细" Binding="{Binding FBatchNoAndActualQty,UpdateSourceTrigger=PropertyChanged}" Width="*" />
@@ -128,7 +130,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <GroupBox Header="即时库存"  Margin="0 5" Padding=" 0 8"  Grid.Row="0">
@@ -175,7 +177,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                     
                                         <DataGridTextColumn Header="库存批次" Binding="{Binding BatchNo,UpdateSourceTrigger=PropertyChanged}" Width="100" />
 
-                                        <DataGridTextColumn Header="仓库名称" Binding="{Binding StockId,UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                                        <!--<DataGridTextColumn Header="仓库名称" Binding="{Binding StockId,UpdateSourceTrigger=PropertyChanged}" Width="80" />-->
                                     </DataGrid.Columns>
                                 </DataGrid>
 
@@ -194,8 +196,8 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                                 </Grid.RowDefinitions>
 
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Style="{StaticResource BtnSuccessStyle}" Content="生成K3调拨单" Command="{Binding BatchNoQtyK3InsertCommand}" CommandParameter="{Binding ElementName=DGDeliverTransfer}" />
-                                    <Button Content="删除发料" Style="{StaticResource BtnWarningStyle}" Margin="50 0" Command="{Binding DeliveryDeleteCommand}"  CommandParameter="{Binding ElementName=DGDeliverTransfer}" />
+                                    <!--<Button Style="{StaticResource BtnSuccessStyle}" Content="生成K3调拨单" Command="{Binding BatchNoQtyK3InsertCommand}" CommandParameter="{Binding ElementName=DGDeliverTransfer}" />-->
+                                    <Button Content="删除发料" Style="{StaticResource BtnWarningStyle}" Margin="10 0" Command="{Binding DeliveryDeleteCommand}"  CommandParameter="{Binding ElementName=DGDeliverTransfer}" />
                                     <Button Content="删除调拨" Style="{StaticResource BtnDangerStyle}" ToolTip="只有当K3里面对应的调拨单删除后，才能执行此操作，将与选择行调拨单号相关的发料数据全部删除" Command="{Binding TransferDeleteCommand}" CommandParameter="{Binding ElementName=DGDeliverTransfer}"/>
                                     <StackPanel.Background>
                                         <LinearGradientBrush  EndPoint="0,0" StartPoint="1,0" Opacity="0.1" >

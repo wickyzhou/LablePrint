@@ -37,7 +37,7 @@ namespace Ui.View
             this.CbIdentType.ItemsSource = IdentTypes;
 
             //新建window后台代码
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) =>
             {

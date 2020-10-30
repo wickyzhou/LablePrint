@@ -142,7 +142,6 @@ namespace Ui.ViewModel.IndexPage
                     var selectedLists = ((obj as DataGrid).SelectedItems).Cast<LabelPrintHistoryModel>().ToList();
                     if (selectedLists.Count > 0)
                     {
-                        //_print.PrintTest(PrintConfiguration.PrinterName, PrintConfiguration.TemplateSelectedItem.TemplateFullName,selectedLists.FirstOrDefault(),2);
                         string result = _print.BarTenderPrintA4(selectedLists, PrintConfiguration, selectedLists.Sum(x => x.PrintCount));
                         MessageBox.Show(result);
                         QueryCommand.Execute(null);

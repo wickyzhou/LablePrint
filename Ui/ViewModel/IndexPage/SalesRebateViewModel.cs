@@ -49,14 +49,15 @@ namespace Ui.ViewModel.IndexPage
 
             Task.Factory.StartNew(() =>
             {
+                var ss = _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory);
+                RebateClassLists = CommonService.GetEnumLists(6);
+                TaxAmountTypeLists = CommonService.GetEnumLists(7);
+                RebatePctTypeLists = CommonService.GetEnumLists(8);
+                OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
+                MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
                 UIExecute.RunAsync(() =>
                 {
-                    RebateClassLists = CommonService.GetEnumLists(6);
-                    TaxAmountTypeLists = CommonService.GetEnumLists(7);
-                    RebatePctTypeLists = CommonService.GetEnumLists(8);
-                    OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
-                    MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
-                    _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory).ForEach(x => SalesRebateLists.Add(x));
+                    ss.ForEach(x => { SalesRebateLists.Add(x);ListsSum += x.SalesRebateAmoutResult; ListsCount++; });
                 });
             });
         }
@@ -64,99 +65,11 @@ namespace Ui.ViewModel.IndexPage
         private void InitCommand()
         {
 
-            //SalesRebateAmountCalculateCommand = new DelegateCommand((obj) =>
-            //{
-            //    var lists = SalesRebateLists.Where(x => x.IsChecked);
-            //    if (lists.Count() == 0)
-            //    {
-
-            //    }
-
-            //    if (SalesRebateLists.Where(x => x.IsChecked & !string.IsNullOrEmpty(x.K3BillNo)).Count() > 0)   // 如果已有K3单据号，则不可以重算
-            //    {
-            //        MessageBox.Show("已生成K3发票的数据不能重算");
-            //    }
-            //    _salesRebateService.ReCalculateSalesRebateAmount(DateTime.Now.Date, DateTime.Now.Date);
-            //    GetNewSalesRebateLists();
-            //});
-
             SalesRebateQueryCommand = new DelegateCommand((obj) =>
             {
                 string filter = $"  and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <= '{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
                 GetNewSalesRebateLists(filter);
             });
-
-            //SalesRebateModifyCommand = new DelegateCommand((obj) =>
-            //{
-            //    if (SalesRebateLists.Where(x => x.IsChecked).Count() != 1)
-            //    {
-            //        MessageBox.Show("只能勾选一条记录修改");
-            //        return;
-            //    }
-            //    SalesRebateSelectedItem = SalesRebateLists.Where(x => x.IsChecked).FirstOrDefault();
-            //    var cloneData = ObjectDeepCopyHelper<SalesRebateModel, SalesRebateModel>.Trans(SalesRebateSelectedItem);
-            //    SalesRebateCreateAndCopyView view = new SalesRebateCreateAndCopyView();
-            //    (view.DataContext as SalesRebateCreateAndCopyViewModel).WithParam(cloneData, (type, outputEntity) =>
-            //    {
-            //        view.Close();
-            //        if (type == 1)
-            //        {
-            //            if (_salesRebateService.Update(outputEntity))
-            //            {
-            //                SalesRebateSelectedItem.TaxAmountType = outputEntity.TaxAmountType;
-            //                SalesRebateSelectedItem.TaxAmountTypeName = outputEntity.TaxAmountTypeName;
-            //                SalesRebateSelectedItem.RebatePctValue = outputEntity.RebatePctValue;
-            //                SalesRebateSelectedItem.RebatePctType = outputEntity.RebatePctType;
-            //                SalesRebateSelectedItem.RebatePctTypeName = outputEntity.RebatePctTypeName;
-            //                SalesRebateSelectedItem.MinusLastPeriodRebateType = outputEntity.MinusLastPeriodRebateType;
-            //                SalesRebateSelectedItem.MinusLastPeriodRebateTypeName = outputEntity.MinusLastPeriodRebateTypeName;
-            //            }
-
-            //        }
-            //    });
-            //    view.ShowDialog();
-            //});
-
-            //SalesRebateCreateCommand = new DelegateCommand((obj) =>
-            //{
-            //    SalesRebateModel inputEntity = new SalesRebateModel() { Guid = Guid.NewGuid(), OrgId = -1, CaseId = -1, MaterialId = -1 };
-
-            //    SalesRebateCreateAndCopyView view = new SalesRebateCreateAndCopyView();
-
-            //    (view.DataContext as SalesRebateCreateAndCopyViewModel).WithParam(inputEntity, (type, outputEntity) =>
-            //    {
-            //        view.Close();
-            //        if (type == 1)
-            //        {
-            //            if (_salesRebateService.Insert(outputEntity))
-            //                SalesRebateLists.Insert(0, _salesRebateService.GetSalesRebate(outputEntity.Guid));
-            //        }
-            //    });
-            //    view.ShowDialog();
-            //});
-
-            //SalesRebateCopyCommand = new DelegateCommand((obj) =>
-            //{
-            //    SalesRebateModel inputEntity = _salesRebateService.GetSalesRebate(SalesRebateSelectedItem.Guid);
-            //    Guid newGuid = Guid.NewGuid();
-            //    // 如果比例类型是分段比例的话，先将分段数据插入到后台表(新增、复制、修改可以共用一个视图)
-            //    if (inputEntity.RebatePctType == 2)
-            //        _salesRebateService.Copy(inputEntity.Guid, newGuid);
-            //    inputEntity.Guid = newGuid;
-
-            //    SalesRebateCreateAndCopyView view = new SalesRebateCreateAndCopyView();
-
-            //    (view.DataContext as SalesRebateCreateAndCopyViewModel).WithParam(inputEntity, (type, outputEntity) =>
-            //    {
-            //        view.Close();
-            //        if (type == 1)
-            //        {
-            //            if (_salesRebateService.Insert(outputEntity))
-            //                SalesRebateLists.Insert(0, _salesRebateService.GetSalesRebate(outputEntity.Guid));
-            //        }
-            //    });
-            //    view.ShowDialog();
-            //});
 
             SalesRebateRemoveCommand = new DelegateCommand((obj) =>
             {
@@ -184,7 +97,6 @@ namespace Ui.ViewModel.IndexPage
 
             AllCheckedCommand = new DelegateCommand((obj) =>
             {
-                //IsCheckedAll = !IsCheckedAll;
                 if (IsCheckedAll)
                 {
                     foreach (var item in SalesRebateLists)
@@ -216,7 +128,7 @@ namespace Ui.ViewModel.IndexPage
                     RebateClassSeletedItem = new EnumModel() { ItemSeq = dr.RebateClass, ItemValue = dr.RebateClassName };
                     BatchParameter.SalesRebateAmountRangeBatchParameter.Clear();
                     if (dr.RebatePctType == 2)
-                        BatchParameter.SalesRebateAmountRangeBatchParameter = new ObservableCollection<SalesRebateAmountRangeModel>(_salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(dr.Guid));
+                         _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(dr.Guid).ForEach(x=> BatchParameter.SalesRebateAmountRangeBatchParameter.Add(x));
                 }
                 else
                 {
@@ -363,6 +275,15 @@ namespace Ui.ViewModel.IndexPage
                 // 重新加载页面
                 GetNewSalesRebateLists();
             });
+        }
+
+        private void GetNewSalesRebateLists(string filter = "")
+        {
+            IsCheckedAll = false;
+            SalesRebateLists.Clear();
+            ListsCount = 0;
+            ListsSum=0;
+            _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory, filter).ForEach(x => { SalesRebateLists.Add(x); ListsSum += x.SalesRebateAmoutResult; ListsCount++; });
         }
 
         private bool InputVerification()
@@ -599,6 +520,7 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        //页面验证
         private bool isValid = true;
 
         public bool IsValid
@@ -611,14 +533,33 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        //查询行数
+        private int listsCount;
 
-
-        private void GetNewSalesRebateLists(string filter = "")
+        public int ListsCount
         {
-            IsCheckedAll = false;
-            SalesRebateLists.Clear();
-            _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory, filter).ForEach(x => SalesRebateLists.Add(x));
-
+            get { return listsCount; }
+            set
+            {
+                listsCount = value;
+                this.RaisePropertyChanged(nameof(ListsCount));
+            }
         }
+
+        //查询总数
+        private double listsSum;
+
+        public double ListsSum
+        {
+            get { return listsSum; }
+            set
+            {
+                listsSum = value;
+                this.RaisePropertyChanged(nameof(ListsSum));
+            }
+        }
+
+
+
     }
 }

@@ -37,14 +37,6 @@ namespace Ui.Service
             }
         }
 
-        //public bool Update(SalesRebateAmountRangeModel model)
-        //{
-        //    string sql = @" update SJSalesRebateAmountRange  set AmountUpper=@AmountUpper,AmountLower=@AmountLower,SalesRebatePctValue=@SalesRebatePctValue  where Id=@Id";
-        //    using (var connection = SqlDb.UpdateConnection)
-        //    {
-        //        return connection.Execute(sql, model) > 0;
-        //    }
-        //}
 
         public bool RecentSonParameterDelete(int id)
         {

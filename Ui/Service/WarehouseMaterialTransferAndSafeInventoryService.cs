@@ -20,11 +20,13 @@ namespace Ui.Service
         /// <param name="materialId"></param>
         /// <param name="productionDate"></param>
         /// <returns></returns>
-        public List<MaterialTimelyInventoryModel> GetGetMaterialTimelyInventoryLists(int materialId,DateTime productionDate)
+        public List<MaterialTimelyInventoryModel> GetGetMaterialTimelyInventoryLists(int materialId,DateTime productionDate,int stockId,int sourceStockId)
         {
             DynamicParameters dp = new DynamicParameters();
             dp.Add("@MaterialId", materialId, DbType.Int32, ParameterDirection.Input);
             dp.Add("@ProductionDate", productionDate, DbType.Date, ParameterDirection.Input);
+            dp.Add("@BatchTypeId", stockId, DbType.Int32, ParameterDirection.Input);
+            dp.Add("@ParentStockId", sourceStockId, DbType.Int32, ParameterDirection.Input);
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Query<MaterialTimelyInventoryModel>("SJGetMaterialTimelyInventory", dp,null,true,null,CommandType.StoredProcedure).ToList();
@@ -86,7 +88,7 @@ namespace Ui.Service
         /// <returns></returns>
         public bool InsertDeliverTransfer(MaterialTimelyInventoryModel model)
         {
-            string sql = @" insert into SJDeliverTransfer (ProductionDate,MaterialId,MaterialNumber,MaterialName,StockId,StockNumber,StockName,BatchNo,TransferingWeight) values(@ProductionDate,@MaterialId,@MaterialNumber,@MaterialName,@StockId,@StockNumber,@StockName,@BatchNo,@TransferingWeight); ";
+            string sql = @" insert into SJDeliverTransfer (ProductionDate,MaterialId,MaterialNumber,MaterialName,StockId,StockNumber,StockName,BatchNo,TransferingWeight,BatchTypeId,ParentStockId) values(@ProductionDate,@MaterialId,@MaterialNumber,@MaterialName,@StockId,@StockNumber,@StockName,@BatchNo,@TransferingWeight,@BatchTypeId,@ParentStockId); ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql, model) > 0;
@@ -98,12 +100,12 @@ namespace Ui.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public List<MaterialTimelyInventoryModel> GetDeliverTransferLists(int materialId,DateTime productionDate)
+        public List<MaterialTimelyInventoryModel> GetDeliverTransferLists(BatchBomRequestSummaryModel model)
         {
-            string sql = $" select * from SJDeliverTransfer where  ProductionDate = @ProductionDate and MaterialId = @MaterialId ;  ";
+            string sql = $" select * from SJDeliverTransfer where  ProductionDate = @ProductionDate and MaterialId = @MaterialId  and  BatchTypeId = @BatchTypeId;  ";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<MaterialTimelyInventoryModel>(sql,new { MaterialId =materialId  ,ProductionDate = productionDate }).ToList();
+                return connection.Query<MaterialTimelyInventoryModel>(sql, model).ToList();
             }
         }
 
@@ -129,7 +131,7 @@ namespace Ui.Service
         /// <returns></returns>
         public bool DeleteDeliverTransfer(string transferBillNo)
         {
-            string sql = $" delete from  SJDeliverTransfer where TransferedBillNo = @TransferedBillNo; ";
+            string sql = $" update SJDeliverTransfer set TransferedWeight= null,TransferedTime = null, TransferedBillNo=null,TransferingWeight=TransferedWeight where TransferedBillNo = @TransferedBillNo; ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql,new { TransferedBillNo = transferBillNo }) > 0;
@@ -155,20 +157,36 @@ namespace Ui.Service
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public bool UpdateBillNo(string ids,double transferedWeight,string billNo)
+        public bool UpdateBillNo(string ids,string billNo)
         {
-            string sql = $" update SJDeliverTransfer set  TransferedWeight = {transferedWeight},TransferedBillNo = '{billNo}', TransferedTime = getdate() where  Id in ({ids}) ";
+            string sql = $" update SJDeliverTransfer set  TransferedWeight = TransferingWeight,TransferingWeight=null,TransferedBillNo = '{billNo}', TransferedTime = getdate() where  Id in ({ids}) ";
             using (var connection = SqlDb.UpdateConnection)
             {
                 return connection.Execute(sql) > 0;
             }
         }
 
-
+        /// <summary>
+        /// 获取分类导出数据
+        /// </summary>
+        /// <param name="productionDate"></param>
+        /// <param name="orderedColumns"></param>
+        /// <returns></returns>
         public DataTable GetSJBatchBomRequestDeliveryExportData(DateTime productionDate,string orderedColumns)
         {
             return SqlHelper.ExecuteDataTableProcedure("SJBatchBomRequestDeliveryExportProc", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate), new SqlParameter("@OrderedColumns", orderedColumns) });
         }
 
+        public List<MaterialTimelyInventoryModel> GetK3InsertData(DateTime productionDate)
+        {
+            string sql = @" select a.*,b.FNumber ParentStockNumber ,b.FName ParentStockName from SJDeliverTransfer a join t_Stock b on a.ParentStockId = b.FItemID
+where ProductionDate = @ProductionDate and TransferingWeight> 0;  ";
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<MaterialTimelyInventoryModel>(sql, new { ProductionDate= productionDate }).ToList();
+            }
+        }
+
+        
     }
 }

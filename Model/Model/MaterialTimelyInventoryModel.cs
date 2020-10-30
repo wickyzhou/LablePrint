@@ -87,5 +87,24 @@ namespace Model
                 this.RaisePropertyChanged(nameof(Spec));
             }
         }
+
+        private int batchTypeId;
+
+        public int BatchTypeId
+        {
+            get { return batchTypeId; }
+            set
+            {
+                batchTypeId = value;
+                this.RaisePropertyChanged(nameof(BatchTypeId));
+            }
+        }
+
+        public int ParentStockId { get; set; }
+
+        public string ParentStockNumber { get; set; }
+
+        public string ParentStockName { get; set; }
+
     }
 }

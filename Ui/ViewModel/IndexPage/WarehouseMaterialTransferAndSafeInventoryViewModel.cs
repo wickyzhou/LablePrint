@@ -69,23 +69,23 @@ namespace Ui.ViewModel.IndexPage
             {
                 if (Directory.Exists(HostConfig.HostValue))
                 {
-                    ExportView view = new ExportView(Menu.ID,3);// Menu.ID-SJExportViewTypedColumn中的ViewGroupId; 3 - 第几个radioButton被默认选中从1开始
+                    ExportView view = new ExportView(Menu.ID, 3);// Menu.ID-SJExportViewTypedColumn中的ViewGroupId; 3 - 第几个radioButton被默认选中从1开始
                     //Export((type - 导出1 取消0, outputEntity 界面选中的radiobuttion 同上, checkBoxValue 选择分类导出的情况下，选择的类别和, orderedColumns 选择分类导出的情况下，选择类别的顺序列表) 
                     (view.DataContext as ExportViewModel).Export((type, outputEntity, checkBoxValue, orderedColumns) =>
                     {
                         view.Close();
                         if (type == 1)
                         {
-                            DataTable datatable = _service.GetSJBatchBomRequestDeliveryExportData(GeneralParameter.ParamBeginDate.Value,string.Join(",", orderedColumns));
+                            DataTable datatable = _service.GetSJBatchBomRequestDeliveryExportData(GeneralParameter.ParamBeginDate.Value, string.Join(",", orderedColumns));
                             if (datatable.Rows.Count > 0)
                             {
                                 ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(GeneralParameter)
-                                    , outputEntity, orderedColumns,true,"$$$发料单",true);
+                                    , outputEntity, orderedColumns, true, "$$$发料单", true);
                                 MessageBox.Show("导出成功");
                             }
                             else
-                                MessageBox.Show("没有可导出的数据");
-                           
+                                MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有可导出的数据");
+
                         }
                     });
                     view.ShowDialog();
@@ -114,81 +114,80 @@ namespace Ui.ViewModel.IndexPage
             QueryBaseCommand = new DelegateCommand((obj) =>
             {
                 BatchBomRequestSummaryLists.Clear();
-                _service.GetBatchBomRequestDetailSummaryLists(CommonService.GetSqlWhereString(Filter)).ForEach(x=> BatchBomRequestSummaryLists.Add(x));
+                InventoryLists.Clear();
+                DeliverTransferLists.Clear();
+                _service.GetBatchBomRequestDetailSummaryLists(CommonService.GetSqlWhereString(Filter)).ForEach(x => BatchBomRequestSummaryLists.Add(x));
             });
 
             DeliverCommand = new DelegateCommand((obj) =>
             {
-                if (InventorySelectedItem != null && InventorySelectedItem.TransferingWeight > 0 && InventorySelectedItem.TransferingWeight <= InventorySelectedItem.TotalWeight&& BatchBomRequestSummarySelectedItem != null)
+                if (BatchBomRequestSummarySelectedItem != null)
                 {
-                    if (_service.InsertDeliverTransfer(InventorySelectedItem))
+                    if (InventorySelectedItem != null && InventorySelectedItem.TransferingWeight > 0 && InventorySelectedItem.TransferingWeight <= InventorySelectedItem.TotalWeight)
                     {
-                        DeliverTransferLists.Clear();
-                        _service.GetDeliverTransferLists(InventorySelectedItem.MaterialId, InventorySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
-                        BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x=>x.TransferingWeight).Value;
+                        if (_service.InsertDeliverTransfer(InventorySelectedItem))
+                        {
+                            DeliverTransferLists.Clear();
+                            _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem).ForEach(x => DeliverTransferLists.Add(x));
+                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                        }
                     }
-                        
+                    else
+                        MessageBox.Show("发料数量必须大于0且小于总重量");
                 }
                 else
-                    MessageBox.Show("发料数量必须大于0且小于总重量");
+                    MessageBox.Show("先选择主表行数据");
+
             });
 
             DeliveryDeleteCommand = new DelegateCommand((obj) =>
             {
-                if (BatchBomRequestSummarySelectedItem == null)
+                if (BatchBomRequestSummarySelectedItem != null)
                 {
-                    MessageBox.Show("先选择主表行数据");
-                    return;
-                }
-                  
-                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
-                if (selectedLists.Count == 1)
-                {   
-                    var model = selectedLists.First();
-                    if (string.IsNullOrEmpty(model.TransferedBillNo))
+
+                    var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+                    if (selectedLists.Count == 1)
                     {
+                        var model = selectedLists.First();
                         if (_service.DeleteDeliverTransfer(model.Id))
                         {
                             DeliverTransferLists.Clear();
-                            _service.GetDeliverTransferLists(model.MaterialId, model.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
-                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                            _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem).ForEach(x => DeliverTransferLists.Add(x));
+                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Sum(x => x.TransferingWeight).Value;
                         }
                     }
                     else
-                        MessageBox.Show("已经调拨数据，需要用【删除调拨】功能");
-               
+                        MessageBox.Show("每次必须选中且删除一行记录");
                 }
                 else
-                    MessageBox.Show("每次必须选中且删除一行记录");
+                    MessageBox.Show("先选择主表行数据");
+
             });
 
             TransferDeleteCommand = new DelegateCommand((obj) =>
             {
-                if (BatchBomRequestSummarySelectedItem == null)
+                if (BatchBomRequestSummarySelectedItem != null)
                 {
-                    MessageBox.Show("先选择主表行数据");
-                    return;
-                }
-
-                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
-                if (selectedLists.Count == 1)
-                {
-                    var model = selectedLists.First();
-                    if (!_service.ExistsK3Bill(model.TransferedBillNo))
+                    var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+                    if (selectedLists.Count == 1)
                     {
-                        if (_service.DeleteDeliverTransfer(model.TransferedBillNo))
+                        var model = selectedLists.First();
+                        if (!_service.ExistsK3Bill(model.TransferedBillNo))
                         {
-                            DeliverTransferLists.Clear();
-                            _service.GetDeliverTransferLists(model.MaterialId, model.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
-                            BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
-                            BatchBomRequestSummarySelectedItem.QtyTransfered = DeliverTransferLists.Where(x => !string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                            if (_service.DeleteDeliverTransfer(model.TransferedBillNo))
+                            {
+                                //重新加载主表格
+                                QueryBaseCommand.Execute(null);
+                            }
                         }
+                        else
+                            MessageBox.Show("请先将选择的调拨单号，在K3里面删除");
                     }
                     else
-                        MessageBox.Show("请先将选择的调拨单号，在K3里面删除");
+                        MessageBox.Show("每次必须选中且删除一行记录");
                 }
                 else
-                    MessageBox.Show("每次必须选中且删除一行记录");
+                    MessageBox.Show("先选择主表行数据");
 
             });
 
@@ -197,81 +196,73 @@ namespace Ui.ViewModel.IndexPage
                 if (BatchBomRequestSummarySelectedItem == null)
                     return;
                 InventoryLists.Clear();
-                _service.GetGetMaterialTimelyInventoryLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => InventoryLists.Add(x));
+                _service.GetGetMaterialTimelyInventoryLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate, BatchBomRequestSummarySelectedItem.BatchTypeId, BatchBomRequestSummarySelectedItem.StockId).ForEach(x => InventoryLists.Add(x));
                 DeliverTransferLists.Clear();
-                _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
+                _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem).ForEach(x => DeliverTransferLists.Add(x));
             });
 
             BatchNoQtyK3InsertCommand = new DelegateCommand((obj) =>
             {
-                if (BatchBomRequestSummarySelectedItem == null)
-                {
-                    MessageBox.Show("先选择主表行数据");
-                    return;
-                }
 
-                var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
-
-                if (selectedLists.Where(x=>!string.IsNullOrEmpty(x.TransferedBillNo)).Count()>0)
+                // 获取当天所有已发料未调拨数据  var selectedLists = ((obj as DataGrid).SelectedItems).Cast<MaterialTimelyInventoryModel>().ToList();
+                var selectedLists = _service.GetK3InsertData(GeneralParameter.ParamBeginDate.Value);
+                if (selectedLists.Count > 0)
                 {
-                    MessageBox.Show("不能重复调拨");
-                    return;
-                }
-
-                TransferMainModel main = new TransferMainModel
-                {
-                    FBillerID = new BaseNumberNameModelX { FNumber = "吴强", FName = "吴强" },
-                    FFManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
-                    FSManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
-                    FRefType = new BaseNumberNameModelX { FNumber = "01", FName = "成本调拨" },
-                    FClassTypeID = 41,
-                    FDate = DateTime.Now.Date.ToString("yyyy-MM-dd")
-                };
-
-                List<TransferSonModel> sons = new List<TransferSonModel>();
-          
-                foreach (MaterialTimelyInventoryModel item in selectedLists)
-                {
-                    sons.Add(new TransferSonModel
+                    TransferMainModel main = new TransferMainModel
                     {
-                        FItemID = new BaseNumberNameModelX { FNumber = BatchBomRequestSummarySelectedItem.MaterialNumber, FName = BatchBomRequestSummarySelectedItem.MaterialName },// K3ApiFKService.GetMaterialById
-                        FChkPassItem = new BaseNumberNameModelX { FNumber = "Y", FName = "是" },
-                        FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
-                        FDCStockID1 = K3ApiFKService.GetStockById(BatchBomRequestSummarySelectedItem.StockId),
-                        FSCStockID1 = new BaseNumberNameModelX { FNumber = item.StockNumber, FName = item.StockName },
-                        FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
-                        FAuxQty = item.TransferingWeight.Value,
-                        FQty = item.TransferingWeight.Value,
-                        FBatchNo = item.BatchNo,
-                    });
-                }
+                        FBillerID = new BaseNumberNameModelX { FNumber = "吴强", FName = "吴强" },
+                        FFManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
+                        FSManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
+                        FRefType = new BaseNumberNameModelX { FNumber = "01", FName = "成本调拨" },
+                        FClassTypeID = 41,
+                        FDate = DateTime.Now.Date.ToString("yyyy-MM-dd")
+                    };
 
+                    List<TransferSonModel> sons = new List<TransferSonModel>();
 
-                var requestModel = new K3ApiInsertRequestModel<TransferMainModel, TransferSonModel>()
-                {
-                    Data = new K3ApiInsertDataRequestModel<TransferMainModel, TransferSonModel>()
+                    foreach (MaterialTimelyInventoryModel item in selectedLists)
                     {
-                        Page1 = new List<TransferMainModel> { main },
-                        Page2 = sons
+                        sons.Add(new TransferSonModel
+                        {
+                            FItemID = new BaseNumberNameModelX { FNumber = item.MaterialNumber, FName = item.MaterialName },// K3ApiFKService.GetMaterialById
+                            FChkPassItem = new BaseNumberNameModelX { FNumber = "Y", FName = "是" },
+                            FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
+                            FDCStockID1 = new BaseNumberNameModelX { FNumber = item.ParentStockNumber, FName = item.ParentStockName },//K3ApiFKService.GetStockById(item.ParentStockId),
+                            FSCStockID1 = new BaseNumberNameModelX { FNumber = item.StockNumber, FName = item.StockName },
+                            FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
+                            FAuxQty = item.TransferingWeight.Value,
+                            FQty = item.TransferingWeight.Value,
+                            FBatchNo = item.BatchNo,
+                        });
                     }
-                };
-
-                string postJson = JsonHelper.ObjectToJson(requestModel);
-                K3ApiInsertResponseModel response = K3ApiService.Insert("Transfer", postJson);
-                if (response.StatusCode == 200)
-                {
-                    double totalQty = selectedLists.Sum(x => x.TransferingWeight).Value;
-                    string ids = string.Join(",", selectedLists.Select(x=>x.Id));
-                    if (_service.UpdateBillNo(ids, totalQty,response.Data.BillNo))
+                    var requestModel = new K3ApiInsertRequestModel<TransferMainModel, TransferSonModel>()
                     {
-                        DeliverTransferLists.Clear();
-                        _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem.MaterialId, BatchBomRequestSummarySelectedItem.ProductionDate).ForEach(x => DeliverTransferLists.Add(x));
-                        BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Where(x => string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
-                        BatchBomRequestSummarySelectedItem.QtyTransfered = DeliverTransferLists.Where(x => !string.IsNullOrEmpty(x.TransferedBillNo)).Sum(x => x.TransferingWeight).Value;
+                        Data = new K3ApiInsertDataRequestModel<TransferMainModel, TransferSonModel>()
+                        {
+                            Page1 = new List<TransferMainModel> { main },
+                            Page2 = sons
+                        }
+                    };
+
+                    string postJson = JsonHelper.ObjectToJson(requestModel);
+                    K3ApiInsertResponseModel response = K3ApiService.Insert("Transfer", postJson);
+                    if (response.StatusCode == 200)
+                    {
+                        //double totalQty = selectedLists.Sum(x => x.TransferingWeight).Value;
+                        string ids = string.Join(",", selectedLists.Select(x => x.Id));
+                        if (_service.UpdateBillNo(ids, response.Data.BillNo))
+                        {
+                            QueryBaseCommand.Execute(null);
+                        }
+                        else
+                            MessageBox.Show($"插入K3调拨单，更新发料表失败，请联系管理员");
                     }
+                    else
+                        MessageBox.Show($"{response.Message}");
                 }
                 else
-                    MessageBox.Show($"{response.Message}");
+                    MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有已发料且未调拨的数据");
+
 
             });
         }
@@ -289,13 +280,15 @@ namespace Ui.ViewModel.IndexPage
             InventoryLists = new ObservableCollection<MaterialTimelyInventoryModel>();
             BatchBomRequestSummaryLists = new ObservableCollection<BatchBomRequestSummaryModel>();
             DeliverTransferLists = new ObservableCollection<MaterialTimelyInventoryModel>();
+            HostConfig = CommonService.GetHostConfig(Menu.ID, HostName, User.ID) ?? new HostConfigModel() { TypeId = Menu.ID, Host = HostName, UserId = User.ID, TypeDesciption = Menu.TB2Text };
+            //DeliveryStockLists = CommonService.GetDeliveryStock();
             Task.Factory.StartNew(() =>
             {
                 UIExecute.RunAsync(() =>
                 {
-                    HostConfig = CommonService.GetHostConfig(Menu.ID, HostName, User.ID) ?? new HostConfigModel() { TypeId = Menu.ID, Host = HostName, UserId = User.ID, TypeDesciption = Menu.TB2Text };
+
                     QueryBaseCommand.Execute(null);
-                    
+
                 });
             });
         }
@@ -312,9 +305,6 @@ namespace Ui.ViewModel.IndexPage
                 this.RaisePropertyChanged(nameof(GeneralParameter));
             }
         }
-
-
-
 
 
         private BatchBomRequestQueryParameterModel queryParameter;
@@ -392,7 +382,7 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-
+        public List<DeliveryStockModel> DeliveryStockLists { get; set; }
 
     }
 }

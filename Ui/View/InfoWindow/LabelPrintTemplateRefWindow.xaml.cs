@@ -31,7 +31,7 @@ namespace Ui.View
             this.DG1.ItemsSource = RefModels;
 
             //新建window后台代码
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Ui.Command;
 using Ui.Helper;
 using Ui.Service;
@@ -67,8 +68,17 @@ namespace Ui.ViewModel
                 if (SalesRebateSelectedItem != null)
                 {
                     AmountRangeLists.Clear();
-                    if (SalesRebateSelectedItem.RebatePctType==2)
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(SalesRebateSelectedItem.Guid).ForEach(x => AmountRangeLists.Add(x));
+                    if (SalesRebateSelectedItem.RebatePctType == 2)
+                    {
+                        _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(SalesRebateSelectedItem.Guid).ForEach(x => AmountRangeLists.Add(x));
+                        if(AmountRangeLists.Count>0)
+                            RowDetailsVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        RowDetailsVisibility = Visibility.Collapsed;
+                    }
+                 
                 }
             });
 
@@ -78,7 +88,16 @@ namespace Ui.ViewModel
                 {
                     AmountRangeLists1.Clear();
                     if (SalesRebateSelectedItem1.RebatePctType == 2)
+                    {
                         _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(SalesRebateSelectedItem1.Guid).ForEach(x => AmountRangeLists1.Add(x));
+                        if (AmountRangeLists1.Count > 0)
+                            RowDetailsVisibility1 = Visibility.Visible;
+                    }
+                    else
+                    {
+                        RowDetailsVisibility1 = Visibility.Collapsed;
+                    }
+                     
                 }
             });
 
@@ -258,5 +277,28 @@ namespace Ui.ViewModel
             }
         }
 
+        private Visibility rowDetailsVisibility =Visibility.Collapsed;
+
+        public Visibility RowDetailsVisibility
+        {
+            get { return rowDetailsVisibility; }
+            set
+            {
+                rowDetailsVisibility = value;
+                this.RaisePropertyChanged(nameof(RowDetailsVisibility));
+            }
+        }
+
+        private Visibility rowDetailsVisibility1 = Visibility.Collapsed;
+
+        public Visibility RowDetailsVisibility1
+        {
+            get { return rowDetailsVisibility1; }
+            set
+            {
+                rowDetailsVisibility = value;
+                this.RaisePropertyChanged(nameof(RowDetailsVisibility1));
+            }
+        }
     }
 }

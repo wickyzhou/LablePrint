@@ -36,7 +36,7 @@ namespace Ui.View
             this._date = date;
             this._printConfig = printConfig;
 
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
 
             this.Loaded += Window_Loaded;
 

@@ -25,7 +25,7 @@ namespace Ui.View.InfoWindow
             this.DataContext = new ShippingBillEntryModifyViewModel();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
         }
     }
 }

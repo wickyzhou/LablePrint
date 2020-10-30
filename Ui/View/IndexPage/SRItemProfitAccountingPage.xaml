@@ -43,7 +43,7 @@
             <GroupBox.Header>
                 <DockPanel Width="auto">
                     <TextBlock Text="利润主表" Style="{StaticResource TextBlockStyle5}" Foreground="Purple"  Margin="10 0 0 0"/>
-                    <TextBlock Text="总数：" Style="{StaticResource TextBlockStyle5}" Margin="20 0 0 0"/>
+                    <TextBlock Text="记录数：" Style="{StaticResource TextBlockStyle5}" Margin="20 0 0 0"/>
                     <TextBox Text="{Binding ListsCount,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Width="200"/>
                     <TextBlock Text="总金额：" Style="{StaticResource TextBlockStyle5}"  Margin="20 0 0 0"/>
                     <TextBox Text="{Binding ListsSum,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" Width="200"/>

@@ -174,90 +174,7 @@ namespace Ui.Service
             }
         }
 
-        public bool BarTenderOilSampleEntryMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data, int printTotalNum, List<BarTenderTemplateModel> barTenderTemplates)
-        {
-            string printerName = config.PrinterName;
 
-            string templateName = barTenderTemplates.FirstOrDefault(m => m.TemplatePerPage == printTotalNum && m.TemplateTotalPage == 4).TemplateFullName;
-            List<OilSampleFlowPrintLogModel> logs = new List<OilSampleFlowPrintLogModel>();
-            BarTender.Application btApp = new BarTender.Application();
-            try
-            {
-                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
-                btFormat.PrintSetup.Printer = printerName;
-                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
-                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
-                var list = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
-                btFormat.PrintSetup.NumberSerializedLabels = 1;
-                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
-                int z = 0;
-                for (int i = 0; i < data.Count; i++)
-                {
-                    var entry = data[i];
-                    string batchNo = new OilSampleService().GetOilSampleEntryBatchNo(entry.Id);
-                    if (string.IsNullOrEmpty(batchNo))
-                    {
-                        var seq = new CommonService().GetCurrentDateNextSerialNumber(entry.ProductionDate, "OilSamplePrintBatchNo");
-                        batchNo = entry.ProductionDate.ToString("yyMMdd") + seq.ToString().PadLeft(3, '0');
-                    }
-                    entry.BatchNo = batchNo;
-                    logs.Add(new OilSampleFlowPrintLogModel
-                    {
-                        FormsonId = entry.Id,
-                        FormmainId = entry.FormmainId,
-                        EntryId = entry.EntryId,
-                        PrintCount = entry.CurrencyPrintCount,
-                        PrintedCount = entry.PrintedCount + entry.CurrencyPrintCount,
-                        BatchNo = entry.BatchNo,
-                        TypeId = config.TemplateTypeId,
-                        TypeDesc = config.TemplateTypeName
-                    });
-
-                    for (int j = 0; j < entry.CurrencyPrintCount; j++)
-                    {
-                        z++;
-                        if (entry.PrintedCount + entry.CurrencyPrintCount >= entry.PrintTotalCount && j == entry.CurrencyPrintCount - 1 && entry.TotalWeight % entry.WeightPerBucket != 0)
-                            entry.WeightPerBucket = (float)Math.Round(entry.TotalWeight % entry.WeightPerBucket, 2);
-                        switch (z)
-                        {
-                            case 1: SetTemplateNamedSubStringValueToPart1(btFormat, list, entry); break;
-                            case 2: SetTemplateNamedSubStringValueToPart2(btFormat, list, entry); break;
-                            case 3: SetTemplateNamedSubStringValueToPart3(btFormat, list, entry); break;
-                            case 4: SetTemplateNamedSubStringValueToPart4(btFormat, list, entry); break;
-                            default: break;
-                        }
-                    }
-                }
-
-                var s = btFormat.PrintOut(false, false);
-
-                // 写日志
-                foreach (var item in logs)
-                {
-                    var result = new OilSampleService().InsertOilSampleFlowLog2(item);
-                    if (!result)
-                        return false;
-                }
-
-
-                btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                if (btApp != null)
-                {
-                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                }
-            }
-
-        }
 
         public bool BarTenderMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data, int printTotalNum, List<BarTenderTemplateModel> barTenderTemplates)
         {
@@ -462,6 +379,180 @@ namespace Ui.Service
         }
 
 
+
+
+   
+        public string BarTenderPrintLS<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config)
+        {
+            string printerName = config.PrinterName; // 打印机名称
+            string templateName = config.TemplateSelectedItem.TemplateFullName; //通用模板名称
+            BarTender.Application btApp = new BarTender.Application();
+            try
+            {
+                // StringBuilder stringBuilder = new StringBuilder();
+                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
+                btFormat.PrintSetup.Printer = printerName;
+                btFormat.PrintSetup.NumberSerializedLabels = 1;
+                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
+                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
+                var fieldLists = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
+
+                foreach (var entry in lists)
+                {
+                    SetTemplateNamedSubStringValueToPart(btFormat, fieldLists, entry);
+                    var s1 = btFormat.PrintOut(false, false);
+                    if (s1 != 0)
+                    {
+                        btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        return "打印结果不正常，打开模板手动打印取消警告窗口";
+                    }
+                    else
+                        WriteRowHashValueLog(entry);
+                }
+                return "打印成功";
+            }
+            catch (Exception ex)
+            {
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (btApp != null)
+                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+            }
+        }
+
+
+        private int GetPrintCountAndWriteLog<T>(T item)
+        {
+            int printCount = 0;
+            string batchNo = string.Empty;
+            Byte[] rowHashValue = new byte[16];
+
+            foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
+            {
+                var name = propertyInfo.Name; // 属性名称
+                if (name == "PrintCount")
+                    printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
+                else if (name == "BatchNo")
+                    batchNo = Convert.ToString(propertyInfo.GetValue(item, null));
+                else if (name == "RowHashValue")
+                    rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
+            }
+            SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintA4Log(PrintBucket,PrintUserID,RowHashValue,BatchNo,PrintTime) values(@PrintBucket,@PrintUserID,@RowHashValue,@BatchNo,@PrintTime) ",
+                new SqlParameter[] { new SqlParameter("@PrintBucket", printCount), new SqlParameter("@PrintUserID", UserId),new SqlParameter("@RowHashValue", rowHashValue),new SqlParameter("@BatchNo", batchNo)
+                , new SqlParameter("@PrintTime", DateTime.Now) });
+            return printCount;
+        }
+
+       
+        private void WriteRowHashValueLog<T>(T item)
+        {
+            int printCount = 1;
+            Byte[] rowHashValue = new byte[16];
+
+            foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
+            {
+                var name = propertyInfo.Name; // 属性名称
+                if (name == "PrintCount")
+                    printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
+                else if (name == "RowHashValue")
+                    rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
+            }
+            SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintRowHashValueLog(RowHashValue,BucketCount,UserId,PrintTime) values(@RowHashValue,@BucketCount,@UserId,@PrintTime) ",
+                new SqlParameter[] { new SqlParameter("@BucketCount", printCount), 
+                    new SqlParameter("@UserId", UserId),
+                    new SqlParameter("@RowHashValue", rowHashValue),
+                    new SqlParameter("@PrintTime", DateTime.Now) });
+        }
+
+        public bool BarTenderOilSampleEntryMergePrint(BarTenderPrintConfigModel config, ObservableCollection<OilSampleEntryModel> data, int printTotalNum, List<BarTenderTemplateModel> barTenderTemplates)
+        {
+            string printerName = config.PrinterName;
+
+            string templateName = barTenderTemplates.FirstOrDefault(m => m.TemplatePerPage == printTotalNum && m.TemplateTotalPage == 4).TemplateFullName;
+            List<OilSampleFlowPrintLogModel> logs = new List<OilSampleFlowPrintLogModel>();
+            BarTender.Application btApp = new BarTender.Application();
+            try
+            {
+                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
+                btFormat.PrintSetup.Printer = printerName;
+                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
+                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
+                var list = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
+                btFormat.PrintSetup.NumberSerializedLabels = 1;
+                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                int z = 0;
+                for (int i = 0; i < data.Count; i++)
+                {
+                    var entry = data[i];
+                    string batchNo = new OilSampleService().GetOilSampleEntryBatchNo(entry.Id);
+                    if (string.IsNullOrEmpty(batchNo))
+                    {
+                        var seq = new CommonService().GetCurrentDateNextSerialNumber(entry.ProductionDate, "OilSamplePrintBatchNo");
+                        batchNo = entry.ProductionDate.ToString("yyMMdd") + seq.ToString().PadLeft(3, '0');
+                    }
+                    entry.BatchNo = batchNo;
+                    logs.Add(new OilSampleFlowPrintLogModel
+                    {
+                        FormsonId = entry.Id,
+                        FormmainId = entry.FormmainId,
+                        EntryId = entry.EntryId,
+                        PrintCount = entry.CurrencyPrintCount,
+                        PrintedCount = entry.PrintedCount + entry.CurrencyPrintCount,
+                        BatchNo = entry.BatchNo,
+                        TypeId = config.TemplateTypeId,
+                        TypeDesc = config.TemplateTypeName
+                    });
+
+                    for (int j = 0; j < entry.CurrencyPrintCount; j++)
+                    {
+                        z++;
+                        if (entry.PrintedCount + entry.CurrencyPrintCount >= entry.PrintTotalCount && j == entry.CurrencyPrintCount - 1 && entry.TotalWeight % entry.WeightPerBucket != 0)
+                            entry.WeightPerBucket = (float)Math.Round(entry.TotalWeight % entry.WeightPerBucket, 2);
+                        switch (z)
+                        {
+                            case 1: SetTemplateNamedSubStringValueToPart1(btFormat, list, entry); break;
+                            case 2: SetTemplateNamedSubStringValueToPart2(btFormat, list, entry); break;
+                            case 3: SetTemplateNamedSubStringValueToPart3(btFormat, list, entry); break;
+                            case 4: SetTemplateNamedSubStringValueToPart4(btFormat, list, entry); break;
+                            default: break;
+                        }
+                    }
+                }
+
+                var s = btFormat.PrintOut(false, false);
+
+                // 写日志
+                foreach (var item in logs)
+                {
+                    var result = new OilSampleService().InsertOilSampleFlowLog2(item);
+                    if (!result)
+                        return false;
+                }
+
+
+                btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (btApp != null)
+                {
+                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                }
+            }
+
+        }
+
         public string BarTenderPrintA4<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config, int totalPages)
         {
             string printerName = config.PrinterName; // 打印机名称
@@ -591,91 +682,9 @@ namespace Ui.Service
             }
         }
 
-   
-        public string BarTenderPrintLS<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config)
+        public string BarTenderPrintA4WeightRem<T>(IEnumerable<T> lists, BarTenderPrintConfigModelXX config)
         {
-            string printerName = config.PrinterName; // 打印机名称
-            string templateName = config.TemplateSelectedItem.TemplateFullName; //通用模板名称
-            BarTender.Application btApp = new BarTender.Application();
-            try
-            {
-                // StringBuilder stringBuilder = new StringBuilder();
-                BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
-                btFormat.PrintSetup.Printer = printerName;
-                btFormat.PrintSetup.NumberSerializedLabels = 1;
-                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
-                string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
-                Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
-                var fieldLists = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
-
-                foreach (var entry in lists)
-                {
-                    SetTemplateNamedSubStringValueToPart(btFormat, fieldLists, entry);
-                    var s1 = btFormat.PrintOut(false, false);
-                    if (s1 != 0)
-                    {
-                        btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                        return "打印结果不正常，打开模板手动打印取消警告窗口";
-                    }
-                    else
-                        WriteRowHashValueLog(entry);
-                }
-                return "打印成功";
-            }
-            catch (Exception ex)
-            {
-                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                if (btApp != null)
-                    btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-            }
-        }
-
-
-        private int GetPrintCountAndWriteLog<T>(T item)
-        {
-            int printCount = 0;
-            string batchNo = string.Empty;
-            Byte[] rowHashValue = new byte[16];
-
-            foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
-            {
-                var name = propertyInfo.Name; // 属性名称
-                if (name == "PrintCount")
-                    printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
-                else if (name == "BatchNo")
-                    batchNo = Convert.ToString(propertyInfo.GetValue(item, null));
-                else if (name == "RowHashValue")
-                    rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
-            }
-            SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintA4Log(PrintBucket,PrintUserID,RowHashValue,BatchNo,PrintTime) values(@PrintBucket,@PrintUserID,@RowHashValue,@BatchNo,@PrintTime) ",
-                new SqlParameter[] { new SqlParameter("@PrintBucket", printCount), new SqlParameter("@PrintUserID", UserId),new SqlParameter("@RowHashValue", rowHashValue),new SqlParameter("@BatchNo", batchNo)
-                , new SqlParameter("@PrintTime", DateTime.Now) });
-            return printCount;
-        }
-
-       
-        private void WriteRowHashValueLog<T>(T item)
-        {
-            int printCount = 1;
-            Byte[] rowHashValue = new byte[16];
-
-            foreach (PropertyInfo propertyInfo in item.GetType().GetProperties())
-            {
-                var name = propertyInfo.Name; // 属性名称
-                if (name == "PrintCount")
-                    printCount = Convert.ToInt32(propertyInfo.GetValue(item, null));
-                else if (name == "RowHashValue")
-                    rowHashValue = propertyInfo.GetValue(item, null) as Byte[];
-            }
-            SqlHelper.ExecuteNonQuery(" insert into SJLabelPrintRowHashValueLog(RowHashValue,BucketCount,UserId,PrintTime) values(@RowHashValue,@BucketCount,@UserId,@PrintTime) ",
-                new SqlParameter[] { new SqlParameter("@BucketCount", printCount), 
-                    new SqlParameter("@UserId", UserId),
-                    new SqlParameter("@RowHashValue", rowHashValue),
-                    new SqlParameter("@PrintTime", DateTime.Now) });
+            return null;
         }
 
     }

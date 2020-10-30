@@ -29,7 +29,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="0.8*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Grid.Column="0" Padding="5" Background="AntiqueWhite" BorderBrush="Purple" Header="批量生成该返利案子或产品">
                 <GroupBox.Content>
@@ -110,9 +110,6 @@
                             </i:Interaction.Triggers>
                         </ComboBox>
                         
-                        
-                        <!--<TextBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TextBoxStretchStyle}" Text="{Binding BatchParameter.RebatePctValue}" IsEnabled="{Binding BatchParameter.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" ToolTip="填写比例数字，例如99%，只需要填【99】"         TabIndex="3" />-->
-
                         <TextBox  Grid.Row="0" Grid.Column="4" Style="{StaticResource TextBoxStretchStyle}" ToolTip="填写比例数字，例如99%，只需要填【99】" IsEnabled="{Binding BatchParameter.SalesRebateBatchParameter.RebatePctType, Converter={c:SalesRebateFixedPercentIsEnabledConverter}}" TabIndex="5" >
                             <TextBox.Text>
                                 <Binding Path="BatchParameter.SalesRebateBatchParameter.RebatePctValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" ValidatesOnDataErrors="True" NotifyOnValidationError="True"/>
@@ -142,7 +139,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0"  Style="{StaticResource BtnInfoStyle}" Content="1.客户参数配置"  Command="{Binding SalesRebateRecentParameterShowCommand}"  ToolTip="最近计算的条目的参数历史记录"/>
+                            <Button Grid.Column="0"  Style="{StaticResource BtnWarningStyle}" Content="1.客户参数配置"  Command="{Binding SalesRebateRecentParameterShowCommand}"  ToolTip="最近计算的条目的参数历史记录"/>
                             <Button Grid.Column="1"  Style="{StaticResource BtnWarningStyle}" Content="2.批量生成数据"  Command="{Binding SalesRebateTypedBatchInsertCommand}"  ToolTip="【结算日期区间】+【客户】+【返利类型】+【上期参数】，将本阶段的数据自动生成到下面列表"/>
                         </Grid>
                     </Grid>
@@ -158,10 +155,10 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" Text="分段返利 ↓" Style="{StaticResource TextBlockStyle15}" Foreground="Chocolate" />
@@ -248,83 +245,99 @@
         </Grid>
 
         <GroupBox Grid.Row="3" Padding="1 2" Margin="0 10">
-            <GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="150"/>
-                    </Grid.ColumnDefinitions>
-
-                    
-                    <Button Grid.Column="1" Style="{StaticResource BtnWarningStyle}" Content="复制为默认参数"  Command="{Binding SalesRebateParameterCopyCommand}" ToolTip="只能勾选一行，点击复制参数，将本行的计算参数导入到上面的全局参数配置里面，做默认值生成参数列表"/>
-                    <Button Grid.Column="2" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后，可点击【显示历史记录】查看,一般不用手动删除，如果以相同的参数多次生成数据，则之前的数据会被自动设置为已删除"/>
-             
-                    <!--<CheckBox IsChecked="{Binding IsRebateAmountBiggerThanZero,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="3" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
-                               Command="{Binding RebateAmountBiggerThanZeroCheckCommand}" />-->
-
-                    <CheckBox IsChecked="{Binding IsHistory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="3" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
-                               Command="{Binding SalesRebateHistoryShowCommand}" />
-                    
-                    
-                    <Button Grid.Column="5" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复,适用于生成数据的时候参数错误"/>
-                    
-                    <Button Grid.Column="8" Style="{StaticResource BtnThemeStyle}" Content="3. 生成K3专用发票"  Command="{Binding SalesRebateK3ApiInsertCommand}"
-                    ToolTip="选中客户数据确认无误后，生成K3折扣返利数据"/>
-              
-                </Grid>
-            </GroupBox.Header>
             <GroupBox.Content>
-                <DataGrid Name="DGSalesRebate"  Style="{StaticResource MultiCheckBoxDataGridStyle}"
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Style="{StaticResource GroupBoxContentTopRow}"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="记录数：" Style="{StaticResource TextBlockStyle5}" />
+                        <TextBox Grid.Column="1" Text="{Binding ListsCount,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}" />
+                        <TextBlock Grid.Column="2" Text="返利总额：" Style="{StaticResource TextBlockStyle5}" />
+                        <TextBox Grid.Column="3" Text="{Binding ListsSum,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxReadonlyStyle}"/>
+
+                        <CheckBox IsChecked="{Binding IsHistory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Grid.Column="5" Content="显示历史数据"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                               Command="{Binding SalesRebateHistoryShowCommand}" />
+                        <Button Grid.Column="6" Style="{StaticResource BtnThemeStyle}" Content="复制为默认参数"  Command="{Binding SalesRebateParameterCopyCommand}" ToolTip="只能勾选一行，点击复制参数，将本行的计算参数导入到上面的全局参数配置里面，做默认值生成参数列表"/>
+                        <Button Grid.Column="7" Style="{StaticResource BtnDangerStyle}" Content="删除"  Command="{Binding SalesRebateRemoveCommand}" ToolTip="删除勾选的数据行后，可点击【显示历史记录】查看,一般不用手动删除，如果以相同的参数多次生成数据，则之前的数据会被自动设置为已删除"/>
+
+
+
+                        <Button Grid.Column="8" Style="{StaticResource BtnWarningStyle}" Content="3. 生成K3专用发票"  Command="{Binding SalesRebateK3ApiInsertCommand}"
+                    ToolTip="选中客户数据确认无误后，生成K3折扣返利数据"/>
+
+
+
+
+
+                        <Button Grid.Column="9" Style="{StaticResource BtnDangerStyle}" Content="永久删除"  Command="{Binding SalesRebateDiskRemoveCommand}" ToolTip="从磁盘删除勾选的数据行,数据不可恢复,适用于生成数据的时候参数错误"/>
+
+
+                    </Grid>
+                
+                    <DataGrid Grid.Row="1" Name="DGSalesRebate"  
+                              Style="{StaticResource MultiCheckBoxDataGridStyle}"
                   ItemsSource="{Binding SalesRebateLists}" SelectedItem="{Binding SalesRebateSelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.ItemContainerStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Height" Value="26"/>
-                            <Setter Property="cmd:CommandBehavior.Event" Value="PreviewMouseLeftButtonDown"/>
-                            <Setter Property="cmd:CommandBehavior.Command" Value="{Binding DataContext.MouseLeftClickCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:SalesRebatePage}}}"/>
-                            <Setter Property="cmd:CommandBehavior.CommandParameter" Value="{Binding  RelativeSource={RelativeSource Self}}"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
-                                    <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
-                                </Trigger>
-                                <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
-                                    <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"/>
-                                    <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Height" Value="26"/>
+                                <Setter Property="cmd:CommandBehavior.Event" Value="PreviewMouseLeftButtonDown"/>
+                                <Setter Property="cmd:CommandBehavior.Command" Value="{Binding DataContext.MouseLeftClickCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:SalesRebatePage}}}"/>
+                                <Setter Property="cmd:CommandBehavior.CommandParameter" Value="{Binding  RelativeSource={RelativeSource Self}}"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                                        <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
+                                        <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"/>
+                                        <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
 
-                        </Style>
-                    </DataGrid.ItemContainerStyle>
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
 
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="40"   HeaderStyle="{StaticResource DGColumnHeader}">
-                            <DataGridColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <CheckBox IsChecked="{Binding DataContext.IsCheckedAll,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="40"   HeaderStyle="{StaticResource DGColumnHeader}">
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <CheckBox IsChecked="{Binding DataContext.IsCheckedAll,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"
                                Command="{Binding DataContext.AllCheckedCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
                         />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridColumn.HeaderTemplate>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
 
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <CheckBox IsChecked="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    
+                </Grid>
             </GroupBox.Content>
         </GroupBox>
 

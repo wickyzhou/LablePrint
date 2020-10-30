@@ -32,7 +32,7 @@ namespace Ui.View
         {
             InitializeComponent();
             this.User = user;
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); RefreshEvent(); }));
             names = new ObservableCollection<QuerySchemaModel>(new LabelPrintService().GetAllSchemaName(user.ID));

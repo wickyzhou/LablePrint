@@ -33,7 +33,7 @@ namespace Ui.View
             this.DataContext = new ExportViewModel(_dataGridTypeId, defaultRadio);
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
-            this.MouseLeftButtonDown += (sender, e) => { this.DragMove(); };
+            this.MouseLeftButtonDown += (sender, e) => { if(e.LeftButton== MouseButtonState.Pressed) this.DragMove(); };
             InitializeExportViewTypedColumnGrid();
         }
 
