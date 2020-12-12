@@ -51,5 +51,10 @@ namespace Bll.Services
                 return $" 成功修改【 {count} 】条记录";
             return null;
         }
+
+        public string VerifyICMOOrder(DateTime productionDate)
+        {
+            return dal.VerifyICMOOrder(productionDate);
+        }
     }
 }

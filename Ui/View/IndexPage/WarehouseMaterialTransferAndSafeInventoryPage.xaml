@@ -6,7 +6,7 @@
       xmlns:cvt="clr-namespace:Ui.Converter"
       xmlns:local="clr-namespace:Ui.View.IndexPage"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1200"
+      d:DesignHeight="700" d:DesignWidth="1300"
             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="WarehouseMaterialTransferAndSafeInventory">
 
@@ -50,7 +50,7 @@
 
                     <TextBox Style="{StaticResource TextBoxReadonlyStyle}" Width="250" Text="{Binding HostConfig.HostValue,UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <Button Content="导出" Style="{StaticResource BtnThemeStyle}" Width="100" Command="{Binding ExportBaseCommand}"  ToolTip="导出过滤数据到指定目录"/>
+                    <Button Content="导出" Style="{StaticResource BtnThemeStyle}" Width="180" Command="{Binding ExportBaseCommand}"  ToolTip="导出计划开工时间当天已发料且未调拨的数据"/>
 
                     <Button Style="{StaticResource BtnSuccessStyle}" Content="生成K3调拨单" Command="{Binding BatchNoQtyK3InsertCommand}" CommandParameter="{Binding ElementName=DGDeliverTransfer}" Margin="100 0 0 0" />
                 </StackPanel>
@@ -59,11 +59,11 @@
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <TextBlock Text="生产日期：" Style="{StaticResource TextBlockStyle5}" Margin="8 0"/>
 
-                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ProductionDateBegin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ProductionDate1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
 
                 <TextBlock  Text="至" Style="{StaticResource TextBlockStyle}" Margin="5 0"/>
 
-                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ProductionDateEnd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
+                <DatePicker  Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding Filter.ProductionDate2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" ToolTip="包括本日"/>
 
                 <TextBlock Text="产品类别：" Style="{StaticResource TextBlockStyle10}" Margin="15 0 2 0"/>
 
@@ -93,6 +93,7 @@
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <DataGrid x:Name="DGMain" Style="{StaticResource SingleSelectionDataGridStyle}" 
@@ -115,20 +116,22 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
 
                                     <DataGridTextColumn Header="产品型号" Binding="{Binding MaterialName,UpdateSourceTrigger=PropertyChanged}" Width="100" />
 
-                                 
-                                     
-                               
-                                    <DataGridTextColumn Header="日需求数" Binding="{Binding QtyRequest,UpdateSourceTrigger=PropertyChanged}" Width="100"  Foreground="Purple"/>
-                        <DataGridTextColumn Header="月内未领料" Binding="{Binding QtyUnPick,UpdateSourceTrigger=PropertyChanged}" Width="100"  Foreground="Purple"/>
-                        <DataGridTextColumn Header="仓库现场结余" Binding="{Binding QtyWorkshopInventory,UpdateSourceTrigger=PropertyChanged}" Width="100" Foreground="Purple"/>
-                                    <DataGridTextColumn Header="缺少数量" Binding="{Binding QtyLack,UpdateSourceTrigger=PropertyChanged}" Width="100" Foreground="Purple"/>
+                        <DataGridTextColumn Header="日需求数" Binding="{Binding QtyRequest,UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                        <DataGridTextColumn Header="当日领料" Binding="{Binding QtyPickedToday,UpdateSourceTrigger=PropertyChanged}" Width="80"  />
+                        <DataGridTextColumn Header="月内未领料" Binding="{Binding QtyUnPick,UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                        <DataGridTextColumn Header="仓库现场结余" Binding="{Binding QtyWorkshopInventory,UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                        <DataGridTextColumn Header="缺少数量" Binding="{Binding QtyLack,UpdateSourceTrigger=PropertyChanged,StringFormat=\{0:N3\}}" Width="110" Foreground="MidnightBlue"/>
                                     <DataGridTextColumn Header="在途数量" Binding="{Binding QtyTransfering,UpdateSourceTrigger=PropertyChanged}" Width="100" />
                                     <DataGridTextColumn Header="已调数量" Binding="{Binding QtyTransfered,UpdateSourceTrigger=PropertyChanged}" Width="100" />
                                 </DataGrid.Columns>
                             </DataGrid>
-       
-                <Grid Grid.Column="1">
+
+                <GridSplitter  Grid.Column="1" Style="{StaticResource ColumnGridSplitter1}"/>
+
+                
+                <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
@@ -184,8 +187,7 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </Grid>
                         </GroupBox.Content>
                     </GroupBox>
-                 
-                   
+
 
                     <GroupBox Header="发料调拨明细" Grid.Row="1" Margin="0 15" Padding=" 0 8">
                         <GroupBox.Content>
@@ -222,8 +224,10 @@ CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, Ancestor
                             </Grid>
                         </GroupBox.Content>
                     </GroupBox>
-
+            
                 </Grid>
+                
+                
             </Grid>
 
         </Grid>

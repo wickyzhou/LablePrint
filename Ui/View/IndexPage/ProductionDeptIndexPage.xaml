@@ -22,7 +22,7 @@
 
 
         <Grid Background="Bisque"  Margin="5">
-            <Grid.RowDefinitions>
+            <!--<Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -30,7 +30,7 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="tbBucketCount" Text="0" Height="50" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"
                                          FontSize="26" HorizontalContentAlignment="Center" Margin="25 10 0 0" BorderThickness="0" Grid.Row="1"/>
-            <Button x:Name="BtnSyncBucket" Content="同步包装桶数据"   Height="30" Style="{StaticResource BtnSuccessStyle}" Width="auto"  Grid.Row="2" Command="{Binding BucketSyncCommand}" />
+            <Button x:Name="BtnSyncBucket" Content="同步包装桶数据"   Height="30" Style="{StaticResource BtnSuccessStyle}" Width="auto"  Grid.Row="2" Command="{Binding BucketSyncCommand}" />-->
         </Grid>
 
 
@@ -98,9 +98,9 @@
 
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="3" Background="Bisque" Margin="5">
-
-        </Grid>
+        <GroupBox Grid.Row="0" Grid.Column="3" Background="Bisque" Margin="5" Header="打印界面">
+            <Button Style="{StaticResource BtnThemeStyle}" Content="通用调整（新）" Command="{Binding PrintCommonAdjustmentCommand}" />
+        </GroupBox>
 
         <Grid Grid.Row="1" Grid.Column="0" Background="Bisque" Margin="5">
 

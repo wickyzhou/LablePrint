@@ -39,10 +39,8 @@
                                 <Setter Property="Cursor" Value="Hand"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter  Property="Background" Value="Red"/>
+                                <Setter Property="Background" Value="Red" />
                             </Trigger>
-
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -124,7 +122,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" 
+            <!--<Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" 
                             Name="BtnSchemeConfig"  FontWeight="Regular" FontFamily="宋体" VerticalContentAlignment="Center"
                         Click="BtnSchemeConfig_Click" Width="85" Height="33" Margin="-20 0 0 0">
                 <Button.Content>
@@ -133,7 +131,7 @@
                         <TextBlock Text="方案设置" FontSize="13" Margin="1 1.5 3 0"/>
                     </StackPanel>
                 </Button.Content>
-            </Button>
+            </Button>-->
 
             <Button Grid.Row="0" Grid.Column="5" Name="BtnGenPrintData"  FontFamily="宋体" VerticalContentAlignment="Center" ToolTip="重新生成打印数据"
                         Click="BtnGenPrintData_Click" Height="33" Margin="14,0,4,0" VerticalAlignment="Top">
@@ -304,7 +302,7 @@
                     </Button>
                     
                     <Button x:Name="BtnGenQuerySchema" Content="生成方案"  Style="{StaticResource BtnWarningStyle}" Width="55" Height="60"   Click="BtnGenQuerySchema_Click" ToolTip="选择文件夹，将里面的模板自动生成查询方案，增量模式" 
-                            HorizontalAlignment="Center"/>
+                            HorizontalAlignment="Center" Visibility="Collapsed"/>
 
            
                     <Button x:Name="BtnPrint"  Click="BtnPrint_Click" Width="60" Height="60" FontSize="22"

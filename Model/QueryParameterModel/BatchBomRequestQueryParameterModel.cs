@@ -7,27 +7,27 @@ namespace Model
 {
     public class BatchBomRequestQueryParameterModel:NotificationObject
     {
-		private DateTime productionDateBegin;
+		private DateTime productionDate1;
 
-		public DateTime ProductionDateBegin
+		public DateTime ProductionDate1
 		{
-			get { return productionDateBegin; }
+			get { return productionDate1; }
 			set
 			{
-				productionDateBegin = value;
-				this.RaisePropertyChanged(nameof(ProductionDateBegin));
+				productionDate1 = value;
+				this.RaisePropertyChanged(nameof(ProductionDate1));
 			}
 		}
 
-		private DateTime productionDateEnd;
+		private DateTime productionDate2;
 
-		public DateTime ProductionDateEnd
+		public DateTime ProductionDate2
 		{
-			get { return productionDateEnd; }
+			get { return productionDate2; }
 			set
 			{
-				productionDateEnd = value;
-				this.RaisePropertyChanged(nameof(ProductionDateEnd));
+				productionDate2 = value;
+				this.RaisePropertyChanged(nameof(ProductionDate2));
 			}
 		}
 

@@ -231,4 +231,25 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ComboBox"
+           x:Key="ReadOnlyAutoComboBoxStyle"
+           BasedOn="{x:Null}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background"
+                Value="{StaticResource ReadonlyBackgroundBrush}" />
+        <Setter Property="Height"
+                Value="26" />
+        <Setter Property="MinWidth"
+                Value="50" />
+        <Setter Property="MaxWidth"
+                Value="120" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="IsEnabled"
+                Value="False" />
+        <Setter Property="Foreground"
+                Value="{StaticResource ReadonlyForegroundBrush}" />
+
+    </Style>
+
 </ResourceDictionary>

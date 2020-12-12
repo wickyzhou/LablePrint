@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Media;
 using Ui.Command;
 using Ui.Service;
+using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel.IndexPage
 {
@@ -92,6 +93,12 @@ namespace Ui.ViewModel.IndexPage
                 int count = _service.SyncBucketInfo();
                 MessageBox.Show($"成功更新【{count}】条桶子名称");
             });
+
+            PrintCommonAdjustmentCommand = new DelegateCommand((obj) =>
+            {
+                PrintCommonAdjustmentView view = new PrintCommonAdjustmentView();
+                view.ShowDialog();
+            });
         }
 
         public DelegateCommand ExportCommand { get; set; }
@@ -99,6 +106,8 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand GenNewDataCommand { get; set; }
         public DelegateCommand BucketSyncCommand { get; set; }
         public DelegateCommand ProfitLossExportCommand { get; set; }
+        public DelegateCommand PrintCommonAdjustmentCommand { get; set; }
+
 
 
         private DateTime selectedDate = DateTime.Now;

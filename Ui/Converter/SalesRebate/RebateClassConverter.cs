@@ -12,7 +12,7 @@ namespace Ui.Converter.SalesRebate
 
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return new CommonService().GetEnumLists(6).Where(m=>m.ID==(int)value).FirstOrDefault().ItemValue;
+            return new CommonService().GetEnumLists(6).Where(m=>m.Id==(int)value).FirstOrDefault().ItemValue;
         }
     }
 }

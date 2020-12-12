@@ -509,8 +509,6 @@ namespace Model
             }
         }
 
-
-
         private string sampleOilPrintProductionName;
 
         public string SampleOilPrintProductionName
@@ -535,13 +533,224 @@ namespace Model
             }
         }
 
+        private string iCMOOrderBillNo;
+
+        public string ICMOOrderBillNo
+        {
+            get { return iCMOOrderBillNo; }
+            set
+            {
+                iCMOOrderBillNo = value;
+                this.RaisePropertyChanged(nameof(ICMOOrderBillNo));
+            }
+        }
+
+        private string shippingAddress;
+
+        public string ShippingAddress
+        {
+            get { return shippingAddress; }
+            set
+            {
+                shippingAddress = value;
+                this.RaisePropertyChanged(nameof(ShippingAddress));
+            }
+        }
+
+        private int fCustId;
+
+        public int FCustId
+        {
+            get { return fCustId; }
+            set
+            {
+                fCustId = value;
+                this.RaisePropertyChanged(nameof(FCustId));
+            }
+        }
 
 
+        private string gB;
+
+        public string GB
+        {
+            get { return gB; }
+            set
+            {
+                gB = value;
+                this.RaisePropertyChanged(nameof(GB));
+            }
+        }
+
+        private string qB;
+
+        public string QB
+        {
+            get { return qB; }
+            set
+            {
+                qB = value;
+                this.RaisePropertyChanged(nameof(QB));
+            }
+        }
+
+        private string gQB;
+
+        public string GQB
+        {
+            get { return gQB; }
+            set
+            {
+                gQB = value;
+                this.RaisePropertyChanged(nameof(GQB));
+            }
+        }
+
+        private string field01;
+
+        public string Field01
+        {
+            get { return field01; }
+            set
+            {
+                field01 = value;
+                this.RaisePropertyChanged(nameof(Field01));
+            }
+        }
+
+        private string field02;
+
+        public string Field02
+        {
+            get { return field02; }
+            set
+            {
+                field02 = value;
+                this.RaisePropertyChanged(nameof(Field02));
+            }
+        }
+
+        private string field03;
+
+        public string Field03
+        {
+            get { return field03; }
+            set
+            {
+                field03 = value;
+                this.RaisePropertyChanged(nameof(Field03));
+            }
+        }
 
 
+        private string field04;
+
+        public string Field04
+        {
+            get { return field04; }
+            set
+            {
+                field04 = value;
+                this.RaisePropertyChanged(nameof(Field04));
+            }
+        }
+
+        private string field05;
+
+        public string Field05
+        {
+            get { return field05; }
+            set
+            {
+                field05 = value;
+                this.RaisePropertyChanged(nameof(Field05));
+            }
+        }
+
+        private string field06;
+
+        public string Field06
+        {
+            get { return field06; }
+            set
+            {
+                field06 = value;
+                this.RaisePropertyChanged(nameof(Field06));
+            }
+        }
+
+        private string field07;
+
+        public string Field07
+        {
+            get { return field07; }
+            set
+            {
+                field07 = value;
+                this.RaisePropertyChanged(nameof(Field07));
+            }
+        }
+
+        private string field08;
+
+        public string Field08
+        {
+            get { return field08; }
+            set
+            {
+                field08 = value;
+                this.RaisePropertyChanged(nameof(Field08));
+            }
+        }
+
+        private string field09;
+
+        public string Field09
+        {
+            get { return field09; }
+            set
+            {
+                field09 = value;
+                this.RaisePropertyChanged(nameof(Field09));
+            }
+        }
+
+        private string field10;
+
+        public string Field10
+        {
+            get { return field10; }
+            set
+            {
+                field10 = value;
+                this.RaisePropertyChanged(nameof(Field10));
+            }
+        }
+
+        private bool noPrintVocName;
+
+        public bool NoPrintVocName
+        {
+            get { return noPrintVocName; }
+            set
+            {
+                noPrintVocName = value;
+                this.RaisePropertyChanged(nameof(NoPrintVocName));
+            }
+        }
 
 
+        private string vOCName;
 
+        public string VOCName
+        {
+            get { return vOCName; }
+            set
+            {
+                vOCName = value;
+                this.RaisePropertyChanged(nameof(VOCName));
+            }
+        }
 
         //public int UserID { get; set; } // 用户ID
 

@@ -227,6 +227,17 @@ namespace Model
 			}
 		}
 
+		private double? qtyPickedToday;
+
+		public double? QtyPickedToday
+		{
+			get { return qtyPickedToday; }
+			set
+			{
+				qtyPickedToday = value;
+				this.RaisePropertyChanged(nameof(QtyPickedToday));
+			}
+		}
 
 
 	}

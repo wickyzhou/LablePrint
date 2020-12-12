@@ -39,7 +39,6 @@ namespace Model
 
         public string OrgID { get; set; }  //客户编号
 
-
         private string productionName;
 
         public string ProductionName
@@ -584,6 +583,54 @@ namespace Model
             {
                 rowQuantity = value;
                 this.RaisePropertyChanged(nameof(RowQuantity));
+            }
+        }
+
+        private string shippingAddress;
+
+        public string ShippingAddress
+        {
+            get { return shippingAddress; }
+            set
+            {
+                shippingAddress = value;
+                this.RaisePropertyChanged(nameof(ShippingAddress));
+            }
+        }
+
+        private int fCustId;
+
+        public int FCustId
+        {
+            get { return fCustId; }
+            set
+            {
+                fCustId = value;
+                this.RaisePropertyChanged(nameof(FCustId));
+            }
+        }
+
+        private bool noPrintVocName;
+
+        public bool NoPrintVocName
+        {
+            get { return noPrintVocName; }
+            set
+            {
+                noPrintVocName = value;
+                this.RaisePropertyChanged(nameof(NoPrintVocName));
+            }
+        }
+
+        private string vOCName;
+
+        public string VOCName
+        {
+            get { return vOCName; }
+            set
+            {
+                vOCName = value;
+                this.RaisePropertyChanged(nameof(VOCName));
             }
         }
 

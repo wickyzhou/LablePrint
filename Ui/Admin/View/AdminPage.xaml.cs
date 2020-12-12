@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Ui.Admin.ViewModel;
 using Ui.MVVM.View;
-using Ui.Service;
-using Ui.ViewModel.IndexPage;
 
-namespace Ui.View.IndexPage
+namespace Ui.Admin.View
 {
     /// <summary>
     /// AdminPage.xaml 的交互逻辑
@@ -58,11 +57,13 @@ namespace Ui.View.IndexPage
 
         private void Btn21_Click(object sender, RoutedEventArgs e)
         {
-            Window1 window = new Window1()
-            {
-                Owner = Window.GetWindow(this)
-            };
-            window.ShowDialog();
+            //DependencyProperty dp = new DependencyProperty() { };
+            //MessageBox.Show(this.Btn21.Parent.GetValue(dp).nam);
+            //Window1 window = new Window1()
+            //{
+            //    Owner = Window.GetWindow(this)
+            //};
+            //window.ShowDialog();
         }
 
         private void ShowJson_Click(object sender, RoutedEventArgs e)

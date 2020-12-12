@@ -173,6 +173,17 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        private bool isCheckedAll = false;
+
+        public bool IsCheckedAll
+        {
+            get { return isCheckedAll; }
+            set
+            {
+                isCheckedAll = value;
+                this.RaisePropertyChanged(nameof(IsCheckedAll));
+            }
+        }
 
 
         public DelegateCommand QueryCommand { get; set; }
@@ -183,11 +194,28 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand PurchaseRequisitionInsertK3Command { get; set; }
         public DelegateCommand PurchaseRequisitionCheckBill1K3Command { get; set; }
         public DelegateCommand PurchaseRequisitionCheckBill2K3Command { get; set; }
+        public DelegateCommand AllCheckCommand { get; set; }
 
 
 
         private void InitCommand()
         {
+
+            AllCheckCommand = new DelegateCommand((obj) =>
+            {
+                if (IsCheckedAll)
+                {
+                    foreach (var item in MaterialPlanSeorderLists)
+                        item.IsChecked = true;
+                }
+                else
+                {
+                    foreach (var item in MaterialPlanSeorderLists)
+                        item.IsChecked = false;
+                }
+
+            });
+
             QueryCommand = new DelegateCommand(Query);
 
             MouseLeftClickCommand = new DelegateCommand((obj) =>

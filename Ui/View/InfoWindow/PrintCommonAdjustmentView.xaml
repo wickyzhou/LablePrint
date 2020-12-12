@@ -1,0 +1,79 @@
+﻿<Window x:Class="Ui.View.InfoWindow.PrintCommonAdjustmentView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ui.View.InfoWindow"
+        mc:Ignorable="d"
+        Title="通用调整" Style="{StaticResource WindowStyleLevel1000*700}">
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
+        <KeyBinding Gesture="Enter" Command="{Binding QueryBaseCommand}" />
+    </Window.InputBindings>
+    <GroupBox Header="重复类型配置，计算优先级：客户标签 > 标签 > 客户 （如果单元格出现红色框，说明必须输入值-1，代表不需要了）" Style="{StaticResource GroupBoxStyle}">
+        <Grid Style="{StaticResource ContentAreaGridStyle}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                <Button Command="{Binding RemoveCommand}" Style="{StaticResource BtnDangerStyle}" Content="删除选中" Margin="20 0" Width="80" ToolTip="选择一行删除" />
+
+                <Button Command="{Binding CopyCommand}" Style="{StaticResource BtnSuccessStyle}" Content="复制新增" Margin="20 0" Width="80" ToolTip="选择一行复制，不选择增加新行,必须【保存】才会将数据写入后台" />
+
+
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource BtnThemeStyle}" Content="保存修改" Margin="20 0" ToolTip="将界面数据保存【快捷键CTRL+S】" Width="80" />
+
+                <TextBlock Style="{StaticResource TextBlockStyle5}" Text="客户代码" Width="60" Margin="50 0 0 0" />
+
+                <TextBox Text="{Binding QueryParameter.OrgId,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0 0 20 0" Width="100" />
+
+                <TextBlock Style="{StaticResource TextBlockStyle5}" Text="标签型号" Width="60" />
+
+                <TextBox Text="{Binding QueryParameter.Label,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0 0 20 0" Width="100" />
+
+                <Button Command="{Binding QueryBaseCommand}" Style="{StaticResource BtnInfoStyle}" Content="查询" Margin="30 0" Width="80" ToolTip="快捷键【Enter】" />
+
+
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding CommonAdjustmentLists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding PrintCommonAdjustmentSelectedItem}">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="150" HeaderStyle="{StaticResource DGColumnHeader}">
+                        <DataGridColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="类型" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+
+                                    <ComboBox Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding DataContext.TypeSelectorLists,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" SelectedValuePath="Id" DisplayMemberPath="ItemValue" SelectedItem="{Binding TypeSeletedItem,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding TypeId,UpdateSourceTrigger=PropertyChanged}" Width="120" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn DataGridColumn.Header="客户代码" DataGridBoundColumn.Binding="{Binding OrgId,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
+                    <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
+                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
+                    <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
+                    <DataGridTextColumn DataGridColumn.Header="有效天数" DataGridBoundColumn.Binding="{Binding ExpirationDay,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
+                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
+                    <DataGridTextColumn DataGridColumn.Header="自定义1" DataGridBoundColumn.Binding="{Binding Field1,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="自定义2" DataGridBoundColumn.Binding="{Binding Field2,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="自定义3" DataGridBoundColumn.Binding="{Binding Field3,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="自定义4" DataGridBoundColumn.Binding="{Binding Field4,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                    <DataGridTextColumn DataGridColumn.Header="自定义5" DataGridBoundColumn.Binding="{Binding Field5,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </GroupBox>
+
+    
+</Window>

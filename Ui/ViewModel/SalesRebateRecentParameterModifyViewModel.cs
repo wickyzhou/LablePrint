@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,12 +18,12 @@ using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel
 {
-    public class SalesRebateCreateAndCopyViewModel : NewDialogViewModel<SalesRebateModel>
+    public class SalesRebateRecentParameterModifyViewModel : NewDialogViewModel<SalesRebateRecentParameterMainModel>
     {
 
         private readonly SalesRebateAmountRangeService _salesRebateAmountRangeService;
 
-        public SalesRebateCreateAndCopyViewModel()
+        public SalesRebateRecentParameterModifyViewModel()
         {
             _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
             InitCommand();
@@ -31,18 +32,22 @@ namespace Ui.ViewModel
 
         private void InitData()
         {
-            SalesRebateAmountRangeLists = new ObservableCollection<SalesRebateAmountRangeModel>();
+
             Task.Factory.StartNew(() =>
             {
+                SalesRebateAmountRangeLists = new ObservableCollection<SalesRebateRecentParameterSonModel>();
+                var enums = CommonService.GetEnumLists();
+                RebateClassLists = enums.Where(x => x.GroupSeq == 6);
+                TaxAmountTypeLists = enums.Where(x => x.GroupSeq == 7);
+                RebatePctTypeLists = enums.Where(x => x.GroupSeq == 8);
+                OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
+                CaseLists = ComboBoxSearchService.GetCaseLists();
+                MinusLastPeriodRebateLists = enums.Where(x => x.GroupSeq == 999);
+                AmountRangeCalculateTypeLists = enums.Where(x => x.GroupSeq == 11);
                 UIExecute.RunAsync(() =>
                 {
-                    RebateClassLists = CommonService.GetEnumLists(6);
-                    TaxAmountTypeLists = CommonService.GetEnumLists(7);
-                    RebatePctTypeLists = CommonService.GetEnumLists(8);
-                    OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
-                    CaseLists = ComboBoxSearchService.GetCaseLists();
-                    MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+                    if (Entity.RebatePctType == 2)
+                        _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.PGuid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
                 });
             });
         }
@@ -51,20 +56,19 @@ namespace Ui.ViewModel
         {
             SalesRebateAmountRangeCreateCommand = new DelegateCommand((obj) =>
             {
-                double lastMaxValue = SalesRebateAmountRangeLists.Count==0 ? 0 : SalesRebateAmountRangeLists.Max(x => x.AmountUpper);
+                double lastMaxValue = SalesRebateAmountRangeLists.Count == 0 ? 0 : SalesRebateAmountRangeLists.Max(x => x.AmountUpper);
                 SalesRebateAmountRangeCreateView view = new SalesRebateAmountRangeCreateView(lastMaxValue);
-                SalesRebateAmountRangeModel inputEntity = new SalesRebateAmountRangeModel() { Guid = Entity.Guid };
+                SalesRebateRecentParameterSonModel inputEntity = new SalesRebateRecentParameterSonModel() { Guid = Entity.PGuid };
 
                 (view.DataContext as SalesRebateAmountRangeCreateViewModel).WithParam(inputEntity, (type, outputEntity) =>
                 {
                     view.Close();
                     if (type == 1)
                     {
-                        if (_salesRebateAmountRangeService.RecentSonParameterInsert(outputEntity))
-                        {
-                            SalesRebateAmountRangeLists.Clear();
-                            _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                        }
+                        var guid = _salesRebateAmountRangeService.RecentSonParameterInsert(outputEntity, inputEntity.Guid);
+                        Entity.PGuid = guid;
+                        SalesRebateAmountRangeLists.Clear();
+                        _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.PGuid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
                     }
                 });
                 view.ShowDialog();
@@ -72,25 +76,32 @@ namespace Ui.ViewModel
 
             SalesRebateAmountRangeRemoveCommand = new DelegateCommand((obj) =>
             {
-                if (SalesRebateAmountRangeSelectedItem == null)
-                    return;
-
-                if (_salesRebateAmountRangeService.RecentSonParameterDelete(SalesRebateAmountRangeSelectedItem.Id))
-                {
-                    SalesRebateAmountRangeLists.Clear();
-                    _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.Guid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
-                }
+                //删除操作不能直接把分段表数据删除，因为计算结果表SJSalesRebate也引用了这个参数表，所以只能先复制一份然后再做增删改
+                //var newGuid = _salesRebateAmountRangeService.RecentSonParameterClear();
+                Entity.PGuid = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                SalesRebateAmountRangeLists.Clear();
             });
 
-            RebatePctTypeSelectionChangedCommand =  new DelegateCommand((obj) =>
-            {
-                if(Entity.RebatePctType== 2)
-                Entity.RebatePctValue = null;
-            });
+            RebatePctTypeSelectionChangedCommand = new DelegateCommand((obj) =>
+           {
+               if (Entity.RebatePctType == 2)
+               {
+                   Entity.RebatePctValue = null;
+                   SalesRebateAmountRangeLists.Clear();
+                   _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(Entity.PGuid).ForEach(x => SalesRebateAmountRangeLists.Add(x));
+               }
+               else
+               {
+                   Entity.AmountRangeCalculateType = -1;
+                   Entity.PGuid = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                   SalesRebateAmountRangeLists.Clear();
+
+               }
+
+           });
         }
 
         public DelegateCommand SalesRebateAmountRangeCreateCommand { get; set; }
-        //public DelegateCommand SalesRebateAmountRangeModifyCommand { get; set; }
         public DelegateCommand OrgNameSearchCommand { get; set; }
         public DelegateCommand EnterCommand { get; set; }
         public DelegateCommand MaterialDatabaseSearchCommand { get; set; }
@@ -108,14 +119,14 @@ namespace Ui.ViewModel
                 MessageBox.Show("下拉框必须选择");
                 return;
             }
-            else if (Entity.RebatePctType == 1 && (Entity.RebatePctValue.Value <= 0 || Entity.RebatePctValue.Value > 80))
+            else if (Entity.RebatePctType == 1 && (Entity.RebatePctValue == null || Entity.RebatePctValue.Value <= 0 || Entity.RebatePctValue.Value > 80))
             {
                 MessageBox.Show("固定返利类型，必须填写正确的数值");
                 return;
             }
-            else if (Entity.RebatePctType == 2 && SalesRebateAmountRangeLists.Count() == 0)
+            else if (Entity.RebatePctType == 2 && (SalesRebateAmountRangeLists.Count() == 0 || Entity.AmountRangeCalculateType < 1))
             {
-                MessageBox.Show("分段返利类型，必须添加明细");
+                MessageBox.Show("分段返利类型，必须添加明细和指定分段金额类型");
                 return;
             }
             base.Save(obj);
@@ -123,9 +134,9 @@ namespace Ui.ViewModel
 
 
         // 返利类型
-        private IList<EnumModel> rebateClassLists;
+        private IEnumerable<EnumModel> rebateClassLists;
 
-        public IList<EnumModel> RebateClassLists
+        public IEnumerable<EnumModel> RebateClassLists
         {
             get { return rebateClassLists; }
             set
@@ -137,9 +148,9 @@ namespace Ui.ViewModel
 
 
         // 含税类型，计算字段
-        private IList<EnumModel> taxAmountTypeLists;
+        private IEnumerable<EnumModel> taxAmountTypeLists;
 
-        public IList<EnumModel> TaxAmountTypeLists
+        public IEnumerable<EnumModel> TaxAmountTypeLists
         {
             get { return taxAmountTypeLists; }
             set
@@ -150,9 +161,9 @@ namespace Ui.ViewModel
         }
 
         // 比例类型
-        private IList<EnumModel> rebatePctTypeLists;
+        private IEnumerable<EnumModel> rebatePctTypeLists;
 
-        public IList<EnumModel> RebatePctTypeLists
+        public IEnumerable<EnumModel> RebatePctTypeLists
         {
             get { return rebatePctTypeLists; }
             set
@@ -216,23 +227,23 @@ namespace Ui.ViewModel
             }
         }
 
-        // 物料条目
-        private ComboBoxSearchModel materialSearchedItem;
+        //// 物料条目
+        //private ComboBoxSearchModel materialSearchedItem;
 
-        public ComboBoxSearchModel MaterialSearchedItem
-        {
-            get { return materialSearchedItem; }
-            set
-            {
-                materialSearchedItem = value;
-                this.RaisePropertyChanged(nameof(MaterialSearchedItem));
-            }
-        }
+        //public ComboBoxSearchModel MaterialSearchedItem
+        //{
+        //    get { return materialSearchedItem; }
+        //    set
+        //    {
+        //        materialSearchedItem = value;
+        //        this.RaisePropertyChanged(nameof(MaterialSearchedItem));
+        //    }
+        //}
 
         // 分段数据源
-        private ObservableCollection<SalesRebateAmountRangeModel> salesRebateAmountRangeLists;
+        private ObservableCollection<SalesRebateRecentParameterSonModel> salesRebateAmountRangeLists;
 
-        public ObservableCollection<SalesRebateAmountRangeModel> SalesRebateAmountRangeLists
+        public ObservableCollection<SalesRebateRecentParameterSonModel> SalesRebateAmountRangeLists
         {
             get { return salesRebateAmountRangeLists; }
             set
@@ -244,9 +255,9 @@ namespace Ui.ViewModel
 
         // 分段选择项
 
-        private SalesRebateAmountRangeModel salesRebateAmountRangeSelectedItem;
+        private SalesRebateRecentParameterSonModel salesRebateAmountRangeSelectedItem;
 
-        public SalesRebateAmountRangeModel SalesRebateAmountRangeSelectedItem
+        public SalesRebateRecentParameterSonModel SalesRebateAmountRangeSelectedItem
         {
             get { return salesRebateAmountRangeSelectedItem; }
             set
@@ -257,7 +268,7 @@ namespace Ui.ViewModel
         }
 
         // 是否查看历史记录
-        private bool  isHistory = false;
+        private bool isHistory = false;
 
         public bool IsHistory
         {
@@ -270,9 +281,9 @@ namespace Ui.ViewModel
         }
 
         //是否减掉上期折扣
-        private IList<EnumModel> minusLastPeriodRebateLists;
+        private IEnumerable<EnumModel> minusLastPeriodRebateLists;
 
-        public IList<EnumModel> MinusLastPeriodRebateLists
+        public IEnumerable<EnumModel> MinusLastPeriodRebateLists
         {
             get { return minusLastPeriodRebateLists; }
             set
@@ -281,6 +292,22 @@ namespace Ui.ViewModel
                 this.RaisePropertyChanged(nameof(MinusLastPeriodRebateLists));
             }
         }
+
+
+        //逐层累积还是总额返利
+        private IEnumerable<EnumModel> amountRangeCalculateTypeLists;
+
+        public IEnumerable<EnumModel> AmountRangeCalculateTypeLists
+        {
+            get { return amountRangeCalculateTypeLists; }
+            set
+            {
+                amountRangeCalculateTypeLists = value;
+                this.RaisePropertyChanged(nameof(AmountRangeCalculateTypeLists));
+            }
+        }
+
+
 
     }
 }

@@ -3,7 +3,8 @@
                     xmlns:local="clr-namespace:Ui"
                     xmlns:cmd="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
                     xmlns:l="clr-namespace:Ui.View.IndexPage"
-                     xmlns:c="clr-namespace:Ui.Converter">
+                     xmlns:c="clr-namespace:Ui.Converter"
+                    xmlns:localxx="clr-namespace:Ui.Admin.View">
 
     <!--下拉按钮-->
     <Style TargetType="ToggleButton" x:Key="ComboxStyleBtn">
@@ -274,6 +275,34 @@
         <Setter Setter.Property="Control.Background" Setter.Value="WhiteSmoke" />
     </Style>
 
+
+    <Style x:Key="BaseCellStyle" TargetType="DataGridCell" BasedOn="{x:Null}">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
+                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="False">
+                <Setter Property="Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
+            </Trigger>
+
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource GenericForegroundCheckedLightBrush}"></Setter>
+                <Setter Property="Background" Value="{StaticResource GenericBackgroundCheckedLightBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+
     <Style x:Key="DGCellStyle" TargetType="DataGridCell">
         <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -302,8 +331,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridCell">
                     <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="10 1 0 1" FontFamily="微软雅黑"
-                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
-                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" >
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </TextBlock>
                 </ControlTemplate>
             </Setter.Value>
@@ -391,7 +420,48 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="MLCommandIsCheckedHiddenCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="8 1 0 1" FontFamily="微软雅黑"   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     
+
+    <Style x:Key="MultiUnCheckedCellStyle" TargetType="DataGridCell">
+        <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="8 1 0 1" FontFamily="微软雅黑"   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </TextBlock>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
+                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"></Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ImportExcelDataGridCellStyle" TargetType="DataGridCell">
         <Setter Property="ToolTipService.ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=Content.Text}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -401,12 +471,6 @@
                     <TextBlock TextAlignment="Left" VerticalAlignment="Center"  Padding="8 1 0 1" FontFamily="微软雅黑"   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis">
                                             <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </TextBlock>
-                    <!--<ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
-                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
-                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundUnCheckedBrush}"></Setter>
-                        </DataTrigger>
-                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -481,6 +545,49 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+    <Style TargetType="DataGrid" x:Key="BaseDataGridStyle">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="Background" Value="#e8e8e8"/>
+        <Setter Property="BorderThickness" Value="0 0 0 3"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource BaseCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush>
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.2" />
+                    <GradientStop Color="LightSeaGreen" Offset="0.7" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="24"/>
+                    <Setter Property="Background" Value="{StaticResource GenericBackgroundMainSonBrush}"/>
+                    <Setter Property="Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverLightBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style TargetType="DataGrid" x:Key="DGStyle">
         <!--<Setter Property="IsReadOnly" Value="True"/>-->
@@ -562,21 +669,21 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Height" Value="{Binding Path=RowHeight}"/>
+                    <Setter Property="Height" Value="{Binding Path=RowHeight}" />
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"></Setter>
                         </Trigger>
 
-                        <DataTrigger Binding="{Binding IsPassed,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
+                        <!--<DataTrigger Binding="{Binding IsPassed,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"></Setter>
                             <Setter Property="DataGridRow.Background" Value="{StaticResource GenericRedBrush}"></Setter>
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding ColumnVisibility,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="false">
                             <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedLightBrush}"></Setter>
-                        </DataTrigger>
+                        </DataTrigger>-->
                         
 
                         <Trigger Property="IsSelected" Value="True">
@@ -737,7 +844,24 @@
     </Style>
 
 
-    <Style TargetType="DataGrid" x:Key="RowDetailsTemplateMainDataGridStyle">
+    <Style TargetType="DataGrid" x:Key="RowDetailsTemplateExtendedMainDataGridStyle">
+        <Setter Property="RowHeight" Value="30" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="SelectionUnit" Value="FullRow" />
+        <Setter Property="SelectionMode" Value="Extended"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="CellStyle" Value="{StaticResource RowDetailsTemplateMainDataGridCellStyle}" />
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}" />
+    </Style>
+    
+    <Style TargetType="DataGrid" x:Key="RowDetailsTemplateSingleMainDataGridStyle">
         <Setter Property="RowHeight" Value="30"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
@@ -790,6 +914,81 @@
     </Style>
 
 
+    <Style TargetType="DataGrid" x:Key="MultiCheckBoxTempDataGridStyle">
+        <Setter Property="RowHeight" Value="26"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource MultiUnCheckedCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="{Binding Path=RowHeight}"/>
+                    <Setter Property="cmd:CommandBehavior.Event" Value="PreviewMouseLeftButtonDown"/>
+                    <Setter Property="cmd:CommandBehavior.Command" Value="{Binding DataContext.MouseLeftClickCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"/>
+                    <Setter Property="cmd:CommandBehavior.CommandParameter" Value="{Binding  RelativeSource={RelativeSource Self}}"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"/>
+                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGrid" x:Key="MLCommandIsCheckedHiddenDataGridStyle">
+        <Setter Property="RowHeight" Value="26"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GenericForegroundGridBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="BorderThickness" Value="0 0.8 0 0"/>
+        <Setter Property="BorderBrush" Value="Purple"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CellStyle" Value="{StaticResource MLCommandIsCheckedHiddenCellStyle}"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource DGColumnHeader}"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="{Binding Path=RowHeight}"/>
+                    <Setter Property="cmd:CommandBehavior.Event" Value="PreviewMouseLeftButtonDown"/>
+                    <Setter Property="cmd:CommandBehavior.Command" Value="{Binding DataContext.DataGridRowMouseLeftClickBaseCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"/>
+                    <Setter Property="cmd:CommandBehavior.CommandParameter" Value="{Binding  RelativeSource={RelativeSource Self}}"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource GenericMouseOverBrush}"/>
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundUnCheckedBrush}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsChecked,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Value="true">
+                            <Setter Property="DataGridRow.Foreground" Value="{StaticResource GenericForegroundCheckedBrush}"/>
+                            <Setter Property="DataGridRow.Background" Value="{StaticResource GenericBackgroundCheckedBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 
 </ResourceDictionary>

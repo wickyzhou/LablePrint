@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QueryParameterModel
+namespace Model
 {
     public class ProductionDeptLabelPrintA4QueryParameterModel:NotificationObject
     {

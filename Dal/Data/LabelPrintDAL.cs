@@ -90,10 +90,6 @@ namespace Dal
             return ls;
         }
 
-
-
-
-
         /// <summary>
         /// 获取打印模板字段设置值
         /// </summary>
@@ -107,7 +103,7 @@ namespace Dal
         /// 更新标签历史数据
         public int ModifyLastPrintBucketByID(int id, int count, string seq)
         {
-            return SqlHelper.ExecuteNonQuery(" UPDATE SJLabelPrintHistory SET PrintCount=@BucketCount,Seq=@Seq WHERE ID=@ID"
+            return SqlHelper.ExecuteNonQuery(" UPDATE SJLabelPrintHistory SET PrintCount=@BucketCount,Seq=@Seq,Seq2678=@Seq WHERE ID=@ID"
                 , new SqlParameter[] { new SqlParameter("@BucketCount", count), new SqlParameter("@ID", id), new SqlParameter("@Seq", seq) });
         }
 
@@ -155,6 +151,33 @@ namespace Dal
                   , new SqlParameter[] { new SqlParameter("@BatchNo", batchNo) }));
         }
 
+        /// <summary>
+        /// 获取某个批号，在销售订单上的VOC名称
+        /// </summary>
+        /// <param name="batchno"></param>
+        /// <returns></returns>
+        public List<VOCBucketCountModel> GetVocNameListsByICMOBillNo(string billNo)
+        {
+            DataTable data = SqlHelper.ExecuteDataTable(@" select VOCName,cast(sum(FBZTQty)as int) BucketCount from t_BOS_ICMOOrder a join t_BOS_ICMOOrderEntry b on a.fid = b.Fid
+                                                            join SJSEORDList e on  e.fid = b.FID_SRC and e.FEntryID = b.FEntryID_SRC
+                                                            where a.FBillNo = @FBillNo
+                                                            group by VOCName ", new SqlParameter[] { new SqlParameter("@FBillNo", billNo) });
+            return SqlHelper.DataTableToModelList<VOCBucketCountModel>(data);
+        }
+
+        /// <summary>
+        /// 获取某个批号，在销售订单上的VOC名称
+        /// </summary>
+        /// <param name="batchno"></param>
+        /// <returns></returns>
+        public List<VOCBucketCountModel> GetVocNameListsByBatchNo(DateTime productionDate,string batchNo,string label,string orgId)
+        {
+            DataTable data = SqlHelper.ExecuteDataTable(@" select b.VOCName,c.PrintCount from SJICMOList a join SJSEORDList b on a.FSEOrderEntryID = b.FSEOrderEntryID
+                                                            join SJLabelPrintHistory c on c.ProductiveTaskListID = a.id
+                                                            where a.FProductionDate= @FProductionDate and a.FBatchNo=@FBatchNo and isnull(a.VocVersion,0)=0 and a.FLabel =@FLabel and a.FOrgID =@FOrgID "
+                                                            , new SqlParameter[] { new SqlParameter("@FBatchNo", batchNo), new SqlParameter("@FProductionDate", productionDate), new SqlParameter("@FLabel", label), new SqlParameter("@FOrgID", orgId) });
+            return SqlHelper.DataTableToModelList<VOCBucketCountModel>(data);
+        }
 
 
         #region 打印记录页面相关

@@ -13,11 +13,6 @@
       Title="ICStockBill29Page">
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
         <GroupBox Grid.Row="0" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
             <GroupBox.Content>
                 <Grid>
@@ -74,6 +69,7 @@
                             <DataGridTextColumn DataGridColumn.Header="备注" DataGridBoundColumn.Binding="{Binding Note}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="领料人Id" DataGridBoundColumn.Binding="{Binding FFManagerFNumber}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
                             <DataGridTextColumn DataGridColumn.Header="领料人" DataGridBoundColumn.Binding="{Binding FFManagerName}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                            <DataGridTextColumn DataGridColumn.Header="备注" DataGridBoundColumn.Binding="{Binding FNote}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -81,7 +77,7 @@
 
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Margin="0 15 0 0" Padding="2 8" Header="收料通知单下推外购入库">
+        <GroupBox Grid.Row="1" Margin="0 15 0 0" Padding="2 8" Header="收料通知单下推外购入库" Visibility="Collapsed">
             <GroupBox.Content>
                 <Grid>
                     <Grid.RowDefinitions>

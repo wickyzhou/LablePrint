@@ -60,6 +60,7 @@
     <Compile Include="K3ApiModel\Request\K3ApiUpdateDataRequestModel.cs" />
     <Compile Include="K3ApiModel\Request\K3ApiUpdateRequestModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiCheckBillResponseModel.cs" />
+    <Compile Include="K3ApiModel\Response\K3ApiDeleteResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertDataMultiResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertDataResponseModel.cs" />
     <Compile Include="K3ApiModel\Response\K3ApiInsertResponseModel.cs" />
@@ -82,7 +83,11 @@
     <Compile Include="Model\BatchBomRequestDeliveryExportModel.cs" />
     <Compile Include="Model\BatchBomRequestDetailModel.cs" />
     <Compile Include="Model\BatchBomRequestSummaryModel.cs" />
-    <Compile Include="Model\BatchBomRequestQueryParameterModel.cs" />
+    <Compile Include="Model\PrintCommonAdjustmentModel.cs" />
+    <Compile Include="Model\SalesRebateOrgCaseReportModel.cs" />
+    <Compile Include="Model\SalesRebateSummaryModel.cs" />
+    <Compile Include="Model\VOCBucketCountModel.cs" />
+    <Compile Include="QueryParameterModel\BatchBomRequestQueryParameterModel.cs" />
     <Compile Include="Model\BatchTypeModel.cs" />
     <Compile Include="Model\CaseModel.cs" />
     <Compile Include="Model\ComboBoxSearchModel.cs" />
@@ -96,7 +101,7 @@
     <Compile Include="Model\MaterialModel.cs" />
     <Compile Include="Model\OaItemCostModel.cs" />
     <Compile Include="Model\ProductionModel.cs" />
-    <Compile Include="Model\SalesRebateAmountRangeModel.cs" />
+    <Compile Include="Model\SalesRebateRecentParameterSonModel.cs" />
     <Compile Include="Model\BarTenderPrintConfigModelXX.cs" />
     <Compile Include="Model\BarTenderTemplateModel.cs" />
     <Compile Include="Model\BatchNoPrintTotalModel.cs" />
@@ -138,7 +143,8 @@
     <Compile Include="Model\QuerySchemaSeqModel.cs" />
     <Compile Include="Model\SalesRebateBatchParameterModel.cs" />
     <Compile Include="Model\SalesRebateModel.cs" />
-    <Compile Include="Model\SalesRebateQueryParameterModel.cs" />
+    <Compile Include="QueryParameterModel\PrintCommonAdjustmentQueryParameterModel.cs" />
+    <Compile Include="QueryParameterModel\SalesRebateQueryParameterModel.cs" />
     <Compile Include="Model\SelectedConsignmentBillsModel.cs" />
     <Compile Include="Model\SellOrderListModel.cs" />
     <Compile Include="Model\BucketModel.cs" />
@@ -161,6 +167,9 @@
     <Compile Include="Model\WarehouseTransferToWorkshopModel.cs" />
     <Compile Include="QueryParameterModel\DataGridColumnHeaderQueryParameterModel.cs" />
     <Compile Include="QueryParameterModel\ProductionDeptLabelPrintA4QueryParameterModel.cs" />
+    <Compile Include="QueryParameterModel\SalesRebateRecentQueryParameterModel.cs" />
+    <Compile Include="Model\SalesRebateRecentParameterMainModel.cs" />
+    <Compile Include="QueryParameterModel\SalesRebateReportQueryParameterModel.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

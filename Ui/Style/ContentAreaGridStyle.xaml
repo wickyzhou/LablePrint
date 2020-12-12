@@ -6,5 +6,15 @@
     <Style  x:Key="ContentAreaGridStyle" TargetType="Grid">
         <Setter Property="Background" Value="LightYellow"/>
     </Style>
-       
+
+    <Style x:Key="GroupBoxContentTopRowGridStyle" TargetType="Grid">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="1,0" EndPoint="0,0" Opacity="0.1">
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="#1FB888" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

@@ -1,63 +1,62 @@
-﻿using Common;
+﻿
 using K3ApiModel;
 using K3ApiModel.Request;
 using K3ApiModel.SalesInvoiceVAT;
 using Model;
-using NPOI.HPSF;
+
+using QueryParameterModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Ui.Command;
 using Ui.Helper;
 using Ui.Service;
+using Ui.View;
 using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel.IndexPage
 {
-    public class SalesRebateViewModel : K3ApiBaseViewModel, IValidationExceptionHandler
+    public class SalesRebateViewModel : K3ApiXBaseViewModel, IValidationExceptionHandler
     {
 
-        private readonly SalesRebateService _salesRebateService;
-        private readonly SalesRebateAmountRangeService _salesRebateAmountRangeService;
-        private readonly int _userDataId;
+        private readonly SalesRebateService _salesRebateService = new SalesRebateService();
+        private readonly SalesRebateAmountRangeService _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
 
-        public SalesRebateViewModel() //: base("Sales_Invoice_VAT")
+        public SalesRebateViewModel()
         {
-            _salesRebateService = new SalesRebateService();
-            _salesRebateAmountRangeService = new SalesRebateAmountRangeService();
-            _userDataId = CommonService.GetUserDataId(User, 10);
             InitCommand();
             InitData();
         }
 
         private void InitData()
         {
-
-            SalesRebateLists = new ObservableCollection<SalesRebateModel>();
-            QueryParameter = new SalesRebateQueryParameterModel() { SettleDateBegin = DateTime.Now.AddYears(-1).Date.ToString("yyyy-MM-dd"), SettleDateEnd = DateTime.Now.Date.ToString("yyyy-MM-dd") };
-            RebateClassSeletedItem = new EnumModel();
-            BatchParameter = new SalesRebateBatchParameterModel()
-            {
-                SalesRebateBatchParameter = new SalesRebateModel() { SettleDateBegin = DateTime.Now.AddMonths(-1).Date, SettleDateEnd = DateTime.Now.Date, Guid = Guid.NewGuid(), OrgCode = "", UserId = User.ID, RebatePctValue = 0, RebatePctType = 1 },
-                SalesRebateAmountRangeBatchParameter = new ObservableCollection<SalesRebateAmountRangeModel>()
-            };
-
-
             Task.Factory.StartNew(() =>
             {
-                var ss = _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory);
-                RebateClassLists = CommonService.GetEnumLists(6);
-                TaxAmountTypeLists = CommonService.GetEnumLists(7);
-                RebatePctTypeLists = CommonService.GetEnumLists(8);
+                QueryParameter = new SalesRebateQueryParameterModel() { SettleDateEnd1 = DateTime.Now.AddYears(-1).Date, SettleDateEnd2 = DateTime.Now.Date };
+                BatchParameter = new SalesRebateBatchParameterModel()
+                {
+                    SettleDateBegin = DateTime.Now.AddMonths(-1).Date,
+                    SettleDateEnd = DateTime.Now.Date
+                };
+
+                var enums = CommonService.GetEnumLists();
+
+                RebateClassLists = enums.Where(x => x.GroupSeq == 6);
                 OrganizationLists = ComboBoxSearchService.GetOrganizationLists();
-                MinusLastPeriodRebateLists = CommonService.GetEnumLists(999);
+
+                HostConfig = CommonService.GetHostConfig(DataGridId, HostName, User.ID) ?? new HostConfigModel() { TypeId = DataGridId, Host = HostName, UserId = User.ID, TypeDesciption = "客户案子销售返利" };
+                Token = K3ApiXService.GetToken();
+
                 UIExecute.RunAsync(() =>
                 {
-                    ss.ForEach(x => { SalesRebateLists.Add(x);ListsSum += x.SalesRebateAmoutResult; ListsCount++; });
+                    QueryBaseCommand.Execute(null);
                 });
             });
         }
@@ -65,265 +64,313 @@ namespace Ui.ViewModel.IndexPage
         private void InitCommand()
         {
 
-            SalesRebateQueryCommand = new DelegateCommand((obj) =>
+            QueryBaseCommand = new DelegateCommand((obj) =>
             {
-                string filter = $"  and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <= '{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
-                GetNewSalesRebateLists(filter);
+                SalesRebateSummaryLists.Clear();
+                ListsCount = 0;
+                ListsSum = 0;
+                SalesRebateLists.Clear();
+                RebatePctValueString = string.Empty;
+                _salesRebateService.GetSalesRebateSummaryLists(UserDataId, CommonService.GetSqlWhereString(QueryParameter)).ForEach(x => { SalesRebateSummaryLists.Add(x); ListsSum += x.OrgAmount; ListsCount++; });
             });
 
-            SalesRebateRemoveCommand = new DelegateCommand((obj) =>
+            DirectorySelectBaseCommand = new DelegateCommand((obj) =>
             {
+                // 导出目录选择
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
-                string guids = "'" + string.Join("','", SalesRebateLists.Where(m => m.IsChecked).Select(x => x.Guid)) + "'";
-                if (_salesRebateService.BatchDelete(guids))
-                    GetNewSalesRebateLists();
-                else
-                    MessageBox.Show("删除失败,系统异常，请联系管理员");
-            });
-
-            SalesRebateDiskRemoveCommand = new DelegateCommand((obj) =>
-            {
-                MessageBoxResult result = MessageBox.Show("此操作不可恢复，确认删除？", "温馨提示", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    HostConfig.HostValue = fbd.SelectedPath;
+                    var result = CommonService.SaveHostConfig(HostConfig);
+                    if (result)
+                    {
+                        HostConfig = CommonService.GetHostConfig(DataGridId, HostName, User.ID);
+                    }
+                }
+            });
 
-                    string guids = "'" + string.Join("','", SalesRebateLists.Where(m => m.IsChecked).Select(x => x.Guid)) + "'";
-                    if (_salesRebateService.DiskBatchDelete(guids))
-                        GetNewSalesRebateLists();
+            ExportBaseCommand = new DelegateCommand((obj) =>
+            {
+                if (Directory.Exists(HostConfig.HostValue))
+                {
+                    ExportView view = new ExportView(DataGridId, 1);
+                    (view.DataContext as ExportViewModel).Export((type, outputEntity, checkBoxValue, orderedColumns) =>
+                    {
+                        view.Close();
+                        if (type == 1)
+                        {
+                            DataTable datatable = new DataTable();
+
+                            if (outputEntity == 1)
+                            {    // 获取导出数据名称
+                                string viewName = CommonService.GetExportViewName(DataGridId, 1);
+                                if (!string.IsNullOrEmpty(viewName))
+                                {
+                                    datatable = viewName.EndsWith("Proc")? _salesRebateService.GetExportDataProc(viewName, ReportQueryParameter): CommonService.GetExportDataView(viewName, CommonService.GetSqlWhereString(ReportQueryParameter));
+                                    ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(ReportQueryParameter));
+                                    MessageBox.Show("导出成功");
+                                }
+                            }
+                            else if ( outputEntity == 2)
+                            {    // 获取导出数据名称
+                                string viewName = CommonService.GetExportViewName(DataGridId, 2);
+                                if (!string.IsNullOrEmpty(viewName))
+                                {
+                                    datatable = viewName.EndsWith("Proc") ? _salesRebateService.GetExportDataProc(viewName, ReportQueryParameter) : CommonService.GetExportDataView(viewName, CommonService.GetSqlWhereString(ReportQueryParameter));
+                                    ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(ReportQueryParameter));
+                                    MessageBox.Show("导出成功");
+                                }
+                            }
+                            else if (outputEntity == 3)
+                            {
+                                // 获取导出数据名称
+                                string procName = CommonService.GetExportViewName(DataGridId, 3);
+                                if (!string.IsNullOrEmpty(procName))
+                                {
+                                    datatable = CommonService.GetExportDataProcedure(procName, UserDataId, string.Join(",", orderedColumns), CommonService.GetSqlWhereString(ReportQueryParameter));
+                                    ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(ReportQueryParameter), checkBoxValue, orderedColumns, false, "", false);
+                                    MessageBox.Show("导出成功");
+                                }
+                            }
+                        }
+                    });
+                    view.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("目录不存在，请先选择导出的目录");
+                    DirectorySelectBaseCommand.Execute(null);
+                }
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "ExportBaseCommand", ActionDesc = HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(QueryParameter), UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+            });
+
+            SalesRebateRecentParameterConfigCommand = new DelegateCommand((obj) =>
+            {
+                if (BatchParameter.OrganizationSearchedItem != null && BatchParameter.RebateClassSeletedItem != null)
+                {
+                    if (BatchParameterVerification( out DateTime maxDate ))
+                    {
+                        if (_salesRebateService.IfExistsOrgICSaleBill(BatchParameter))
+                        {
+                            SalesRebateRecentParameterView view = new SalesRebateRecentParameterView(BatchParameter);
+                            (view.DataContext as SalesRebateRecentParameterViewModel).WithParam(null, (type, outputEntity, isChanged) =>
+                            {
+                                view.Close();
+                                if (isChanged)
+                                {
+                                    // 计算刚才配置的参数
+                                    _salesRebateService.CalculateAmount(BatchParameter, User.ID,true);
+
+                                    // 查询出刚生成的数据
+                                    QueryBaseCommand.Execute(null);
+                                }
+                            });
+                            view.Show();
+                            CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "SalesRebateRecentParameterConfigCommand", ActionDesc = CommonService.GetSqlWhereString(BatchParameter), UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+                        }
+                        else
+                            MessageBox.Show($"【{BatchParameter.SettleDateBegin}】至【{BatchParameter.SettleDateEnd}】 ,客户【{BatchParameter.OrganizationSearchedItem.Name}】 没有K3销售单据");
+                    }
                     else
-                        MessageBox.Show("删除失败,系统异常，请联系管理员");
-                }
-            });
-
-            AllCheckedCommand = new DelegateCommand((obj) =>
-            {
-                if (IsCheckedAll)
-                {
-                    foreach (var item in SalesRebateLists)
-                        item.IsChecked = true;
+                        MessageBox.Show($"【{maxDate}】 该类型【{BatchParameter.RebateClassSeletedItem.ItemValue} 】已经返利，同时间点不能多次返利");
                 }
                 else
-                {
-                    foreach (var item in SalesRebateLists)
-                        item.IsChecked = false;
-                }
-
-            });
-
-            MouseLeftClickCommand = new DelegateCommand((obj) =>
-            {
-
-                SalesRebateModel dr = (obj as DataGridRow).Item as SalesRebateModel;
-                dr.IsChecked = !dr.IsChecked;
-            });
-
-            SalesRebateParameterCopyCommand = new DelegateCommand((obj) =>
-            {
-                if (SalesRebateLists.Where(m => m.IsChecked).Count() == 1)
-                {
-                    var dr = SalesRebateLists.Where(m => m.IsChecked).FirstOrDefault();
-                    // 将选项数据赋值到批处理
-                    ModelTypeHelper.PropertyMapper(BatchParameter.SalesRebateBatchParameter, dr);
-                    OrganizationSearchedItem = new ComboBoxSearchModel() { Id = dr.OrgId, Name = dr.OrgName, SearchText = dr.OrgName };
-                    RebateClassSeletedItem = new EnumModel() { ItemSeq = dr.RebateClass, ItemValue = dr.RebateClassName };
-                    BatchParameter.SalesRebateAmountRangeBatchParameter.Clear();
-                    if (dr.RebatePctType == 2)
-                         _salesRebateAmountRangeService.GetSalesRebateAmountRangeLists(dr.Guid).ForEach(x=> BatchParameter.SalesRebateAmountRangeBatchParameter.Add(x));
-                }
-                else
-                {
-                    MessageBox.Show("只允许选中一行数据");
-                }
-            });
-
-            SalesRebateParameterClearCommand = new DelegateCommand((obj) =>
-            {
-                BatchParameter.SalesRebateBatchParameter.MinusLastPeriodRebateType = 0;
-                BatchParameter.SalesRebateBatchParameter.TaxAmountType = 0;
-                BatchParameter.SalesRebateBatchParameter.RebatePctType = 0;
-                BatchParameter.SalesRebateBatchParameter.RebatePctValue = null;
-                BatchParameter.SalesRebateAmountRangeBatchParameter.Clear();
-            });
-
-
-            SalesRebateHistoryShowCommand = new DelegateCommand((obj) =>
-            {
-                string filter = $"  and SettleDateEnd >= '{QueryParameter.SettleDateBegin}' and SettleDateEnd <='{QueryParameter.SettleDateEnd}' and OrgCode like '%{QueryParameter.OrgCode}%' and CaseName like '%{QueryParameter.CaseName}%' and OrgName like '%{QueryParameter.OrgName}%' ";
-                GetNewSalesRebateLists(filter);
-            });
-
-            RebateAmountBiggerThanZeroCheckCommand = new DelegateCommand((obj) =>
-            {
-
-            });
-
-            SalesRebateTypedBatchInsertCommand = new DelegateCommand((obj) =>
-             {
-                //验证界面数据是否都填写，填写无误则将参数导入到数据库模板，后台批插入
-                //if (InputVerification())
-                //{
-                MessageBox.Show($"{_salesRebateService.BatchGenerationSalesRebateEntry(BatchParameter.SalesRebateBatchParameter)}");
-                 GetNewSalesRebateLists();
-                //}
-                //else
-                //    MessageBox.Show("界面参数必须全部正确填写");
-
-            });
-
-            SalesRebateAmountRangeCreateCommand = new DelegateCommand((obj) =>
-            {
-                double lastMaxValue = BatchParameter.SalesRebateAmountRangeBatchParameter.Count == 0 ? 0 : BatchParameter.SalesRebateAmountRangeBatchParameter.Max(x => x.AmountUpper);
-                SalesRebateAmountRangeCreateView view = new SalesRebateAmountRangeCreateView(lastMaxValue);
-                SalesRebateAmountRangeModel inputEntity = new SalesRebateAmountRangeModel() { Guid = BatchParameter.SalesRebateBatchParameter.Guid };
-
-                (view.DataContext as SalesRebateAmountRangeCreateViewModel).WithParam(inputEntity, (type, outputEntity) =>
-                {
-                    view.Close();
-                    if (type == 1)
-                        BatchParameter.SalesRebateAmountRangeBatchParameter.Add(outputEntity);
-                });
-                view.ShowDialog();
-            });
-
-            SalesRebateAmountRangeRemoveCommand = new DelegateCommand((obj) =>
-            {
-                BatchParameter.SalesRebateAmountRangeBatchParameter.Remove(SalesRebateAmountRangeSelectedItem);
-            });
-
-            SalesRebateRecentParameterShowCommand = new DelegateCommand((obj) =>
-            {
-
-                if (OrganizationSearchedItem == null || RebateClassSeletedItem == null || OrganizationSearchedItem.Id == 0 || RebateClassSeletedItem.ItemSeq == 0)
-                {
                     MessageBox.Show("请先输入客户和返利类别");
-                    return;
-                }
-                else
-                {
 
-                    //后台插入该客户类型的本期所需添加的数据
-                    _salesRebateService.LoadBatchParamterToDBTemplate(BatchParameter.SalesRebateBatchParameter, User.ID);
-                    if (BatchParameter.SalesRebateBatchParameter.RebatePctType == 2)
-                        _salesRebateService.LoadAmountRangeListsToDBTemplate(BatchParameter.SalesRebateAmountRangeBatchParameter);
-
-                    _salesRebateService.InsertCurrentOrgRebateClassParameter(BatchParameter.SalesRebateBatchParameter);
-                    BatchParameter.SalesRebateBatchParameter.OrgName = OrganizationSearchedItem.SearchText;
-                    BatchParameter.SalesRebateBatchParameter.RebateClassName = RebateClassSeletedItem.ItemValue;
-                    SalesRebateRecentParameterView view = new SalesRebateRecentParameterView(BatchParameter.SalesRebateBatchParameter);
-                    view.Show();
-                }
-
-            });
-
-            RebatePctTypeSelectionChangedCommand = new DelegateCommand((obj) =>
-            {
-                if (BatchParameter.SalesRebateBatchParameter.RebatePctType == 2)
-                    BatchParameter.SalesRebateBatchParameter.RebatePctValue = null;
             });
 
             SalesRebateK3ApiInsertCommand = new DelegateCommand((obj) =>
             {
-                var keys = SalesRebateLists.Where(m => m.IsChecked).GroupBy(x => new { x.SettleDateBegin, x.SettleDateEnd, x.OrgId, x.RebateClass, x.OrgTotalAmount }).Select(m => m.Key);
-
-                foreach (var item in keys)
+                StringBuilder stringBuilder = new StringBuilder();
+                if (SalesRebateSummarySelectedItem != null && string.IsNullOrEmpty(SalesRebateSummarySelectedItem.K3BillNo) && SalesRebateLists.Count > 0)
                 {
-                    SalesInvoiceVATMainModel main = new SalesInvoiceVATMainModel
+                    var maxDate = _salesRebateService.GetMaxSettleDateByOrgId(BatchParameter.OrganizationSearchedItem.Id, BatchParameter.RebateClassSeletedItem.ItemSeq);
+                    if (SalesRebateSummarySelectedItem.SettleDateBegin > maxDate && SalesRebateSummarySelectedItem.SettleDateEnd > maxDate)
                     {
-                        FCustID = K3ApiFKService.GetOrganizationById(item.OrgId),
-                        FBillerID = new BaseNumberNameModelX { FNumber = User.UserName, FName = User.UserName },
-                        FNote = "结算日期：" + item.SettleDateBegin.Date.ToString("yyyy-MM-dd") + "至" + item.SettleDateEnd.Date.ToString("yyyy-MM-dd")
-                    };
-
-                    var son = new SalesInvoiceVATSonModel
-                    {
-                        Fauxprice = item.OrgTotalAmount,
-                        Famount = item.OrgTotalAmount * main.FROB,
-                        FStdAmount = item.OrgTotalAmount * main.FROB,
-                        FTaxRate = item.OrgTotalAmount * 0.13,
-                        FTaxAmount = item.OrgTotalAmount * 0.13 * main.FROB,
-                        FStdTaxAmount = item.OrgTotalAmount * 0.13 * main.FROB,
-                        FAllAmount = item.OrgTotalAmount * (1 + 0.13),
-                        FAuxTaxPrice = item.OrgTotalAmount * (1 + 0.13),
-                        FAuxPriceDiscount = item.OrgTotalAmount * (1 + 0.13),
-                        FAmountincludetax = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
-                        FStdAmountincludetax = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
-                        FRemainAmount = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
-                        FRemainAmountFor = item.OrgTotalAmount * (1 + 0.13) * main.FROB,
-                    };
-
-                    var requestModel = new K3ApiInsertRequestModel<SalesInvoiceVATMainModel, SalesInvoiceVATSonModel>()
-                    {
-                        Data = new K3ApiInsertDataRequestModel<SalesInvoiceVATMainModel, SalesInvoiceVATSonModel>()
+                        SalesInvoiceVATMainModel main = new SalesInvoiceVATMainModel
                         {
-                            Page1 = new List<SalesInvoiceVATMainModel> { main },
-                            Page2 = new List<SalesInvoiceVATSonModel> { son }
+                            Fdate = SalesRebateSummarySelectedItem.SettleDateEnd.AddDays(5).ToString("yyyy-MM-dd"),
+                            FCustID = K3ApiFKService.GetOrganizationById(SalesRebateSummarySelectedItem.OrgId),
+                            FBillerID = new BaseNumberNameModelX { FNumber = User.UserName, FName = User.UserName },
+                            FNote = "结算日期：" + SalesRebateSummarySelectedItem.SettleDateBegin.Date.ToString("yyyy-MM-dd") + "至" + SalesRebateSummarySelectedItem.SettleDateEnd.Date.ToString("yyyy-MM-dd")
+                        };
+
+                        var son = new SalesInvoiceVATSonModel
+                        {
+                            Fauxprice = SalesRebateSummarySelectedItem.OrgAmount,
+                            Famount = SalesRebateSummarySelectedItem.OrgAmount * main.FROB,
+                            FStdAmount = SalesRebateSummarySelectedItem.OrgAmount * main.FROB,
+                            FTaxRate = SalesRebateSummarySelectedItem.OrgAmount * 0.13,
+                            FTaxAmount = SalesRebateSummarySelectedItem.OrgAmount * 0.13 * main.FROB,
+                            FStdTaxAmount = SalesRebateSummarySelectedItem.OrgAmount * 0.13 * main.FROB,
+                            FAllAmount = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13),
+                            FAuxTaxPrice = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13),
+                            FAuxPriceDiscount = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13),
+                            FAmountincludetax = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13) * main.FROB,
+                            FStdAmountincludetax = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13) * main.FROB,
+                            FRemainAmount = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13) * main.FROB,
+                            FRemainAmountFor = SalesRebateSummarySelectedItem.OrgAmount * (1 + 0.13) * main.FROB,
+                        };
+
+                        var requestModel = new K3ApiInsertRequestModel<SalesInvoiceVATMainModel, SalesInvoiceVATSonModel>()
+                        {
+                            Data = new K3ApiInsertDataRequestModel<SalesInvoiceVATMainModel, SalesInvoiceVATSonModel>()
+                            {
+                                Page1 = new List<SalesInvoiceVATMainModel> { main },
+                                Page2 = new List<SalesInvoiceVATSonModel> { son }
+                            }
+                        };
+
+                        string postJson = JsonHelper.ObjectToJson(requestModel);
+                        K3ApiInsertResponseModel response = K3ApiXService.Insert(Token, "Sales_Invoice_VAT", postJson);
+
+                        if (response.StatusCode == 200)
+                        {
+                            // 更新后台数据
+                            _salesRebateService.UpdateK3BillNo(SalesRebateSummarySelectedItem.Id, response.Data.BillNo, SalesRebateSummarySelectedItem.SettleDateEnd.AddDays(5));
+                            stringBuilder.Append($"成功 BillNo：{response.Data.BillNo}, SettleDateBegin：{SalesRebateSummarySelectedItem.SettleDateBegin}, SettleDateEnd：{SalesRebateSummarySelectedItem.SettleDateEnd},OrgId： {SalesRebateSummarySelectedItem.OrgId}, RebateClass：{SalesRebateSummarySelectedItem.RebateClass}");
                         }
-                    };
-
-                    string postJson = JsonHelper.ObjectToJson(requestModel);
-                    K3ApiInsertResponseModel response = K3ApiService.Insert("Sales_Invoice_VAT", postJson);
-
-                    if (response.StatusCode == 200)
-                        // 更新后台数据
-                        _salesRebateService.UpdateK3BillNo(response.Data.BillNo, item.SettleDateBegin, item.SettleDateEnd, item.OrgId, item.RebateClass);
-                    else
-                    {
-                        MessageBox.Show(response.Message);
-                        return;
+                        else
+                        {
+                            MessageBox.Show(response.Message);
+                            stringBuilder.Append($"{response.Message}");
+                            CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "SalesRebateRecentParameterConfigCommand", ActionDesc = stringBuilder.ToString(), UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+                            return;
+                        }
                     }
+                    else
+                        MessageBox.Show($"【{maxDate}】 该类型【{BatchParameter.RebateClassSeletedItem.ItemValue} 】已经返利，同时间点不能多次返利");
+
                 }
-                // 重新加载页面
-                GetNewSalesRebateLists();
+                //重新加载数据
+                QueryBaseCommand.Execute(null);
+
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "SalesRebateK3ApiInsertCommand", ActionDesc = stringBuilder.ToString(), UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+            });
+
+            SalesRebateK3ApiRemoveCommand = new DelegateCommand((obj) =>
+            {
+                // 弹出删除提示
+                if (MessageBox.Show($"此操作会将K3单据和本条记录同时删除", "温馨提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    if (SalesRebateSummarySelectedItem != null && !string.IsNullOrEmpty(SalesRebateSummarySelectedItem.K3BillNo))
+                    {
+                        string k3BillNo = SalesRebateSummarySelectedItem.K3BillNo;
+
+                        // 可选参数FInterID，当FBillNo重复时传入,【只删除明细行】
+                        string postJson = @"{""Data"": {""FBillNo"":""" + k3BillNo + @"""}}";
+
+                        var response = K3ApiXService.Delete(Token, "Sales_Invoice_VAT", postJson);
+                        // 如果Token过期则重新加载
+                        if (response.StatusCode == 200)
+                        {
+                            if (_salesRebateService.SummaryDelete(SalesRebateSummarySelectedItem.Id, SalesRebateSummarySelectedItem.Guid))
+                                MessageBox.Show("删除K3单据成功");
+                            else
+                                MessageBox.Show("后台删除失败，单据不存在");
+                        }
+                        else if (response.Message.IndexOf("token", StringComparison.OrdinalIgnoreCase) > 0)
+                        {
+                            Token = K3ApiXService.GetToken();
+                            response = K3ApiXService.Delete(Token, "Sales_Invoice_VAT", postJson);
+                            MessageBox.Show(response.Message);
+                        }
+                        else
+                            MessageBox.Show(response.Message);
+                        CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "SalesRebateK3ApiRemoveCommand", ActionDesc = k3BillNo, UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
+                        QueryBaseCommand.Execute(null);
+                    }
+                    else
+                        MessageBox.Show("一次只能选择一个K3单据且已经生成过K3单据");
+                }
+
+
+            });
+
+            DetailSelectionChangedCommand = new DelegateCommand((obj) =>
+            {
+                if (SalesRebateSelectedItem != null)
+                {
+                    var lists = _salesRebateAmountRangeService.GetSalesRebateAmountRangeRecentParameterLists(SalesRebateSelectedItem.PGuid);
+                    if (lists.Count>0)
+                    {
+                        StringBuilder result = new StringBuilder();
+                        foreach (var item in lists)
+                        {
+                            result.Append($"金额区间：{item.AmountLower}-{item.AmountUpper} 万元  比例：{item.SalesRebatePctValue}% \t\t");
+                        }
+                        RebatePctValueString = result.ToString();
+                    }
+                    else
+                        RebatePctValueString = string.Empty;
+                }
+       
+            });
+
+            SummarySelectionChangedCommand = new DelegateCommand((obj) =>
+            {
+                if (SalesRebateSummarySelectedItem != null)
+                {
+                    RebatePctValueString = string.Empty;
+                    SalesRebateLists.Clear();
+                    _salesRebateService.GetSalesRebateListsByGuid(SalesRebateSummarySelectedItem.Guid).ForEach(x => SalesRebateLists.Add(x));
+                }
+            });
+
+            SalesRebateSummaryDeleteCommand = new DelegateCommand((obj) =>
+            {
+                if (SalesRebateSummarySelectedItem != null && string.IsNullOrEmpty(SalesRebateSummarySelectedItem.K3BillNo))
+                {
+                    _salesRebateService.SummaryDelete(SalesRebateSummarySelectedItem.Id, SalesRebateSummarySelectedItem.Guid);
+                    QueryBaseCommand.Execute(null);
+                }
+            });
+
+            ReportQueryCommand = new DelegateCommand((obj) =>
+            {
+                ReportLists.Clear();
+                _salesRebateService.GetCaseAmountReport(ReportQueryParameter).ForEach(x=> ReportLists.Add(x));
+            });
+
+            AmountCalculateCommand = new DelegateCommand((obj) =>
+            {
+                if (BatchParameterVerification(out DateTime maxDate))
+                {
+                    // 计算刚才配置的参数
+                    _salesRebateService.CalculateAmount(BatchParameter, User.ID,false);
+
+                    // 查询出刚生成的数据
+                    QueryBaseCommand.Execute(null);
+                }
+                else
+                    MessageBox.Show($"【{maxDate}】 该类型【{BatchParameter.RebateClassSeletedItem.ItemValue} 】已经返利，同时间点不能多次返利");
+
             });
         }
 
-        private void GetNewSalesRebateLists(string filter = "")
-        {
-            IsCheckedAll = false;
-            SalesRebateLists.Clear();
-            ListsCount = 0;
-            ListsSum=0;
-            _salesRebateService.GetSalesRebateLists(_userDataId, IsHistory, filter).ForEach(x => { SalesRebateLists.Add(x); ListsSum += x.SalesRebateAmoutResult; ListsCount++; });
-        }
 
-        private bool InputVerification()
-        {
-            if (!IsValid)
-                return false;
-            else if (BatchParameter.SalesRebateBatchParameter.RebateClass == 0)
-                return false;
-            else if (BatchParameter.SalesRebateBatchParameter.OrgId == -1)
-                return false;
-            else if (BatchParameter.SalesRebateBatchParameter.RebatePctType == 1 && (batchParameter.SalesRebateBatchParameter.RebatePctValue.Value <= 0 || batchParameter.SalesRebateBatchParameter.RebatePctValue.Value > 80))
-                return false;
-            else if (BatchParameter.SalesRebateBatchParameter.RebatePctType == 2 && BatchParameter.SalesRebateAmountRangeBatchParameter.Count == 0)
-                return false;
-            else
-                return true;
-        }
-
-        public DelegateCommand SalesRebateAmountCalculateCommand { get; set; }
-        public DelegateCommand SalesRebateQueryCommand { get; set; }
-        public DelegateCommand SalesRebateModifyCommand { get; set; }
-        public DelegateCommand SalesRebateCreateCommand { get; set; }
-        public DelegateCommand SalesRebateCopyCommand { get; set; }
+        public DelegateCommand SalesRebateRecentParameterConfigCommand { get; set; }
         public DelegateCommand SalesRebateRemoveCommand { get; set; }
         public DelegateCommand AllCheckedCommand { get; set; }
         public DelegateCommand MouseLeftClickCommand { get; set; }
-        public DelegateCommand SalesRebateHistoryShowCommand { get; set; }
-        public DelegateCommand SalesRebateTypedBatchInsertCommand { get; set; }
-        public DelegateCommand SalesRebateAmountRangeCreateCommand { get; set; }
-        public DelegateCommand SalesRebateAmountRangeRemoveCommand { get; set; }
-        public DelegateCommand SalesRebateDiskRemoveCommand { get; set; }
-        public DelegateCommand SalesRebateRecentParameterShowCommand { get; set; }
-        public DelegateCommand RebatePctTypeSelectionChangedCommand { get; set; }
         public DelegateCommand SalesRebateK3ApiInsertCommand { get; set; }
-        public DelegateCommand SalesRebateParameterCopyCommand { get; set; }
-        public DelegateCommand SalesRebateParameterClearCommand { get; set; }
-        public DelegateCommand RebateAmountBiggerThanZeroCheckCommand { get; set; }
+        public DelegateCommand SalesRebateK3ApiRemoveCommand { get; set; }
+        public DelegateCommand SalesRebateParameterShowCommand { get; set; }
+        public DelegateCommand ReportQueryCommand { get; set; }
+        public DelegateCommand SummarySelectionChangedCommand { get; set; }
+        public DelegateCommand SalesRebateSummaryDeleteCommand { get; set; }
+        public DelegateCommand DetailSelectionChangedCommand { get; set; }
+        public DelegateCommand AmountCalculateCommand { get; set; }
 
-
-
+        private bool BatchParameterVerification(out DateTime dt)
+        {
+            var maxDate = _salesRebateService.GetMaxSettleDateByOrgId(BatchParameter.OrganizationSearchedItem.Id, BatchParameter.RebateClassSeletedItem.ItemSeq);
+            dt = maxDate;
+            if (BatchParameter.SettleDateBegin > maxDate && BatchParameter.SettleDateEnd > maxDate)
+                return true;
+            return false;
+        }
 
         private SalesRebateQueryParameterModel queryParameter;
 
@@ -338,7 +385,19 @@ namespace Ui.ViewModel.IndexPage
         }
 
 
-        private ObservableCollection<SalesRebateModel> salesRebateLists;
+        private ObservableCollection<SalesRebateSummaryModel> salesRebateSummaryLists = new ObservableCollection<SalesRebateSummaryModel>();
+
+        public ObservableCollection<SalesRebateSummaryModel> SalesRebateSummaryLists
+        {
+            get { return salesRebateSummaryLists; }
+            set
+            {
+                salesRebateSummaryLists = value;
+                this.RaisePropertyChanged(nameof(SalesRebateSummaryLists));
+            }
+        }
+
+        private ObservableCollection<SalesRebateModel> salesRebateLists = new ObservableCollection<SalesRebateModel>();
 
         public ObservableCollection<SalesRebateModel> SalesRebateLists
         {
@@ -350,6 +409,31 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        private ObservableCollection<SalesRebateOrgCaseReportModel> reportLists = new ObservableCollection<SalesRebateOrgCaseReportModel>();
+
+        public ObservableCollection<SalesRebateOrgCaseReportModel> ReportLists
+        {
+            get { return reportLists; }
+            set
+            {
+                reportLists = value;
+                this.RaisePropertyChanged(nameof(ReportLists));
+            }
+        }
+
+
+
+        private SalesRebateSummaryModel salesRebateSummarySelectedItem;
+
+        public SalesRebateSummaryModel SalesRebateSummarySelectedItem
+        {
+            get { return salesRebateSummarySelectedItem; }
+            set
+            {
+                salesRebateSummarySelectedItem = value;
+                this.RaisePropertyChanged(nameof(SalesRebateSummarySelectedItem));
+            }
+        }
 
         private SalesRebateModel salesRebateSelectedItem;
 
@@ -362,6 +446,7 @@ namespace Ui.ViewModel.IndexPage
                 this.RaisePropertyChanged(nameof(SalesRebateSelectedItem));
             }
         }
+
 
         private string k3BillNos;
 
@@ -400,8 +485,6 @@ namespace Ui.ViewModel.IndexPage
         }
 
 
-
-
         // 客户列表
         private IEnumerable<ComboBoxSearchModel> organizationLists;
 
@@ -428,97 +511,6 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-        private ComboBoxSearchModel organizationSearchedItem;
-
-        public ComboBoxSearchModel OrganizationSearchedItem
-        {
-            get { return organizationSearchedItem; }
-            set
-            {
-                organizationSearchedItem = value;
-                this.RaisePropertyChanged(nameof(OrganizationSearchedItem));
-            }
-        }
-
-        private EnumModel rebateClassSearchedItem;
-
-        public EnumModel RebateClassSeletedItem
-        {
-            get { return rebateClassSearchedItem; }
-            set
-            {
-                rebateClassSearchedItem = value;
-                this.RaisePropertyChanged(nameof(RebateClassSeletedItem));
-            }
-        }
-
-
-        // 分段选择项
-        private SalesRebateAmountRangeModel salesRebateAmountRangeSelectedItem;
-
-        public SalesRebateAmountRangeModel SalesRebateAmountRangeSelectedItem
-        {
-            get { return salesRebateAmountRangeSelectedItem; }
-            set
-            {
-                salesRebateAmountRangeSelectedItem = value;
-                this.RaisePropertyChanged(nameof(SalesRebateAmountRangeSelectedItem));
-            }
-        }
-
-
-        //是否减掉上期折扣
-        private IList<EnumModel> minusLastPeriodRebateLists;
-
-        public IList<EnumModel> MinusLastPeriodRebateLists
-        {
-            get { return minusLastPeriodRebateLists; }
-            set
-            {
-                minusLastPeriodRebateLists = value;
-                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateLists));
-            }
-        }
-
-        // 返利类型
-        private IList<EnumModel> rebateClassLists;
-
-        public IList<EnumModel> RebateClassLists
-        {
-            get { return rebateClassLists; }
-            set
-            {
-                rebateClassLists = value;
-                this.RaisePropertyChanged(nameof(RebateClassLists));
-            }
-        }
-
-
-        // 含税类型，计算字段
-        private IList<EnumModel> taxAmountTypeLists;
-
-        public IList<EnumModel> TaxAmountTypeLists
-        {
-            get { return taxAmountTypeLists; }
-            set
-            {
-                taxAmountTypeLists = value;
-                this.RaisePropertyChanged(nameof(TaxAmountTypeLists));
-            }
-        }
-
-        // 比例类型
-        private IList<EnumModel> rebatePctTypeLists;
-
-        public IList<EnumModel> RebatePctTypeLists
-        {
-            get { return rebatePctTypeLists; }
-            set
-            {
-                rebatePctTypeLists = value;
-                this.RaisePropertyChanged(nameof(RebatePctTypeLists));
-            }
-        }
 
         //页面验证
         private bool isValid = true;
@@ -556,6 +548,43 @@ namespace Ui.ViewModel.IndexPage
             {
                 listsSum = value;
                 this.RaisePropertyChanged(nameof(ListsSum));
+            }
+        }
+
+
+        private string rebatePctValueString;
+
+        public string RebatePctValueString
+        {
+            get { return rebatePctValueString; }
+            set
+            {
+                rebatePctValueString = value;
+                this.RaisePropertyChanged(nameof(RebatePctValueString));
+            }
+        }
+
+        private IEnumerable<EnumModel> rebateClassLists;
+
+        public IEnumerable<EnumModel> RebateClassLists
+        {
+            get { return rebateClassLists; }
+            set
+            {
+                rebateClassLists = value;
+                this.RaisePropertyChanged(nameof(RebateClassLists));
+            }
+        }
+
+        private SalesRebateReportQueryParameterModel reportQueryParameter = new SalesRebateReportQueryParameterModel { BillDate1= DateTime.Now.AddMonths(-3).Date, BillDate2 = DateTime.Now.Date };
+
+        public SalesRebateReportQueryParameterModel ReportQueryParameter
+        {
+            get { return reportQueryParameter; }
+            set
+            {
+                reportQueryParameter = value;
+                this.RaisePropertyChanged(nameof(ReportQueryParameter));
             }
         }
 

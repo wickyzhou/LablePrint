@@ -5,15 +5,56 @@ using System.Text;
 
 namespace Model
 {
-    public class BucketModel
+    public class BucketModel:NotificationObject
     {
-        public int FBucketID { get; set; }
+		private int fBucketID;
 
-        public string FName { get; set; }
+		public int FBucketID
+		{
+			get { return fBucketID; }
+			set
+			{
+				fBucketID = value;
+				this.RaisePropertyChanged(nameof(FBucketID));
+			}
+		}
 
-        public decimal? FWeight { get; set; }
 
-        public decimal? FOffset { get; set; }
+		private string fName;
+
+		public string FName
+		{
+			get { return fName; }
+			set
+			{
+				fName = value;
+				this.RaisePropertyChanged(nameof(FName));
+			}
+		}
+
+		private decimal? fWeight;
+
+		public decimal? FWeight
+		{
+			get { return fWeight; }
+			set
+			{
+				fWeight = value;
+				this.RaisePropertyChanged(nameof(FWeight));
+			}
+		}
+
+		private decimal fOffset;
+
+		public decimal FOffset
+		{
+			get { return fOffset; }
+			set
+			{
+				fOffset = value;
+				this.RaisePropertyChanged(nameof(FOffset));
+			}
+		}
 
         public string FKeyword { get; set; }
 

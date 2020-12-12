@@ -5,8 +5,20 @@ using System.Text;
 
 namespace Model
 {
-    public class ActionOperationLogModel
+    public class ActionOperationLogModel:NotificationObject
     {
+        private bool isChecked;
+
+        public bool IsChecked
+        {
+            get { return isChecked; }
+            set
+            {
+                isChecked = value;
+                this.RaisePropertyChanged(nameof(IsChecked));
+            }
+        }
+
         public int Id { get; set; }
 
         public DateTime CreateTime { get; set; }

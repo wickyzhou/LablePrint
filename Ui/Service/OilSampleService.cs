@@ -24,7 +24,7 @@ namespace Ui.Service
         // 已办流程
         public IList<OilSampleFlowModel> GetOilSampleDealedFlow()
         {
-            string sql = @" select distinct b.ID Id,a.SUBJECT Title 
+            string sql = @" select distinct b.ID Id,a.SUBJECT+cast(b.ID as nvarchar(50)) Title 
                                     ,isnull((select max(PrintedCount) PrintCount from SROilSampleFlowPrintLog where TypeId=3 and FormmainId=b.ID),0)  ExpressPrintedCount
                             from CTP_AFFAIR a 
                             join formmain_1796 b on a.FORM_RECORDID=b.ID

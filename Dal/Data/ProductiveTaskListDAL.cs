@@ -24,7 +24,7 @@ namespace Dal
 
         public object SyncProductiveTaskList(DateTime productionDate)
         {
-            return SqlHelper.ExecuteScalarProcedure("SJGenICMOList", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) });
+            return SqlHelper.ExecuteScalarProcedure("SJGenICMOListVOC", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) });
         }
 
         public int ModifyProductiveTaskList(ProductiveTaskListModel model)
@@ -58,7 +58,7 @@ namespace Dal
 
         public object AuditProductiveTaskList(DateTime productionDate)
         {
-            return SqlHelper.ExecuteScalarProcedure("SJGenPrintData", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) });
+            return SqlHelper.ExecuteScalarProcedure("SJGenPrintDataVOC", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) });
         }
 
         public void ClearIncrement()
@@ -74,5 +74,11 @@ namespace Dal
                    new SqlParameter("@NewDate", newDate),
                    new SqlParameter("@UserId", userId) });
         }
+
+        public string VerifyICMOOrder(DateTime productionDate)
+        {
+            return  Convert.ToString(SqlHelper.ExecuteScalarProcedure("SJICMOOrderVerificationProc", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) }));
+        }
+        
     }
 }

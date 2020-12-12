@@ -1,7 +1,9 @@
 ﻿using Common;
 using Model;
 using NPOI.HSSF.UserModel;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -138,6 +140,51 @@ namespace Ui.Helper
             previousBatchBeginIndex = 0;
         }
 
+        /// <summary>
+        /// 最近的通用导出功能20201026
+        /// </summary>
+        /// <param name="dataTable">导出的结果集</param>
+        /// <param name="filePath">导出文件目录</param>
+        /// <param name="fileName">导出文件名称</param>
+        /// <param name="typeId">导出类别 1-汇总 2 明细 3-分类</param>
+        /// <param name="checkBoxValue">分类选中的类别Id和</param>
+        /// <param name="groupId">同页面Id</param>
+        /// <param name="orderedName">分类选中的类别名字顺序类别</param>
+        /// <param name="hasTitle">第一行是否有标题</param>
+        /// <param name="isExportLogo">第一行标题的情况下，是否导出logo图标</param>
+        /// <param name="titleName">如果有不是分类，此名字也是sheetName,如果是分类且需要标题，则用占位符$$$代替分类名</param>
+        public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName, int typeId, List<string> orderedName, bool hasTitle, string titleName, bool isExportLogo, string logoPicFileName = "")
+        {
+            string fullName = Path.Combine(filePath, $"{fileName}.xls");
+
+            //如果存在此文件则添加1
+            if (File.Exists(fullName))
+                fullName = fullName.Replace(".xls", DateTime.Now.ToString("--HH-mm-ss") + ".xls");
+
+            IWorkbook wb = new HSSFWorkbook();
+
+            int rowIndex = 0;
+            if (typeId == 3)//分类导出
+            {
+                while (rowIndex > -1 && rowIndex < dataTable.Rows.Count)
+                {
+                    rowIndex = CreateNewSheet(wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName, orderedName, rowIndex);
+                }
+
+            }
+            else// 普通datatable 导出
+            {
+                CreateNewSheet(wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName);
+            }
+
+            FileStream fs = new FileStream(fullName, FileMode.Create);//新建才不会报错
+            wb.Write(fs);//会自动关闭流文件
+            fs.Close();
+
+            currencyBatchSeq = 1;
+            previousBatchBeginIndex = 0;
+        }
+
 
         // 旧功能分类导出的创建Sheet，保留防止程序报错
         private int CreateNewSheet(IWorkbook wb, DataTable dataTable, List<string> orderedName, int rowIndex)
@@ -180,7 +227,7 @@ namespace Ui.Helper
                     var s = dataTable.Columns[z].DataType;
                     if (s.Name == "Int16" || s.Name == "Int32" || s.Name == "Int64" || s.Name == "Float" || s.Name == "Double" || s.Name == "Decimal")
                     {
-           
+
                         row1.CreateCell(z).SetCellValue(Convert.ToDouble(value));
                     }
                     else if (s.Name == "DateTime")
@@ -210,7 +257,7 @@ namespace Ui.Helper
         /// <param name="isExportLogo"></param>
         /// <param name="titleName"></param>
         /// <returns></returns>
-        private int CreateNewSheet(IWorkbook wb, DataTable dataTable, bool hasTitle, string titleName, bool isExportLogo,string picfileName, List<string> orderedName, int rowIndex)
+        private int CreateNewSheet(IWorkbook wb, DataTable dataTable, bool hasTitle, string titleName, bool isExportLogo, string picfileName, List<string> orderedName, int rowIndex)
         {
             #region 标题样式
             IFont titleFont = wb.CreateFont();
@@ -252,7 +299,7 @@ namespace Ui.Helper
             ISheet sheet = wb.CreateSheet(sheetName);
             sheet.ForceFormulaRecalculation = true;
             //设置统一列宽
-            for (int i = 0; i < dataTable.Columns.Count-1; i++)
+            for (int i = 0; i < dataTable.Columns.Count - 1; i++)
             {
                 sheet.SetColumnWidth(i, 15 * 256);
             }
@@ -274,7 +321,7 @@ namespace Ui.Helper
             //表头
             IRow row0 = sheet.CreateRow(firstRowindex);
             row0.Height = (short)20 * 25;
-            for (int i = 0; i < dataTable.Columns.Count-1; i++)
+            for (int i = 0; i < dataTable.Columns.Count - 1; i++)
             {
                 var s = row0.CreateCell(i);
                 s.SetCellValue(dataTable.Columns[i].ColumnName);
@@ -286,18 +333,18 @@ namespace Ui.Helper
             for (int j = 0; j < dataTable.Rows.Count - previousBatchBeginIndex; j++)
             {
                 // 一个sheet数据导出完成的条件
-                if (currencyBatchSeq != Convert.ToInt32(dataTable.Rows[rowIndex][dataTable.Columns.Count-1]))
+                if (currencyBatchSeq != Convert.ToInt32(dataTable.Rows[rowIndex][dataTable.Columns.Count - 1]))
                 {
                     previousBatchBeginIndex = rowIndex;
                     currencyBatchSeq++;
                     return rowIndex;
                 }
 
-                IRow row1 = sheet.CreateRow(j + 1+ firstRowindex);
+                IRow row1 = sheet.CreateRow(j + 1 + firstRowindex);
                 row1.Height = (short)18 * 20;
 
 
-                for (int z = 0; z < dataTable.Columns.Count-1; z++)
+                for (int z = 0; z < dataTable.Columns.Count - 1; z++)
                 {
                     var x = dataTable.Rows[rowIndex][z];
                     object value = x.GetType().Name == "DBNull" ? null : x;
@@ -468,50 +515,6 @@ namespace Ui.Helper
             return string.IsNullOrEmpty(sheetName.Substring(1)) ? "空" : sheetName.Substring(1);
         }
 
-        /// <summary>
-        /// 最近的通用导出功能20201026
-        /// </summary>
-        /// <param name="dataTable">导出的结果集</param>
-        /// <param name="filePath">导出文件目录</param>
-        /// <param name="fileName">导出文件名称</param>
-        /// <param name="typeId">导出类别 1-汇总 2 明细 3-分类</param>
-        /// <param name="checkBoxValue">分类选中的类别Id和</param>
-        /// <param name="groupId">同页面Id</param>
-        /// <param name="orderedName">分类选中的类别名字顺序类别</param>
-        /// <param name="hasTitle">第一行是否有标题</param>
-        /// <param name="isExportLogo">第一行标题的情况下，是否导出logo图标</param>
-        /// <param name="titleName">如果有不是分类，此名字也是sheetName,如果是分类且需要标题，则用占位符$$$代替分类名</param>
-        public void ExportDataTableToExcel(DataTable dataTable, string filePath, string fileName, int typeId, List<string> orderedName, bool hasTitle, string titleName, bool isExportLogo, string logoPicFileName = "")
-        {
-            string fullName = Path.Combine(filePath, $"{fileName}.xls");
-
-            //如果存在此文件则添加1
-            if (File.Exists(fullName))
-                fullName = fullName.Replace(".xls", DateTime.Now.ToString("--HH-mm-ss") + ".xls");
-
-            IWorkbook wb = new HSSFWorkbook();
-
-            int rowIndex = 0;
-            if (typeId == 3)//分类导出
-            {
-                while (rowIndex > -1 && rowIndex < dataTable.Rows.Count)
-                {
-                    rowIndex = CreateNewSheet(wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName, orderedName, rowIndex);
-                }
-
-            }
-            else// 普通datatable 导出
-            {
-                CreateNewSheet(wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName);
-            }
-
-            FileStream fs = new FileStream(fullName, FileMode.Create);//新建才不会报错
-            wb.Write(fs);//会自动关闭流文件
-            fs.Close();
-
-            currencyBatchSeq = 1;
-            previousBatchBeginIndex = 0;
-        }
 
         /// <summary>
         /// 将图片导出到Excel
@@ -542,7 +545,7 @@ namespace Ui.Helper
                     int pictureIdx = xssfworkbook.AddPicture(picBytes, picType);  //添加图片
 
                     HSSFPatriarch patriarch = (HSSFPatriarch)sheet.CreateDrawingPatriarch();
-                    HSSFClientAnchor anchor = new HSSFClientAnchor(200, 90, 10, 230, 0, 0, 2, 0);
+                    HSSFClientAnchor anchor = new HSSFClientAnchor(200, 90, 240, 200, 0, 0, 1, 0);// 90 200 图片高度110 
                     // new HSSFClientAnchor(X1, Y1,  X2, Y2,  列索引1,行索引1 , 列索引2, 行索引2); 行列索引从0开始 ,行列索引指的是 图片左上角所在单元格的行列和 图片右下角所在单元格的行列
                     //X: 0-1024  Y:0-256 ； X1\X2相对本单元格，距离Y轴的偏移量，最大值1023；Y1\Y2相对本单元格，距离X轴的偏移量，最大值255；
                     HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, pictureIdx);
@@ -588,6 +591,205 @@ namespace Ui.Helper
                 return PictureType.WPG;
             return PictureType.Unknown;
         }
+
+
+        #region 导出发料数据，特定格式
+        /// <summary>
+        /// 最近的通用导出功能20201026
+        /// </summary>
+        /// <param name="dataTable">导出的结果集</param>
+        /// <param name="filePath">导出文件目录</param>
+        /// <param name="fileName">导出文件名称</param>
+        /// <param name="typeId">导出类别 1-汇总 2 明细 3-分类</param>
+        /// <param name="checkBoxValue">分类选中的类别Id和</param>
+        /// <param name="groupId">同页面Id</param>
+        /// <param name="orderedName">分类选中的类别名字顺序类别</param>
+        /// <param name="hasTitle">第一行是否有标题</param>
+        /// <param name="isExportLogo">第一行标题的情况下，是否导出logo图标</param>
+        /// <param name="titleName">如果有不是分类，此名字也是sheetName,如果是分类且需要标题，则用占位符$$$代替分类名</param>
+        public void ExportDeliveryDataToExcel(DateTime date, DataTable dataTable, string filePath, string fileName, int typeId, List<string> orderedName, bool hasTitle, string titleName, bool isExportLogo, string logoPicFileName = "")
+        {
+            string fullName = Path.Combine(filePath, $"{fileName}.xls");
+
+            //如果存在此文件则添加1
+            if (File.Exists(fullName))
+                fullName = fullName.Replace(".xls", DateTime.Now.ToString("--HH-mm-ss") + ".xls");
+
+            IWorkbook wb = new HSSFWorkbook();
+
+            int rowIndex = 0;
+            if (typeId == 3)//分类导出
+            {
+                while (rowIndex > -1 && rowIndex < dataTable.Rows.Count)
+                {
+                    rowIndex = CreateNewDeliverySheet(date, wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName, orderedName, rowIndex);
+                }
+
+            }
+            else// 普通datatable 导出
+            {
+                CreateNewSheet(wb, dataTable, hasTitle, titleName, isExportLogo, logoPicFileName);
+            }
+
+            FileStream fs = new FileStream(fullName, FileMode.Create);//新建才不会报错
+            wb.Write(fs);//会自动关闭流文件
+            fs.Close();
+
+            currencyBatchSeq = 1;
+            previousBatchBeginIndex = 0;
+        }
+
+        private int CreateNewDeliverySheet(DateTime date, IWorkbook wb, DataTable dataTable, bool hasTitle, string titleName, bool isExportLogo, string picfileName, List<string> orderedName, int rowIndex)
+        {
+            #region 标题样式
+            IFont titleFont = wb.CreateFont();
+            titleFont.FontName = "宋体";
+            titleFont.Boldweight = (short)FontBoldWeight.Bold;
+            titleFont.FontHeight = 24 * 20; //字体大小
+            ICellStyle titleStyle = wb.CreateCellStyle();
+            titleStyle.Alignment = HorizontalAlignment.Center;
+            titleStyle.VerticalAlignment = VerticalAlignment.Center;
+            titleStyle.BorderBottom = titleStyle.BorderLeft = titleStyle.BorderTop = titleStyle.BorderRight = BorderStyle.Thin;
+            titleStyle.SetFont(titleFont);
+            #endregion
+
+            #region 表头样式
+            IFont headerFont = wb.CreateFont();
+            headerFont.FontName = "宋体";
+            headerFont.Boldweight = (short)FontBoldWeight.Bold;
+            headerFont.FontHeight = 14 * 20; //字体大小
+            ICellStyle headerStyle = wb.CreateCellStyle();
+            headerStyle.Alignment = HorizontalAlignment.Center;
+            headerStyle.VerticalAlignment = VerticalAlignment.Center;
+            headerStyle.BorderBottom = headerStyle.BorderLeft = headerStyle.BorderTop = headerStyle.BorderRight = BorderStyle.Thin;
+            headerStyle.SetFont(headerFont);
+            #endregion
+
+            #region 数据左对齐自动换行缩小字体
+            IFont dataFont = wb.CreateFont();
+            dataFont.FontName = "宋体";
+            dataFont.Boldweight = (short)FontBoldWeight.Normal;
+            dataFont.FontHeight = 14 * 20; //和行高一样？ 也是20倍
+            ICellStyle dataStyle = wb.CreateCellStyle();
+            dataStyle.Alignment = HorizontalAlignment.Left;
+            dataStyle.VerticalAlignment = VerticalAlignment.Center;
+            dataStyle.BorderBottom = dataStyle.BorderLeft = dataStyle.BorderTop = dataStyle.BorderRight = BorderStyle.Thin;
+            dataStyle.WrapText = true;
+            dataStyle.SetFont(dataFont);
+            #endregion
+
+            #region 数据居中对齐自动换行缩小字体
+            IFont dataFont2 = wb.CreateFont();
+            dataFont2.FontName = "宋体";
+            dataFont2.Boldweight = (short)FontBoldWeight.Normal;
+            dataFont2.FontHeight = 14 * 20; //和行高一样？ 也是20倍
+            ICellStyle dataStyle2 = wb.CreateCellStyle();
+            dataStyle2.Alignment = HorizontalAlignment.Center;
+            dataStyle2.VerticalAlignment = VerticalAlignment.Center;
+            dataStyle2.BorderBottom = dataStyle2.BorderLeft = dataStyle2.BorderTop = dataStyle2.BorderRight = BorderStyle.Thin;
+            dataStyle2.WrapText = true;
+            dataStyle2.SetFont(dataFont2);
+            #endregion
+
+            IFont dataFont3 = wb.CreateFont();
+            dataFont3.FontName = "宋体";
+            dataFont3.Boldweight = (short)FontBoldWeight.Normal;
+            dataFont3.FontHeight = 10 * 20; //和行高一样？ 也是20倍
+            ICellStyle dataStyle3 = wb.CreateCellStyle();
+            dataStyle3.Alignment = HorizontalAlignment.Left;
+            dataStyle3.VerticalAlignment = VerticalAlignment.Center;
+            dataStyle3.BorderBottom = dataStyle3.BorderLeft = dataStyle3.BorderTop = dataStyle3.BorderRight = BorderStyle.Thin;
+            dataStyle3.WrapText = true;
+            dataStyle3.SetFont(dataFont3);
+
+
+            string sheetName = GetSheetName(dataTable, currencyBatchSeq, orderedName);
+
+            ISheet sheet = wb.CreateSheet(sheetName);
+            sheet.SetMargin(MarginType.RightMargin, (double)0.1);
+            sheet.SetMargin(MarginType.TopMargin, (double)1);
+            sheet.SetMargin(MarginType.LeftMargin, (double)0.12);
+            sheet.SetMargin(MarginType.BottomMargin, (double)1);
+            //sheet.PrintSetup.Copies = 1;
+            //sheet.PrintSetup.NoColor = true;
+            //sheet.PrintSetup.Landscape = true;
+            //sheet.PrintSetup.PaperSize = (short)PaperSize.A4;
+            sheet.FitToPage = false;
+            sheet.RepeatingRows = new CellRangeAddress(0, 1, 0, 6);
+
+            //设置列宽
+            sheet.SetColumnWidth(0, 15 * 256); sheet.SetColumnWidth(1, 15 * 256); sheet.SetColumnWidth(2, 15 * 256); sheet.SetColumnWidth(3, (int)(18.5 * 256)); sheet.SetColumnWidth(4, 28 * 256); sheet.SetColumnWidth(5, 10 * 256);
+
+
+            int firstRowindex = hasTitle ? 1 : 0;
+            if (hasTitle)
+            {
+                //标题加边框
+                IRow rowTitle = sheet.CreateRow(0);
+                CellRangeAddress region = new CellRangeAddress(0, 0, 0, 5);
+                sheet.AddMergedRegion(region);
+                ((HSSFSheet)sheet).SetEnclosedBorderOfRegion(region, BorderStyle.Thin, HSSFColor.Black.Index);
+                rowTitle.Height = (short)(20 * 50);//50 磅
+                ICell cell = rowTitle.CreateCell(0);
+                cell.SetCellValue(titleName.Replace("$$$", sheetName) + date.ToString("MMdd"));
+                cell.CellStyle = titleStyle;
+                if (isExportLogo)//导出logo到第一行第一列
+                {
+                    ExportImgToExcel(sheet, (HSSFWorkbook)wb, picfileName);
+                }
+            }
+
+            //表头
+            IRow row0 = sheet.CreateRow(firstRowindex);
+            row0.Height = (short)(20 * 35.25); //35.25 磅
+            for (int i = 0; i < dataTable.Columns.Count - 2; i++)
+            {
+                var s = row0.CreateCell(i);
+                s.SetCellValue(dataTable.Columns[i].ColumnName);
+                s.CellStyle = headerStyle;
+            }
+
+            // 获取该组号的最大数量
+            int maxCount = (int)Math.Ceiling((dataTable.Select($"组号={currencyBatchSeq}").Count()) / 15.0) * 15;
+            //数据固定15行一页
+            for (int j = 0; j < maxCount ; j++)
+            {
+                // 一个sheet数据导出完成的条件
+                if (rowIndex < dataTable.Rows.Count && currencyBatchSeq == Convert.ToInt32(dataTable.Rows[rowIndex][dataTable.Columns.Count - 1])  )
+                {
+                    IRow row1 = sheet.CreateRow(j + 1 + firstRowindex);
+                    row1.Height = (short)(20 * 35.25); //35.25 磅
+                    var cell0 = row1.CreateCell(0); cell0.SetCellValue(Convert.ToString(dataTable.Rows[rowIndex][0])); cell0.CellStyle = dataStyle;
+                    var cell1 = row1.CreateCell(1); cell1.SetCellValue(Convert.ToString(Convert.ToDouble(dataTable.Rows[rowIndex][1]))); cell1.CellStyle = dataStyle2;
+                    var cell2 = row1.CreateCell(2); cell2.SetCellValue(Convert.ToString(Convert.ToDouble(dataTable.Rows[rowIndex][2]))); cell2.CellStyle = dataStyle2;
+                    var cell3 = row1.CreateCell(3); cell3.SetCellValue(Convert.ToString(Convert.ToDouble(dataTable.Rows[rowIndex][3]))); cell3.CellStyle = dataStyle2;
+                    var cell4 = row1.CreateCell(4);
+                    var value = Convert.ToString(dataTable.Rows[rowIndex][4]);
+                    cell4.SetCellValue(value); 
+                    if(value.Replace("（", "(").Replace("(","").Length + 3 == value.Length)
+                        cell4.CellStyle = dataStyle3;
+                    else
+                        cell4.CellStyle = dataStyle;
+                    var cell5 = row1.CreateCell(5); cell5.SetCellValue(Convert.ToString(Convert.ToDouble(dataTable.Rows[rowIndex][5]))); cell5.CellStyle = dataStyle2;
+                    rowIndex++;
+                }
+                else
+                {
+                    IRow rownull = sheet.CreateRow(j + 1 + firstRowindex);
+                    rownull.Height = (short)(20 * 35.25); //35.25 磅
+                    for (int z = 0; z < 6; z++)
+                    {
+                        var cell = rownull.CreateCell(z);
+                        cell.SetCellValue("");
+                        cell.CellStyle = dataStyle2;
+                    }
+                }
+            }
+            currencyBatchSeq++;
+            return rowIndex;
+        }
+        #endregion
+
 
     }
 }

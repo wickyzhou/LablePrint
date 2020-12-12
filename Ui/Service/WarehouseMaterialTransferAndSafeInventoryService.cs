@@ -187,6 +187,12 @@ where ProductionDate = @ProductionDate and TransferingWeight> 0;  ";
             }
         }
 
-        
+
+        public DataTable GeSJBatchBOMSummaryExportData(DateTime productionDate)
+        {
+            return SqlHelper.ExecuteDataTable("select * from SJBatchBOMSummaryExportView where 生产日期 = @ProductionDate", new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate)});
+        }
+
+
     }
 }

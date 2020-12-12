@@ -3,28 +3,42 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Ui.View.IndexPage">
-    <Page.Resources>
-        <Style TargetType="DatePickerTextBox" >
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="IsEnabled" Value="False"/>
-        </Style>
-    </Page.Resources>
+      xmlns:local="clr-namespace:Ui.View.IndexPage" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+
 
     <Grid x:Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Style="{StaticResource GroupBoxContentTopRowPanelStyle}" Orientation="Horizontal">
 
-        <DataGrid Name="DG1" Style="{StaticResource DGStyle}" >
-            <FrameworkElement.ContextMenu>
+            <Button x:Name="BtnSyncBucket" Content="同步包装桶数据" Height="30" Style="{StaticResource BtnThemeStyle}" Width="auto" Grid.Row="2" Command="{Binding SyncBucketInfo}" Margin="100 0" />
+            
+            <TextBlock Text="包装桶名称:" Style="{StaticResource TextBlockStyle}" Margin="100 0 10 0"/>
+            
+            <TextBox Text="{Binding BucketName}" Style="{StaticResource TextBoxStyle}" Width="150" />
+            
+            <Button Command="{Binding QueryBaseCommand}" Content="查询" Style="{StaticResource BtnInfoStyle}" Margin="100 0" IsDefault="True"/>
+        </StackPanel>
+        <DataGrid Name="DG1" Style="{StaticResource SingleSelectionDataGridStyle}" Grid.Row="1" ItemsSource="{Binding Lists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding BucketSelectedItem,UpdateSourceTrigger=PropertyChanged}" >
+            <!--<FrameworkElement.ContextMenu>
                     <ContextMenu>
                         <MenuItem Name="modify" HeaderedItemsControl.Header="修改" FrameworkElement.Height="30" Control.VerticalContentAlignment="Center" Control.HorizontalContentAlignment="Center" Click="modify_Click" BorderBrush="DarkSeaGreen"/>
                     </ContextMenu>
-                </FrameworkElement.ContextMenu>
-                <DataGrid.Columns>
-                    <DataGridTextColumn DataGridColumn.Header="编号" DataGridBoundColumn.Binding="{Binding FBucketID}" Width="180"  HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding FWeight}" Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="正负差" DataGridBoundColumn.Binding="{Binding FOffset}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                    <DataGridTextColumn DataGridColumn.Header="关键字" DataGridBoundColumn.Binding="{Binding FKeyword}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                </FrameworkElement.ContextMenu>-->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding ModifyCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn DataGridColumn.Header="编号" DataGridBoundColumn.Binding="{Binding FBucketID}" Width="180"  HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding FWeight}" Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="正负差" DataGridBoundColumn.Binding="{Binding FOffset}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="关键字" DataGridBoundColumn.Binding="{Binding FKeyword}"  Width="200" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -2,6 +2,39 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
+
+    <ControlTemplate x:Key="CallBackWindowTemplate" TargetType="{x:Type Window}">
+        <Border>
+            <Border CornerRadius="5" Background="#57ae57" Margin="{Binding BorderMargin}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Background="#444" Name="CustomWindow">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"  HorizontalAlignment="Left" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Title}" Margin="12 0 0 0" FontFamily="微软雅黑,黑体" FontSize="13" Foreground="Snow" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" MaxHeight="26" Background="#444" Orientation="Horizontal">
+                            <Button Style="{StaticResource BtnHelpStyle}"  ToolTip="帮助或最大化" Name="BtnHelp" Command="{x:Static ApplicationCommands.Help}" FontSize="22" Margin="0 1 0 0 "/>
+                            <Button Name="BtnClose" Style="{StaticResource BtnCloseStyle}" Content="&#xe724;" Command="{Binding ExitCommand}" ToolTip="关闭" Margin="8 2 10 0"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Background="#d6e7f1" CornerRadius="3" Grid.Row="1" Margin="2" BorderThickness="2">
+                        <Border Margin="3" BorderThickness="1" BorderBrush="LightBlue">
+                            <ContentPresenter ></ContentPresenter>
+                        </Border>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+    </ControlTemplate>
+    
     <ControlTemplate x:Key="tempWindowStyleLevel1" TargetType="{x:Type Window}">
         <Border>
             <Border CornerRadius="5" Background="#57ae57" Margin="{Binding BorderMargin}">
@@ -72,7 +105,6 @@
         <Setter Property="Width" Value="1200"/>
     </Style>
 
-
     <ControlTemplate x:Key="tempWindowStyleLevelX" TargetType="{x:Type Window}">
         <Border>
             <Border CornerRadius="5" Background="#57ae57" Margin="{Binding BorderMargin}">
@@ -104,7 +136,6 @@
             </Border>
         </Border>
     </ControlTemplate>
-
 
     <ControlTemplate x:Key="DataWindowTemplate" TargetType="{x:Type Window}">
         <Border>
@@ -138,7 +169,6 @@
         </Border>
     </ControlTemplate>
 
-
     <Style x:Key="WindowStyleLevel1000*700" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
@@ -150,7 +180,6 @@
         <Setter Property="Width" Value="1000"/>
     </Style>
     
-
     <Style x:Key="WindowStyleLevel800*600" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
@@ -173,8 +202,6 @@
         <Setter Property="Width" Value="700"/>
     </Style>
 
-
-    
     <Style x:Key="WindowStyle600*440" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
@@ -196,8 +223,6 @@
         <Setter Property="Height" Value="400"/>
         <Setter Property="Width" Value="600"/>
     </Style>
-    
-
 
     <Style x:Key="WindowStyle500*280" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
@@ -221,8 +246,6 @@
         <Setter Property="Height" Value="350"/>
     </Style>
     
-    
-
     <Style x:Key="WindowStyle400*225" TargetType="{x:Type Window}">
         <Setter Property="Template" Value="{StaticResource DataWindowTemplate}"/>
         <Setter Property="AllowsTransparency" Value="True"/>
@@ -234,6 +257,38 @@
         <Setter Property="Height" Value="225"/>
     </Style>
 
+    <Style x:Key="CallBackWindowStyleLevel1300*750" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource CallBackWindowTemplate}" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="750" />
+        <Setter Property="Width" Value="1300" />
+    </Style>
+    
+    <Style x:Key="CallBackWindowStyleLevel1200*700" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource CallBackWindowTemplate}"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="700"/>
+        <Setter Property="Width" Value="1200"/>
+    </Style>
+
+    <Style x:Key="CallBackWindowStyle600*440" TargetType="{x:Type Window}">
+        <Setter Property="Template" Value="{StaticResource CallBackWindowTemplate}" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Height" Value="440" />
+        <Setter Property="Width" Value="600" />
+    </Style>
 
 </ResourceDictionary>
 

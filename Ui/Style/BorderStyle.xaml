@@ -13,4 +13,78 @@
         </Setter>
     </Style>
 
+    <Style TargetType="GridSplitter" x:Key="ColumnGridSplitter3">
+        <Setter Property="Background" Value="{StaticResource GridSplitterBackgroundBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ToolTip" Value="拖动"/>
+        <Setter Property="Width" Value="3"/>
+        <Setter Property="Margin" Value="1.5 0"/>
+
+    </Style>
+
+    <Style TargetType="GridSplitter"
+           x:Key="ColumnGridSplitter2">
+        <Setter Property="Background" Value="{StaticResource GridSplitterBackgroundBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ToolTip" Value="拖动"/>
+        <Setter Property="Width" Value="2"/>
+        <Setter Property="Margin" Value="0.5 0"/>
+
+    </Style>
+
+    <Style TargetType="GridSplitter"
+           x:Key="ColumnGridSplitter1">
+        <Setter Property="Background" Value="{StaticResource GridSplitterBackgroundBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="ToolTip" Value="拖动"/>
+        <Setter Property="Width" Value="1"/>
+        <Setter Property="Margin"
+                Value="0.3 0" />
+    </Style>
+
+
+    <Style TargetType="GridSplitter"
+           x:Key="RowGridSplitter1">
+        <Setter Property="Background"
+                Value="{StaticResource GridSplitterBackgroundBrush}" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="拖动" />
+        <Setter Property="Height"
+                Value="1" />
+        <Setter Property="Margin"
+                Value="0 0.3" />
+    </Style>
+
+
+    <Style TargetType="GridSplitter"
+           x:Key="RowGridSplitter2">
+        <Setter Property="Background"
+                Value="{StaticResource GridSplitterBackgroundBrush}" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="ToolTip"
+                Value="拖动" />
+        <Setter Property="Height"
+                Value="2" />
+        <Setter Property="Margin"
+                Value="0 0.5" />
+    </Style>
+
+    <Style TargetType="GridSplitter" x:Key="RowGridSplitter3">
+        <Setter Property="Background" Value="{StaticResource GridSplitterBackgroundBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ToolTip" Value="拖动" />
+        <Setter Property="Height" Value="3" />
+        <Setter Property="Margin" Value="0 1.5" />
+    </Style>
 </ResourceDictionary>

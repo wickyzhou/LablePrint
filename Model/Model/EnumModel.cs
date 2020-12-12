@@ -9,13 +9,13 @@ namespace Model
     {
         private int id;
 
-        public int ID
+        public int Id
         {
             get { return id; }
             set
             {
                 id = value;
-                this.RaisePropertyChanged(nameof(ID));
+                this.RaisePropertyChanged(nameof(Id));
             }
         }
 

@@ -8,7 +8,7 @@ using Ui.Service;
 
 namespace Ui.ViewModel
 {
-    public class SalesRebateAmountRangeCreateViewModel: NewDialogViewModel<SalesRebateAmountRangeModel>
+    public class SalesRebateAmountRangeCreateViewModel: NewDialogViewModel<SalesRebateRecentParameterSonModel>
     {
         public SalesRebateAmountRangeCreateViewModel()
         {

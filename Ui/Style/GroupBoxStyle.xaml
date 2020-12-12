@@ -75,7 +75,7 @@
     </Style>
 
 
-    <Style TargetType="GroupBox" x:Key="GroupBoxStyle1">
+    <!--<Style TargetType="GroupBox" x:Key="GroupBoxStyle1">
         <Setter Property="HeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -120,7 +120,7 @@
             </Setter.Value>
     
         </Setter>
-    </Style>
+    </Style>-->
 
 
 </ResourceDictionary>

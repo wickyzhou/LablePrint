@@ -15,7 +15,17 @@ namespace Ui.View.IndexPage
         {
             InitializeComponent();
             this.DataContext = new SalesRebateViewModel();
-            new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGSalesRebate, 1);
+            // new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.DGSalesRebate, 1);
         }
+
+        //没用
+        //private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        //{
+        //    TextBox textBox = sender as TextBox;
+        //    if (Validation.GetErrors(textBox).Count > 0)
+        //    {
+        //        textBox.ToolTip = Validation.GetErrors(textBox)[0].ErrorContent.ToString();
+        //    }
+        //}
     }
 }

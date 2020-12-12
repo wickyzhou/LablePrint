@@ -51,43 +51,15 @@ namespace Common
                 {
                     btFormat.PageSetup.Orientation = BarTender.BtOrientation.btLandscape;//1 纵向
                 }
-                /* btFormat.PageSetup.Orientation = BarTender.BtOrientation.btPortrait;//0 横向 默认值
-                    btFormat.PageSetup.Orientation = BarTender.BtOrientation.btLandscape;//1 纵向 
-                    btFormat.PageSetup.Orientation = BarTender.BtOrientation.btPortrait180;//2 横向旋转180 不支持
-                    btFormat.PageSetup.Orientation = BarTender.BtOrientation.btLandscape180;//3 纵向旋转180 不支持 */
-                //btFormat.PrintToFileLicense = "SEQ7RP291SWNRF2JBHPP958W84EW6Z82KDS";
-
 
                 string nameValues = "," + btFormat.NamedSubStrings.GetAll("|", ",");
                 Regex rg = new Regex(@",([^|]*)", RegexOptions.IgnoreCase);
                 var list = GetTendarFieldName(nameValues.Replace(Environment.NewLine, ""), rg);
 
-          
+
 
                 foreach (LabelPrintCurrencyModel model in data)
                 {
-
-                    btFormat.PrintSetup.IdenticalCopiesOfLabel = model.PrintCount;
-
-
-                    // 设置了序列号，更新配置
-                    if (list.Contains("Seq"))
-                    {
-                        if (string.IsNullOrEmpty(model.Seq))
-                        {
-                            if (previousBatchNo != model.BatchNo)
-                            {
-                                // 重新获取打印开始序号
-                                currentPrintBeginValue = model.BatchCurrentSeq; //new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
-                                previousBatchNo = model.BatchNo;
-                            }
-                        }
-                        currentPrintSeqValue = string.IsNullOrEmpty(model.Seq) ? (currentPrintBeginValue + 1).ToString().PadLeft(3, '0') : model.Seq;
-                        btFormat.SetNamedSubStringValue("Seq", currentPrintSeqValue);
-
-                        btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
-                        btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
-                    }
                     if (list.Contains("RowQuantity"))
                         btFormat.SetNamedSubStringValue("RowQuantity", Convert.ToString(model.RowQuantity));
 
@@ -95,7 +67,7 @@ namespace Common
                         btFormat.SetNamedSubStringValue("SampleOilPrintArea", model.SampleOilPrintArea);
 
                     if (list.Contains("Seq2678"))
-                        btFormat.SetNamedSubStringValue("Seq2678", "000001");
+                        btFormat.SetNamedSubStringValue("Seq2678", model.Seq2678>0?Convert.ToString(model.Seq2678).PadLeft(6, '0'):"000001");
 
                     if (list.Contains("TwoDimensionCode1"))
                         btFormat.SetNamedSubStringValue("TwoDimensionCode1", model.TwoDimensionCode1);
@@ -113,8 +85,7 @@ namespace Common
                         btFormat.SetNamedSubStringValue("ProductionDate", model.ProductionDate.ToString("yyyy-MM-dd"));
                     if (list.Contains("ProductionModel"))
                         btFormat.SetNamedSubStringValue("ProductionModel", model.ProductionModel);
-                    if (list.Contains("ProductionName"))
-                        btFormat.SetNamedSubStringValue("ProductionName", model.ProductionName);
+
                     if (list.Contains("OrgID"))
                         btFormat.SetNamedSubStringValue("OrgID", model.OrgID);
                     if (list.Contains("Label"))
@@ -145,37 +116,161 @@ namespace Common
                         btFormat.SetNamedSubStringValue("DangerousIngredient", model.DangerousIngredient);
                     if (list.Contains("DangerousComment"))
                         btFormat.SetNamedSubStringValue("DangerousComment", model.DangerousComment);
+                    if (list.Contains("GB"))
+                        btFormat.SetNamedSubStringValue("GB", model.GB);
+                    if (list.Contains("QB"))
+                        btFormat.SetNamedSubStringValue("QB", model.QB);
+                    if (list.Contains("GQB"))
+                        btFormat.SetNamedSubStringValue("GQB", model.GQB);
+                    if (list.Contains("Field01"))
+                        btFormat.SetNamedSubStringValue("Field01", model.Field01);
+                    if (list.Contains("Field02"))
+                        btFormat.SetNamedSubStringValue("Field02", model.Field02);
+                    if (list.Contains("Field03"))
+                        btFormat.SetNamedSubStringValue("Field03", model.Field03);
+                    if (list.Contains("Field04"))
+                        btFormat.SetNamedSubStringValue("Field04", model.Field04);
+                    if (list.Contains("Field05"))
+                        btFormat.SetNamedSubStringValue("Field05", model.Field05);
+                    if (list.Contains("Field06"))
+                        btFormat.SetNamedSubStringValue("Field06", model.Field06);
+                    if (list.Contains("Field07"))
+                        btFormat.SetNamedSubStringValue("Field07", model.Field07);
+                    if (list.Contains("Field08"))
+                        btFormat.SetNamedSubStringValue("Field08", model.Field08);
+                    if (list.Contains("Field09"))
+                        btFormat.SetNamedSubStringValue("Field09", model.Field09);
+                    if (list.Contains("Field10"))
+                        btFormat.SetNamedSubStringValue("Field10", model.Field10);
 
-                    /* var s= 结果是0 可能是成功的意思 */
-                    var s = btFormat.PrintOut(false, false);
-                    if (s != 0)
+                    if (model.NoPrintVocName) //不打VOC名称的数据
                     {
-                        btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                        btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
-                        return "打印结果不正常，打开模板手动打印取消警告窗口";
+                        btFormat.PrintSetup.IdenticalCopiesOfLabel = model.PrintCount;
+
+                        // 设置了序列号，更新配置
+                        if (list.Contains("Seq"))
+                        {
+                            if (string.IsNullOrEmpty(model.Seq))
+                            {
+                                if (previousBatchNo != model.BatchNo)
+                                {
+                                    // 重新获取打印开始序号
+                                    currentPrintBeginValue = model.BatchCurrentSeq; //new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
+                                    previousBatchNo = model.BatchNo;
+                                }
+                            }
+                            currentPrintSeqValue = string.IsNullOrEmpty(model.Seq) ? (currentPrintBeginValue + 1).ToString().PadLeft(3, '0') : model.Seq;
+                            btFormat.SetNamedSubStringValue("Seq", currentPrintSeqValue);
+
+                            btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                            btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
+                        }
+
+                        // 设置了序列号，更新配置
+                        if (list.Contains("ProductionName"))
+                            btFormat.SetNamedSubStringValue("ProductionName", model.ProductionName);
+
+
+                        /* var s= 结果是0 可能是成功的意思 */
+                        var s = btFormat.PrintOut(false, false);
+                        if (s != 0)
+                        {
+                            btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                            btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                            return "打印结果不正常，打开模板手动打印取消警告窗口";
+                        }
+
+                        currentPrintBeginValue += model.PrintCount;
+                    }
+                    else
+                    {
+                        // 获取该批号的VOC分类，如果只有一个分类则打印张数不变，如果有多个，打印张数则必须按VOC分类逐项打印
+                        //var vocLists = model.ICMOOrderBillNo == null
+                        //    ? new LabelPrintDAL().GetVocNameListsByBatchNo(model.ProductionDate, model.BatchNo, model.Label, model.OrgID) : new LabelPrintDAL().GetVocNameListsByICMOBillNo(model.ICMOOrderBillNo);
+
+                        //if (vocLists.Count == 1)
+                        //{
+                            btFormat.PrintSetup.IdenticalCopiesOfLabel = model.PrintCount;
+
+                            // 设置了序列号，更新配置
+                            if (list.Contains("Seq"))
+                            {
+                                if (string.IsNullOrEmpty(model.Seq))
+                                {
+                                    if (previousBatchNo != model.BatchNo)
+                                    {
+                                        // 重新获取打印开始序号
+                                        currentPrintBeginValue = model.BatchCurrentSeq; //new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
+                                        previousBatchNo = model.BatchNo;
+                                    }
+                                }
+                                currentPrintSeqValue = string.IsNullOrEmpty(model.Seq) ? (currentPrintBeginValue + 1).ToString().PadLeft(3, '0') : model.Seq;
+                                btFormat.SetNamedSubStringValue("Seq", currentPrintSeqValue);
+
+                                btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                                btFormat.PrintSetup.NumberSerializedLabels = model.PrintCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
+                            }
+
+                            // 设置了序列号，更新配置
+                            if (list.Contains("ProductionName"))
+                                btFormat.SetNamedSubStringValue("ProductionName", model.VOCName);
+
+
+                            /* var s= 结果是0 可能是成功的意思 */
+                            var s = btFormat.PrintOut(false, false);
+                            if (s != 0)
+                            {
+                                btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                                btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                                return "打印结果不正常，打开模板手动打印取消警告窗口";
+                            }
+
+                            currentPrintBeginValue += model.PrintCount;
+
+                        //}
+                        //else
+                        //{
+                        //    foreach (VOCBucketCountModel item in vocLists)
+                        //    {
+                        //        btFormat.PrintSetup.IdenticalCopiesOfLabel = item.BucketCount;
+
+                        //        // 设置了序列号，更新配置
+                        //        if (list.Contains("Seq"))
+                        //        {
+                        //            if (string.IsNullOrEmpty(model.Seq))
+                        //            {
+                        //                if (previousBatchNo != model.BatchNo)
+                        //                {
+                        //                    // 重新获取打印开始序号
+                        //                    currentPrintBeginValue = model.BatchCurrentSeq; //new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
+                        //                    previousBatchNo = model.BatchNo;
+                        //                }
+                        //            }
+                        //            currentPrintSeqValue = string.IsNullOrEmpty(model.Seq) ? (currentPrintBeginValue + 1).ToString().PadLeft(3, '0') : model.Seq;
+                        //            btFormat.SetNamedSubStringValue("Seq", currentPrintSeqValue);
+
+                        //            btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
+                        //            btFormat.PrintSetup.NumberSerializedLabels = item.BucketCount;  // 模板打印序列号（如果模板设置了序列号，这个值相当于打印多少份）
+                        //        }
+
+                        //        // 设置了序列号，更新配置
+                        //        if (list.Contains("ProductionName"))
+                        //            btFormat.SetNamedSubStringValue("ProductionName", item.VOCName);
+
+                        //        var s = btFormat.PrintOut(false, false);
+                        //        if (s != 0)
+                        //        {
+                        //            btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        //            btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
+                        //            return "打印结果不正常，打开模板手动打印取消警告窗口";
+                        //        }
+
+                        //        currentPrintBeginValue += model.PrintCount;
+                        //    }
+                        //}
                     }
 
 
-
-
-                    // 打印文档
-                    //    BarTender.BtPrintResult btPrintRtn;
-                    //    BarTender.Messages btMsgs;
-                    //    btPrintRtn = btFormat.Print("Job1", true, -1, out btMsgs);
-                    //    string printResult = "";
-
-                    //    //检查是否有任何错误消息
-
-                    //    if (btPrintRtn != BarTender.BtPrintResult.btSuccess)
-                    //    {
-                    //        foreach (BarTender.Message MSG in btMsgs)
-                    //        {
-                    //            printResult += MSG.Message;
-                    //        }
-                    //        return printResult;
-                    //    }
-
-                    currentPrintBeginValue += model.PrintCount;
                 }
 
 
@@ -185,7 +280,6 @@ namespace Common
                 //    btFormat.PrintSetup.IdenticalCopiesOfLabel = 1;
                 //    btFormat.PrintOut(false, false);
                 //#endregion
-
 
                 btFormat.Close(BarTender.BtSaveOptions.btDoNotSaveChanges);
                 btApp.Quit(BarTender.BtSaveOptions.btDoNotSaveChanges);
@@ -242,7 +336,6 @@ namespace Common
                 BarTender.Format btFormat = btApp.Formats.Open(templateName, false, "");
                 btFormat.PrintSetup.Printer = printerName;
 
-
                 if (orientation == "横向")
                     btFormat.PageSetup.Orientation = BarTender.BtOrientation.btPortrait;//0 横向 默认值
                 else
@@ -263,7 +356,7 @@ namespace Common
                             if (previousBatchNo != model.BatchNo)
                             {
                                 // 重新获取打印开始序号
-                                currentPrintBeginValue = model.BatchCurrentSeq; //new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
+                                currentPrintBeginValue = model.BatchCurrentSeq; // new LabelPrintDAL().GetBatchPrintTotal(model.BatchNo);
                                 previousBatchNo = model.BatchNo;
                             }
                         }

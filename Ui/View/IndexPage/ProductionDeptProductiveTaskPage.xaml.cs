@@ -30,6 +30,8 @@ namespace Ui.View.IndexPage
         readonly static UserModel user = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
         private static readonly ProductiveTaskWorkService _work = new ProductiveTaskWorkService();
 
+        private static readonly ProductiveTaskListService _service = new ProductiveTaskListService();
+
         public ProductionDeptProductiveTaskPage()
         {
             InitializeComponent();
@@ -68,19 +70,25 @@ namespace Ui.View.IndexPage
 
         private void BtnSync_Click(object sender, RoutedEventArgs e)
         {
-            object result = new ProductiveTaskListService().SyncProductiveTaskList(this.DP2.SelectedDate.Value);
-            if (result == null)
+            string msg = _service.VerifyICMOOrder(this.DP2.SelectedDate.Value);
+            if (string.IsNullOrEmpty(msg))
             {
-                MessageBox.Show($"生成成功...");
-                this.AuditText.Text = "确认审核";
-                GetDataFromDatabase();
-                this.DataContext = ob;
-                this.MainDataGrid.ItemsSource = ob;
+                object result = _service.SyncProductiveTaskList(this.DP2.SelectedDate.Value);
+                if (result == null)
+                {
+                    MessageBox.Show($"生成成功...");
+                    this.AuditText.Text = "确认审核";
+                    GetDataFromDatabase();
+                    this.DataContext = ob;
+                    this.MainDataGrid.ItemsSource = ob;
+                }
+                else
+                    MessageBox.Show($"{result}");
             }
             else
-            {
-                MessageBox.Show($"{result}");
-            }
+                MessageBox.Show($"{msg}","数据异常");
+
+
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -97,7 +105,7 @@ namespace Ui.View.IndexPage
                 string result = new FileHelper().ImportExcelToDatabase(opd.FileName);
                 if (result == null)
                 {
-                    r = (int)new ProductiveTaskListService().AuditProductiveTaskList(this.DP2.SelectedDate.Value);
+                    r = (int)_service.AuditProductiveTaskList(this.DP2.SelectedDate.Value);
                 }
 
                 this.AuditText.Text = "已审核";
@@ -148,7 +156,7 @@ namespace Ui.View.IndexPage
         public void GetDataFromDatabase()
         {
             List<CBTypeModel> cBTypes = new List<CBTypeModel>();
-            lists = new ProductiveTaskListService().GetAllProductiveTaskListByDate(this.DP2.SelectedDate.Value);
+            lists = _service.GetAllProductiveTaskListByDate(this.DP2.SelectedDate.Value);
             if (this.BtnQuery == null)
             {
                 return;
@@ -226,7 +234,7 @@ namespace Ui.View.IndexPage
                 //    }
                 //}
               
-                int rowCount = (int)new ProductiveTaskListService().AuditProductiveTaskList(dateTime);
+                int rowCount = (int)_service.AuditProductiveTaskList(dateTime);
                 if (rowCount > 0)
                 {
                     this.AuditText.Text = "已审核";
@@ -241,7 +249,7 @@ namespace Ui.View.IndexPage
 
         private void BtnClearIncrem_Click(object sender, RoutedEventArgs e)
         {
-            new ProductiveTaskListService().ClearIncrement();
+            _service.ClearIncrement();
             MessageBox.Show("清除成功");
         }
 
@@ -265,7 +273,7 @@ namespace Ui.View.IndexPage
             MessageBoxResult result = MessageBox.Show($"确认修改选择批次的领料单和入库单制单日期为【{this.DP3.Text}】?", "温馨提示", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                var r = new ProductiveTaskListService().ModifyBillDateMonthly(batchesIn, Convert.ToDateTime(this.DP2.Text), Convert.ToDateTime(this.DP3.Text), user.ID);
+                var r = _service.ModifyBillDateMonthly(batchesIn, Convert.ToDateTime(this.DP2.Text), Convert.ToDateTime(this.DP3.Text), user.ID);
                 if (r.Length > 0)
                 {
                     MessageBox.Show(r);

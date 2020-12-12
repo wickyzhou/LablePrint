@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="Ui.Extension.PrintConfigControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ui.Extension"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <GroupBox Height="auto" BorderBrush="MediumSeaGreen">
+        <GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1" Text="打印参数" Style="{StaticResource TextBlockStyle15}" />
+                <Button Grid.Column="2" Content="保存配置" Style="{StaticResource BtnSuccessStyle}" VerticalAlignment="Center" Margin="10 0 0 0" ToolTip="保存打印机名称和模板目录，下次开启时就自动带出此次配置" Height="30" Command="{Binding PrintConfigurationSaveCommand}" />
+            </Grid>
+        </GroupBox.Header>
+        <GroupBox.Content>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="打印机名" Style="{StaticResource TextBlockStyle15}" />
+
+                    <ComboBox Grid.Row="0" Grid.Column="2" Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding ComputerPrinters,UpdateSourceTrigger=PropertyChanged}" Text="{Binding PrintConfiguration.PrinterName}" />
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="模板目录" Style="{StaticResource BtnWarningStyle}" ToolTip="点击选择模板所在文件夹" Command="{Binding TemplateSelectBaseCommand}" />
+
+                    <ComboBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="5" Style="{StaticResource ComboBoxStyleAuto}" ItemsSource="{Binding PirntTemplates,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="TemplateFullName" DisplayMemberPath="TemplateDisplayName" Text="{Binding PrintConfiguration.TemplateSelectedItem.TemplateDisplayName}" SelectedItem="{Binding PrintConfiguration.TemplateSelectedItem,UpdateSourceTrigger=PropertyChanged}">
+                    </ComboBox>
+                </Grid>
+            </Grid>
+        </GroupBox.Content>
+    </GroupBox>
+</UserControl>

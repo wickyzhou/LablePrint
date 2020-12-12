@@ -76,15 +76,30 @@ namespace Ui.ViewModel.IndexPage
                         view.Close();
                         if (type == 1)
                         {
-                            DataTable datatable = _service.GetSJBatchBomRequestDeliveryExportData(GeneralParameter.ParamBeginDate.Value, string.Join(",", orderedColumns));
-                            if (datatable.Rows.Count > 0)
+                            if (outputEntity == 3)
                             {
-                                ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(GeneralParameter)
-                                    , outputEntity, orderedColumns, true, "$$$发料单", true);
-                                MessageBox.Show("导出成功");
+                                DataTable datatable = _service.GetSJBatchBomRequestDeliveryExportData(GeneralParameter.ParamBeginDate.Value, string.Join(",", orderedColumns));
+                                if (datatable.Rows.Count > 0)
+                                {
+                                    ExportHelper.ExportDeliveryDataToExcel(GeneralParameter.ParamBeginDate.Value, datatable, HostConfig.HostValue, HostConfig.TypeDesciption + CommonService.GetQueryParameterValueString(GeneralParameter)
+                                        , outputEntity, orderedColumns, true, "$$$发料单", true);
+                                    MessageBox.Show("导出成功");
+                                }
+                                else
+                                    MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有可导出的数据");
                             }
                             else
-                                MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有可导出的数据");
+                            {
+                                DataTable datatable = _service.GeSJBatchBOMSummaryExportData(GeneralParameter.ParamBeginDate.Value); 
+                                if (datatable.Rows.Count > 0)
+                                {
+                                    ExportHelper.ExportDataTableToExcel(datatable, HostConfig.HostValue, "物料需求" + CommonService.GetQueryParameterValueString(GeneralParameter), outputEntity, null, false, "物料需求", false);
+                                    MessageBox.Show("导出成功");
+                                }
+                                else
+                                    MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有可导出的数据");
+                            }
+                         
 
                         }
                     });
@@ -102,6 +117,7 @@ namespace Ui.ViewModel.IndexPage
             {
                 _service.SplitBatchBomRequest(GeneralParameter.ParamBeginDate.Value);
                 QueryBaseCommand.Execute(null);
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "MaterialRequestGenerateCommand", ActionDesc = "生成物料需求", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
             });
 
             WorkshopInventoryRefreshCommand = new DelegateCommand((obj) =>
@@ -109,6 +125,7 @@ namespace Ui.ViewModel.IndexPage
                 BatchBomRequestSummaryLists.Clear();
                 _service.RefreshWorkshopInventoryQty(CommonService.GetSqlWhereString(Filter));
                 QueryBaseCommand.Execute(null);
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "WorkshopInventoryRefreshCommand", ActionDesc = "获取现场库存", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
             });
 
             QueryBaseCommand = new DelegateCommand((obj) =>
@@ -137,11 +154,12 @@ namespace Ui.ViewModel.IndexPage
                 }
                 else
                     MessageBox.Show("先选择主表行数据");
-
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "DeliverCommand", ActionDesc ="发料", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
             });
 
             DeliveryDeleteCommand = new DelegateCommand((obj) =>
             {
+                int id = -1;
                 if (BatchBomRequestSummarySelectedItem != null)
                 {
 
@@ -151,6 +169,7 @@ namespace Ui.ViewModel.IndexPage
                         var model = selectedLists.First();
                         if (_service.DeleteDeliverTransfer(model.Id))
                         {
+                            id = model.Id;
                             DeliverTransferLists.Clear();
                             _service.GetDeliverTransferLists(BatchBomRequestSummarySelectedItem).ForEach(x => DeliverTransferLists.Add(x));
                             BatchBomRequestSummarySelectedItem.QtyTransfering = DeliverTransferLists.Sum(x => x.TransferingWeight).Value;
@@ -161,7 +180,7 @@ namespace Ui.ViewModel.IndexPage
                 }
                 else
                     MessageBox.Show("先选择主表行数据");
-
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "DeliveryDeleteCommand", ActionDesc ="删除发料", UserId = User.ID, MainMenuId = Menu.ID, PKId = id, HostName = HostName });
             });
 
             TransferDeleteCommand = new DelegateCommand((obj) =>
@@ -188,7 +207,7 @@ namespace Ui.ViewModel.IndexPage
                 }
                 else
                     MessageBox.Show("先选择主表行数据");
-
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "TransferDeleteCommand", ActionDesc = "删除调拨单", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
             });
 
             SelectionChangedCommand = new DelegateCommand((obj) =>
@@ -208,62 +227,69 @@ namespace Ui.ViewModel.IndexPage
                 var selectedLists = _service.GetK3InsertData(GeneralParameter.ParamBeginDate.Value);
                 if (selectedLists.Count > 0)
                 {
-                    TransferMainModel main = new TransferMainModel
+                    var emp = K3ApiFKService.GetEmployeeByUserName(User.UserName);
+                    if (emp != null)
                     {
-                        FBillerID = new BaseNumberNameModelX { FNumber = "吴强", FName = "吴强" },
-                        FFManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
-                        FSManagerID = new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
-                        FRefType = new BaseNumberNameModelX { FNumber = "01", FName = "成本调拨" },
-                        FClassTypeID = 41,
-                        FDate = DateTime.Now.Date.ToString("yyyy-MM-dd")
-                    };
-
-                    List<TransferSonModel> sons = new List<TransferSonModel>();
-
-                    foreach (MaterialTimelyInventoryModel item in selectedLists)
-                    {
-                        sons.Add(new TransferSonModel
+                        TransferMainModel main = new TransferMainModel
                         {
-                            FItemID = new BaseNumberNameModelX { FNumber = item.MaterialNumber, FName = item.MaterialName },// K3ApiFKService.GetMaterialById
-                            FChkPassItem = new BaseNumberNameModelX { FNumber = "Y", FName = "是" },
-                            FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
-                            FDCStockID1 = new BaseNumberNameModelX { FNumber = item.ParentStockNumber, FName = item.ParentStockName },//K3ApiFKService.GetStockById(item.ParentStockId),
-                            FSCStockID1 = new BaseNumberNameModelX { FNumber = item.StockNumber, FName = item.StockName },
-                            FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
-                            FAuxQty = item.TransferingWeight.Value,
-                            FQty = item.TransferingWeight.Value,
-                            FBatchNo = item.BatchNo,
-                        });
-                    }
-                    var requestModel = new K3ApiInsertRequestModel<TransferMainModel, TransferSonModel>()
-                    {
-                        Data = new K3ApiInsertDataRequestModel<TransferMainModel, TransferSonModel>()
+                            FBillerID = new BaseNumberNameModelX { FNumber = emp.FName, FName = emp.FName },
+                            FFManagerID = emp,// BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
+                            FSManagerID = emp,// new BaseNumberNameModelX { FNumber = "111", FName = "吴强" },
+                            FRefType = new BaseNumberNameModelX { FNumber = "01", FName = "成本调拨" },
+                            FClassTypeID = 41,
+                            FDate = DateTime.Now.Date.ToString("yyyy-MM-dd")
+                        };
+
+                        List<TransferSonModel> sons = new List<TransferSonModel>();
+
+                        foreach (MaterialTimelyInventoryModel item in selectedLists)
                         {
-                            Page1 = new List<TransferMainModel> { main },
-                            Page2 = sons
+                            sons.Add(new TransferSonModel
+                            {
+                                FItemID = new BaseNumberNameModelX { FNumber = item.MaterialNumber, FName = item.MaterialName },// K3ApiFKService.GetMaterialById
+                                FChkPassItem = new BaseNumberNameModelX { FNumber = "Y", FName = "是" },
+                                FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
+                                FDCStockID1 = new BaseNumberNameModelX { FNumber = item.ParentStockNumber, FName = item.ParentStockName },//K3ApiFKService.GetStockById(item.ParentStockId),
+                                FSCStockID1 = new BaseNumberNameModelX { FNumber = item.StockNumber, FName = item.StockName },
+                                FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
+                                FAuxQty = item.TransferingWeight.Value,
+                                FQty = item.TransferingWeight.Value,
+                                FBatchNo = item.BatchNo,
+                            });
                         }
-                    };
-
-                    string postJson = JsonHelper.ObjectToJson(requestModel);
-                    K3ApiInsertResponseModel response = K3ApiService.Insert("Transfer", postJson);
-                    if (response.StatusCode == 200)
-                    {
-                        //double totalQty = selectedLists.Sum(x => x.TransferingWeight).Value;
-                        string ids = string.Join(",", selectedLists.Select(x => x.Id));
-                        if (_service.UpdateBillNo(ids, response.Data.BillNo))
+                        var requestModel = new K3ApiInsertRequestModel<TransferMainModel, TransferSonModel>()
                         {
-                            QueryBaseCommand.Execute(null);
+                            Data = new K3ApiInsertDataRequestModel<TransferMainModel, TransferSonModel>()
+                            {
+                                Page1 = new List<TransferMainModel> { main },
+                                Page2 = sons
+                            }
+                        };
+
+                        string postJson = JsonHelper.ObjectToJson(requestModel);
+                        K3ApiInsertResponseModel response = K3ApiService.Insert("Transfer", postJson);
+                        if (response.StatusCode == 200)
+                        {
+                            //double totalQty = selectedLists.Sum(x => x.TransferingWeight).Value;
+                            string ids = string.Join(",", selectedLists.Select(x => x.Id));
+                            if (_service.UpdateBillNo(ids, response.Data.BillNo))
+                            {
+                                QueryBaseCommand.Execute(null);
+                            }
+                            else
+                                MessageBox.Show($"插入K3调拨单，更新发料表失败，请联系管理员");
                         }
                         else
-                            MessageBox.Show($"插入K3调拨单，更新发料表失败，请联系管理员");
+                            MessageBox.Show($"{response.Message}");
                     }
                     else
-                        MessageBox.Show($"{response.Message}");
+                        MessageBox.Show($"【{User.UserName}】 在K3里面不存在，或不一致");
+
                 }
                 else
                     MessageBox.Show($"【{GeneralParameter.ParamBeginDate.Value}】 没有已发料且未调拨的数据");
 
-
+                CommonService.WriteActionLog(new ActionOperationLogModel { ActionName = "BatchNoQtyK3InsertCommand", ActionDesc = "生成调拨单", UserId = User.ID, MainMenuId = Menu.ID, PKId = -1, HostName = HostName });
             });
         }
 
@@ -273,26 +299,25 @@ namespace Ui.ViewModel.IndexPage
 
             Filter = new BatchBomRequestQueryParameterModel
             {
-                ProductionDateBegin = DateTime.Now.Date,
-                ProductionDateEnd = DateTime.Now.Date
+                ProductionDate1 = DateTime.Now.Date,
+                ProductionDate2 = DateTime.Now.Date
             };
 
             InventoryLists = new ObservableCollection<MaterialTimelyInventoryModel>();
             BatchBomRequestSummaryLists = new ObservableCollection<BatchBomRequestSummaryModel>();
             DeliverTransferLists = new ObservableCollection<MaterialTimelyInventoryModel>();
             HostConfig = CommonService.GetHostConfig(Menu.ID, HostName, User.ID) ?? new HostConfigModel() { TypeId = Menu.ID, Host = HostName, UserId = User.ID, TypeDesciption = Menu.TB2Text };
-            //DeliveryStockLists = CommonService.GetDeliveryStock();
-            Task.Factory.StartNew(() =>
-            {
-                UIExecute.RunAsync(() =>
-                {
+            DeliveryStockLists = CommonService.GetDeliveryStock();
+            //Task.Factory.StartNew(() =>
+            //{
+            //    UIExecute.RunAsync(() =>
+            //    {
 
-                    QueryBaseCommand.Execute(null);
+            //        QueryBaseCommand.Execute(null);
 
-                });
-            });
+            //    });
+            //});
         }
-
 
         private GeneralParameterModel generalParameter;
 

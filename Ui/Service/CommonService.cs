@@ -4,6 +4,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Ui.Extension;
 using Ui.Helper;
 using Ui.MVVM.Common;
 
@@ -480,22 +482,27 @@ namespace Ui.Service
                 {
                     if (value != null)
                     {
-                        if (name.EndsWith("Begin"))
-                            sb.Append($" and {name.Replace("Begin", "")} >= {value} ");
-                        else if (name.EndsWith("End"))
-                            sb.Append($" and {name.Replace("End", "")} <= {value} ");
+                        if (name.EndsWith("1"))
+                            sb.Append($" and {name.Substring(0, name.Length - 1)} >= {value} ");
+                        else if (name.EndsWith("2"))
+                            sb.Append($" and {name.Substring(0, name.Length - 1)} <= {value} ");
                         else
                             sb.Append($" and {name} = {value} ");
                     }
                 }
                 else if (type == typeof(DateTime))
                 {
-                    if (name.EndsWith("Begin"))
-                        sb.Append($" and {name.Replace("Begin", "")} >= '{value}' ");
-                    else if (name.EndsWith("End"))
-                        sb.Append($" and {name.Replace("End", "")} <= '{value}' ");
-                    else
-                        sb.Append($" and {name} = '{value}' ");
+                    if (value != null)
+                    {
+                        if (name.EndsWith("1"))
+                            sb.Append($" and {name.Substring(0, name.Length - 1)} >= '{value}' ");
+                        else if (name.EndsWith("2"))
+                            sb.Append($" and {name.Substring(0, name.Length - 1)} <= '{value}' ");
+                        else
+                            sb.Append($" and {name} = '{value}' ");
+
+                    }
+                   
                 }
             }
             return sb.ToString();
@@ -524,6 +531,12 @@ namespace Ui.Service
         public void LoadIEnumerableToDatabase<T>(IEnumerable<T> lists, string tableName)
         {
             DataTable dataTable = TypeConvertHelper.ConvertIEnumerableToDataTable(lists, DateTime.Now.Ticks);
+            SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+        }
+
+        public void LoadIEnumerableToDatabase2<T>(IEnumerable<T> lists, string tableName)
+        {
+            DataTable dataTable = lists.ListToDataTable<T>(tableName);
             SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
         }
 
@@ -564,5 +577,30 @@ namespace Ui.Service
             }
         }
 
+        public string GetExportViewName(int menu,int viewId)
+        {
+            string sql = string.Empty;
+            switch (viewId)
+            {
+                case 1: sql = @" select View1 from SJExportView where MainMenuId = @MainMenuId ;";break;
+                case 2: sql = @" select View2 from SJExportView where MainMenuId = @MainMenuId ;"; break;
+                case 3: sql = @" select View3 from SJExportView where MainMenuId = @MainMenuId ;"; break;
+                default:break;
+            }
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return Convert.ToString(connection.ExecuteScalar(sql, new { MainMenuId  = menu }));
+            }
+        }
+
+        public DataTable GetExportDataView(string viewName, string filter)
+        {
+            return SqlHelper.ExecuteDataTable($" select * from {viewName} where 1=1 {filter}");
+        }
+
+        public DataTable GetExportDataProcedure(string procName, int userDataId, string orderedColumns, string filter)
+        {
+            return SqlHelper.ExecuteDataTableProcedure(procName, new SqlParameter[] { new SqlParameter("@UserId", userDataId), new SqlParameter("@OrderColumns", orderedColumns),new SqlParameter("@Filter", filter) });
+        }
     }
 }

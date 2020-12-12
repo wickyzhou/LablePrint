@@ -156,10 +156,16 @@ namespace Ui.View.IndexPage
 
         private void BtnPrintAdjustment_Click(object sender, RoutedEventArgs e)
         {
-            LabelPrintCommonAdjustmentWindow window = new LabelPrintCommonAdjustmentWindow(user);
-            window.RefreshEvent += RefreshDataGrid;
-            window.Owner = System.Windows.Window.GetWindow(this);
-            window.ShowDialog();
+            PrintCommonAdjustmentView view = new PrintCommonAdjustmentView();
+            view.ShowDialog();
+            view.Owner = System.Windows.Window.GetWindow(this);
+
+            //LabelPrintCommonAdjustmentWindow window = new LabelPrintCommonAdjustmentWindow(user);
+            //window.RefreshEvent += RefreshDataGrid;
+            //window.Owner = System.Windows.Window.GetWindow(this);
+            //window.ShowDialog();
+
+          
         }
 
         private void BtnShow_Click(object sender, RoutedEventArgs e)

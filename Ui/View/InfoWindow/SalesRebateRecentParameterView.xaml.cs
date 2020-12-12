@@ -20,12 +20,12 @@ namespace Ui.View.InfoWindow
     /// </summary>
     public partial class SalesRebateRecentParameterView : Window
     {
-        public SalesRebateRecentParameterView(SalesRebateModel model)
+        public SalesRebateRecentParameterView(SalesRebateBatchParameterModel model)
         {
             InitializeComponent();
             this.DataContext = new SalesRebateRecentParameterViewModel(model);
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (send, e) => { this.Close(); }));
+   
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Help, (send, e) =>
             {
                 if (this.WindowState == WindowState.Normal)

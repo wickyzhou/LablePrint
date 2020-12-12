@@ -8,32 +8,56 @@ namespace Model
 {
     public class SalesRebateBatchParameterModel : NotificationObject
     {
+		private DateTime settleDateBegin;
 
-        private SalesRebateModel salesRebateBatchParameter;
-
-        public SalesRebateModel SalesRebateBatchParameter
-        {
-            get { return salesRebateBatchParameter; }
-            set
-            {
-                salesRebateBatchParameter = value;
-                this.RaisePropertyChanged(nameof(SalesRebateBatchParameter));
-            }
-        }
-
+		public DateTime SettleDateBegin
+		{
+			get { return settleDateBegin; }
+			set
+			{
+				settleDateBegin = value;
+				this.RaisePropertyChanged(nameof(SettleDateBegin));
+			}
+		}
 
 
-        private ObservableCollection<SalesRebateAmountRangeModel> salesRebateAmountRangeBatchParameter;
+		private DateTime settleDateEnd;
 
-        public ObservableCollection<SalesRebateAmountRangeModel> SalesRebateAmountRangeBatchParameter
-        {
-            get { return salesRebateAmountRangeBatchParameter; }
-            set
-            {
-                salesRebateAmountRangeBatchParameter = value;
-                this.RaisePropertyChanged(nameof(SalesRebateAmountRangeBatchParameter));
-            }
-        }
+		public DateTime SettleDateEnd
+		{
+			get { return settleDateEnd; }
+			set
+			{
+				settleDateEnd = value;
+				this.RaisePropertyChanged(nameof(SettleDateEnd));
+			}
+		}
 
-    }
+		private ComboBoxSearchModel organizationSearchedItem;
+
+		public ComboBoxSearchModel OrganizationSearchedItem
+		{
+			get { return organizationSearchedItem; }
+			set
+			{
+				organizationSearchedItem = value;
+				this.RaisePropertyChanged(nameof(OrganizationSearchedItem));
+			}
+		}
+
+		private EnumModel rebateClassSeletedItem;
+
+		public EnumModel RebateClassSeletedItem
+		{
+			get { return rebateClassSeletedItem; }
+			set
+			{
+				rebateClassSeletedItem = value;
+				this.RaisePropertyChanged(nameof(RebateClassSeletedItem));
+			}
+		}
+
+
+
+	}
 }

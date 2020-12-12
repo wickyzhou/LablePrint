@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Caching;
+using System.Windows;
 using Ui.Command;
 using Ui.Helper;
 using Ui.Service;
@@ -113,6 +114,5 @@ namespace Ui.ViewModel
         }
 
         #endregion
-
     }
 }

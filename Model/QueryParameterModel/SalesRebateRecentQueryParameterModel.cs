@@ -1,12 +1,37 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Model
+namespace QueryParameterModel
 {
-    public class SalesRebateQueryParameterModel : NotificationObject
+    public class SalesRebateRecentQueryParameterModel: NotificationObject
     {
+		private int? orgId;
+
+		public int? OrgId
+		{
+			get { return orgId; }
+			set
+			{
+				orgId = value;
+				this.RaisePropertyChanged(nameof(OrgId));
+			}
+		}
+
+		private int rebateClass;
+
+		public int RebateClass
+		{
+			get { return rebateClass; }
+			set
+			{
+				rebateClass = value;
+				this.RaisePropertyChanged(nameof(RebateClass));
+			}
+		}
+
 		private string orgCode;
 
 		public string OrgCode
@@ -18,6 +43,7 @@ namespace Model
 				this.RaisePropertyChanged(nameof(OrgCode));
 			}
 		}
+
 
 		private string caseName;
 
@@ -31,6 +57,7 @@ namespace Model
 			}
 		}
 
+
 		private string orgName;
 
 		public string OrgName
@@ -42,31 +69,6 @@ namespace Model
 				this.RaisePropertyChanged(nameof(OrgName));
 			}
 		}
-
-		private string settleDateBegin;
-
-		public string SettleDateBegin
-		{
-			get { return settleDateBegin; }
-			set
-			{
-				settleDateBegin = value;
-				this.RaisePropertyChanged(nameof(SettleDateBegin));
-			}
-		}
-
-		private string settleDateEnd;
-
-		public string SettleDateEnd
-		{
-			get { return settleDateEnd; }
-			set
-			{
-				settleDateEnd = value;
-				this.RaisePropertyChanged(nameof(SettleDateEnd));
-			}
-		}
-
 
 	}
 }

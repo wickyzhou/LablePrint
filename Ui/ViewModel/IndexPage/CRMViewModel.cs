@@ -43,7 +43,6 @@ customItem175__c JiShuZhiChi,customItem182__c PinZhiZhiChi,customItem173__c Chan
 				if (ss2.code == 200)
 				{
 					SROpportunityQueryXoqlModel[] rr = ss2.data.records;
-					// SqlHelper.ExecuteNonQuery(" truncate table SROpportunityXoqlTable ;", null); 计算时只保留最新的即可
 					SqlHelper.LoadArrayToDBModelTable(rr, "SROpportunityXoqlTable");
 				}
 				else

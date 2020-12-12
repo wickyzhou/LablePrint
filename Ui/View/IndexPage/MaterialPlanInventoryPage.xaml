@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Ui.View.IndexPage"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1200"
+      d:DesignHeight="700" d:DesignWidth="1200"
       xmlns:c="clr-namespace:Ui.Converter"
       xmlns:p="clr-namespace:Model;assembly=Model"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -14,12 +14,16 @@
 
     <Grid Style="{StaticResource ContentAreaGridStyle}">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100"/>
                 <RowDefinition/>
@@ -88,7 +92,7 @@
                                 <DataGridColumn.HeaderTemplate >
                                     <DataTemplate>
                                         <StackPanel>
-                                            <TextBlock></TextBlock>
+                                            <CheckBox IsChecked="{Binding DataContext.IsCheckedAll,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Command="{Binding DataContext.AllCheckCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridColumn.HeaderTemplate>
@@ -117,18 +121,68 @@
             </GroupBox>
         </Grid>
 
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource ColumnGridSplitter3}" />
+        <GroupBox Grid.Column="2" Grid.Row="0" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
+            <GroupBox.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  导入采购申请模板  " Command="{Binding PurchaseRequisitionImportCommand}" Style="{StaticResource BtnSuccessStyle}" Margin="3 0"/>
+                        <TextBox Grid.Column="1" Text="{Binding ImportFileFullName1,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}" Width="auto" />
+                    </Grid>
 
-        <GroupBox Grid.Column="1" Margin="0 20 0 0" Padding="1 8" >
+                    <Grid Grid.Row="1" Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="104*" />
+                            <ColumnDefinition Width="11*" />
+                            <ColumnDefinition Width="58*" />
+                            <ColumnDefinition Width="138*" />
+                            <ColumnDefinition Width="57*" />
+                            <ColumnDefinition Width="138*" />
+
+
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="  生成K3采购申请  " Command="{Binding PurchaseRequisitionInsertK3Command}" Style="{StaticResource BtnWarningStyle}" Margin="3,5" ToolTip="生成成功后，单据就在K3里面了,需要修改删除的话得进K3" Grid.ColumnSpan="2" />
+                        <TextBlock Grid.Column="2" Style="{StaticResource TextBlockStyle5}" Text="单号：" Margin="0,9,5,8" />
+                        <TextBox Grid.Column="3" Text="{Binding K3InsertResponseData.BillNo,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxStyle}" ToolTip="审核改单据号" Margin="2,4,2,5" />
+                        <TextBlock Grid.Column="4" Style="{StaticResource TextBlockStyle5}" Text="Id：" Margin="0,9,4,8" />
+                        <TextBox Grid.Column="5" Text="{Binding K3InsertResponseData.BillInterID,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxStyle}" Margin="2,4,2,5" />
+
+                        <Button Grid.Column="4" Content="审核" Command="{Binding PurchaseRequisitionCheckBill2K3Command}" Style="{StaticResource BtnThemeStyle}" ToolTip="此审核对应界面的审核，系统新增数据后台直接开启了多级审核" Visibility="Hidden" Margin="0,5" />
+                    </Grid>
+
+                    <DataGrid Grid.Row="2" Style="{StaticResource ImportExcelDataGridStyle}" ItemsSource="{Binding CheckedPurchaseRequisitionMaterialLists}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn DataGridColumn.Header="行号" DataGridBoundColumn.Binding="{Binding Seq}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="验证结果" DataGridBoundColumn.Binding="{Binding IsPassed,Converter={c:ValidationResultValueConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="代码" DataGridBoundColumn.Binding="{Binding FNumber}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />
+                            <DataGridTextColumn DataGridColumn.Header="系统Id" DataGridBoundColumn.Binding="{Binding SystemId}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox.Content>
+
+        </GroupBox>
+        <GroupBox Grid.Column="2" Grid.Row="1" Margin="0 20 0 0" Padding="1 8" >
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="导入原材料" Command="{Binding ImportCommand}" Style="{StaticResource BtnSuccessStyle}" Margin="0 0 5 0"/>
-                    <TextBox Grid.Column="1" Text="{Binding ImportFileFullName,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}" MaxWidth="300" ToolTip="{Binding ImportFileFullName,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                    <Button Grid.Column="0" Content="导入原材料" Command="{Binding ImportCommand}" Style="{StaticResource BtnSuccessStyle}" Margin="0 0 5 0" />
+                    <TextBox Grid.Column="1" Text="{Binding ImportFileFullName,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}" MaxWidth="300" ToolTip="{Binding ImportFileFullName,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" MinWidth="200"/>
                 </Grid>
-
             </GroupBox.Header>
             <GroupBox.Content>
                 <DataGrid  ItemsSource="{Binding MaterialBomLists,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Style="{StaticResource SingleSelectionDataGridStyle}">
@@ -143,58 +197,6 @@
             </GroupBox.Content>
         </GroupBox>
 
-        <GroupBox Grid.Column="2" Margin="0 15 0 0" Padding="2 8" Header="K3 Api导入Excel数据">
-            <GroupBox.Content>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="  导入采购申请模板  " Command="{Binding PurchaseRequisitionImportCommand}" Style="{StaticResource BtnSuccessStyle}" Margin="3 0"/>
-                        <TextBox Grid.Column="1" Text="{Binding ImportFileFullName1,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Style="{StaticResource TextBoxReadonlyStyle}"   Width="auto"  />
-                    </Grid>
 
-                    <Grid Grid.Row="1" Margin="0 0 0 5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="104*"/>
-                            <ColumnDefinition Width="11*"/>
-                            <ColumnDefinition Width="58*"/>
-                            <ColumnDefinition Width="138*"/>
-                            <ColumnDefinition Width="57*"/>
-                            <ColumnDefinition Width="138*"/>
-
-
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="  生成K3采购申请  " Command="{Binding PurchaseRequisitionInsertK3Command}" Style="{StaticResource BtnWarningStyle}"  Margin="3,5" ToolTip="生成成功后，单据就在K3里面了,需要修改删除的话得进K3" Grid.ColumnSpan="2"/>
-                        <TextBlock Grid.Column="2" Style="{StaticResource TextBlockStyle5}" Text="单号：" Margin="0,9,5,8"/>
-                        <TextBox Grid.Column="3" Text="{Binding K3InsertResponseData.BillNo,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
-                                 Style="{StaticResource TextBoxStyle}" ToolTip="审核改单据号" Margin="2,4,2,5"  />
-                        <TextBlock Grid.Column="4" Style="{StaticResource TextBlockStyle5}" Text="Id：" Margin="0,9,4,8"/>
-                        <TextBox Grid.Column="5" Text="{Binding K3InsertResponseData.BillInterID,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" 
-                                 Style="{StaticResource TextBoxStyle}" Margin="2,4,2,5" />
-
-                        <Button Grid.Column="4" Content="审核" Command="{Binding PurchaseRequisitionCheckBill2K3Command}" Style="{StaticResource BtnThemeStyle}"  ToolTip="此审核对应界面的审核，系统新增数据后台直接开启了多级审核" Visibility="Hidden" Margin="0,5"/>
-                    </Grid>
-
-                    <DataGrid Grid.Row="2" Style="{StaticResource ImportExcelDataGridStyle}" ItemsSource="{Binding CheckedPurchaseRequisitionMaterialLists}" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn DataGridColumn.Header="行号" DataGridBoundColumn.Binding="{Binding Seq}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}" />
-                            <DataGridTextColumn DataGridColumn.Header="验证结果" DataGridBoundColumn.Binding="{Binding IsPassed,Converter={c:ValidationResultValueConverter}}" Width="80" HeaderStyle="{StaticResource DGColumnHeader}" />
-                            <DataGridTextColumn DataGridColumn.Header="代码" DataGridBoundColumn.Binding="{Binding FNumber}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="名称" DataGridBoundColumn.Binding="{Binding FName}" Width="*" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="数量" DataGridBoundColumn.Binding="{Binding Quantity}" Width="50" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                            <DataGridTextColumn DataGridColumn.Header="系统Id" DataGridBoundColumn.Binding="{Binding SystemId}" Width="100" HeaderStyle="{StaticResource DGColumnHeader}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </GroupBox.Content>
-
-        </GroupBox>
     </Grid>
 </Page>

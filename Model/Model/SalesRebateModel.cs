@@ -7,20 +7,43 @@ namespace Model
 {
    public class SalesRebateModel:NotificationObject
     {
-        public int Id { get; set; }
 
-        private int materialId;
+        private int userId;
 
-        public int MaterialId
+        public int UserId
         {
-            get { return materialId; }
+            get { return userId; }
             set
             {
-                materialId = value;
-                this.RaisePropertyChanged(nameof(MaterialId));
+                userId = value;
+                this.RaisePropertyChanged(nameof(UserId));
             }
         }
 
+
+        private string userName;
+
+        public string UserName
+        {
+            get { return userName; }
+            set
+            {
+                userName = value;
+                this.RaisePropertyChanged(nameof(UserName));
+            }
+        }
+
+        private int id;
+
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                this.RaisePropertyChanged(nameof(Id));
+            }
+        }
 
         private int caseId;
 
@@ -34,6 +57,7 @@ namespace Model
             }
         }
 
+
         private int orgId;
 
         public int OrgId
@@ -45,6 +69,7 @@ namespace Model
                 this.RaisePropertyChanged(nameof(OrgId));
             }
         }
+
 
         private int rebateClass;
 
@@ -59,104 +84,53 @@ namespace Model
         }
 
 
-        private int taxAmountType;
+        private string orgCode;
 
-        public int TaxAmountType
+        public string OrgCode
         {
-            get { return taxAmountType; }
+            get { return orgCode; }
             set
             {
-                taxAmountType = value;
-                this.RaisePropertyChanged(nameof(TaxAmountType));
-                this.RaisePropertyChanged(nameof(IsPassed));
+                orgCode = value;
+                this.RaisePropertyChanged(nameof(OrgCode));
             }
         }
 
+        public int TaxAmountType;
 
-        private int minusLastPeriodRebateType;
+        public int MinusLastPeriodRebateType;
 
-        public int MinusLastPeriodRebateType
+        public int RebatePctType;
+
+        public int AmountRangeCalculateType;
+
+        public double? RebatePctValue;
+
+        public double CalculateRebateAmout { get; set; }
+
+        public DateTime? CalculateTime { get; set; }
+
+        private Guid sGuid;
+
+        public Guid SGuid
         {
-            get { return minusLastPeriodRebateType; }
+            get { return sGuid; }
             set
             {
-                minusLastPeriodRebateType = value;
-                this.RaisePropertyChanged(nameof(MinusLastPeriodRebateType));
-                this.RaisePropertyChanged(nameof(IsPassed));
+                sGuid = value;
+                this.RaisePropertyChanged(nameof(SGuid));
             }
         }
 
-        private int rebatePctType;
+        private Guid pGuid;
 
-        public int RebatePctType
+        public Guid PGuid
         {
-            get { return rebatePctType; }
+            get { return pGuid; }
             set
             {
-                rebatePctType = value;
-                this.RaisePropertyChanged(nameof(RebatePctType));
-                this.RaisePropertyChanged(nameof(IsPassed));
-            }
-        }
-
-
-
-        private double? rebatePctValue;
-
-        public double? RebatePctValue
-        {
-            get { return rebatePctValue; }
-            set
-            {
-                rebatePctValue = value;
-                this.RaisePropertyChanged(nameof(RebatePctValue));
-            }
-        }
-
-
-        public double ComputeRebatePctValue { get; set; }
-
-        public double ComputeRebateAmout { get; set; }
-
-        public double SalesRebateAmoutResult { get; set; }
-
-        public Guid Guid { get; set; }
-
-        private bool isChecked;
-
-        public bool IsChecked
-        {
-            get { return isChecked; }
-            set
-            {
-                isChecked = value;
-                this.RaisePropertyChanged(nameof(IsChecked));
-            }
-        }
-
-
-
-        private SalesRebateModel salesRebateSelectedItem;
-
-        public SalesRebateModel SalesRebateSelectedItem
-        {
-            get { return salesRebateSelectedItem; }
-            set
-            {
-                salesRebateSelectedItem = value;
-                this.RaisePropertyChanged(nameof(SalesRebateSelectedItem));
-            }
-        }
-
-        private string materialName;
-
-        public string MaterialName
-        {
-            get { return materialName; }
-            set
-            {
-                materialName = value;
-                this.RaisePropertyChanged(nameof(MaterialName));
+                pGuid = value;
+                this.RaisePropertyChanged(nameof(PGuid));
             }
         }
 
@@ -164,7 +138,7 @@ namespace Model
 
         public string CaseName
         {
-            get { return caseName; }   
+            get { return caseName; }
             set
             {
                 caseName = value;
@@ -196,6 +170,7 @@ namespace Model
             }
         }
 
+
         private string rebatePctTypeName;
 
         public string RebatePctTypeName
@@ -207,6 +182,7 @@ namespace Model
                 this.RaisePropertyChanged(nameof(RebatePctTypeName));
             }
         }
+
 
         private string taxAmountTypeName;
 
@@ -221,9 +197,6 @@ namespace Model
         }
 
 
-
-
-
         private string minusLastPeriodRebateTypeName;
 
         public string MinusLastPeriodRebateTypeName
@@ -236,122 +209,17 @@ namespace Model
             }
         }
 
-        private DateTime settleDateBegin;
+        private string amountRangeCalculateTypeName;
 
-        public DateTime SettleDateBegin
+        public string AmountRangeCalculateTypeName
         {
-            get { return settleDateBegin; }
+            get { return amountRangeCalculateTypeName; }
             set
             {
-                settleDateBegin = value;
-                this.RaisePropertyChanged(nameof(SettleDateBegin));
+                amountRangeCalculateTypeName = value;
+                this.RaisePropertyChanged(nameof(AmountRangeCalculateTypeName));
             }
         }
-
-        private DateTime settleDateEnd;
-
-        public DateTime SettleDateEnd
-        {
-            get { return settleDateEnd; }
-            set
-            {
-                settleDateEnd = value;
-                this.RaisePropertyChanged(nameof(SettleDateEnd));
-            }
-        }
-
-        private double orgTotalAmount;
-
-        public double OrgTotalAmount
-        {
-            get { return orgTotalAmount; }
-            set
-            {
-                orgTotalAmount = value;
-                this.RaisePropertyChanged(nameof(OrgTotalAmount));
-            }
-        }
-
-        private bool deleted;
-
-        public bool Deleted
-        {
-            get { return deleted; }
-            set
-            {
-                deleted = value;
-                this.RaisePropertyChanged(nameof(Deleted));
-            }
-        }
-
-        private string k3BillNo;
-
-        public string K3BillNo
-        {
-            get { return k3BillNo; }
-            set
-            {
-                k3BillNo = value;
-                this.RaisePropertyChanged(nameof(K3BillNo));
-            }
-        }
-
-
-        private string orgCode;
-
-        public string OrgCode
-        {
-            get { return orgCode; }
-            set
-            {
-                orgCode = value;
-                this.RaisePropertyChanged(nameof(OrgCode));
-            }
-        }
-
-        private int userId;
-
-        public int UserId
-        {
-            get { return userId; }
-            set
-            {
-                userId = value;
-                this.RaisePropertyChanged(nameof(UserId));
-            }
-        }
-
-        private DateTime modifyTime;
-
-        public DateTime ModifyTime
-        {
-            get { return modifyTime; }
-            set
-            {
-                modifyTime = value;
-                this.RaisePropertyChanged(nameof(ModifyTime));
-            }
-        }
-
-        private bool isPassed;
-
-        public bool IsPassed
-        {
-            get 
-            {
-                if ( TaxAmountType>0 && minusLastPeriodRebateType>0 && ((RebatePctType==1 && RebatePctValue>0 ) || RebatePctType == 2))
-                    return true;
-                return false;
-            }
-            set
-            {
-               
-            }
-        }
-
-
-        public string UserName { get; set; }
-
 
     }
 }

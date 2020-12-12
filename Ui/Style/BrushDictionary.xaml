@@ -16,17 +16,25 @@
     
     
     <Brush x:Key="GenericForegroundUnCheckedBrush">black</Brush>
-    <Brush x:Key="GenericForegroundUnCheckedLightBrush">#aaa</Brush>
+    <Brush x:Key="GenericForegroundUnCheckedLightBrush">#bbb</Brush>
 
     <Brush x:Key="GenericForegroundGridBrush">lightblue</Brush>
 
 
 
     <Brush x:Key="GenericMouseOverBrush">LightYellow</Brush>
+    
     <Brush x:Key="GenericMouseOverLightBrush">#FFFAF2</Brush>
 
     <Brush x:Key="GenericBackgroundMainSonBrush">AliceBlue</Brush>
 
     <Brush x:Key="GenericLessColorThanDefault">#ccc</Brush>
+    
+    <Brush x:Key="GridSplitterBackgroundBrush">#11998e</Brush>
+    
+    <Brush x:Key="ReadonlyBackgroundBrush">#e8e8e8</Brush>
+
+    <Brush x:Key="ReadonlyForegroundBrush">#E56F43</Brush>
+
 
 </ResourceDictionary>
