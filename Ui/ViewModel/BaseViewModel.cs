@@ -17,11 +17,11 @@ namespace Ui.ViewModel
             Menu = MemoryCache.Default["PageCache"] as MainMenuModel;
             User = (MemoryCache.Default["UserCache"] as UserCacheModel).User;
             HostName = Dns.GetHostName();
-            DataGridId = Menu.ID * 10000 + 1;
+            DataGridId = Menu==null ? 0: Menu.ID * 10000 + 1;
             ComboBoxSearchService = new ComboBoxSearchService();
             ExportHelper = new DataTableImportExportHelper();
             DataGridManagementService = new DataGridManagementService();
-            UserDataId = CommonService.GetUserDataId(User, Menu.ID);
+            UserDataId = CommonService.GetUserDataId(User, Menu == null ? 0 :Menu.ID);
 
             PrintConfiguration = new BarTenderPrintConfigModelXX();
         }

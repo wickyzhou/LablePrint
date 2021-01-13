@@ -1,0 +1,192 @@
+﻿<Page x:Class="Ui.View.IndexPage.ProductionDeptSemiMaterialsInventoryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Ui.View.IndexPage"
+      mc:Ignorable="d" d:DesignHeight="700" d:DesignWidth="1300" 
+      xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+      xmlns:cvt="clr-namespace:Ui.Converter.Generic" Title="ProductionDeptSemiMaterialsInventoryPage">
+
+    <Grid Style="{StaticResource ContentAreaGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition  Height="1.8*"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!--<pu:TextBlockX Grid.Row="0" Text="{Binding Text1}">
+            
+        </pu:TextBlockX>
+        <TextBox Height="30" Width="500" pu:TextBoxHelper.Header="产品型号：" pu:TextBoxHelper.Watermark="输入文字" pu:TextBoxHelper.CornerRadius="15" pu:TextBoxHelper.FocusedBorderBrush="Red" Padding="8 0 0 0" TextAlignment="Left" Text="{Binding Text1 }" pu:TextBoxHelper.IsClearButtonVisible="True" />-->
+
+        <!--<pu:MultiComboBox x:Name="McmbOption" Height="30" Width="300" ItemsSource="{Binding Options}" DisplayMemberPath="Name" SelectionChanged="McmbOption_SelectionChanged">
+            <pu:MultiComboBox.ItemContainerStyle>
+                <Style TargetType="{x:Type pu:MultiComboBoxItem}" BasedOn="{StaticResource {x:Type pu:MultiComboBoxItem}}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                </Style>
+            </pu:MultiComboBox.ItemContainerStyle>
+        </pu:MultiComboBox>-->
+
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="4">
+            <TextBlock Text="生产日期：" Style="{StaticResource TextBlockStyle5}" 
+                       Margin="35 0 8 0" />
+
+            <DatePicker Width="120" Style="{StaticResource DatePickerStyle}" SelectedDate="{Binding QueryParameter.ProductionDate,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd }" />
+
+
+            <TextBlock Text="物料代码：" Style="{StaticResource TextBlockStyle2}" Margin="35 0 2 0" />
+
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.MaterialNumber,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+
+
+
+            <TextBlock Text="物料名称：" Style="{StaticResource TextBlockStyle2}" Margin="35 0 2 0" />
+
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.MaterialName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+            
+            
+            <TextBlock Text="批号及数量：" Style="{StaticResource TextBlockStyle10}" Margin="35 0 2 0" ToolTip="可以输入生成批号，查询具体投料及数量" />
+
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding QueryParameter.BatchQty,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+
+            <Button Content="查询" Style="{StaticResource BtnInfoStyle}" Command="{Binding QueryCommand}" Margin="120 0 0 0" IsDefault="True" />
+
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0,0" StartPoint="1,0" Opacity="0.1">
+                    <GradientStop Color="#11998e" Offset="0.0" />
+                    <GradientStop Color="#1FB888" Offset="1" />
+                </LinearGradientBrush>
+            </StackPanel.Background>
+        </StackPanel>
+
+        <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding SemiMaterialsLists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SemiMaterialsSelectedItem,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="1">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="生产日期" Binding="{Binding ProductionDate,UpdateSourceTrigger=PropertyChanged,StringFormat=yyyy-MM-dd}" Width="110" />
+
+                <DataGridTextColumn Header="物料代码" Binding="{Binding MaterialNumber,UpdateSourceTrigger=PropertyChanged}" Width="150" />
+
+                <DataGridTextColumn Header="物料名称" Binding="{Binding MaterialName,UpdateSourceTrigger=PropertyChanged}" Width="150" />
+
+                <DataGridTextColumn Header="批次明细" Binding="{Binding BatchQty,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+
+                <!--<DataGridTextColumn Header="今日需求(P)" Binding="{Binding PQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="未领数量(P)" Binding="{Binding PQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="今日需求(Y)" Binding="{Binding YQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="未领数量(Y)" Binding="{Binding YQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="今日需求(W)" Binding="{Binding WQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="未领数量(W)" Binding="{Binding WQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Width="100" />
+                <DataGridTextColumn Header="今日需求(F)" Binding="{Binding FQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                <DataGridTextColumn Header="未领数量(F)" Binding="{Binding FQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Width="100" />-->
+                
+                <DataGridTemplateColumn Header="今日需求(P)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding PQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding PQtyRequestOfDay,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="未领数量(P)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding PQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding PQtyUnPicked,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="今日需求(Y)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding YQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding YQtyRequestOfDay,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="未领数量(Y)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding YQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding YQtyUnPicked,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="今日需求(W)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding WQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding WQtyRequestOfDay,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="未领数量(W)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding WQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding WQtyUnPicked,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="今日需求(F)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FQtyRequestOfDay,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FQtyRequestOfDay,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="未领数量(F)" MinWidth="100" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FQtyUnPicked,UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FQtyUnPicked,Converter={cvt:LighterForegroundConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Header="库存数量" Binding="{Binding QtyInventoryTimely,UpdateSourceTrigger=PropertyChanged}" Width="120" />
+                <DataGridTextColumn Header="缺少数量" Binding="{Binding QtyLack,UpdateSourceTrigger=PropertyChanged}" Width="120" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <GridSplitter Grid.Column="0" Grid.Row="2" Style="{StaticResource RowGridSplitter3}" />
+        
+        <GroupBox Grid.Column="0" Grid.Row="3" Header="及时库存" Margin="0 5" Padding="0 5">
+            <DataGrid Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding MaterialTimelyInventoryLists,UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="产品代码" Binding="{Binding MaterialNumber,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="产品名称" Binding="{Binding MaterialName,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="产品规格" Binding="{Binding Spec,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="仓库代码" Binding="{Binding StockNumber,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="仓库名称" Binding="{Binding StockName,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="库存批次" Binding="{Binding BatchNo,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                    <DataGridTextColumn Header="批次数量" Binding="{Binding TotalWeight,UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+
+    </Grid>
+</Page>

@@ -65,9 +65,9 @@ namespace Common
 
                     if (list.Contains("SampleOilPrintArea"))
                         btFormat.SetNamedSubStringValue("SampleOilPrintArea", model.SampleOilPrintArea);
-
+                    string ss = model.Seq2678 > 0 ? Convert.ToString(model.Seq2678).PadLeft(6, '0') : "000001";
                     if (list.Contains("Seq2678"))
-                        btFormat.SetNamedSubStringValue("Seq2678", model.Seq2678>0?Convert.ToString(model.Seq2678).PadLeft(6, '0'):"000001");
+                        btFormat.SetNamedSubStringValue("Seq2678", ss);
 
                     if (list.Contains("TwoDimensionCode1"))
                         btFormat.SetNamedSubStringValue("TwoDimensionCode1", model.TwoDimensionCode1);
@@ -122,26 +122,48 @@ namespace Common
                         btFormat.SetNamedSubStringValue("QB", model.QB);
                     if (list.Contains("GQB"))
                         btFormat.SetNamedSubStringValue("GQB", model.GQB);
-                    if (list.Contains("Field01"))
-                        btFormat.SetNamedSubStringValue("Field01", model.Field01);
-                    if (list.Contains("Field02"))
-                        btFormat.SetNamedSubStringValue("Field02", model.Field02);
-                    if (list.Contains("Field03"))
-                        btFormat.SetNamedSubStringValue("Field03", model.Field03);
-                    if (list.Contains("Field04"))
-                        btFormat.SetNamedSubStringValue("Field04", model.Field04);
-                    if (list.Contains("Field05"))
-                        btFormat.SetNamedSubStringValue("Field05", model.Field05);
-                    if (list.Contains("Field06"))
-                        btFormat.SetNamedSubStringValue("Field06", model.Field06);
-                    if (list.Contains("Field07"))
-                        btFormat.SetNamedSubStringValue("Field07", model.Field07);
-                    if (list.Contains("Field08"))
-                        btFormat.SetNamedSubStringValue("Field08", model.Field08);
-                    if (list.Contains("Field09"))
-                        btFormat.SetNamedSubStringValue("Field09", model.Field09);
-                    if (list.Contains("Field10"))
-                        btFormat.SetNamedSubStringValue("Field10", model.Field10);
+
+                    if (list.Contains("FS1"))
+                        btFormat.SetNamedSubStringValue("FS1", model.FS1);
+                    if (list.Contains("FS2"))
+                        btFormat.SetNamedSubStringValue("FS2", model.FS2);
+                    if (list.Contains("FS3"))
+                        btFormat.SetNamedSubStringValue("FS3", model.FS3);
+                    if (list.Contains("FS4"))
+                        btFormat.SetNamedSubStringValue("FS4", model.FS4);
+                    if (list.Contains("FS5"))
+                        btFormat.SetNamedSubStringValue("FS5", model.FS5);
+                    if (list.Contains("FS6"))
+                        btFormat.SetNamedSubStringValue("FS6", model.FS6);
+                    if (list.Contains("FS7"))
+                        btFormat.SetNamedSubStringValue("FS7", model.FS7);
+                    if (list.Contains("FS8"))
+                        btFormat.SetNamedSubStringValue("FS8", model.FS8);
+                    if (list.Contains("FS9"))
+                        btFormat.SetNamedSubStringValue("FS9", model.FS9);
+                    if (list.Contains("FS10"))
+                        btFormat.SetNamedSubStringValue("FS10", model.FS10);
+
+                    if (list.Contains("FD01"))
+                        btFormat.SetNamedSubStringValue("FD01", model.FD01);
+                    if (list.Contains("FD02"))
+                        btFormat.SetNamedSubStringValue("FD02", model.FD02);
+                    if (list.Contains("FD03"))
+                        btFormat.SetNamedSubStringValue("FD03", model.FD03);
+                    if (list.Contains("FD04"))
+                        btFormat.SetNamedSubStringValue("FD04", model.FD04);
+                    if (list.Contains("FD05"))
+                        btFormat.SetNamedSubStringValue("FD05", model.FD05);
+                    if (list.Contains("FD06"))
+                        btFormat.SetNamedSubStringValue("FD06", model.FD06);
+                    if (list.Contains("FD07"))
+                        btFormat.SetNamedSubStringValue("FD07", model.FD07);
+                    if (list.Contains("FD08"))
+                        btFormat.SetNamedSubStringValue("FD08", model.FD08);
+                    if (list.Contains("FD09"))
+                        btFormat.SetNamedSubStringValue("FD09", model.FD09);
+                    if (list.Contains("FD10"))
+                        btFormat.SetNamedSubStringValue("FD10", model.FD10);
 
                     if (model.NoPrintVocName) //不打VOC名称的数据
                     {
@@ -420,6 +442,48 @@ namespace Common
                         btFormat.SetNamedSubStringValue("DangerousIngredient", model.DangerousIngredient);
                     if (list.Contains("DangerousComment"))
                         btFormat.SetNamedSubStringValue("DangerousComment", model.DangerousComment);
+
+                    if (list.Contains("FS1"))
+                        btFormat.SetNamedSubStringValue("FS1", model.FS1);
+                    if (list.Contains("FS2"))
+                        btFormat.SetNamedSubStringValue("FS2", model.FS2);
+                    if (list.Contains("FS3"))
+                        btFormat.SetNamedSubStringValue("FS3", model.FS3);
+                    if (list.Contains("FS4"))
+                        btFormat.SetNamedSubStringValue("FS4", model.FS4);
+                    if (list.Contains("FS5"))
+                        btFormat.SetNamedSubStringValue("FS5", model.FS5);
+                    if (list.Contains("FS6"))
+                        btFormat.SetNamedSubStringValue("FS6", model.FS6);
+                    if (list.Contains("FS7"))
+                        btFormat.SetNamedSubStringValue("FS7", model.FS7);
+                    if (list.Contains("FS8"))
+                        btFormat.SetNamedSubStringValue("FS8", model.FS8);
+                    if (list.Contains("FS9"))
+                        btFormat.SetNamedSubStringValue("FS9", model.FS9);
+                    if (list.Contains("FS10"))
+                        btFormat.SetNamedSubStringValue("FS10", model.FS10);
+
+                    if (list.Contains("FD01"))
+                        btFormat.SetNamedSubStringValue("FD01", model.FD01);
+                    if (list.Contains("FD02"))
+                        btFormat.SetNamedSubStringValue("FD02", model.FD02);
+                    if (list.Contains("FD03"))
+                        btFormat.SetNamedSubStringValue("FD03", model.FD03);
+                    if (list.Contains("FD04"))
+                        btFormat.SetNamedSubStringValue("FD04", model.FD04);
+                    if (list.Contains("FD05"))
+                        btFormat.SetNamedSubStringValue("FD05", model.FD05);
+                    if (list.Contains("FD06"))
+                        btFormat.SetNamedSubStringValue("FD06", model.FD06);
+                    if (list.Contains("FD07"))
+                        btFormat.SetNamedSubStringValue("FD07", model.FD07);
+                    if (list.Contains("FD08"))
+                        btFormat.SetNamedSubStringValue("FD08", model.FD08);
+                    if (list.Contains("FD09"))
+                        btFormat.SetNamedSubStringValue("FD09", model.FD09);
+                    if (list.Contains("FD10"))
+                        btFormat.SetNamedSubStringValue("FD10", model.FD10);
 
                     /* var s= 结果是0 可能是成功的意思 */
                     var s = btFormat.PrintOut(false, false);

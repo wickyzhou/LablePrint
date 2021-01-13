@@ -80,12 +80,15 @@
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATMainModel.cs" />
     <Compile Include="K3ApiModel\SalesInvoiceVAT\SalesInvoiceVATSonModel.cs" />
     <Compile Include="Model\ActionOperationLogModel.cs" />
+    <Compile Include="Model\AGenericFieldModel.cs" />
     <Compile Include="Model\BatchBomRequestDeliveryExportModel.cs" />
     <Compile Include="Model\BatchBomRequestDetailModel.cs" />
     <Compile Include="Model\BatchBomRequestSummaryModel.cs" />
+    <Compile Include="Model\OptionModel.cs" />
     <Compile Include="Model\PrintCommonAdjustmentModel.cs" />
     <Compile Include="Model\SalesRebateOrgCaseReportModel.cs" />
     <Compile Include="Model\SalesRebateSummaryModel.cs" />
+    <Compile Include="Model\SemiMaterialsInventoryModel.cs" />
     <Compile Include="Model\VOCBucketCountModel.cs" />
     <Compile Include="QueryParameterModel\BatchBomRequestQueryParameterModel.cs" />
     <Compile Include="Model\BatchTypeModel.cs" />
@@ -170,6 +173,7 @@
     <Compile Include="QueryParameterModel\SalesRebateRecentQueryParameterModel.cs" />
     <Compile Include="Model\SalesRebateRecentParameterMainModel.cs" />
     <Compile Include="QueryParameterModel\SalesRebateReportQueryParameterModel.cs" />
+    <Compile Include="QueryParameterModel\SemiMaterialsInventoryQueryParameterModel.cs" />
     <Compile Include="SJICMOOrderList.cs" />
     <Reference Include="System" />
     <Compile Include="AssemblyInfo.cs" />

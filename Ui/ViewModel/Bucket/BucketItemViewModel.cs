@@ -2,7 +2,7 @@
 
 namespace Ui.ViewModel.Bucket
 {
-    public class BucketItemViewModel: NotificationObject
+    public class BucketItemViewModel: BaseViewModel
     {
         public BucketModel BucketItem { get; set; }
 

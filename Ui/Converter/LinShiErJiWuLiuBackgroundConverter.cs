@@ -13,9 +13,9 @@ namespace Ui.Converter
             if (value == null)
                 return null;
             if ((int)value == 2 || (int)value == 4)
-                return new SolidColorBrush((Color)Application.Current.Resources["GenericOrangeColor"]);
+                return new SolidColorBrush((Color)Application.Current.Resources["BorderLightColor"]);
             else
-                return null;
+                return new SolidColorBrush((Color)Application.Current.Resources["BorderDarkColor"]);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

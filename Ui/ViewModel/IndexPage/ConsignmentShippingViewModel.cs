@@ -21,7 +21,7 @@ using Ui.View.InfoWindow;
 
 namespace Ui.ViewModel
 {
-    public class ConsignmentShippingViewModel : NotificationObject
+    public class ConsignmentShippingViewModel : BaseViewModel
     {
         private ShippingBillService _shippingService;
         private ConsignmentBillService _consignmentService;
@@ -764,17 +764,17 @@ namespace Ui.ViewModel
 
         #endregion
 
-        private HostConfigModel hostConfig;
+        //private HostConfigModel hostConfig;
 
-        public HostConfigModel HostConfig
-        {
-            get { return hostConfig; }
-            set
-            {
-                hostConfig = value;
-                this.RaisePropertyChanged(nameof(HostConfig));
-            }
-        }
+        //public HostConfigModel HostConfig
+        //{
+        //    get { return hostConfig; }
+        //    set
+        //    {
+        //        hostConfig = value;
+        //        this.RaisePropertyChanged(nameof(HostConfig));
+        //    }
+        //}
 
 
         #endregion

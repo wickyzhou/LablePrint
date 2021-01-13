@@ -7,11 +7,11 @@ using System.Windows.Controls;
 using Ui.Admin.View;
 using Ui.Command;
 using Ui.Service;
-using Ui.ViewModel;
+
 
 namespace Ui.Admin.ViewModel
 {
-    public class AdminPageViewModel : BaseViewModel
+    public class AdminPageViewModel : NotificationObject
     {
         private  readonly AdminService _service;
         public AdminPageViewModel()

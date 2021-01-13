@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Model
 {
-    public class PrintCommonAdjustmentModel:NotificationObject
+    public class PrintCommonAdjustmentModel:AGenericFieldModel
     {
 
         public int Id { get; set; }
@@ -94,66 +94,18 @@ namespace Model
 			}
 		}
 
-		private dynamic field1;
+		private DateTime createTime;
 
-		public dynamic Field1
+		public DateTime CreateTime
 		{
-			get { return field1; }
+			get { return createTime; }
 			set
 			{
-				field1 = value;
-				this.RaisePropertyChanged(nameof(Field1));
+				createTime = value;
+				this.RaisePropertyChanged(nameof(CreateTime));
 			}
 		}
 
-		private dynamic field2;
-
-		public dynamic Field2
-		{
-			get { return field2; }
-			set
-			{
-				field2 = value;
-				this.RaisePropertyChanged(nameof(Field2));
-			}
-		}
-
-		private dynamic field3;
-
-		public dynamic Field3
-		{
-			get { return field3; }
-			set
-			{
-				field3 = value;
-				this.RaisePropertyChanged(nameof(Field3));
-			}
-		}
-
-		private dynamic field4;
-
-		public dynamic Field4
-		{
-			get { return field4; }
-			set
-			{
-				field4 = value;
-				this.RaisePropertyChanged(nameof(Field4));
-			}
-		}
-
-
-		private dynamic field5;
-
-		public dynamic Field5
-		{
-			get { return field5; }
-			set
-			{
-				field5 = value;
-				this.RaisePropertyChanged(nameof(Field5));
-			}
-		}
 
 	}
 }

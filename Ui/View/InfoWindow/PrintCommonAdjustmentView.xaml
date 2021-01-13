@@ -39,7 +39,7 @@
 
             </StackPanel>
 
-            <DataGrid Grid.Row="1" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding CommonAdjustmentLists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding PrintCommonAdjustmentSelectedItem}">
+            <DataGrid Grid.Row="1" x:Name="PrintCommonAdjustment" Style="{StaticResource SingleSelectionDataGridStyle}" ItemsSource="{Binding CommonAdjustmentLists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding PrintCommonAdjustmentSelectedItem}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="150" HeaderStyle="{StaticResource DGColumnHeader}">
                         <DataGridColumn.HeaderTemplate>
@@ -61,15 +61,10 @@
 
                     <DataGridTextColumn DataGridColumn.Header="客户代码" DataGridBoundColumn.Binding="{Binding OrgId,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
                     <DataGridTextColumn DataGridColumn.Header="标签型号" DataGridBoundColumn.Binding="{Binding Label,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
-                    <DataGridTextColumn DataGridColumn.Header="产品名称" DataGridBoundColumn.Binding="{Binding ProductionName,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
+                    <DataGridTextColumn DataGridColumn.Header="客户品名" DataGridBoundColumn.Binding="{Binding ProductionName,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="120" />
                     <DataGridTextColumn DataGridColumn.Header="有效月份" DataGridBoundColumn.Binding="{Binding ExpirationMonth,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
                     <DataGridTextColumn DataGridColumn.Header="有效天数" DataGridBoundColumn.Binding="{Binding ExpirationDay,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
                     <DataGridTextColumn DataGridColumn.Header="净重" DataGridBoundColumn.Binding="{Binding NetWeight,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="100" />
-                    <DataGridTextColumn DataGridColumn.Header="自定义1" DataGridBoundColumn.Binding="{Binding Field1,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
-                    <DataGridTextColumn DataGridColumn.Header="自定义2" DataGridBoundColumn.Binding="{Binding Field2,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
-                    <DataGridTextColumn DataGridColumn.Header="自定义3" DataGridBoundColumn.Binding="{Binding Field3,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
-                    <DataGridTextColumn DataGridColumn.Header="自定义4" DataGridBoundColumn.Binding="{Binding Field4,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
-                    <DataGridTextColumn DataGridColumn.Header="自定义5" DataGridBoundColumn.Binding="{Binding Field5,UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource DGColumnHeader}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

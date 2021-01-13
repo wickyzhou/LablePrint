@@ -9,7 +9,7 @@ using Ui.Service;
 
 namespace Ui.ViewModel
 {
-   public class ShippingBillEntryAddViewModel: NotificationObject, IValidationExceptionHandler
+   public class ShippingBillEntryAddViewModel: BaseViewModel, IValidationExceptionHandler
     {
         private Action<int, ShippingBillEntryModel> _callBack;
 

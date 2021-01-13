@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="Ui.View.HamburgerMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ui.View"
+             mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" d:DesignHeight="450" d:DesignWidth="800" >
+    <UserControl.Resources>
+        <Storyboard x:Key="CloseMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="200" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="48" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        
+        <Storyboard x:Key="OpenMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="48" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="200" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <StackPanel Height="35" Orientation="Horizontal" Background="Transparent" Name="ListBoxItemPanel" Cursor="Hand">
+                            <Rectangle Fill="OrangeRed" VerticalAlignment="Stretch" Width="8" Visibility="Hidden" Name="ListBoxItemLeftRectangle" />
+                            <ContentControl>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" ToolTip="{Binding TB2Text}">
+                                    <TextBlock Text="{Binding TB1Text,Converter={StaticResource AMainMenuIconConverter}}" FontFamily="{StaticResource MainMenuIconfont}" Margin="2 0" FontSize="24" VerticalAlignment="Center">
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding TB2Text}" FontFamily="{StaticResource MainMenuIconfont}" Margin="10 0 0 0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ContentControl>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                             
+                                <!--<Setter Property="Background" Value="AliceBlue" TargetName="ListBoxItemPanel" />-->
+                                <Setter Property="Visibility" Value="Hidden" TargetName="ListBoxItemLeftRectangle" />
+                                <Setter Property="Foreground" Value="NavajoWhite" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Visibility" Value="Visible" TargetName="ListBoxItemLeftRectangle" />
+                                <Setter Property="Background" Value="mediumpurple" TargetName="ListBoxItemPanel" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </UserControl.Resources>
+
+    <Grid x:Name="GridMenu" HorizontalAlignment="Left" Width="200">
+        <Border  BorderThickness="0">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="1,1" StartPoint="0,0" Opacity="1">
+                    <GradientStop Color="#15998e" Offset="0.0" />
+                    <GradientStop Color="#11998e" Offset="0.43" />
+                    <GradientStop Color="#24DE41" Offset="0.68" />
+                    <GradientStop Color="#11998e" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <DockPanel LastChildFill="True">
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False" Height="50">
+                    <ToggleButton IsChecked="False" DockPanel.Dock="Right" Margin="0,0,6,0" x:Name="MenuToggleButton" Width="36" Height="36" Click="MenuToggleButton_Click" Content="{Binding IsOpen ,Converter={StaticResource AMainMenuFolderConverter}}" FontFamily="{StaticResource MainMenuIconfont}" FontSize="16" Style="{StaticResource MainMenuToggleButtonStyle}" 
+                                  BorderThickness="1" Background="Transparent" BorderBrush="DarkCyan" ToolTip="展开/折叠">
+                    </ToggleButton>
+                </DockPanel>
+
+                <StackPanel Margin="0.2 5 0 0" DockPanel.Dock="Top" VerticalAlignment="Center">
+                    <Button Name="BtnShowDefaultPage" Content="&#xe631;" ToolTip="显示首页" Style="{StaticResource SubIconButton}" FontSize="50" Foreground="AntiqueWhite" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding NavigateToIndexCommand}" CommandParameter="{Binding ElementName=GridMenu}" 
+                            Height="60" />
+                </StackPanel>
+
+                <ListBox DockPanel.Dock="Bottom" Background="Transparent" Foreground="#fff" FontSize="16" BorderThickness="0" Margin="0 2 0 0" Name="MenuListBox" ItemsSource="{Binding MainMenuLists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding MainMenuSelectedItem,UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding NavigateToPageCommand}" CommandParameter="{Binding ElementName=GridMenu}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListBox>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Model
 {
-    public class LabelPrintHistoryModel : NotificationObject
+    public class LabelPrintHistoryModel : AGenericFieldModel
     {
 
         public Byte[] RowHashValue { get; set; }

@@ -10,14 +10,14 @@ namespace Dal
     {
         public List<ProductiveTaskListModel> GetAllProductiveTaskList(DateTime productionDate, string type)
         {
-            DataTable data= SqlHelper.ExecuteDataTable(" SELECT * FROM SJICMOList WHERE FProductionDate=@ProductionDate AND FType=@Type "
+            DataTable data= SqlHelper.ExecuteDataTable(" SELECT * FROM SJICMOList WHERE FProductionDate=@ProductionDate AND FType=@Type  ORDER BY FBatchNo,FOrgID"
                 , new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate), new SqlParameter("@Type", type) });
             return SqlHelper.DataTableToModelList<ProductiveTaskListModel>(data);
         }
 
         public List<ProductiveTaskListModel> GetAllProductiveTaskListByDate(DateTime productionDate)
         {
-            DataTable data = SqlHelper.ExecuteDataTable(" SELECT * FROM SJICMOList WHERE FProductionDate=@ProductionDate AND FType<>'其他' ORDER BY FBatchNo"
+            DataTable data = SqlHelper.ExecuteDataTable(" SELECT * FROM SJICMOList WHERE FProductionDate=@ProductionDate AND FType<>'其他' ORDER BY FBatchNo,FOrgID"
                 , new SqlParameter[] { new SqlParameter("@ProductionDate", productionDate) });
             return SqlHelper.DataTableToModelList<ProductiveTaskListModel>(data);
         }

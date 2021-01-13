@@ -15,4 +15,11 @@
     <local:GoodsTypeConverter x:Key="GoodsTypeConverter"/>
     <ll:YesOrNoConverter x:Key="YesOrNoConverter"/>
     <ll:NoOrYesConverter x:Key="NoOrYesConverter"/>
+    <local:AMainMenuIconConverter x:Key="AMainMenuIconConverter" />
+    <local:AMainMenuMarginConverter x:Key="AMainMenuMarginConverter" />
+    <local:AMainMenuFolderConverter x:Key="AMainMenuFolderConverter" />
+
+    
+
+
 </ResourceDictionary>

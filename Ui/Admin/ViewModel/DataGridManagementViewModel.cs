@@ -12,7 +12,7 @@ using Ui.ViewModel;
 
 namespace Ui.Admin.ViewModel
 {
-    public class DataGridManagementViewModel:BaseViewModel
+    public class DataGridManagementViewModel: BaseViewModel
     {
         private readonly DataGridManagementService _service;
         public DataGridManagementViewModel()

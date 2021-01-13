@@ -13,4 +13,6 @@
 
     <FontFamily x:Key="JianTouIconfont">/Resource/JianTou/#iconfont</FontFamily>
 
+    <FontFamily x:Key="MainMenuIconfont">/Resource/MainMenu/#iconfont</FontFamily>
+
 </ResourceDictionary> 

@@ -534,10 +534,13 @@ namespace Ui.Service
             SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
         }
 
-        public void LoadIEnumerableToDatabase2<T>(IEnumerable<T> lists, string tableName)
+
+
+
+        public void LoadIEnumerableToDatabase2<T>(IEnumerable<T> lists, string tableName, bool dbFirst)
         {
-            DataTable dataTable = lists.ListToDataTable<T>(tableName);
-            SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName);
+            DataTable dataTable = lists.ListToDataTable(tableName);
+            SqlHelper.LoadDataTableToDBModelTable(dataTable, tableName, dbFirst);
         }
 
         public void ExecuteSqlAsync(string sql)

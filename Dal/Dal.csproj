@@ -46,7 +46,6 @@
     <Compile Include="Dal\SJICMOOrderListDal.cs" />
     <Compile Include="Data\LabelPrintDAL.cs" />
     <Compile Include="Dal\t_CheckNewDal.cs" />
-    <Compile Include="Data\QuerySchemaCurrentStatusDAL.cs" />
     <Compile Include="Data\UserDAL.cs" />
     <Compile Include="Data\UserInformationDAL.cs" />
     <Compile Include="Global.cs" />

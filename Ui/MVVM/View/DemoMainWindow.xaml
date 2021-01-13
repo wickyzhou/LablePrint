@@ -5,11 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:Ui.MVVM.ViewModel"
+        xmlns:ll="clr-namespace:Ui.UserControls"
+
         Title="MainWindow"  Style="{StaticResource WindowStyleLevel1200*700}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
@@ -46,5 +49,34 @@
 
         </DataGrid>
 
+        <Grid Grid.Row="2" Height="200" MinWidth="1400">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <ll:ExportUserControl Grid.Row="0" Grid.Column="0" Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+
+            <ll:ExportUserControl Grid.Row="1" Grid.Column="0" Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+
+            <ll:ExportUserControl Grid.Row="0" Grid.Column="1"  Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+
+            <ll:ExportUserControl Grid.Row="1" Grid.Column="1"  Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+
+            <ll:ExportUserControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+            <ll:ExportUserControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Height="50" ExportCommand="{Binding ExportCommand}" ExportPath="{Binding HostConfig.HostValue}" />
+
+        </Grid>
     </Grid>
 </Window>

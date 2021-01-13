@@ -62,7 +62,6 @@ namespace Ui.Service
             {
                connection.Execute("SJSplitBatchBomRequestProc", dp, null, null, CommandType.StoredProcedure);
             }
-
         }
 
         /// <summary>

@@ -266,22 +266,51 @@ namespace Ui.Helper
             }
         }
 
-        public static void LoadDataTableToDBModelTable(DataTable dt, string modeltable)
+        public static void LoadDataTableToDBModelTable(DataTable dt, string modeltable, bool dbFirst=false)
         {
-            if (dt.Rows.Count > 0)
+            if (dbFirst)
             {
-                using (SqlBulkCopy bkc = new SqlBulkCopy(connStr))
+                DataTable dt1 = GetTableFields(modeltable);
+                if (dt1.Rows.Count > 0)
                 {
-                    bkc.DestinationTableName = modeltable;
-                    for (int i = 0; i < dt.Columns.Count; i++)
+                    using (SqlBulkCopy bkc = new SqlBulkCopy(connStr))
                     {
-                        string fieldName = dt.Columns[i].ColumnName;
-                        bkc.ColumnMappings.Add(fieldName, fieldName);
+                        bkc.DestinationTableName = modeltable;
+                        for (int i = 0; i < dt1.Rows.Count; i++)
+                        {
+                            string fieldName = dt1.Rows[i]["name"].ToString();
+                            bkc.ColumnMappings.Add(fieldName, fieldName);
+                        }
+                        bkc.WriteToServer(dt);
                     }
-                    bkc.WriteToServer(dt);
                 }
             }
+            else
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    using (SqlBulkCopy bkc = new SqlBulkCopy(connStr))
+                    {
+                        bkc.DestinationTableName = modeltable;
+                        for (int i = 0; i < dt.Columns.Count; i++)
+                        {
+                            string fieldName = dt.Columns[i].ColumnName;
+                            bkc.ColumnMappings.Add(fieldName, fieldName);
+                        }
+                        bkc.WriteToServer(dt);
+                    }
+                }
+            }
+   
         }
+
+        public static DataTable GetTableFields(string modeltable)
+        {
+          return  SqlHelper.ExecuteDataTable($"select column_id, name from sys.columns where object_id = object_id('{modeltable}')");
+        }
+
+
+        //
 
         public static List<T> DataTableToModelList<T>(DataTable table)
         {

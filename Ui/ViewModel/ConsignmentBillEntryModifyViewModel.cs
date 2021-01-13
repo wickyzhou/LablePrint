@@ -8,7 +8,7 @@ using Ui.Command;
 
 namespace Ui.ViewModel
 {
-    public class ConsignmentBillEntryModifyViewModel:NotificationObject,IValidationExceptionHandler
+    public class ConsignmentBillEntryModifyViewModel:BaseViewModel,IValidationExceptionHandler
     {
         private Action<int, ConsignmentBillEntryModel> _callBack;
 

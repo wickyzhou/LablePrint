@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Model;
+using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Ui.MVVM.Common;
 using Ui.MVVM.Entity;
@@ -22,8 +24,15 @@ namespace Ui.MVVM.ViewModel
             SearchCommand = new RelayCommand(Search);
 
             GetAll();
+            InitCommand();
         }
 
+        private void InitCommand()
+        {
+            ExportCommand = new RelayCommand((obj)=> {
+                var ss = 234;
+            });
+        }
 
         private string _displayName { get; set; }
         public string DisplayName
@@ -62,6 +71,8 @@ namespace Ui.MVVM.ViewModel
         public RelayCommand EditCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand SearchCommand { get; set; }
+        public RelayCommand ExportCommand { get; set; }
+
 
 
         private void Search(object obj)
@@ -120,6 +131,20 @@ namespace Ui.MVVM.ViewModel
             {
                 DataList.Add(x);
             });
+
+            HostConfig = new HostConfigModel { HostValue = "默认位置" };
+        }
+
+        private HostConfigModel hostConfig;
+
+        public HostConfigModel HostConfig
+        {
+            get { return hostConfig; }
+            set
+            {
+                hostConfig = value;
+                this.RaisePropertyChanged(nameof(HostConfig));
+            }
         }
     }
 }

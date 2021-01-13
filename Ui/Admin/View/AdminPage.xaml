@@ -13,7 +13,7 @@
         <KeyBinding  Modifiers="Ctrl" Key="C"   Command="{Binding DataGridRowMouseLeftClickBaseCommand}"/>
     </Page.InputBindings>
 
-    <Grid  Name="MainGrid" Style="{StaticResource ContentAreaGridStyle}">
+    <Grid  Name="MainGrid1" Style="{StaticResource ContentAreaGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -39,7 +39,27 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Background="DarkOrchid" Margin="2" Tag="我是依赖属性">
-            <Button x:Name="Btn21" Style="{StaticResource BtnThemeStyle}"  Content="测试1" Click="Btn21_Click" Width="300" Height="50" />
+    
+            <ScrollViewer x:Name="PART_SheetScrollViewer" Focusable="False" Grid.Row="1" Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid x:Name="PART_SheetGrid" Background="Transparent">
+                        <Border x:Name="PART_SelectionBackground" Background="#b7dbff" />
+                        <Border x:Name="PART_CurrentBackground" Background="White" />
+                        <Border x:Name="PART_Selection" BorderBrush="Black" BorderThickness="3" Margin="-1,-1,-2,-2" />
+                        <Border x:Name="PART_AutoFillSelection" BorderBrush="Gray" BorderThickness="3" Margin="-1,-1,-2,-2" Visibility="Hidden" />
+                        <Border x:Name="PART_AutoFillBox" Width="7" Height="7" SnapsToDevicePixels="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Black" BorderBrush="White" BorderThickness="1" Margin="0, 0, -4, -4" />
+                    </Grid>
+                    <Grid>
+                        
+                    </Grid>
+                </Grid>
+   
+            </ScrollViewer>
+
+   
+
+            
+
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Background="ForestGreen" Margin="2">

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Model
 {
-	public class LabelPrintLSModel : NotificationObject
+	public class LabelPrintLSModel : AGenericFieldModel
 	{
 		private int? printCount;
 
@@ -259,6 +259,17 @@ namespace Model
 			}
 		}
 
+		private string orgId;
+
+		public string OrgId
+		{
+			get { return orgId; }
+			set
+			{
+				orgId = value;
+				this.RaisePropertyChanged(nameof(OrgId));
+			}
+		}
 
 	}
 }

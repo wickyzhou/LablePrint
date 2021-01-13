@@ -119,13 +119,8 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.Background>
-                            <LinearGradientBrush  EndPoint="0,0" StartPoint="1,0" Opacity="0.1" >
-                                <GradientStop Color="#11998e" Offset="0.0" />
-                                <GradientStop Color="#1FB888" Offset="1" />
-                            </LinearGradientBrush>
-                        </StackPanel.Background>
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource GroupBoxContentTopRowPanelStyle}">
+   
                         <Button Content="详细配置" Style="{StaticResource BtnWarningStyle}" Width="100" Margin="10 5 0 5"
                   Command="{Binding DataGridManageBaseCommand}" CommandParameter="{Binding ElementName=DGPrintLS}" ToolTip="表格格式更加详细的配置" />
 

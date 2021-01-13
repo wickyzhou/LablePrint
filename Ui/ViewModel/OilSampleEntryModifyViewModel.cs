@@ -8,7 +8,7 @@ using Ui.Command;
 
 namespace Ui.ViewModel
 {
-    class OilSampleEntryModifyViewModel : NotificationObject, IValidationExceptionHandler
+    class OilSampleEntryModifyViewModel : BaseViewModel, IValidationExceptionHandler
     {
         private Action<int, OilSampleEntryModel> _callBack;
 

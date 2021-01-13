@@ -24,16 +24,7 @@ namespace Ui.Service
         // 已办流程
         public IList<OilSampleFlowModel> GetOilSampleDealedFlow()
         {
-            string sql = @" select distinct b.ID Id,a.SUBJECT+cast(b.ID as nvarchar(50)) Title 
-                                    ,isnull((select max(PrintedCount) PrintCount from SROilSampleFlowPrintLog where TypeId=3 and FormmainId=b.ID),0)  ExpressPrintedCount
-                            from CTP_AFFAIR a 
-                            join formmain_1796 b on a.FORM_RECORDID=b.ID
-                            where  a.NODE_NAME='松润总经办-人事专员' 
-                                     and a.TEMPLETE_ID=4081300307003984148 -- 样油样板申请表I
-                                     and a.state = 4 --待办
-                                     and b.field0002=2612005562338331437 -- 样油
-                                     and b.start_date>='2020-06-01'
-                            order by title desc ; ";
+            string sql = @" select * from SROilSampleDealedFlowView  order by title desc ; ";
             using (var connection = SqlDb.UpdateConnectionOa)
             {
                 return connection.Query<OilSampleFlowModel>(sql).ToList();

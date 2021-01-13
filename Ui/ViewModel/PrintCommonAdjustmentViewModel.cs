@@ -31,10 +31,11 @@ namespace Ui.ViewModel
                 if (!r.Any(x=>x.Rc>1))
                 {
                     // 将界面数据插入到后台
-                    CommonService.LoadIEnumerableToDatabase(CommonAdjustmentLists, "SJPrintCommonAdjustment");
-
+                    CommonService.LoadIEnumerableToDatabase2(CommonAdjustmentLists, "SJPrintCommonAdjustment",true);
+               
                     // 将之前的后台数据删除
                     var ids = string.Join(",", CommonAdjustmentLists.Where(x => x.Id > 0).Select(x => x.Id));
+                    if(!string.IsNullOrEmpty(ids))
                     LabelPrintService.DeletePrintCommonAdjustment(ids);
                     QueryBaseCommand.Execute(null);
                 }

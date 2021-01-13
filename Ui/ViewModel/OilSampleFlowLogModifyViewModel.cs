@@ -8,7 +8,7 @@ using Ui.Command;
 
 namespace Ui.ViewModel
 {
-   public class OilSampleFlowLogModifyViewModel : NotificationObject, IValidationExceptionHandler
+   public class OilSampleFlowLogModifyViewModel : BaseViewModel, IValidationExceptionHandler
     {
         private Action<int, OilSampleFlowPrintLogModel> _callBack;
 

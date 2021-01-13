@@ -9,7 +9,7 @@ using Ui.Service;
 
 namespace Ui.ViewModel
 {
-    public class ExportViewModel : NotificationObject
+    public class ExportViewModel : BaseViewModel
     {
         public ExportViewModel(int viewGroupId,int defaultRadio)
         {

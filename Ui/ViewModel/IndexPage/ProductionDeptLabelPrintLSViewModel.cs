@@ -182,20 +182,20 @@ namespace Ui.ViewModel.IndexPage
 
             GenerationNewDataCommand = new DelegateCommand((obj) =>
             {
-                if (_service.ExistsPrintData(ProductionDate))
-                {
-                    //提示是否清理
-                    MessageBoxResult result = MessageBox.Show("当天已经有数据，重新生成会将打印记录清除", "温馨提示", MessageBoxButton.YesNo);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        _service.GenerationPrintData(ProductionDate);
-                    }
-                }
-                else
-                {
+                //if (_service.ExistsPrintData(ProductionDate))
+                //{
+                //    //提示是否清理
+                //    MessageBoxResult result = MessageBox.Show("当天已经有数据，重新生成会将打印记录清除", "温馨提示", MessageBoxButton.YesNo);
+                //    if (result == MessageBoxResult.Yes)
+                //    {
+                //        _service.GenerationPrintData(ProductionDate);
+                //    }
+                //}
+                //else
+                //{
                     _service.GenerationPrintData(ProductionDate);
-                }
-
+                //}
+                QueryBaseCommand.Execute(null);
             });
         }
 

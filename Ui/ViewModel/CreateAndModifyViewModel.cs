@@ -6,7 +6,7 @@ using Ui.Command;
 
 namespace Ui.ViewModel
 {
-   public class CreateAndModifyViewModel<T> : NotificationObject where T : class
+   public class CreateAndModifyViewModel<T> : BaseViewModel where T : class
     {
         public CreateAndModifyViewModel()
         {

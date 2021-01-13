@@ -22,15 +22,6 @@ namespace Ui.Service
             }
         }
 
-        public IList<MaterialDemandModel> GetMaterialDemandLists()
-        {
-            string sql = @"  select * from SJMaterialDemand ;";
-            using (var connection = SqlDb.UpdateConnection)
-            {
-                return connection.Query<MaterialDemandModel>(sql).ToList();
-            }
-        }
-
         public IList<MaterialBomModel> GetMaterialBomLists(string fNumbers)
         {
             string sql = @"  select * from SJMaterialBomView where FNumber in( " + fNumbers + ") ;";

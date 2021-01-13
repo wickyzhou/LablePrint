@@ -8,7 +8,7 @@ using Ui.Service;
 
 namespace Ui.ViewModel
 {
-    public class ShippingBillDetailLogViewModel:NotificationObject
+    public class ShippingBillDetailLogViewModel:BaseViewModel
     {
         private ShippingBillService _shippingService;
         private int _mainId;

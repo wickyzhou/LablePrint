@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Ui.Service;
 using Ui.ViewModel;
 
 namespace Ui.View.InfoWindow
@@ -33,6 +36,7 @@ namespace Ui.View.InfoWindow
                     this.WindowState = WindowState.Normal;
             }));
             this.MouseLeftButtonDown += (sender, e) => { if (e.LeftButton == MouseButtonState.Pressed) this.DragMove(); };
+            new CommonService().GetUserDataGridColumn((MemoryCache.Default["UserCache"] as UserCacheModel).User.ID, this.PrintCommonAdjustment, 0);
         }
     }
 }
