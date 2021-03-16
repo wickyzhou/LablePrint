@@ -1,6 +1,10 @@
 ﻿
 using Bll.Services;
 using Common;
+using Dal;
+using K3ApiModel;
+using K3ApiModel.Request;
+using K3ApiModel.SO;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -86,7 +90,7 @@ namespace Ui.View.IndexPage
                     MessageBox.Show($"{result}");
             }
             else
-                MessageBox.Show($"{msg}","数据异常");
+                MessageBox.Show($"{msg}", "数据异常");
 
 
         }
@@ -163,7 +167,7 @@ namespace Ui.View.IndexPage
             }
             if (lists.Count() == 0)
             {
-                ob = new ObservableCollection<ProductiveTaskListModel>(new List<ProductiveTaskListModel> { new ProductiveTaskListModel { FBucketName = "暂无数据，请先点击【生成数据】", FAuditTip = "确认审核",RowHashValue=new byte[] { 0} } });
+                ob = new ObservableCollection<ProductiveTaskListModel>(new List<ProductiveTaskListModel> { new ProductiveTaskListModel { FBucketName = "暂无数据，请先点击【生成数据】", FAuditTip = "确认审核", RowHashValue = new byte[] { 0 } } });
                 return;
             }
             ob = new ObservableCollection<ProductiveTaskListModel>(lists);
@@ -233,7 +237,7 @@ namespace Ui.View.IndexPage
                 //        _work.UpdateProductiveTaskWork(new ProductiveTaskWorkModel { FICMONo = item.FICMONo, FRequest1 = f1, FRequest2 = f2, FRequest3 = f3 });
                 //    }
                 //}
-              
+
                 int rowCount = (int)_service.AuditProductiveTaskList(dateTime);
                 if (rowCount > 0)
                 {
@@ -309,18 +313,169 @@ namespace Ui.View.IndexPage
             model.IsChecked = !model.IsChecked;
         }
 
-        private string GetNewNote(DateTime date,ProductiveTaskWorkModel model)
+        private string GetNewNote(DateTime date, ProductiveTaskWorkModel model)
         {
-            string note1 = @"/" + model.FOrgNo1 + " " + model.FModal2 + " " + model.FModal3+ " " + model.FRequest1;//   "/2678 38*1kg JW790A(专用4) 华南,HW/2733 3*1kg JW790A 奥凯盛，样油200G ";
+            string note1 = @"/" + model.FOrgNo1 + " " + model.FModal2 + " " + model.FModal3 + " " + model.FRequest1;//   "/2678 38*1kg JW790A(专用4) 华南,HW/2733 3*1kg JW790A 奥凯盛，样油200G ";
             string noteNew = string.Empty;
             Regex rg = new Regex(@"/(\d{4})");
             var matches = rg.Matches(note1);
             foreach (Match item in matches)
             {
-                noteNew+=_work.GetProductiveTaskListFNote(date, model.FICMONo, item.Groups[1].ToString());
+                noteNew += _work.GetProductiveTaskListFNote(date, model.FICMONo, item.Groups[1].ToString());
             }
-           
+
             return noteNew;
+        }
+
+        private void BtnNewExport_Click(object sender, RoutedEventArgs e)
+        {
+
+            var data = new ProductiveTaskService().GetSrOrderData(Convert.ToDateTime(this.DP2.Text));
+            if (data.Count() > 0)
+            {
+                var firstOrder = data.FirstOrDefault();
+                var fbillno = firstOrder.FBillNo;
+                var main = new SrSoMainModel
+                {
+                    FTranType = 81,
+                    FAreaPS = new BaseNumberNameModelX { FNumber = "1", FName = "购销" },
+                    FCurrencyID = new BaseNumberNameModelX { FNumber = "CNY", FName = "人民币" },
+                    FExchangeRateType = new BaseNumberNameModelX { FNumber = "01", FName = "公司汇率" },
+                    FSelTranType = new BaseNumberNameModelX { FNumber = "81", FName = "销售订单" },
+                    FPlanCategory = new BaseNumberNameModelX { FNumber = "STD", FName = "标准" },
+                    FBillerID = new BaseNumberNameModelX { FNumber = "丁惠兰", FName = "丁惠兰" },
+                    FDeptID = new BaseNumberNameModelX { FNumber = "10.01", FName = "销售部" },
+                    Fdate = firstOrder.FProductionDate.ToString("yyyy-MM-dd"),
+                    FCustID = new BaseNumberNameModelX { FNumber = firstOrder.OrgNumber, FName = firstOrder.OrgName },
+                    FEmpID = new BaseNumberNameModelX { FNumber = firstOrder.EmpNumber, FName = firstOrder.EmpName },
+                    FExchangeRate = 1,
+                };
+                var sons = new List<SrSoSonModel>();
+                foreach (var item in data)
+                {
+                    // 单据号相等，增加明细
+                    if (item.FBillNo == fbillno)
+                    {
+                        sons.Add(new SrSoSonModel
+                        {
+                            FAdviceConsignDate = item.DeliveryDate.ToString("yyyy-MM-dd"),
+                            FDate1 = item.DeliveryDate.ToString("yyyy-MM-dd"),
+                            FOrderBillNo = item.FOrgBillNo,
+                            FItemID = new BaseNumberNameModelX { FNumber = item.MaterialNumber, FName = item.MaterialName },
+                            FItemName = item.MaterialName,
+                            FBaseUnit = "kg",
+                            FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
+                            FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
+                            FEntrySelfS0179 = item.FBillNo,
+                            FEntrySelfS0178 = item.FProductionName,
+                            FEntrySelfS0177 = item.FBucketCount,
+                            FEntrySelfS0176 = new BaseNumberNameModelX { FNumber = item.SpecNumber, FName = item.SpecName },
+                            FCESS = item.FCESS,
+                            FQty = item.OrderQty,
+                            Fauxqty = item.OrderQty,
+                            //Fauxprice = item.Price,
+                            //Famount = item.OrderQty * item.Price,
+                            //FAuxTaxPrice = item.Price * (decimal)(1.13),
+                            //FAuxPriceDiscount = item.Price * (decimal)1.13,
+                            //FTaxAmt = item.OrderQty * item.Price * (decimal)0.13,
+                            //FAllAmount = item.OrderQty * item.Price * (decimal)1.13 ,
+                            Fauxprice = item.Fauxprice,
+                            Famount = item.Famount,
+                            FAuxTaxPrice = item.FAuxTaxPrice,
+                            FAuxPriceDiscount = item.FAuxPriceDiscount,
+                            FTaxAmt = item.FTaxAmt,
+                            FAllAmount = item.FAllAmount,
+                            Fnote = item.OrderEntryNote,
+                            FMapName = item.FLabel,
+                            FEntrySelfS0180 = string.IsNullOrEmpty(item.FOrgCode)?".": item.FOrgCode,
+                            FEntrySelfS0181 = item.FBatchNo,
+                        });
+                    }
+                    else //插入K3
+                    {
+                        var requestModel = new K3ApiInsertRequestModel<SrSoMainModel, SrSoSonModel>()
+                        {
+                            Data = new K3ApiInsertDataRequestModel<SrSoMainModel, SrSoSonModel>()
+                            {
+                                Page1 = new List<SrSoMainModel> { main },
+                                Page2 = sons
+                            }
+                        };
+
+                        string postJson = JsonHelper.ObjectToJson(requestModel);
+
+                        K3ApiInsertResponseModel response =  new SrK3ApiService().Insert("SO",postJson);
+                        if (response.StatusCode == 200)
+                        {
+                            fbillno = item.FBillNo;
+                            main.Fdate = item.FProductionDate.ToString("yyyy-MM-dd");
+                            main.FCustID = new BaseNumberNameModelX { FNumber = item.OrgNumber, FName = item.OrgName };
+                            main.FEmpID = new BaseNumberNameModelX { FNumber = item.EmpNumber, FName = item.EmpName };
+                            sons.Clear();
+                            sons.Add(new SrSoSonModel
+                            {
+                                FAdviceConsignDate = item.DeliveryDate.ToString("yyyy-MM-dd"),
+                                FDate1 = item.DeliveryDate.ToString("yyyy-MM-dd"),
+                                FOrderBillNo = item.FOrgBillNo,
+                                FItemID = new BaseNumberNameModelX { FNumber = item.MaterialNumber, FName = item.MaterialName },
+                                FItemName = item.MaterialName,
+                                FBaseUnit = "kg",
+                                FUnitID = new BaseNumberNameModelX { FNumber = "kg", FName = "kg" },
+                                FPlanMode = new BaseNumberNameModelX { FNumber = "MTS", FName = "MTS计划模式" },
+                                FEntrySelfS0179 = item.FBillNo,
+                                FEntrySelfS0178 = item.FProductionName,
+                                FEntrySelfS0177 = item.FBucketCount,
+                                FEntrySelfS0176 = new BaseNumberNameModelX { FNumber = item.SpecNumber, FName = item.SpecName },
+                                FCESS = item.FCESS,
+                                FQty = item.OrderQty,
+                                Fauxqty = item.OrderQty,
+                                Fauxprice = item.Fauxprice,
+                                Famount = item.Famount,
+                                FAuxTaxPrice = item.FAuxTaxPrice,
+                                FAuxPriceDiscount = item.FAuxPriceDiscount,
+                                FTaxAmt = item.FTaxAmt,
+                                FAllAmount = item.FAllAmount,
+                                Fnote = item.OrderEntryNote,
+                                FMapName = item.FLabel,
+                                FEntrySelfS0180 = string.IsNullOrEmpty(item.FOrgCode) ? "." : item.FOrgCode,
+                                FEntrySelfS0181 = item.FBatchNo,
+                            });
+                        }
+                        else
+                        {
+                            MessageBox.Show($"{response.Message}");
+                        }
+                    }
+                }
+
+
+                // 最后一行执行一次插入
+                if (sons.Count > 0)
+                {
+                    var requestModel = new K3ApiInsertRequestModel<SrSoMainModel, SrSoSonModel>()
+                    {
+                        Data = new K3ApiInsertDataRequestModel<SrSoMainModel, SrSoSonModel>()
+                        {
+                            Page1 = new List<SrSoMainModel> { main },
+                            Page2 = sons
+                        }
+                    };
+                    string postJson = JsonHelper.ObjectToJson(requestModel);
+                    K3ApiInsertResponseModel response = new SrK3ApiService().Insert("SO", postJson);
+                    MessageBox.Show($"执行完毕： {response.Message}");
+                }
+
+
+            }
+            else
+                MessageBox.Show("没有最新的8319数据");
+
+        }
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            new ProductiveTaskService().ClearExistsOrderEntryId();
+            MessageBox.Show("清理成功");
         }
     }
 

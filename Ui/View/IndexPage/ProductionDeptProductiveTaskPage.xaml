@@ -84,6 +84,8 @@
                 </MenuItem.Header>
             </MenuItem>
 
+
+            
             <MenuItem Width="160"/>
 
 
@@ -95,6 +97,26 @@
                         <TextBlock Text="&#xe6e8;"  FontFamily="/image/#iconfont" FontSize="18" Margin="0 3 0 0"  />
                         <TextBlock Text="{Binding FAuditTip}" Margin="5 5 0 0"
                                FontSize="12" Name="AuditText"  />
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Width="100"></MenuItem>
+    
+            <MenuItem Name="BtnNewExport" Click="BtnNewExport_Click" Cursor="Hand" Foreground="Chocolate" ToolTip="页面生成日期的8319数据按批次生成订单"  HorizontalContentAlignment="Center" BorderBrush="Purple" Background="#eeeeee">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="生成松润销售订单" Margin="5 5 0 0" FontSize="12" />
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+
+            <MenuItem Width="100"></MenuItem>
+
+            <MenuItem Name="BtnClear" Click="BtnClear_Click" Cursor="Hand" Foreground="Chocolate" ToolTip="清除数据后此页面的8319客户数据会全部重新插入到松润账套" HorizontalContentAlignment="Center" BorderBrush="Purple" Background="#eeeeee">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="清除松润订单新增记录" Margin="5 5 0 0" FontSize="12" />
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
@@ -148,7 +170,7 @@
             <DatePicker Name="DP3" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontSize="14"
                             VerticalContentAlignment="Center" Margin="10,7,0,7" Width="120" 
                               SelectedDate="{x:Static sys:DateTime.Now}"  Cursor="Hand"/>
-            <Button Name="BtnModifyDate" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="更新领料和入库日期以及审核日期" Style="{StaticResource BtnWarningStyle}" Click="BtnModifyDate_Click" VerticalAlignment="Center" Width="200" Height="30"/>
+            <Button Name="BtnModifyDate" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="更新领料和入库日期以及审核日期" Style="{StaticResource BtnWarningStyle}" Click="BtnModifyDate_Click" VerticalAlignment="Center" MaxWidth="300" Height="30"/>
         </Grid>
 
 
@@ -190,7 +212,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn DataGridColumn.Header="唯一值" DataGridBoundColumn.Binding="{Binding RowHashValueString}" Width="300" HeaderStyle="{StaticResource DGColumnHeader}"/>
+                <DataGridTextColumn DataGridColumn.Header="外箱标签" DataGridBoundColumn.Binding="{Binding ShippingAddress}" Width="120" HeaderStyle="{StaticResource DGColumnHeader}"/>
                 <DataGridTextColumn DataGridColumn.Header="产品型号" DataGridBoundColumn.Binding="{Binding FitemName}" Width="90" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="产品批号" DataGridBoundColumn.Binding="{Binding FBatchNo}" Width="90" HeaderStyle="{StaticResource DGColumnHeader}"/>
                     <DataGridTextColumn DataGridColumn.Header="生产数量" DataGridBoundColumn.Binding="{Binding FQuantity}" HeaderStyle="{StaticResource DGColumnHeader}"/>

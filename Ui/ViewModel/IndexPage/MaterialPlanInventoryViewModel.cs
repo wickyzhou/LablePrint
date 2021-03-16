@@ -4,6 +4,7 @@ using K3ApiModel;
 using K3ApiModel.PurchaseRequisition;
 using K3ApiModel.Request;
 using Model;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,14 +16,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Ui.Command;
 using Ui.Service;
 
 namespace Ui.ViewModel.IndexPage
 {
-    public class MaterialPlanInventoryViewModel : K3ApiBaseViewModel
+    public class MaterialPlanInventoryViewModel : BaseViewModel
     {
-        private string fBillNo; // 插入后返回的单号，用来审核
+        //private string fBillNo; // 插入后返回的单号，用来审核
         private MaterialPlanInventoryService _materialPlanInventoryService;
         private IList<PurchaseRequisitionFKModel> _purchaseRequisitionICItemLists;
         private IList<BaseNumberNameModel> _employeeLists;
@@ -37,16 +39,9 @@ namespace Ui.ViewModel.IndexPage
 
         private void InitData()
         {
-            K3InsertResponseData = new K3ApiInsertDataResponseModel();
-            MaterialPlanSeorderLists = new ObservableCollection<MaterialPlanSeorderModel>();
-            MaterialDemandLists = new ObservableCollection<MaterialDemandModel>();
-            MaterialPlanSeorderSelectedItem = new MaterialPlanSeorderModel();
-            MaterialBomLists = new ObservableCollection<MaterialBomModel>();
-            CheckedPurchaseRequisitionMaterialLists = new ObservableCollection<PurchaseRequisitionImportVerificationModel>();
-
             Filter = new MaterialPlanInventoryParameterModel
             {
-                ParamBeginDate = Convert.ToDateTime(System.DateTime.Now.AddDays(-7).ToShortDateString()),
+                ParamBeginDate = DateTime.Now.AddDays(-7),
                 ParamEndDate = Convert.ToDateTime(System.DateTime.Now.ToShortDateString()),
             };
 
@@ -56,16 +51,28 @@ namespace Ui.ViewModel.IndexPage
                 _measureUnitLists = K3ApiFKService.GetMeasureUnit();
                 _employeeLists = K3ApiFKService.GetK3Employee();
 
+                if (_materialPlanInventoryService.DeleteMaterialPlanInventory())
+                    MaterialPlanInventoryLists.Clear();
+
+                MaterialPlanSeOrderFullLists = _materialPlanInventoryService.GetMaterialPlanSeorderFullLists(Filter.ParamBeginDate, Filter.ParamEndDate);
+
                 UIExecute.RunAsync(() =>
                 {
-                    _materialPlanInventoryService.GetMaterialPlanSeorderLists(Filter.ParamBeginDate, Filter.ParamEndDate).ToList().ForEach(x => MaterialPlanSeorderLists.Add(x));
+                    MaterialPlanSeOrderFullLists.GroupBy(x => new { x.FBillNo, x.FInterID, x.FDate, x.FCustName, x.FEmpName, x.FDeptName })
+                    .Select(x => new MaterialPlanSeOrderShowModel { FCustName = x.Key.FCustName, FEmpName = x.Key.FEmpName, FDeptName = x.Key.FDeptName, FDate = x.Key.FDate, FInterID = x.Key.FInterID, FBillNo = x.Key.FBillNo })
+                    .OrderByDescending(x => x.FDate).ThenBy(x => x.FBillNo)
+                    .ToList().ForEach(m => MaterialPlanSeorderLists.Add(m));
                 });
             });
         }
 
-        private ObservableCollection<MaterialPlanSeorderModel> materialPlanSeorderLists;
+        public K3ApiFKService K3ApiFKService { get; set; } = new K3ApiFKService();
 
-        public ObservableCollection<MaterialPlanSeorderModel> MaterialPlanSeorderLists
+        public List<MaterialPlanSeOrderFullModel> MaterialPlanSeOrderFullLists { get; set; } = new List<MaterialPlanSeOrderFullModel>();
+
+        private ObservableCollection<MaterialPlanSeOrderShowModel> materialPlanSeorderLists = new ObservableCollection<MaterialPlanSeOrderShowModel>();
+
+        public ObservableCollection<MaterialPlanSeOrderShowModel> MaterialPlanSeorderLists
         {
             get { return materialPlanSeorderLists; }
             set
@@ -74,6 +81,22 @@ namespace Ui.ViewModel.IndexPage
                 this.RaisePropertyChanged(nameof(MaterialPlanSeorderLists));
             }
         }
+
+        private ObservableCollection<MaterialPlanSeOrderEntryShowModel> materialPlanSeOrderEntryLists = new ObservableCollection<MaterialPlanSeOrderEntryShowModel>();
+
+        public ObservableCollection<MaterialPlanSeOrderEntryShowModel> MaterialPlanSeOrderEntryLists
+        {
+            get { return materialPlanSeOrderEntryLists; }
+            set
+            {
+                materialPlanSeOrderEntryLists = value;
+                this.RaisePropertyChanged(nameof(MaterialPlanSeOrderEntryLists));
+            }
+        }
+
+
+
+
 
         private MaterialPlanInventoryParameterModel filter;
 
@@ -87,7 +110,7 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-        private ObservableCollection<MaterialDemandModel> materialDemandLists;
+        private ObservableCollection<MaterialDemandModel> materialDemandLists = new ObservableCollection<MaterialDemandModel>();
 
         public ObservableCollection<MaterialDemandModel> MaterialDemandLists
         {
@@ -99,9 +122,9 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-        private MaterialPlanSeorderModel materialPlanSeorderSelectedItem;
+        private MaterialPlanSeOrderShowModel materialPlanSeorderSelectedItem = new MaterialPlanSeOrderShowModel();
 
-        public MaterialPlanSeorderModel MaterialPlanSeorderSelectedItem
+        public MaterialPlanSeOrderShowModel MaterialPlanSeorderSelectedItem
         {
             get { return materialPlanSeorderSelectedItem; }
             set
@@ -112,7 +135,7 @@ namespace Ui.ViewModel.IndexPage
         }
 
 
-        private ObservableCollection<MaterialBomModel> materialBomLists;
+        private ObservableCollection<MaterialBomModel> materialBomLists = new ObservableCollection<MaterialBomModel>();
 
         public ObservableCollection<MaterialBomModel> MaterialBomLists
         {
@@ -148,7 +171,7 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
-        private K3ApiInsertDataResponseModel k3InsertResponseData;
+        private K3ApiInsertDataResponseModel k3InsertResponseData = new K3ApiInsertDataResponseModel();
 
         public K3ApiInsertDataResponseModel K3InsertResponseData
         {
@@ -161,7 +184,7 @@ namespace Ui.ViewModel.IndexPage
         }
 
 
-        private ObservableCollection<PurchaseRequisitionImportVerificationModel> checkedPurchaseRequisitionMaterialLists;
+        private ObservableCollection<PurchaseRequisitionImportVerificationModel> checkedPurchaseRequisitionMaterialLists = new ObservableCollection<PurchaseRequisitionImportVerificationModel>();
 
         public ObservableCollection<PurchaseRequisitionImportVerificationModel> CheckedPurchaseRequisitionMaterialLists
         {
@@ -185,6 +208,19 @@ namespace Ui.ViewModel.IndexPage
             }
         }
 
+        private ObservableCollection<MaterialPlanInventoryModel> materialPlanInventoryLists = new ObservableCollection<MaterialPlanInventoryModel>();
+
+        public ObservableCollection<MaterialPlanInventoryModel> MaterialPlanInventoryLists
+        {
+            get { return materialPlanInventoryLists; }
+            set
+            {
+                materialPlanInventoryLists = value;
+                this.RaisePropertyChanged(nameof(MaterialPlanInventoryLists));
+            }
+        }
+
+
 
         public DelegateCommand QueryCommand { get; set; }
         public DelegateCommand MouseLeftClickCommand { get; set; }
@@ -195,7 +231,8 @@ namespace Ui.ViewModel.IndexPage
         public DelegateCommand PurchaseRequisitionCheckBill1K3Command { get; set; }
         public DelegateCommand PurchaseRequisitionCheckBill2K3Command { get; set; }
         public DelegateCommand AllCheckCommand { get; set; }
-
+        public DelegateCommand CalculateCommand { get; set; }
+        public DelegateCommand UnLockCommand { get; set; }
 
 
         private void InitCommand()
@@ -206,22 +243,103 @@ namespace Ui.ViewModel.IndexPage
                 if (IsCheckedAll)
                 {
                     foreach (var item in MaterialPlanSeorderLists)
-                        item.IsChecked = true;
+                    {
+                        if (!item.IsLocked)
+                            item.IsChecked = true;
+                    }
+
                 }
                 else
                 {
                     foreach (var item in MaterialPlanSeorderLists)
-                        item.IsChecked = false;
+                    {
+                        if (!item.IsLocked)
+                            item.IsChecked = false;
+                    }
+
                 }
 
             });
 
-            QueryCommand = new DelegateCommand(Query);
+            QueryCommand = new DelegateCommand((obj) =>
+            {
+                MaterialPlanSeOrderFullLists.Clear();
+                MaterialPlanSeOrderFullLists = _materialPlanInventoryService.GetMaterialPlanSeorderFullLists(Filter.ParamBeginDate, Filter.ParamEndDate);
+
+                MaterialPlanSeorderLists.Clear();
+                MaterialPlanSeOrderFullLists.GroupBy(x => new { x.FCustName, x.FEmpName, x.FDeptName, x.FDate, x.FInterID, x.FBillNo })
+                .Select(x => new MaterialPlanSeOrderShowModel { FCustName = x.Key.FCustName, FEmpName = x.Key.FEmpName, FDeptName = x.Key.FDeptName, FDate = x.Key.FDate, FInterID = x.Key.FInterID, FBillNo = x.Key.FBillNo })
+                .ToList().ForEach(m => MaterialPlanSeorderLists.Add(m));
+                MaterialPlanSeOrderEntryLists.Clear();
+
+                _materialPlanInventoryService.DeleteMaterialPlanInventory();
+               MaterialPlanInventoryLists.Clear();
+            });
+
+            UnLockCommand = new DelegateCommand((obj) =>
+            {
+                // 将列表的锁定状态归0并且清空原料锁定总数
+                MaterialPlanSeOrderEntryLists.Clear();
+                foreach (var item in MaterialPlanSeorderLists)
+                {
+                    item.IsChecked = false;
+                    item.IsLocked = false;
+                }
+                _materialPlanInventoryService.DeleteMaterialPlanInventory();
+                MaterialPlanInventoryLists.Clear();
+            });
+
+            CalculateCommand = new DelegateCommand((obj) =>
+            {
+
+                //var data = MaterialPlanSeorderLists.Where(x => !x.IsLocked && x.IsChecked).Select(x => x.FDetailId);
+                if (MaterialPlanSeOrderEntryLists.Count() > 0)
+                {
+                    // 将选定计算行，锁定数据
+                    string ids = string.Join(",", MaterialPlanSeOrderEntryLists.Select(x=>x.FDetailId));
+                    MaterialPlanInventoryLists.Clear();
+                    _materialPlanInventoryService.GetMaterialPlanInventoryLists(ids).OrderByDescending(x=>x.IsVisible).ToList().ForEach(x => MaterialPlanInventoryLists.Add(x));
+                    MaterialPlanSeOrderEntryLists.Clear();
+                    foreach (var item in MaterialPlanSeorderLists)
+                    {
+                        if (!item.IsLocked && item.IsChecked)
+                            item.IsLocked = true;
+                    }
+                }
+                else
+                    MessageBox.Show("没有选择最新的数据");
+            });
 
             MouseLeftClickCommand = new DelegateCommand((obj) =>
             {
-                MaterialPlanSeorderModel dr = (obj as DataGridRow).Item as MaterialPlanSeorderModel;
-                dr.IsChecked = !dr.IsChecked;
+                MaterialPlanSeOrderShowModel dr = (obj as DataGridRow).Item as MaterialPlanSeOrderShowModel;
+                if (!dr.IsLocked)
+                {
+                    dr.IsChecked = !dr.IsChecked;
+                    var cz = MaterialPlanSeOrderEntryLists.Any(x=>x.FBillNo == dr.FBillNo);
+                    if (cz)
+                    {
+                        for (int i = 0; i < MaterialPlanSeOrderEntryLists.Count; i++)
+                        {
+
+                            if (MaterialPlanSeOrderEntryLists[i].FBillNo == dr.FBillNo)
+                            {
+                                MaterialPlanSeOrderEntryLists.RemoveAt(i);
+                                i--;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var entries = MaterialPlanSeOrderFullLists.Where(x => x.FBillNo == dr.FBillNo).Select(x => new MaterialPlanSeOrderEntryShowModel
+                        { FBillNo = x.FBillNo, FInterID = x.FInterID, FEntryID = x.FEntryID, FDetailId = x.FDetailId, DeliveryDate = x.DeliveryDate, FitemId = x.FitemId, FName = x.FName, FQty = x.FQty });
+                        foreach (var item in entries)
+                        {
+                            MaterialPlanSeOrderEntryLists.Add(item);
+                        }
+                    }
+                }
+
             });
 
             MouseLeftClickCommand1 = new DelegateCommand((obj) =>
@@ -260,7 +378,7 @@ namespace Ui.ViewModel.IndexPage
                                  };
                     MaterialBomLists.Clear();
                     MaterialBomLists = new ObservableCollection<MaterialBomModel>(query1);
-                    
+
                 }
                 opd.Dispose();
             });
@@ -436,16 +554,6 @@ namespace Ui.ViewModel.IndexPage
                 var checkRes = new K3ApiService("Purchase_Requisition").CheckBill(json);
                 MessageBox.Show(checkRes.Message);
             });
-        }
-
-
-
-
-
-        private void Query(object obj)
-        {
-            MaterialPlanSeorderLists.Clear();
-            _materialPlanInventoryService.GetMaterialPlanSeorderLists(Filter.ParamBeginDate, Filter.ParamEndDate).ToList().ForEach(x => MaterialPlanSeorderLists.Add(x));
         }
 
     }

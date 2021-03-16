@@ -105,6 +105,25 @@ namespace Model
 
         public int ProductionNumber { get; set; }
 
+        public string ShippingAddress { get; set; }
+
+        
+        
+        public string FOrgBillNo { get; set; }
+
+        public string FProductionName { get; set; }
+
+        public DateTime DeliveryDate { get; set; }
+
+        public string SRProductionName { get; set; }
+
+        public string OrgCode { get; set; }
+
+        public decimal OrderQty { get; set; }
+
+        public string SpecNumber { get; set; }
+
+        public string SpecName { get; set; }
 
     }
 }

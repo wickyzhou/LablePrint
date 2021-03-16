@@ -153,9 +153,9 @@ namespace Ui.Service
 
         public int SaveBarTenderPrintConfigXX(BarTenderPrintConfigModelXX model)
         {
-            if (model.Id==0)
+            if (model.Id == 0)
                 return InsertBarTenderPrintConfigXX(model);
-             UpdateBarTenderPrintConfigXX(model);
+            UpdateBarTenderPrintConfigXX(model);
             return model.Id;
 
         }
@@ -502,7 +502,7 @@ namespace Ui.Service
                             sb.Append($" and {name} = '{value}' ");
 
                     }
-                   
+
                 }
             }
             return sb.ToString();
@@ -580,19 +580,19 @@ namespace Ui.Service
             }
         }
 
-        public string GetExportViewName(int menu,int viewId)
+        public string GetExportViewName(int menu, int viewId)
         {
             string sql = string.Empty;
             switch (viewId)
             {
-                case 1: sql = @" select View1 from SJExportView where MainMenuId = @MainMenuId ;";break;
+                case 1: sql = @" select View1 from SJExportView where MainMenuId = @MainMenuId ;"; break;
                 case 2: sql = @" select View2 from SJExportView where MainMenuId = @MainMenuId ;"; break;
                 case 3: sql = @" select View3 from SJExportView where MainMenuId = @MainMenuId ;"; break;
-                default:break;
+                default: break;
             }
             using (var connection = SqlDb.UpdateConnection)
             {
-                return Convert.ToString(connection.ExecuteScalar(sql, new { MainMenuId  = menu }));
+                return Convert.ToString(connection.ExecuteScalar(sql, new { MainMenuId = menu }));
             }
         }
 
@@ -603,7 +603,9 @@ namespace Ui.Service
 
         public DataTable GetExportDataProcedure(string procName, int userDataId, string orderedColumns, string filter)
         {
-            return SqlHelper.ExecuteDataTableProcedure(procName, new SqlParameter[] { new SqlParameter("@UserId", userDataId), new SqlParameter("@OrderColumns", orderedColumns),new SqlParameter("@Filter", filter) });
+            return SqlHelper.ExecuteDataTableProcedure(procName, new SqlParameter[] { new SqlParameter("@UserId", userDataId), new SqlParameter("@OrderColumns", orderedColumns), new SqlParameter("@Filter", filter) });
         }
     }
+
+
 }

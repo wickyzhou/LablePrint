@@ -13,16 +13,16 @@ namespace Ui.Service
 {
     public class MaterialPlanInventoryService
     {
-        public IList<MaterialPlanSeorderModel> GetMaterialPlanSeorderLists(DateTime beginDate,DateTime endDate)
+        public List<MaterialPlanSeOrderFullModel> GetMaterialPlanSeorderFullLists(DateTime beginDate,DateTime endDate)
         {
-            string sql = @"  select * from SJYuanCaiLiaoJiSuan where FDate >= @BeginDate and FDate <= @EndDate order by FInterID desc,FEntryID ;";
+            string sql = @"  select * from SJYuanCaiLiaoJiSuanView where FDate >= @BeginDate and FDate <= @EndDate ;";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<MaterialPlanSeorderModel>(sql,new {BeginDate=beginDate,EndDate=endDate }).ToList();
+                return connection.Query<MaterialPlanSeOrderFullModel>(sql,new {BeginDate=beginDate,EndDate=endDate }).ToList();
             }
         }
 
-        public IList<MaterialBomModel> GetMaterialBomLists(string fNumbers)
+        public List<MaterialBomModel> GetMaterialBomLists(string fNumbers)
         {
             string sql = @"  select * from SJMaterialBomView where FNumber in( " + fNumbers + ") ;";
             using (var connection = SqlDb.UpdateConnection)
@@ -36,7 +36,7 @@ namespace Ui.Service
             return SqlHelper.ExecuteDataTable(@" select * from SJMaterialBomView ;", null);
         }
 
-        public IList<int> GetMaterialFItemIds(string itemNames)
+        public List<int> GetMaterialFItemIds(string itemNames)
         {
             string sql = @" select fitemId from 
                             (select ROW_NUMBER()over(partition by FName order by case when FNumber like 'YL.SC%' then 0 else 1 end) rnk,FItemID  from t_ICItem where FName in("+itemNames+@")) as t
@@ -48,28 +48,34 @@ namespace Ui.Service
         }
 
 
-        public bool ImportExcel()
+        public bool DeleteMaterialPlanInventory()
         {
-            return true;
-        }
-
-        public IList<PurchaseRequisitionImportVerificationModel> GetCheckedPurchaseRequisitionMaterialLists()
-        {
-            string sql = @" ";
+            string sql = @" truncate table SJMaterialPlanInventory;";
             using (var connection = SqlDb.UpdateConnection)
             {
-                return connection.Query<PurchaseRequisitionImportVerificationModel>(sql).ToList();
+                return connection.Execute(sql) > 0;
             }
         }
 
-        
+        public IEnumerable<MaterialPlanInventoryModel> GetMaterialPlanInventoryLists(string ids)
+        {
 
-        //public bool DeleteOilSampleFlowLog(decimal id)
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("@Ids", ids, DbType.String, ParameterDirection.Input);
+            using (var connection = SqlDb.UpdateConnection)
+            {
+                return connection.Query<MaterialPlanInventoryModel>("SJCalculateMaterialPlanInventoryProc", dp, null,true, null, CommandType.StoredProcedure);
+            }
+        }
+
+        //// 40004 -- 生产Bom  0 -- 未禁用  1072 -- 使用中
+        //public List<ExpandBomModel> GetScBom()
         //{
-        //    string sql = @" delete from SROilSampleFlowPrintLog where Id=@Id ; ";
-        //    using (var connection = SqlDb.UpdateConnectionOa)
+        //    string sql = @"  select a.FItemID PitemId,b.FItemID CitemId,a.FQty PQty,b.FQty CQty,FBOMNumber
+        //                    from ICBOM  a join ICBomChild b on a.FInterID=b.FInterID  where  a.FHeadSelfZ0134=40004  and a.FForbid=0  and FUseStatus=1072 ";
+        //    using (var connection = SqlDb.UpdateConnection)
         //    {
-        //        return connection.Execute(sql, new { Id = id }) > 0;
+        //        return connection.Query<ExpandBomModel>(sql).ToList();
         //    }
         //}
     }

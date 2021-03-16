@@ -23,7 +23,9 @@
 
 
     <Brush x:Key="GenericMouseOverBrush">LightYellow</Brush>
-    
+
+    <Brush x:Key="GenericSelectedBrush">NavajoWhite</Brush>
+
     <Brush x:Key="GenericMouseOverLightBrush">#FFFAF2</Brush>
 
     <Brush x:Key="GenericBackgroundMainSonBrush">AliceBlue</Brush>

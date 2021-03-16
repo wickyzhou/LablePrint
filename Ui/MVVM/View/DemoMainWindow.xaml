@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:Ui.MVVM.ViewModel"
         xmlns:ll="clr-namespace:Ui.UserControls"
 
-        Title="MainWindow"  Style="{StaticResource WindowStyleLevel1200*700}">
+        Title="MainWindow"  Style="{StaticResource WindowStyleLevel1200*700}" Topmost="True" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
